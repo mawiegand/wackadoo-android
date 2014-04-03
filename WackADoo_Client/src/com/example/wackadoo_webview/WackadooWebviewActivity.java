@@ -16,7 +16,7 @@ public class WackadooWebviewActivity extends Activity {
 	    @Override
 	    protected void onCreate(Bundle savedInstanceState) {
 	        super.onCreate(savedInstanceState);
-	        setContentView(R.layout.wackadoo_webview);
+	        setContentView(R.layout.activity_wackadoowebview);
 	        webView = (WebView) findViewById(R.id.main_webView);
 	        if (savedInstanceState != null) {
 	            webView.restoreState(savedInstanceState);
@@ -52,7 +52,7 @@ public class WackadooWebviewActivity extends Activity {
 	        webView.setWebChromeClient(new WebChromeClient());
 	        webView.setWebViewClient(new WebViewClient());
 	        
-	        String urlToLoad = "Javascript:( function() { window.name = JSON.stringify({ \"accessToken\" : \"eyJ0b2tlbiI6eyJpZGVudGlmaWVyIjoiQmxBd0FUaFNWRHR3RHVWRiIsInNjb3BlIjpbInBheW1lbnQiLCI1ZGVudGl0eSIsIndhY2thZG9vLXJvdW5kNSJdLCJ0aW1lc3RhbXAiOiIyMDE0LTA0LTAyVDExOjU3OjI5KzAyOjAwIn0sInNpZ25hdHVyZSI6ImE4ZDc3M2UxNjc0MDViNDFjMGM2MDJiMDJiOGNiMmExYjc5Y2YzYTMifQ==\", \"client_id\" : \"WACKADOOHTML5-ROUND5\", \"expiration\" : \"28800\", \"locale\" : \"de_DE\"  }) ;  window.open(\"https://gs05.wack-a-doo.com/client?t=28704894\");})()";
+	        String urlToLoad = "Javascript:( function() { window.name = JSON.stringify({ \"accessToken\" : \"eyJ0b2tlbiI6eyJpZGVudGlmaWVyIjoiQmxBd0FUaFNWRHR3RHVWRiIsInNjb3BlIjpbInBheW1lbnQiLCI1ZGVudGl0eSIsIndhY2thZG9vLXJvdW5kNSJdLCJ0aW1lc3RhbXAiOiIyMDE0LTA0LTAzVDA4OjU0OjQ5KzAyOjAwIn0sInNpZ25hdHVyZSI6ImZhY2M0NTUxZjlmODRkMDZkOTViMjEyYjZiYmZhYzM1NmI3NjZjY2QifQ==\", \"client_id\" : \"WACKADOOHTML5-ROUND5\", \"expiration\" : \"28800\", \"locale\" : \"de_DE\"  }) ;  window.open(\"https://gs05.wack-a-doo.com/client?t=14029298\");})()";
 	        webView.loadUrl(urlToLoad);
 	    }
 
