@@ -1,4 +1,6 @@
-package com.example.wackadoo_webview;
+package com.wackadoo.wackadoo_client;
+
+import com.example.wackadoo_webview.R;
 
 import android.support.v7.app.ActionBarActivity;
 import android.content.Intent;

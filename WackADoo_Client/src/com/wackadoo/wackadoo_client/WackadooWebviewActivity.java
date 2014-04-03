@@ -1,4 +1,6 @@
-package com.example.wackadoo_webview;
+package com.wackadoo.wackadoo_client;
+
+import com.example.wackadoo_webview.R;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -29,31 +31,11 @@ public class WackadooWebviewActivity extends Activity {
 	        //webSettings.setUseWideViewPort(true);
 	       // webSettings.setLoadWithOverviewMode(true);
 	        
-	    /*    
-	        webView.setWebViewClient(new WebViewClient() {
-	        	@Override
-	            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-	        		System.out.println("asdf: webview called"); 
-	                view.loadUrl(url);
-	                return true;
-	            }
-	        });
-
-	        webView.setWebChromeClient(new WebChromeClient() {
-	            
-	      	  public boolean onCreateWindow (WebView view, boolean dialog, boolean userGesture, Message resultMsg) {
-	      		  System.out.println("asdf: it's called");
-	      		  return false;
-	      	  }
-	      });
-
-	        webView.loadUrl("file:///android_asset/index.html");
-	        */
 	        webView.setWebChromeClient(new WebChromeClient());
 	        webView.setWebViewClient(new WebViewClient());
 	        
-	        String urlToLoad = "Javascript:( function() { window.name = JSON.stringify({ \"accessToken\" : \"eyJ0b2tlbiI6eyJpZGVudGlmaWVyIjoiQmxBd0FUaFNWRHR3RHVWRiIsInNjb3BlIjpbInBheW1lbnQiLCI1ZGVudGl0eSIsIndhY2thZG9vLXJvdW5kNSJdLCJ0aW1lc3RhbXAiOiIyMDE0LTA0LTAzVDA4OjU0OjQ5KzAyOjAwIn0sInNpZ25hdHVyZSI6ImZhY2M0NTUxZjlmODRkMDZkOTViMjEyYjZiYmZhYzM1NmI3NjZjY2QifQ==\", \"client_id\" : \"WACKADOOHTML5-ROUND5\", \"expiration\" : \"28800\", \"locale\" : \"de_DE\"  }) ;  window.open(\"https://gs05.wack-a-doo.com/client?t=14029298\");})()";
-	        webView.loadUrl(urlToLoad);
+	        webSettings.setAllowFileAccess(true);
+	        webView.loadUrl("file:///android_asset/index.html");
 	    }
 
 
