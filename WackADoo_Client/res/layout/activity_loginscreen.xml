@@ -6,10 +6,95 @@
     tools:context="com.wackadoo.wackadoo_client.WackadooWebviewActivity"
     tools:ignore="MergeRootFrame" >
 
-    <Button
-        android:id="@+id/loginButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Login" />
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/title_bg_vertical" />
+    
+    <RelativeLayout 
+            android:id="@+id/shop_container"  
+            android:layout_height="56dip"
+            android:layout_gravity="top|left"
+            android:layout_width="81dip"
+            >
+    	<ImageView
+        	android:layout_width="fill_parent"
+        	android:layout_height="fill_parent"
+        	android:scaleType="centerCrop"
+        	android:src="@drawable/title_left_corner_vertical" />
+    	<Button
+    	    android:background="@drawable/title_shop_button"
+        	android:id="@+id/shopButton"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:scaleType="center"/>	
+   	</RelativeLayout>
+    
+    <RelativeLayout 
+            android:id="@+id/logo_container" 
+            android:layout_width="fill_parent" 
+            android:layout_height="wrap_content"
+            >
 
+    	<ImageView
+    	    android:layout_width="match_parent"
+    	    android:layout_height="wrap_content"
+    	    android:adjustViewBounds="true"
+    	    android:scaleType="fitXY"
+    	    android:src="@drawable/title_logo_vertical" />
+
+  	</RelativeLayout>
+  	
+  	<RelativeLayout 
+           	android:id="@+id/controls_container" 
+            android:layout_width="fill_parent" 
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|right"
+            android:paddingTop="10dip"
+            >
+		<ImageView
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:scaleType="center"
+    	    android:src="@drawable/title_info_button"
+    	    android:paddingRight="10dip"
+    	    android:layout_alignParentRight="true" />
+		<ImageView
+    	    android:layout_width="wrap_content"
+    	    android:layout_gravity="right"
+    	    android:layout_height="wrap_content"
+    	    android:scaleType="center"
+    	    android:src="@drawable/title_sound_button" 
+			android:paddingRight="40dip"
+    	    android:layout_alignParentRight="true" />
+
+  	</RelativeLayout>
+    
+
+ 	<ImageView
+ 	    android:layout_width="fill_parent"
+ 	    android:layout_height="wrap_content"
+ 	    android:layout_gravity="bottom|center"
+ 	    android:adjustViewBounds="true"
+ 	    android:scaleType="fitCenter"
+ 	    android:src="@drawable/title_bar_vertical" />
+
+ 	<RelativeLayout 
+           	android:id="@+id/test_container" 
+            android:layout_width="match_parent"
+            android:layout_height="100dip"
+            android:layout_gravity="bottom|center"
+            android:paddingBottom="10dip" >
+  	<Button
+  	    android:id="@+id/loginButton"
+  	    android:layout_width="fill_parent"
+  	    android:layout_height="100dip"
+  	   	android:adjustViewBounds="false"
+  	    android:layout_gravity="bottom|center"
+  	    android:background="@drawable/title_play_button"
+  	    android:scaleType="center" />
+ </RelativeLayout>
+  	
+  		
 </FrameLayout>
