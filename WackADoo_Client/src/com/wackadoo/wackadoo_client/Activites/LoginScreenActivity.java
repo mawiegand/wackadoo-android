@@ -36,7 +36,6 @@ public class LoginScreenActivity extends Activity implements RegistrationCallbac
 		    
 		    this.setUpButtonListeners();
 		    this.setUpLoginButtonAnimation();
-		    loginButtonAnimation.start();
 		    userCredentials.loadCredentials();
 		}
 
@@ -56,6 +55,14 @@ public class LoginScreenActivity extends Activity implements RegistrationCallbac
 	        getMenuInflater().inflate(R.menu.main, menu);
 	        return true;
 	   }
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		loginButton.setEnabled(true);
+		shopButton.setEnabled(true);
+		loginButtonAnimation.start();
+	};
 
 	   @Override
 	    public boolean onOptionsItemSelected(MenuItem item) {
@@ -68,7 +75,8 @@ public class LoginScreenActivity extends Activity implements RegistrationCallbac
 	   
 
 		private void setUpLoginButton() {
-			   loginButton.setOnTouchListener(new View.OnTouchListener() {
+			loginButton.setEnabled(true);
+			loginButton.setOnTouchListener(new View.OnTouchListener() {
 					
 				@SuppressLint("NewApi")
 				@Override
@@ -90,16 +98,18 @@ public class LoginScreenActivity extends Activity implements RegistrationCallbac
 					}
 			   });
 			   
-			   loginButton.setOnClickListener(new View.OnClickListener() {
+			loginButton.setOnClickListener(new View.OnClickListener() {
 					
 					@Override
 					public void onClick(View v) {
+						loginButton.setEnabled(false);
 						triggerLogin();
 					}
 				});
 		}
 
 		private void setUpShopButton() {
+			shopButton.setEnabled(true);
 		   shopButton.setOnTouchListener(new View.OnTouchListener() {
 				
 				@SuppressLint("NewApi")
@@ -126,6 +136,7 @@ public class LoginScreenActivity extends Activity implements RegistrationCallbac
 					@Override
 					public void onClick(View v) {
 						///// TODO: Insert Intent to Shop
+						shopButton.setEnabled(false);
 					}
 				});
 	}
