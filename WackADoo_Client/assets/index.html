@@ -1,12 +1,14 @@
 <html>
 <head>
 <script type="text/javascript">
-window.name = "{\"accessToken\":\"eyJ0b2tlbiI6eyJpZGVudGlmaWVyIjoiQmxBd0FUaFNWRHR3RHVWRiIsInNjb3BlIjpbInBheW1lbnQiLCI1ZGVudGl0eSIsIndhY2thZG9vLXJvdW5kNSJdLCJ0aW1lc3RhbXAiOiIyMDE0LTA0LTAzVDA4OjU0OjQ5KzAyOjAwIn0sInNpZ25hdHVyZSI6ImZhY2M0NTUxZjlmODRkMDZkOTViMjEyYjZiYmZhYzM1NmI3NjZjY2QifQ==\",\"expiration\":\"28800\",\"locale\":\"de_DE\",\"playerInvitation\":null,\"allianceInvitation\":null,\"client_id\":\"WACKADOOHTML5-ROUND5\"}";
-var windowSize = "width=" + window.innerWidth + ",height=" + window.innerHeight + ",scrollbars=no";
-window.open('https://gs05.wack-a-doo.com/client?t=14029298');
+var accessToken = LoginHandler.getAccessToken();
+var userId = LoginHandler.getUserId();
+var expiration = LoginHandler.getExpiration();
+var countryCode = LoginHandler.getCountryCode();
+window.name = "{\"accessToken\":\"" + accessToken + "\",\"expiration\":\"" + expiration + "\",\"locale\":\"" + countryCode + "\",\"playerInvitation\":null,\"allianceInvitation\":null,\"client_id\":\"WACKADOOHTML5-ROUND5\"}";
+window.open('https://gs05.wack-a-doo.com/client?t=" + userId + "');
 </script>
 </head>
 <body>
-Testpage
 </body>
 </html> 

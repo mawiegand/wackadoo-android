@@ -1,4 +1,4 @@
-package com.wackadoo.wackadoo_client;
+package com.wackadoo.wackadoo_client.Activites;
 
 import com.example.wackadoo_webview.R;
 

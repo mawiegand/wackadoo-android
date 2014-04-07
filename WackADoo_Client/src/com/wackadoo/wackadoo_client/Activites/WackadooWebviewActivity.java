@@ -1,7 +1,9 @@
-package com.wackadoo.wackadoo_client;
+package com.wackadoo.wackadoo_client.Activites;
 
 import com.example.wackadoo_webview.R;
 
+import JavaScriptInterfaces.LoginJavaScriptHandler;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -15,7 +17,8 @@ public class WackadooWebviewActivity extends Activity {
 
 		private WebView webView;
 		
-	    @Override
+	    @SuppressLint({ "NewApi", "JavascriptInterface" })
+		@Override
 	    protected void onCreate(Bundle savedInstanceState) {
 	        super.onCreate(savedInstanceState);
 	        setContentView(R.layout.activity_wackadoowebview);
@@ -23,23 +26,22 @@ public class WackadooWebviewActivity extends Activity {
 	        if (savedInstanceState != null) {
 	            webView.restoreState(savedInstanceState);
 	        }
+
+	        webView.setWebChromeClient(new WebChromeClient());
+	        webView.setWebViewClient(new WebViewClient());
 	        
 	        WebSettings webSettings = webView.getSettings();
 	        webSettings.setJavaScriptEnabled(true);
 	        webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
-	       
-	        //webSettings.setUseWideViewPort(true);
-	       // webSettings.setLoadWithOverviewMode(true);
-	        
-	        webView.setWebChromeClient(new WebChromeClient());
-	        webView.setWebViewClient(new WebViewClient());
-	        
 	        webSettings.setAllowFileAccess(true);
+	        Bundle b = getIntent().getExtras();
+	        
+	        final LoginJavaScriptHandler loginHandler = new LoginJavaScriptHandler(b.getString("accessToken"), b.getString("expiration"), b.getString("userId"));
+	        webView.addJavascriptInterface(loginHandler, "LoginHandler");
 	        webView.loadUrl("file:///android_asset/index.html");
 	    }
 
-
-	    @Override
+		@Override
 	    public boolean onCreateOptionsMenu(Menu menu) {
 	        getMenuInflater().inflate(R.menu.main, menu);
 	        return true;
@@ -57,7 +59,6 @@ public class WackadooWebviewActivity extends Activity {
 	    protected void onSaveInstanceState(Bundle outState) {
 	    	webView.saveState(outState);
 	    }
-
 }
 
 

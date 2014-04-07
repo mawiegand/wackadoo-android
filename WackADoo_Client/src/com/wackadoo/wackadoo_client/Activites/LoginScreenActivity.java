@@ -1,6 +1,11 @@
-package com.wackadoo.wackadoo_client;
+package com.wackadoo.wackadoo_client.Activites;
 
 import com.example.wackadoo_webview.R;
+import com.wackadoo.wackadoo_client.Interfaces.LoginCallbackInterface;
+import com.wackadoo.wackadoo_client.Interfaces.RegistrationCallbackInterface;
+import com.wackadoo.wackadoo_client.Model.UserCredentials;
+import com.wackadoo.wackadoo_client.Tasks.LoginAsyncTask;
+import com.wackadoo.wackadoo_client.Tasks.RegisterAsyncTask;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -13,11 +18,12 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 
-public class LoginScreenActivity extends Activity{
+public class LoginScreenActivity extends Activity implements RegistrationCallbackInterface, LoginCallbackInterface{
 	
 		private Button loginButton;
 		private Button shopButton;
 		private AnimationDrawable loginButtonAnimation;
+		private UserCredentials userCredentials;
 	
 		@Override
 	    protected void onCreate(Bundle savedInstanceState) {
@@ -26,9 +32,12 @@ public class LoginScreenActivity extends Activity{
 		    loginButton = (Button) findViewById(R.id.loginButton);
 		    shopButton = (Button) findViewById(R.id.shopButton);
 		    
+		    userCredentials = new UserCredentials(this.getApplicationContext());
+		    
 		    this.setUpButtonListeners();
 		    this.setUpLoginButtonAnimation();
 		    loginButtonAnimation.start();
+		    userCredentials.loadCredentials();
 		}
 
 	   private void setUpLoginButtonAnimation() {
@@ -85,13 +94,12 @@ public class LoginScreenActivity extends Activity{
 					
 					@Override
 					public void onClick(View v) {
-						Intent intent = new Intent(LoginScreenActivity.this, WackadooWebviewActivity.class);
-				        startActivity(intent);
+						triggerLogin();
 					}
 				});
 		}
 
-	   private void setUpShopButton() {
+		private void setUpShopButton() {
 		   shopButton.setOnTouchListener(new View.OnTouchListener() {
 				
 				@SuppressLint("NewApi")
@@ -121,4 +129,39 @@ public class LoginScreenActivity extends Activity{
 					}
 				});
 	}
+	
+
+		private void triggerLogin() {
+			if(userCredentials.getIdentifier().length() > 0)
+			{
+				new LoginAsyncTask(this, getApplicationContext()).execute();
+			}
+			else
+			{
+				new RegisterAsyncTask(this).execute();	
+			}
+		}
+
+		@Override
+		public void onRegistrationCompleted(String identifier, String clientID) {
+			userCredentials.setIdentifier(identifier);
+			userCredentials.setClientID(clientID);
+			this.triggerLogin();
+		}
+		
+		@Override
+		public void loginCallback(String accessToken, String expiration) {
+			this.startLogin(accessToken, expiration, userCredentials.getClientID());
+		}
+		
+		private void startLogin(String accessToken, String expiration, String userId) {
+			Intent intent = new Intent(LoginScreenActivity.this, WackadooWebviewActivity.class);
+			Bundle bundle = new Bundle();
+			bundle.putString("accessToken", accessToken);
+			bundle.putString("expiration", expiration);
+			bundle.putString("userId", userId);
+			intent.putExtras(bundle);
+			startActivity(intent);
+		}
+		
 }
