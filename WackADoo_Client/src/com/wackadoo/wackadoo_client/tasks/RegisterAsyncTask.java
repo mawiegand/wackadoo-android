@@ -1,4 +1,4 @@
-package com.wackadoo.wackadoo_client.Tasks;
+package com.wackadoo.wackadoo_client.tasks;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -18,21 +18,17 @@ import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpConnectionParams;
 import org.json.JSONObject;
 
-import com.wackadoo.wackadoo_client.Interfaces.LoginCallbackInterface;
+import com.wackadoo.wackadoo_client.interfaces.RegistrationCallbackInterface;
 
-import android.content.Context;
 import android.os.AsyncTask;
-import android.provider.Settings.Secure;
 import android.util.Log;
 
-public class LoginAsyncTask extends AsyncTask<String, Integer, Double> {
+public class RegisterAsyncTask extends AsyncTask<String, Integer, Double> {
 	
-    private LoginCallbackInterface listener;
-    private Context context;
+    private RegistrationCallbackInterface listener;
     
-    public LoginAsyncTask(LoginCallbackInterface callback, Context context) {
+    public RegisterAsyncTask(RegistrationCallbackInterface callback) {
     	this.listener = callback;
-    	this.context = context;
     }
 	
 	@Override
@@ -45,28 +41,21 @@ public class LoginAsyncTask extends AsyncTask<String, Integer, Double> {
 		return null;
 	}
 	
-	public  void postDataToServer() throws Throwable
-    {
-		
-		String androidId = Secure.getString(context.getContentResolver(), Secure.ANDROID_ID);
+	public  void postDataToServer() throws Throwable {
 
-	    HttpPost request = new HttpPost("https://wack-a-doo.de/identity_provider/" + Locale.getDefault().getCountry().toLowerCase() + "/oauth2/access_token");
-	    StringBuilder sb=new StringBuilder();
-	
-	    List < NameValuePair > nameValuePairs = new ArrayList < NameValuePair > (7);
+		HttpPost request = new HttpPost("https://wack-a-doo.de/identity_provider/" + Locale.getDefault().getCountry().toLowerCase() + "/identities");
+		StringBuilder sb=new StringBuilder();
+
+		List < NameValuePair > nameValuePairs = new ArrayList < NameValuePair > (6);
 		nameValuePairs.add(new BasicNameValuePair("client_id", "WACKADOO-IOS"));
 		nameValuePairs.add(new BasicNameValuePair("client_password", "5d"));
-		nameValuePairs.add(new BasicNameValuePair("username", "rPIPtVpdyzNcVlVn"));
-		nameValuePairs.add(new BasicNameValuePair("grant_type", "password"));
+		nameValuePairs.add(new BasicNameValuePair("generic_password", "1"));
+		nameValuePairs.add(new BasicNameValuePair("nickname_base", "WackyUser"));
 		nameValuePairs.add(new BasicNameValuePair("password", "egjzdsgt"));
-		nameValuePairs.add(new BasicNameValuePair("scope", ""));
-		nameValuePairs.add(new BasicNameValuePair("username", "rPIPtVpdyzNcVlVn"));
-		if(androidId.length() > 0) {
-			nameValuePairs.add(new BasicNameValuePair("hardware_token", androidId));
-		}
-		
+		nameValuePairs.add(new BasicNameValuePair("password_confirmation", "egjzdsgt"));
+	    
 		UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nameValuePairs);
-	    entity.setContentType("application/x-www-form-urlencoded;charset=UTF-8");//text/plain;charset=UTF-8
+	    entity.setContentType("application/x-www-form-urlencoded;charset=UTF-8");
 	    
 	    request.getParams().setParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, Boolean.FALSE);
 	    request.setHeader("Accept", "application/json");
@@ -92,7 +81,7 @@ public class LoginAsyncTask extends AsyncTask<String, Integer, Double> {
 	        sb.append(line);
 	    }
 	    JSONObject jsonObj = new JSONObject(sb.toString());
-	    this.listener.loginCallback(jsonObj.get("access_token").toString(), jsonObj.get("expires_in").toString());
-    }
+	    this.listener.onRegistrationCompleted(jsonObj.get("identifier").toString(), jsonObj.get("id").toString());
+	}
 
 }

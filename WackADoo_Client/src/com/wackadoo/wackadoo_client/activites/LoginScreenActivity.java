@@ -1,11 +1,11 @@
-package com.wackadoo.wackadoo_client.Activites;
+package com.wackadoo.wackadoo_client.activites;
 
 import com.example.wackadoo_webview.R;
-import com.wackadoo.wackadoo_client.Interfaces.LoginCallbackInterface;
-import com.wackadoo.wackadoo_client.Interfaces.RegistrationCallbackInterface;
-import com.wackadoo.wackadoo_client.Model.UserCredentials;
-import com.wackadoo.wackadoo_client.Tasks.LoginAsyncTask;
-import com.wackadoo.wackadoo_client.Tasks.RegisterAsyncTask;
+import com.wackadoo.wackadoo_client.interfaces.LoginCallbackInterface;
+import com.wackadoo.wackadoo_client.interfaces.RegistrationCallbackInterface;
+import com.wackadoo.wackadoo_client.model.UserCredentials;
+import com.wackadoo.wackadoo_client.tasks.LoginAsyncTask;
+import com.wackadoo.wackadoo_client.tasks.RegisterAsyncTask;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 
 public class LoginScreenActivity extends Activity implements RegistrationCallbackInterface, LoginCallbackInterface{
@@ -28,6 +29,7 @@ public class LoginScreenActivity extends Activity implements RegistrationCallbac
 		@Override
 	    protected void onCreate(Bundle savedInstanceState) {
 	        super.onCreate(savedInstanceState);
+		    requestWindowFeature(Window.FEATURE_NO_TITLE);
 	        setContentView(R.layout.activity_loginscreen);
 		    loginButton = (Button) findViewById(R.id.loginButton);
 		    shopButton = (Button) findViewById(R.id.shopButton);

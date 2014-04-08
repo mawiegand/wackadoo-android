@@ -1,25 +1,27 @@
-package com.wackadoo.wackadoo_client.Activites;
+package com.wackadoo.wackadoo_client.activites;
 
 import com.example.wackadoo_webview.R;
 
-import android.support.v7.app.ActionBarActivity;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends Activity {
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+	    requestWindowFeature(Window.FEATURE_NO_TITLE);
+	    
         setContentView(R.layout.activity_main);
-        
         Intent intent = new Intent(MainActivity.this, LoginScreenActivity.class);
         startActivity(intent);
     }
 
-    @Override
+	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
@@ -33,4 +35,5 @@ public class MainActivity extends ActionBarActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 }

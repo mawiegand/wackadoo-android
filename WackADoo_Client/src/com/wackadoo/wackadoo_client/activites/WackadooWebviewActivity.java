@@ -1,13 +1,14 @@
-package com.wackadoo.wackadoo_client.Activites;
+package com.wackadoo.wackadoo_client.activites;
 
 import com.example.wackadoo_webview.R;
+import com.wackadoo.wackadoo_client.javascriptinterfaces.LoginJavaScriptHandler;
 
-import JavaScriptInterfaces.LoginJavaScriptHandler;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -21,6 +22,7 @@ public class WackadooWebviewActivity extends Activity {
 		@Override
 	    protected void onCreate(Bundle savedInstanceState) {
 	        super.onCreate(savedInstanceState);
+	        requestWindowFeature(Window.FEATURE_NO_TITLE);
 	        setContentView(R.layout.activity_wackadoowebview);
 	        webView = (WebView) findViewById(R.id.main_webView);
 	        if (savedInstanceState != null) {

@@ -1,4 +1,4 @@
-package com.wackadoo.wackadoo_client.Model;
+package com.wackadoo.wackadoo_client.model;
 
 import android.content.Context;
 import android.content.SharedPreferences;

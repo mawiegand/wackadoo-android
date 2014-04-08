@@ -1,4 +1,4 @@
-package JavaScriptInterfaces;
+package com.wackadoo.wackadoo_client.javascriptinterfaces;
 
 import java.util.Arrays;
 import java.util.Locale;
