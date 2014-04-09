@@ -1,5 +1,5 @@
 package com.wackadoo.wackadoo_client.interfaces;
 
 public interface RegistrationCallbackInterface {
-	public void onRegistrationCompleted(String identifier, String clientID);
+	public void onRegistrationCompleted(String identifier, String clientID, String nickname);
 }

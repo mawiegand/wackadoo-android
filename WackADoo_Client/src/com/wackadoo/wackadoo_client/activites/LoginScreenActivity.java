@@ -3,6 +3,7 @@ package com.wackadoo.wackadoo_client.activites;
 import com.example.wackadoo_webview.R;
 import com.wackadoo.wackadoo_client.interfaces.LoginCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.RegistrationCallbackInterface;
+import com.wackadoo.wackadoo_client.model.DeviceInformation;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
 import com.wackadoo.wackadoo_client.tasks.LoginAsyncTask;
 import com.wackadoo.wackadoo_client.tasks.RegisterAsyncTask;
@@ -18,20 +19,22 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 public class LoginScreenActivity extends Activity implements RegistrationCallbackInterface, LoginCallbackInterface{
 	
-		private Button loginButton;
+		private ImageButton loginButton;
 		private Button shopButton;
 		private AnimationDrawable loginButtonAnimation;
 		private UserCredentials userCredentials;
 	
+		@SuppressLint("NewApi")
 		@Override
 	    protected void onCreate(Bundle savedInstanceState) {
 	        super.onCreate(savedInstanceState);
 		    requestWindowFeature(Window.FEATURE_NO_TITLE);
 	        setContentView(R.layout.activity_loginscreen);
-		    loginButton = (Button) findViewById(R.id.loginButton);
+		    loginButton = (ImageButton) findViewById(R.id.loginButton);
 		    shopButton = (Button) findViewById(R.id.shopButton);
 		    
 		    userCredentials = new UserCredentials(this.getApplicationContext());
@@ -39,11 +42,14 @@ public class LoginScreenActivity extends Activity implements RegistrationCallbac
 		    this.setUpButtonListeners();
 		    this.setUpLoginButtonAnimation();
 		    userCredentials.loadCredentials();
+		    
+		    ////TODO: DELETE
+		    DeviceInformation test = new DeviceInformation(getApplicationContext());
 		}
 
-	   private void setUpLoginButtonAnimation() {
-		   loginButton.setBackgroundResource(R.drawable.animationlist_loginbutton);
-		   loginButtonAnimation = (AnimationDrawable) loginButton.getBackground();
+	private void setUpLoginButtonAnimation() {
+			loginButton.setImageResource(R.anim.animationlist_loginbutton);
+			loginButtonAnimation = (AnimationDrawable) loginButton.getDrawable();
 		}
 
 	   private void setUpButtonListeners() {
@@ -86,7 +92,7 @@ public class LoginScreenActivity extends Activity implements RegistrationCallbac
 					   switch ( event.getAction() ) {
 				    		case MotionEvent.ACTION_DOWN: 
 				    			{
-				    				loginButton.setBackground(getResources().getDrawable(R.drawable.title_play_button_active));
+				    				loginButton.setImageResource(R.drawable.title_play_button_active);
 				    				break;
 				    			}
 				    		case MotionEvent.ACTION_UP: 
@@ -137,7 +143,8 @@ public class LoginScreenActivity extends Activity implements RegistrationCallbac
 					
 					@Override
 					public void onClick(View v) {
-						///// TODO: Insert Intent to Shop
+						Intent intent = new Intent(LoginScreenActivity.this, ShopActivity.class);
+						startActivity(intent);
 						shopButton.setEnabled(false);
 					}
 				});
@@ -145,25 +152,30 @@ public class LoginScreenActivity extends Activity implements RegistrationCallbac
 	
 
 		private void triggerLogin() {
-			if(userCredentials.getIdentifier().length() > 0)
-			{
-				new LoginAsyncTask(this, getApplicationContext()).execute();
+			if(userCredentials.getIdentifier().length() > 0){
+				if(userCredentials.getAccessToken().isExpired()) {
+					new LoginAsyncTask(this, getApplicationContext()).execute();
+				}
+				else {
+					this.startLogin(this.userCredentials.getAccessToken().getToken(), this.userCredentials.getAccessToken().getExpireCode(), this.userCredentials.getClientID());
+				}
 			}
-			else
-			{
+			else {
 				new RegisterAsyncTask(this).execute();	
 			}
 		}
 
 		@Override
-		public void onRegistrationCompleted(String identifier, String clientID) {
+		public void onRegistrationCompleted(String identifier, String clientID, String nickname) {
 			userCredentials.setIdentifier(identifier);
 			userCredentials.setClientID(clientID);
+			userCredentials.setUsername(nickname);
 			this.triggerLogin();
 		}
 		
 		@Override
 		public void loginCallback(String accessToken, String expiration) {
+			this.userCredentials.generateNewAccessToken(accessToken, expiration);
 			this.startLogin(accessToken, expiration, userCredentials.getClientID());
 		}
 		
