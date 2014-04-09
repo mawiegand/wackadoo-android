@@ -33,5 +33,10 @@
             android:name="com.wackadoo.wackadoo_client.activites.LoginScreenActivity"
             android:label="@string/app_name" >
         </activity>
+        <activity
+            android:configChanges="orientation|screenSize"
+            android:name="com.wackadoo.wackadoo_client.activites.ShopActivity"
+            android:label="@string/app_name" >
+        </activity>
     </application>
 </manifest>

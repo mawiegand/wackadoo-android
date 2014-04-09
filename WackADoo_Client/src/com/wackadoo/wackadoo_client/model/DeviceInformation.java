@@ -15,8 +15,6 @@ public class DeviceInformation {
 	public DeviceInformation(Context context) {
 		this.context = context;
 		this.collectDeviceInformation();
-		this.loadAppToken();
-		System.out.println("asdf: token" + this.uniqueTrackingToken); ///remove
 	}
 	
 	private void loadAppToken() {
@@ -41,8 +39,6 @@ public class DeviceInformation {
 		this.os = "Android" + this.bundleVersion;
 		this.bundleBuild = android.os.Build.FINGERPRINT.toString();
 		this.hardware = android.os.Build.MANUFACTURER + " " + android.os.Build.MODEL;
-		
-		System.out.println("asdf: " + os + " " + bundleVersion + " " + bundleBuild + " " + hardware);
 	}
 	
 	private String determinePlatform() {
