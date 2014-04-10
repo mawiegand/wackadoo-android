@@ -95,6 +95,16 @@
 		 	    android:adjustViewBounds="true"
 		 	    android:scaleType="centerInside"
 		 	    android:src="@drawable/title_bar_vertical"/>
+
+		 	<ImageButton
+		 	    android:background="@null"
+		 	    android:id="@+id/accountmanagerButton"
+		 	    android:layout_width="wrap_content"
+		 	    android:layout_height="wrap_content"
+		 	    android:layout_centerHorizontal="true"
+		 	    android:layout_centerVertical="true"
+		 	    android:src="@drawable/title_change_button"/>
+
 	 	</RelativeLayout>
  	</LinearLayout>
  	<RelativeLayout 

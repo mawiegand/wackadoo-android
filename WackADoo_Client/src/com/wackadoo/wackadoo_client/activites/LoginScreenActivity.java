@@ -22,7 +22,7 @@ import android.widget.ImageButton;
 
 public class LoginScreenActivity extends Activity implements RegistrationCallbackInterface, LoginCallbackInterface{
 	
-		private ImageButton loginButton;
+		private ImageButton loginButton, accountmanagerButton;
 		private Button shopButton;
 		private AnimationDrawable loginButtonAnimation;
 		private UserCredentials userCredentials;
@@ -34,13 +34,13 @@ public class LoginScreenActivity extends Activity implements RegistrationCallbac
 		    requestWindowFeature(Window.FEATURE_NO_TITLE);
 	        setContentView(R.layout.activity_loginscreen);
 		    loginButton = (ImageButton) findViewById(R.id.loginButton);
+		    accountmanagerButton = (ImageButton) findViewById(R.id.accountmanagerButton);
 		    shopButton = (Button) findViewById(R.id.shopButton);
 		    
 		    userCredentials = new UserCredentials(this.getApplicationContext());
 		    
 		    this.setUpButtonListeners();
 		    this.setUpLoginButtonAnimation();
-		    userCredentials.loadCredentials();
 		}
 
 	private void setUpLoginButtonAnimation() {
@@ -51,6 +51,7 @@ public class LoginScreenActivity extends Activity implements RegistrationCallbac
 	   private void setUpButtonListeners() {
 		   this.setUpLoginButton();
 		   this.setUpShopButton();
+		   this.setUpAccountmanagerButton();
 	   }
 
 
@@ -146,7 +147,40 @@ public class LoginScreenActivity extends Activity implements RegistrationCallbac
 				});
 	}
 	
-
+		private void setUpAccountmanagerButton() {
+			accountmanagerButton.setEnabled(true);
+			accountmanagerButton.setOnTouchListener(new View.OnTouchListener() {
+				
+				@SuppressLint("NewApi")
+				@Override
+				   public boolean onTouch(View v, MotionEvent event) {
+					   switch ( event.getAction() ) {
+				    		case MotionEvent.ACTION_DOWN: 
+				    			{
+				    				accountmanagerButton.setImageResource(R.drawable.title_change_button_active);
+				    				break;
+				    			}
+				    		case MotionEvent.ACTION_UP: 
+				    			{
+				    				accountmanagerButton.setImageResource(R.drawable.title_change_button);
+				    				break;
+				    			}
+					   }
+					   return false;
+					}
+			   });
+			   
+			accountmanagerButton.setOnClickListener(new View.OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						Intent intent = new Intent(LoginScreenActivity.this, AccountManagerActivity.class);
+						startActivity(intent);
+					}
+				});
+	}
+		
+		
 		private void triggerLogin() {
 			if(userCredentials.getIdentifier().length() > 0){
 				if(userCredentials.getAccessToken().isExpired()) {

@@ -16,6 +16,7 @@ public class UserCredentials {
 		this.context = context;
 		this.accessToken = new AccessToken();
 		this.clientCredentials = new ClientCredentials(context);
+		this.loadCredentials();
 	}
 
 	public String getUsername() {
@@ -52,12 +53,13 @@ public class UserCredentials {
 		this.persistCredentials();
 	}
 	
-	public void loadCredentials()
+	private void loadCredentials()
 	{
 		SharedPreferences myPrefs = context.getSharedPreferences("myPrefs", 0);
 		this.accessToken.setIdentifier(myPrefs.getString("identifier", "")) ;
 		this.accessToken.restoreExpireDate(new Date(myPrefs.getLong("expire_date", 0)));
 		this.clientID = myPrefs.getString("client_id", "");
+		this.username = myPrefs.getString("username", "");
 	}
 	
 	private void persistCredentials()
@@ -67,6 +69,7 @@ public class UserCredentials {
 		e.putString("identifier", this.accessToken.getIdentifier());
 		e.putLong("expire_date", this.accessToken.getCreatedAt().getTime());
 		e.putString("client_id", this.clientID);
+		e.putString("username", this.username);
 		e.commit();
 	}
 
@@ -83,6 +86,7 @@ public class UserCredentials {
 		this.accessToken = new AccessToken();
 		this.accessToken.setToken(accessToken);
 		this.accessToken.setExpireCode(expiration);
+		this.accessToken.setCreatedAt(new Date());
 	}
 
 }

@@ -67,6 +67,10 @@ public class AccessToken {
 		this.createdAt = date;
 	}
 
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
+	}
+
 	public Date getCreatedAt() {
 		return createdAt;
 	}

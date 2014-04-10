@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" 
+    android:background="#ffffff">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/title_bg_vertical" />
+
+    <TextView
+        android:id="@+id/textHeadline"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="26dp"
+        android:textSize="25sp"
+        android:textColor="#000000"
+        android:text="Your 5D Games Account"
+        android:textAlignment="center" />
+
+    <Button
+        android:id="@+id/signOutButton"
+        android:background="@null"
+        android:layout_toRightOf="@+id/usernameText"
+        android:layout_below="@+id/textHeadline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sign Out"
+        android:textColor="#FF7F24"/>
+
+    <TextView
+        android:id="@+id/usernameText"
+        android:layout_below="@+id/textHeadline"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="26dp"
+        android:layout_marginRight="35dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="20sp"
+        android:textColor="#000000" />
+    
+    <Button
+        android:id="@+id/emailButton"
+        android:background="@null"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/usernameText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Set Email"
+        android:textColor="#FF7F24"/>
+    
+    <TextView
+        android:id="@+id/emailText"
+        android:layout_below="@+id/emailButton"
+        android:layout_marginTop="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Provide an email to be used in password retrieval, and to recive ingame events."
+        android:textSize="18sp"
+        android:textColor="#000000"
+        android:gravity="center"
+        android:textAlignment="center"  />
+    
+    <TextView
+        android:id="@+id/characterLockedText"
+        android:layout_below="@+id/emailText"
+        android:layout_marginTop="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Your character is presently locked to this particular device!"
+        android:textSize="22sp"
+        android:textColor="#FF4040"
+        android:gravity="center"
+        android:textAlignment="center"  />
+    
+    <TextView
+        android:id="@+id/makeCharacterPortableText"
+        android:layout_below="@+id/characterLockedText"
+        android:layout_marginTop="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="You have these options to make your character &quot;portable&quot;"
+        android:textSize="18sp"
+        android:textColor="#000000"
+        android:gravity="center"
+        android:textAlignment="center"  />
+    
+    <Button
+        android:id="@+id/passwordButton"
+        android:background="@null"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/makeCharacterPortableText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Set A Password"
+        android:textColor="#FF7F24"/>
+
+</RelativeLayout>
