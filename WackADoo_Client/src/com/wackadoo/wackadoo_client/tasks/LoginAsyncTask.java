@@ -19,10 +19,10 @@ import org.apache.http.params.HttpConnectionParams;
 import org.json.JSONObject;
 
 import com.wackadoo.wackadoo_client.interfaces.LoginCallbackInterface;
+import com.wackadoo.wackadoo_client.model.DeviceInformation;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.provider.Settings.Secure;
 import android.util.Log;
 
 public class LoginAsyncTask extends AsyncTask<String, Integer, Double> {
@@ -47,8 +47,8 @@ public class LoginAsyncTask extends AsyncTask<String, Integer, Double> {
 	
 	public  void postDataToServer() throws Throwable
     {
-		
-		String androidId = Secure.getString(context.getContentResolver(), Secure.ANDROID_ID);
+
+	    DeviceInformation deviceInformation = new DeviceInformation(context);
 
 	    HttpPost request = new HttpPost("https://wack-a-doo.de/identity_provider/" + Locale.getDefault().getCountry().toLowerCase() + "/oauth2/access_token");
 	    StringBuilder sb=new StringBuilder();
@@ -61,12 +61,14 @@ public class LoginAsyncTask extends AsyncTask<String, Integer, Double> {
 		nameValuePairs.add(new BasicNameValuePair("password", "egjzdsgt"));
 		nameValuePairs.add(new BasicNameValuePair("scope", ""));
 		nameValuePairs.add(new BasicNameValuePair("username", "rPIPtVpdyzNcVlVn"));
-		if(androidId.length() > 0) {
-			nameValuePairs.add(new BasicNameValuePair("hardware_token", androidId));
-		}
+		nameValuePairs.add(new BasicNameValuePair("operating_system", deviceInformation.getOs()));
+		nameValuePairs.add(new BasicNameValuePair("app_token", deviceInformation.getUniqueTrackingToken()));
+		nameValuePairs.add(new BasicNameValuePair("hardware_string", deviceInformation.getHardware()));
+		nameValuePairs.add(new BasicNameValuePair("hardware_token", deviceInformation.getBundleBuild()));
+		nameValuePairs.add(new BasicNameValuePair("version", deviceInformation.getBundleVersion()));
 		
 		UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nameValuePairs);
-	    entity.setContentType("application/x-www-form-urlencoded;charset=UTF-8");//text/plain;charset=UTF-8
+	    entity.setContentType("application/x-www-form-urlencoded;charset=UTF-8");
 	    
 	    request.getParams().setParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, Boolean.FALSE);
 	    request.setHeader("Accept", "application/json");

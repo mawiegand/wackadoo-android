@@ -3,7 +3,6 @@ package com.wackadoo.wackadoo_client.activites;
 import com.example.wackadoo_webview.R;
 import com.wackadoo.wackadoo_client.interfaces.LoginCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.RegistrationCallbackInterface;
-import com.wackadoo.wackadoo_client.model.DeviceInformation;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
 import com.wackadoo.wackadoo_client.tasks.LoginAsyncTask;
 import com.wackadoo.wackadoo_client.tasks.RegisterAsyncTask;
@@ -42,9 +41,6 @@ public class LoginScreenActivity extends Activity implements RegistrationCallbac
 		    this.setUpButtonListeners();
 		    this.setUpLoginButtonAnimation();
 		    userCredentials.loadCredentials();
-		    
-		    ////TODO: DELETE
-		    DeviceInformation test = new DeviceInformation(getApplicationContext());
 		}
 
 	private void setUpLoginButtonAnimation() {

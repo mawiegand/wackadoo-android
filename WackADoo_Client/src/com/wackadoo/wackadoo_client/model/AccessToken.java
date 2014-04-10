@@ -62,5 +62,13 @@ public class AccessToken {
 		Date actualTime = new Date();
 		return (this.createdAt != null) && ((actualTime.getTime() - this.createdAt.getTime()) > tokenExpiration);
 	}
+	
+	public void restoreExpireDate(Date date) {
+		this.createdAt = date;
+	}
+
+	public Date getCreatedAt() {
+		return createdAt;
+	}
 
 }

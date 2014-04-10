@@ -1,5 +1,7 @@
 package com.wackadoo.wackadoo_client.model;
 
+import java.util.Date;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -54,6 +56,7 @@ public class UserCredentials {
 	{
 		SharedPreferences myPrefs = context.getSharedPreferences("myPrefs", 0);
 		this.accessToken.setIdentifier(myPrefs.getString("identifier", "")) ;
+		this.accessToken.restoreExpireDate(new Date(myPrefs.getLong("expire_date", 0)));
 		this.clientID = myPrefs.getString("client_id", "");
 	}
 	
@@ -62,6 +65,7 @@ public class UserCredentials {
 		SharedPreferences myPrefs = context.getSharedPreferences("myPrefs", 0);
 		SharedPreferences.Editor e = myPrefs.edit();
 		e.putString("identifier", this.accessToken.getIdentifier());
+		e.putLong("expire_date", this.accessToken.getCreatedAt().getTime());
 		e.putString("client_id", this.clientID);
 		e.commit();
 	}
