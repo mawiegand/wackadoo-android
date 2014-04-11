@@ -8,7 +8,7 @@ import android.content.SharedPreferences;
 public class UserCredentials {
 	
 	private Context context;
-	private String username, password, gcPlayerId, fbPlayerId, fbAccessToken, clientID;
+	private String username, password, gcPlayerId, fbPlayerId, fbAccessToken, clientID, email;
 	private AccessToken accessToken;
 	private ClientCredentials clientCredentials;
 	
@@ -60,6 +60,7 @@ public class UserCredentials {
 		this.accessToken.restoreExpireDate(new Date(myPrefs.getLong("expire_date", 0)));
 		this.clientID = myPrefs.getString("client_id", "");
 		this.username = myPrefs.getString("username", "");
+		this.email = myPrefs.getString("email", "");
 	}
 	
 	private void persistCredentials()
@@ -70,6 +71,7 @@ public class UserCredentials {
 		e.putLong("expire_date", this.accessToken.getCreatedAt().getTime());
 		e.putString("client_id", this.clientID);
 		e.putString("username", this.username);
+		e.putString("email", this.email);
 		e.commit();
 	}
 
@@ -87,6 +89,14 @@ public class UserCredentials {
 		this.accessToken.setToken(accessToken);
 		this.accessToken.setExpireCode(expiration);
 		this.accessToken.setCreatedAt(new Date());
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 }
