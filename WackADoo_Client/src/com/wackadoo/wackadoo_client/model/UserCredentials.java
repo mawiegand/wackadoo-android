@@ -11,6 +11,7 @@ public class UserCredentials {
 	private String username, password, gcPlayerId, fbPlayerId, fbAccessToken, clientID, email;
 	private AccessToken accessToken;
 	private ClientCredentials clientCredentials;
+	private boolean generatedPassword=true;
 	
 	public UserCredentials(Context context) {
 		this.context = context;
@@ -61,6 +62,8 @@ public class UserCredentials {
 		this.clientID = myPrefs.getString("client_id", "");
 		this.username = myPrefs.getString("username", "");
 		this.email = myPrefs.getString("email", "");
+		this.password = myPrefs.getString("password", "");
+		this.generatedPassword = myPrefs.getBoolean("generatedPassword", true);
 	}
 	
 	private void persistCredentials()
@@ -72,6 +75,8 @@ public class UserCredentials {
 		e.putString("client_id", this.clientID);
 		e.putString("username", this.username);
 		e.putString("email", this.email);
+		e.putString("password", this.password);
+		e.putBoolean("generatedPassword", this.generatedPassword);
 		e.commit();
 	}
 
@@ -93,10 +98,21 @@ public class UserCredentials {
 
 	public void setPassword(String password) {
 		this.password = password;
+		this.generatedPassword = false;
+		this.persistCredentials();
 	}
 	
 	public void setEmail(String email) {
 		this.email = email;
+		this.persistCredentials();
+	}
+	
+	public boolean isPasswordGenerated() {
+		return this.generatedPassword;
+	}
+
+	public String getEmail() {
+		return email;
 	}
 
 }

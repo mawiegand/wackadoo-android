@@ -25,20 +25,22 @@ public class AccountManagerActivity extends Activity {
 	private UserCredentials userCredentials;
 	private TextView usernameTextField;
 	private Button signOutButton, emailButton, passwordButton;
-	private String editableText;
 	private enum AlertCallback { Email, Password }
 	
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 	    requestWindowFeature(Window.FEATURE_NO_TITLE);
+	    
+	    this.userCredentials = new UserCredentials(this.getApplicationContext());
+	    this.checkUserIsLoggedIn();
+	    
 	    setContentView(R.layout.activity_accountmanager);
         usernameTextField = (TextView) findViewById(R.id.usernameText);
         signOutButton = (Button) findViewById(R.id.signOutButton);
         emailButton = (Button) findViewById(R.id.emailButton);
         passwordButton = (Button) findViewById(R.id.passwordButton);
         
-	    this.userCredentials = new UserCredentials(this.getApplicationContext());
 	    this.loadCredentialsToUI();
 	    this.addButtonListeners();
     }
@@ -59,9 +61,24 @@ public class AccountManagerActivity extends Activity {
     }
 
 	private void addButtonListeners() {
-		this.setUpSignOutButton();
-		this.setUpEmailButton();
-		this.setUpPasswordButton();
+		if(this.userCredentials.isPasswordGenerated()) {
+			this.setUpPasswordButton();
+		} else {
+			this.passwordButton.setEnabled(false);
+			this.passwordButton.setVisibility(View.GONE);
+		}
+		if(this.userCredentials.getEmail().length() <= 0) {
+			this.setUpEmailButton();
+		} else {
+			this.emailButton.setEnabled(false);
+			this.emailButton.setVisibility(View.GONE);
+		}
+		if(this.userCredentials.getUsername().length() > 0) {
+			this.setUpSignOutButton();
+		} else {
+			this.signOutButton.setEnabled(false);
+			this.signOutButton.setVisibility(View.GONE);
+		}
 	}
 
 	private void setUpPasswordButton() {
@@ -95,7 +112,6 @@ public class AccountManagerActivity extends Activity {
 		});
 	}
 
-	
 
 	private void setUpEmailButton() {
 		this.emailButton.setOnTouchListener(new View.OnTouchListener() {
@@ -170,10 +186,10 @@ public class AccountManagerActivity extends Activity {
 	}
 	
 	protected void signOut() {
-		//TODO: Sign out
+		this.checkUserIsLoggedIn();
 	}
-	    
-    private void loadCredentialsToUI() {
+
+	private void loadCredentialsToUI() {
     	String username = userCredentials.getUsername();
     	if(username != null) {
     		usernameTextField.setText(username);
@@ -214,6 +230,16 @@ public class AccountManagerActivity extends Activity {
 	
 	private void enteredNewPassword(String password) {
 		userCredentials.setPassword(password);
+	}
+	
+	private void checkUserIsLoggedIn() {
+		////TODO: Might check facebook or e-mail login 
+		if(this.userCredentials.getIdentifier().length() <= 0 ) {
+			Intent intent = new Intent(AccountManagerActivity.this, CredentialScreenActivity.class);
+			startActivity(intent);
+			this.finish();
+		}
+		
 	}
     
 }
