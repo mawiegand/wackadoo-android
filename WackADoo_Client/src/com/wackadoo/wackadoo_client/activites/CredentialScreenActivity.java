@@ -7,7 +7,9 @@ import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
 import com.facebook.widget.LoginButton.UserInfoChangedCallback;
+import com.wackadoo.wackadoo_client.interfaces.RegistrationCallbackInterface;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
+import com.wackadoo.wackadoo_client.tasks.RegisterAsyncTask;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -23,7 +25,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class CredentialScreenActivity extends Activity {
+public class CredentialScreenActivity extends Activity implements RegistrationCallbackInterface{
 	
 	private UserCredentials userCredentials;
 	private Button signInButton, createAccountButton, restoreAccountButton;
@@ -184,15 +186,15 @@ public class CredentialScreenActivity extends Activity {
 	}
 	
 	protected void triggerCreateAccount() {
-		// TODO Create new account
+		this.userCredentials.clearAllCredentials();
+		new RegisterAsyncTask(this).execute();
 	}
 
 	
 	private void triggerLogin() {
-		//TODO: Check if entered value is email or username
 		if(this.userNameEditText.getText().toString().length() > 0 && this.passwordEditText.getText().toString().length() > 0) {
 			this.userCredentials.setEmail(this.userNameEditText.getText().toString());
-			this.userCredentials.setPassword(this.userNameEditText.getText().toString());
+			this.userCredentials.setPassword(this.passwordEditText.getText().toString());
 			this.finish();
 		} else {
 			Toast.makeText(getApplicationContext(), "Enter valid Credentials", Toast.LENGTH_LONG).show();
@@ -238,4 +240,12 @@ public class CredentialScreenActivity extends Activity {
 	        super.onSaveInstanceState(savedState);
 	        uiHelper.onSaveInstanceState(savedState);
 	    }
+
+		@Override
+		public void onRegistrationCompleted(String identifier, String clientID, String nickname) {
+			this.userCredentials.setIdentifier(identifier);
+			this.userCredentials.setClientID(clientID);
+			this.userCredentials.setUsername(nickname);
+			this.finish();
+		}
 }

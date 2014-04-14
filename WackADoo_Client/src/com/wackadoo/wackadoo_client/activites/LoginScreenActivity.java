@@ -187,7 +187,7 @@ public class LoginScreenActivity extends Activity implements RegistrationCallbac
 		private void triggerLogin() {
 			if(userCredentials.getIdentifier().length() > 0){
 				if(userCredentials.getAccessToken().isExpired()) {
-					new LoginAsyncTask(this, getApplicationContext()).execute();
+					new LoginAsyncTask(this, getApplicationContext(), this.userCredentials).execute();
 				}
 				else {
 					this.startLogin(this.userCredentials.getAccessToken().getToken(), this.userCredentials.getAccessToken().getExpireCode(), this.userCredentials.getClientID());

@@ -9,7 +9,8 @@
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/title_bg_vertical" />
+        android:src="@drawable/title_bg_vertical"
+        android:scaleType="centerCrop" />
 
     <TextView
         android:id="@+id/textHeadline"

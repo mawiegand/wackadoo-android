@@ -45,7 +45,7 @@ public class RegisterAsyncTask extends AsyncTask<String, Integer, Double> {
 
 		HttpPost request = new HttpPost("https://wack-a-doo.de/identity_provider/" + Locale.getDefault().getCountry().toLowerCase() + "/identities");
 		StringBuilder sb=new StringBuilder();
-
+		
 		List < NameValuePair > nameValuePairs = new ArrayList < NameValuePair > (6);
 		nameValuePairs.add(new BasicNameValuePair("client_id", "WACKADOO-IOS"));
 		nameValuePairs.add(new BasicNameValuePair("client_password", "5d"));

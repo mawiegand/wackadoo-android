@@ -122,5 +122,9 @@ public class UserCredentials {
 		e.commit();
 	}
 
+	public String getPassword() {
+		return this.password;
+	}
+
 }
 

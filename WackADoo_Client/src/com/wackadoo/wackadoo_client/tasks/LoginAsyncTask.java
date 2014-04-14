@@ -20,6 +20,7 @@ import org.json.JSONObject;
 
 import com.wackadoo.wackadoo_client.interfaces.LoginCallbackInterface;
 import com.wackadoo.wackadoo_client.model.DeviceInformation;
+import com.wackadoo.wackadoo_client.model.UserCredentials;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -29,10 +30,12 @@ public class LoginAsyncTask extends AsyncTask<String, Integer, Double> {
 	
     private LoginCallbackInterface listener;
     private Context context;
+	private UserCredentials userCredentials;
     
-    public LoginAsyncTask(LoginCallbackInterface callback, Context context) {
+    public LoginAsyncTask(LoginCallbackInterface callback, Context context, UserCredentials userCredentials) {
     	this.listener = callback;
     	this.context = context;
+    	this.userCredentials = userCredentials;
     }
 	
 	@Override
@@ -53,14 +56,22 @@ public class LoginAsyncTask extends AsyncTask<String, Integer, Double> {
 	    HttpPost request = new HttpPost("https://wack-a-doo.de/identity_provider/" + Locale.getDefault().getCountry().toLowerCase() + "/oauth2/access_token");
 	    StringBuilder sb=new StringBuilder();
 	
+	    String username, password;
+	    if(this.userCredentials.getEmail().length() > 0 && this.userCredentials.getPassword().length() > 0) {
+	    	username = this.userCredentials.getEmail();
+	    	password = this.userCredentials.getPassword();
+	    } else {
+	    	username = this.userCredentials.getIdentifier();
+	    	password = "egjzdsgt";
+	    }
+	    
 	    List < NameValuePair > nameValuePairs = new ArrayList < NameValuePair > (7);
 		nameValuePairs.add(new BasicNameValuePair("client_id", "WACKADOO-IOS"));
 		nameValuePairs.add(new BasicNameValuePair("client_password", "5d"));
-		nameValuePairs.add(new BasicNameValuePair("username", "rPIPtVpdyzNcVlVn"));
+		nameValuePairs.add(new BasicNameValuePair("username", username));
+		nameValuePairs.add(new BasicNameValuePair("password", password));
 		nameValuePairs.add(new BasicNameValuePair("grant_type", "password"));
-		nameValuePairs.add(new BasicNameValuePair("password", "egjzdsgt"));
 		nameValuePairs.add(new BasicNameValuePair("scope", ""));
-		nameValuePairs.add(new BasicNameValuePair("username", "rPIPtVpdyzNcVlVn"));
 		nameValuePairs.add(new BasicNameValuePair("operating_system", deviceInformation.getOs()));
 		nameValuePairs.add(new BasicNameValuePair("app_token", deviceInformation.getUniqueTrackingToken()));
 		nameValuePairs.add(new BasicNameValuePair("hardware_string", deviceInformation.getHardware()));
