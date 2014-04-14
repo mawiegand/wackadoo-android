@@ -80,7 +80,6 @@ public class RegisterAsyncTask extends AsyncTask<String, Integer, Double> {
 	    while((line = reader.readLine()) != null){
 	        sb.append(line);
 	    }
-	    System.out.println("asdf: " + sb.toString());
 	    JSONObject jsonObj = new JSONObject(sb.toString());
 	    this.listener.onRegistrationCompleted(jsonObj.get("identifier").toString(), jsonObj.get("id").toString(), jsonObj.get("nickname").toString());
 	}
