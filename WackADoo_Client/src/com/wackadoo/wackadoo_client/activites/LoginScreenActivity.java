@@ -64,6 +64,7 @@ public class LoginScreenActivity extends Activity implements RegistrationCallbac
 	@Override
 	protected void onResume() {
 		super.onResume();
+		this.userCredentials = new UserCredentials(getApplicationContext());
 		loginButton.setEnabled(true);
 		shopButton.setEnabled(true);
 		loginButtonAnimation.start();
