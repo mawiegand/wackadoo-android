@@ -115,5 +115,12 @@ public class UserCredentials {
 		return email;
 	}
 
+	public void clearAllCredentials() {
+		SharedPreferences myPrefs = context.getSharedPreferences("myPrefs", 0);
+		SharedPreferences.Editor e = myPrefs.edit();
+		e.clear();
+		e.commit();
+	}
+
 }
 

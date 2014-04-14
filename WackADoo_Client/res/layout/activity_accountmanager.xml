@@ -100,5 +100,5 @@
         android:layout_height="wrap_content"
         android:text="Set A Password"
         android:textColor="#FF7F24"/>
-
+	
 </RelativeLayout>

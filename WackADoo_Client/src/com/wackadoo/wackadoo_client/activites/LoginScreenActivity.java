@@ -67,6 +67,8 @@ public class LoginScreenActivity extends Activity implements RegistrationCallbac
 		loginButton.setEnabled(true);
 		shopButton.setEnabled(true);
 		loginButtonAnimation.start();
+		//TODO: If(user not logged in && credentials available)
+		// -> Login
 	};
 
 	   @Override
