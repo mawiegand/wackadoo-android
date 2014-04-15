@@ -93,6 +93,7 @@ public class AccountManagerActivity extends Activity {
 			RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)passwordButton.getLayoutParams();
 			params.addRule(RelativeLayout.BELOW, R.id.emailInformationText);
 			passwordButton.setLayoutParams(params); 
+			this.setUpPasswordButton();
 			
 			this.characterLockedTextView.setVisibility(View.GONE);
 			this.makeCharacterPortableTextView.setVisibility(View.GONE);
