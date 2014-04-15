@@ -58,7 +58,7 @@ public class AccessToken {
 	}
 	
 	public boolean isExpiredAt(Date date) {
-		double tokenExpiration = 3600.0 * 5.0;
+		double tokenExpiration = 1000 * 60 * 60 * 5.0; // 1000 milliseconds * 60 seconds * 60 = minutes * 5 hours
 		Date actualTime = new Date();
 		return (this.createdAt != null) && ((actualTime.getTime() - this.createdAt.getTime()) > tokenExpiration);
 	}

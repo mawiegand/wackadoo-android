@@ -7,8 +7,10 @@ import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
 import com.facebook.widget.LoginButton.UserInfoChangedCallback;
+import com.wackadoo.wackadoo_client.interfaces.LoginCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.RegistrationCallbackInterface;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
+import com.wackadoo.wackadoo_client.tasks.LoginAsyncTask;
 import com.wackadoo.wackadoo_client.tasks.RegisterAsyncTask;
 
 import android.annotation.SuppressLint;
@@ -25,7 +27,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class CredentialScreenActivity extends Activity implements RegistrationCallbackInterface{
+public class CredentialScreenActivity extends Activity implements RegistrationCallbackInterface, LoginCallbackInterface{
 	
 	private UserCredentials userCredentials;
 	private Button signInButton, createAccountButton, restoreAccountButton;
@@ -195,7 +197,7 @@ public class CredentialScreenActivity extends Activity implements RegistrationCa
 		if(this.userNameEditText.getText().toString().length() > 0 && this.passwordEditText.getText().toString().length() > 0) {
 			this.userCredentials.setEmail(this.userNameEditText.getText().toString());
 			this.userCredentials.setPassword(this.passwordEditText.getText().toString());
-			this.finish();
+			new LoginAsyncTask(this, getApplicationContext(), userCredentials).execute();
 		} else {
 			Toast.makeText(getApplicationContext(), "Enter valid Credentials", Toast.LENGTH_LONG).show();
 		}
@@ -246,6 +248,12 @@ public class CredentialScreenActivity extends Activity implements RegistrationCa
 			this.userCredentials.setIdentifier(identifier);
 			this.userCredentials.setClientID(clientID);
 			this.userCredentials.setUsername(nickname);
+			this.finish();
+		}
+		
+		@Override
+		public void loginCallback(String accessToken, String expiration) {
+			this.userCredentials.generateNewAccessToken(accessToken, expiration);
 			this.finish();
 		}
 }

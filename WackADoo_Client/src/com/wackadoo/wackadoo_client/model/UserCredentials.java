@@ -57,7 +57,9 @@ public class UserCredentials {
 	private void loadCredentials()
 	{
 		SharedPreferences myPrefs = context.getSharedPreferences("myPrefs", 0);
-		this.accessToken.setIdentifier(myPrefs.getString("identifier", "")) ;
+		this.accessToken.setIdentifier(myPrefs.getString("identifier", ""));
+		this.accessToken.setExpireCode(myPrefs.getString("expire_code", ""));
+		this.accessToken.setToken(myPrefs.getString("accesstoken", ""));
 		this.accessToken.restoreExpireDate(new Date(myPrefs.getLong("expire_date", 0)));
 		this.clientID = myPrefs.getString("client_id", "");
 		this.username = myPrefs.getString("username", "");
@@ -77,6 +79,8 @@ public class UserCredentials {
 		e.putString("email", this.email);
 		e.putString("password", this.password);
 		e.putBoolean("generatedPassword", this.generatedPassword);
+		e.putString("accesstoken", this.accessToken.getToken());
+		e.putString("expire_code", this.accessToken.getExpireCode());
 		e.commit();
 	}
 
@@ -94,6 +98,7 @@ public class UserCredentials {
 		this.accessToken.setToken(accessToken);
 		this.accessToken.setExpireCode(expiration);
 		this.accessToken.setCreatedAt(new Date());
+		this.persistCredentials();
 	}
 
 	public void setPassword(String password) {

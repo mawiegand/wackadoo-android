@@ -5,7 +5,6 @@ import com.wackadoo.wackadoo_client.interfaces.LoginCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.RegistrationCallbackInterface;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
 import com.wackadoo.wackadoo_client.tasks.LoginAsyncTask;
-import com.wackadoo.wackadoo_client.tasks.RegisterAsyncTask;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -19,12 +18,13 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 public class LoginScreenActivity extends Activity implements RegistrationCallbackInterface, LoginCallbackInterface{
 	
-		private ImageButton loginButton, accountmanagerButton;
+		private ImageButton playButton, accountmanagerButton;
 		private Button shopButton;
-		private AnimationDrawable loginButtonAnimation;
+		private AnimationDrawable playButtonAnimation;
 		private UserCredentials userCredentials;
 	
 		@SuppressLint("NewApi")
@@ -33,23 +33,24 @@ public class LoginScreenActivity extends Activity implements RegistrationCallbac
 	        super.onCreate(savedInstanceState);
 		    requestWindowFeature(Window.FEATURE_NO_TITLE);
 	        setContentView(R.layout.activity_loginscreen);
-		    loginButton = (ImageButton) findViewById(R.id.loginButton);
+		    playButton = (ImageButton) findViewById(R.id.loginButton);
 		    accountmanagerButton = (ImageButton) findViewById(R.id.accountmanagerButton);
 		    shopButton = (Button) findViewById(R.id.shopButton);
 		    
 		    userCredentials = new UserCredentials(this.getApplicationContext());
 		    
 		    this.setUpButtonListeners();
-		    this.setUpLoginButtonAnimation();
+		    this.setUpPlayButtonAnimation();
+		    this.triggerLogin();
 		}
 
-	private void setUpLoginButtonAnimation() {
-			loginButton.setImageResource(R.anim.animationlist_loginbutton);
-			loginButtonAnimation = (AnimationDrawable) loginButton.getDrawable();
+	private void setUpPlayButtonAnimation() {
+			playButton.setImageResource(R.anim.animationlist_loginbutton);
+			playButtonAnimation = (AnimationDrawable) playButton.getDrawable();
 		}
 
 	   private void setUpButtonListeners() {
-		   this.setUpLoginButton();
+		   this.setUpPlayButton();
 		   this.setUpShopButton();
 		   this.setUpAccountmanagerButton();
 	   }
@@ -65,9 +66,9 @@ public class LoginScreenActivity extends Activity implements RegistrationCallbac
 	protected void onResume() {
 		super.onResume();
 		this.userCredentials = new UserCredentials(getApplicationContext());
-		loginButton.setEnabled(true);
+		playButton.setEnabled(true);
 		shopButton.setEnabled(true);
-		loginButtonAnimation.start();
+		playButtonAnimation.start();
 		//TODO: If(user not logged in && credentials available)
 		// -> Login
 	};
@@ -82,9 +83,9 @@ public class LoginScreenActivity extends Activity implements RegistrationCallbac
 	    }
 	   
 
-		private void setUpLoginButton() {
-			loginButton.setEnabled(true);
-			loginButton.setOnTouchListener(new View.OnTouchListener() {
+		private void setUpPlayButton() {
+			playButton.setEnabled(true);
+			playButton.setOnTouchListener(new View.OnTouchListener() {
 					
 				@SuppressLint("NewApi")
 				@Override
@@ -92,13 +93,13 @@ public class LoginScreenActivity extends Activity implements RegistrationCallbac
 					   switch ( event.getAction() ) {
 				    		case MotionEvent.ACTION_DOWN: 
 				    			{
-				    				loginButton.setImageResource(R.drawable.title_play_button_active);
+				    				playButton.setImageResource(R.drawable.title_play_button_active);
 				    				break;
 				    			}
 				    		case MotionEvent.ACTION_UP: 
 				    			{
-				    				setUpLoginButtonAnimation();
-				    				loginButtonAnimation.start();
+				    				setUpPlayButtonAnimation();
+				    				playButtonAnimation.start();
 				    				break;
 				    			}
 					   }
@@ -106,12 +107,12 @@ public class LoginScreenActivity extends Activity implements RegistrationCallbac
 					}
 			   });
 			   
-			loginButton.setOnClickListener(new View.OnClickListener() {
+			playButton.setOnClickListener(new View.OnClickListener() {
 					
 					@Override
 					public void onClick(View v) {
-						loginButton.setEnabled(false);
-						triggerLogin();
+						playButton.setEnabled(false);
+						triggerPlayGame();
 					}
 				});
 		}
@@ -185,19 +186,39 @@ public class LoginScreenActivity extends Activity implements RegistrationCallbac
 		
 		
 		private void triggerLogin() {
-			if(userCredentials.getIdentifier().length() > 0){
+			String identifier = userCredentials.getIdentifier();
+			String accessToken = userCredentials.getAccessToken().getToken();
+			String email = userCredentials.getEmail();
+			if(identifier.length() > 0 || accessToken.length() > 0 || email.length() > 0){
 				if(userCredentials.getAccessToken().isExpired()) {
 					new LoginAsyncTask(this, getApplicationContext(), this.userCredentials).execute();
 				}
-				else {
-					this.startLogin(this.userCredentials.getAccessToken().getToken(), this.userCredentials.getAccessToken().getExpireCode(), this.userCredentials.getClientID());
-				}
 			}
 			else {
-				new RegisterAsyncTask(this).execute();	
+				Toast.makeText(getApplicationContext(), "Unable to login", Toast.LENGTH_LONG).show();	
 			}
 		}
 
+		private void triggerPlayGame() {
+			String accessToken = this.userCredentials.getAccessToken().getToken();
+			String tokenExpiration = this.userCredentials.getAccessToken().getExpireCode();
+			String userId = this.userCredentials.getClientID();
+			if(accessToken != null && tokenExpiration != null && !this.userCredentials.getAccessToken().isExpired()) {
+				this.startGame(accessToken, tokenExpiration, userId);
+			} else {
+				new LoginAsyncTask(this, getApplicationContext(), userCredentials).execute();
+			}
+		}
+		
+		private void startGame(String accessToken, String expiration, String userId) {
+			Intent intent = new Intent(LoginScreenActivity.this, WackadooWebviewActivity.class);
+			Bundle bundle = new Bundle();
+			bundle.putString("accessToken", accessToken);
+			bundle.putString("expiration", expiration);
+			bundle.putString("userId", userId);
+			intent.putExtras(bundle);
+			startActivity(intent);
+		}
 		@Override
 		public void onRegistrationCompleted(String identifier, String clientID, String nickname) {
 			userCredentials.setIdentifier(identifier);
@@ -209,17 +230,6 @@ public class LoginScreenActivity extends Activity implements RegistrationCallbac
 		@Override
 		public void loginCallback(String accessToken, String expiration) {
 			this.userCredentials.generateNewAccessToken(accessToken, expiration);
-			this.startLogin(accessToken, expiration, userCredentials.getClientID());
+			Toast.makeText(getApplicationContext(), "Login successfull", Toast.LENGTH_LONG).show();
 		}
-		
-		private void startLogin(String accessToken, String expiration, String userId) {
-			Intent intent = new Intent(LoginScreenActivity.this, WackadooWebviewActivity.class);
-			Bundle bundle = new Bundle();
-			bundle.putString("accessToken", accessToken);
-			bundle.putString("expiration", expiration);
-			bundle.putString("userId", userId);
-			intent.putExtras(bundle);
-			startActivity(intent);
-		}
-		
 }
