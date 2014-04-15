@@ -21,7 +21,7 @@
         android:layout_marginTop="26dp"
         android:textSize="25sp"
         android:textColor="#000000"
-        android:text="Your 5D Games Account"
+        android:text="@string/your_account_headline"
         android:textAlignment="center" />
     
     <TextView
@@ -43,7 +43,7 @@
         android:layout_below="@+id/textHeadline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sign Out"
+        android:text="@string/account_sign_out_button"
         android:textColor="#FF7F24"/>
     
     <TextView
@@ -74,7 +74,7 @@
         android:layout_marginTop="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Email can be used to sign in at wack-a-doo.com or to retrieve a new password"
+        android:text="@string/account_email_information"
         android:textSize="16sp"
         android:textColor="#000000"
         android:gravity="center"
@@ -88,7 +88,7 @@
         android:layout_below="@+id/usernameText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Set Email"
+        android:text="@string/account_set_email"
         android:textColor="#FF7F24"/>
     
     <TextView
@@ -97,7 +97,7 @@
         android:layout_marginTop="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Provide an email to be used in password retrieval, and to recive ingame events."
+        android:text="@string/account_provide_email"
         android:textSize="18sp"
         android:textColor="#000000"
         android:gravity="center"
@@ -109,7 +109,7 @@
         android:layout_marginTop="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Your character is presently locked to this particular device!"
+        android:text="@string/account_character_locked"
         android:textSize="22sp"
         android:textColor="#FF4040"
         android:gravity="center"
@@ -121,7 +121,7 @@
         android:layout_marginTop="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="You have these options to make your character &quot;portable&quot;"
+        android:text="@string/account_character_portable"
         android:textSize="18sp"
         android:textColor="#000000"
         android:gravity="center"
@@ -134,7 +134,7 @@
         android:layout_below="@+id/makeCharacterPortableText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Set A Password"
+        android:text="@string/account_set_password"
         android:textColor="#FF7F24"/>
 	
 </RelativeLayout>

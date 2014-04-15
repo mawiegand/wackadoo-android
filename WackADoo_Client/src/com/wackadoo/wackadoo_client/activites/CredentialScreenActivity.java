@@ -199,7 +199,7 @@ public class CredentialScreenActivity extends Activity implements RegistrationCa
 			this.userCredentials.setPassword(this.passwordEditText.getText().toString());
 			new LoginAsyncTask(this, getApplicationContext(), userCredentials).execute();
 		} else {
-			Toast.makeText(getApplicationContext(), "Enter valid Credentials", Toast.LENGTH_LONG).show();
+			Toast.makeText(getApplicationContext(), getResources().getString(R.string.invalid_credential_toast), Toast.LENGTH_LONG).show();
 		}
 	}
 	

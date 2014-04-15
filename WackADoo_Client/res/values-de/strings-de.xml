@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- General -->
+    <string name="app_name">Wack-A-Doo</string>
+    <string name="action_settings">Settings</string>
+    <string name="app_id">308180782571605</string>
+    
+    <!-- LoginScreen -->
+    <string name="login_failed_toast">Login nicht möglich</string> 
+    <string name="login_success_toast">Login erfolgreich</string>
+    
+    <!-- AccountManager -->
+    <string name="account_change_password">Passwort ändern</string>
+    <string name="alert_change_password">Passwort ändern</string>
+    <string name="alert_email_change">E-Mail ändern</string>
+    <string name="alert_ok_button">OK</string>
+    <string name="alert_cancel_button">Abbrechen</string>
+    <string name="alert_quit">Sind Sie sicher?</string>
+    <string name="alert_quit_yes">Ja</string>
+    <string name="alert_quit_no">Nein</string>
+    <string name="your_account_headline">Dein 5D Spiele Account</string>
+    <string name="account_sign_out_button">Ausloggen</string>
+    <string name="account_email_information">Email kann benutzt werden um sich auf wack-a-doo.com einzuloggen oder ein neues Passwort zu bekommen.</string>
+    <string name="account_set_email">Email angeben</string>
+	<string name="account_provide_email">Geben Sie eine E-Mail-Adresse an um Passwörter zurückzusetzen und Neuigkeiten aus dem Spiel zu erhalten.</string>
+    <string name="account_character_locked">Ihr Charakter ist derzeit auf dieses Gerät beschränkt!</string>
+    <string name="account_character_portable">Sie haben folgende Optionen um Ihn tragbar zu machen:</string>
+    <string name="account_set_password">Passwort angeben</string>
+    
+    <!-- CredentialScreen -->
+    <string name="invalid_credential_toast">Geben Sie gültige Daten ein</string>
+    <string name="credentials_headline">Einloggen</string>
+    <string name="credentials_sign_in_button">Einloggen</string>
+    <string name="credentials_use_facebook">Facebook Account nutzen?</string>
+    <string name="credentials_no_account">Haben Sie noch keinen Account?</string>
+    <string name="credentials_new_account">Neuen Account erstellen</string>
+    <string name="credentials_lost_account">Haben Sie den Zugriff auf Ihren Account verloren?</string>
+    <string name="credentials_restore_account">Nicht portablen Account wiederherstellen</string>
+    
+</resources>

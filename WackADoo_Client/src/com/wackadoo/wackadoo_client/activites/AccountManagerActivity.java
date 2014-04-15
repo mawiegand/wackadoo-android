@@ -89,7 +89,7 @@ public class AccountManagerActivity extends Activity {
 	
 	private void setButtonVisibility (boolean setPasswordButtonVisible, boolean emailButtonVisible) {
 		if(!passwordButtonVisible) {
-			this.passwordButton.setText("Change Password");
+			this.passwordButton.setText(getResources().getString(R.string.account_change_password));
 			RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)passwordButton.getLayoutParams();
 			params.addRule(RelativeLayout.BELOW, R.id.emailInformationText);
 			passwordButton.setLayoutParams(params); 
@@ -205,11 +205,11 @@ public class AccountManagerActivity extends Activity {
 
 
 	private void startChangePassword() {
-		this.showInputAlertDialogWithText("Change Password", AlertCallback.Password);
+		this.showInputAlertDialogWithText(getResources().getString(R.string.alert_change_password), AlertCallback.Password);
 	}
 
 	private void startSetEmail() {
-		this.showInputAlertDialogWithText("Set E-Mail", AlertCallback.Email);
+		this.showInputAlertDialogWithText(getResources().getString(R.string.alert_email_change), AlertCallback.Email);
 	}
 	
 	private void triggerSignOut() {
@@ -236,7 +236,7 @@ public class AccountManagerActivity extends Activity {
     	input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
     	builder.setView(input);
 
-    	builder.setPositiveButton("OK", new DialogInterface.OnClickListener() { 
+    	builder.setPositiveButton(getResources().getString(R.string.alert_ok_button), new DialogInterface.OnClickListener() { 
     	    @Override
     	    public void onClick(DialogInterface dialog, int which) {
     	    	switch(callback) {
@@ -246,7 +246,7 @@ public class AccountManagerActivity extends Activity {
     	    	}
     	    }
     	});
-    	builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+    	builder.setNegativeButton(getResources().getString(R.string.alert_cancel_button), new DialogInterface.OnClickListener() {
     	    @Override
     	    public void onClick(DialogInterface dialog, int which) {
     	        dialog.cancel();
@@ -268,8 +268,8 @@ public class AccountManagerActivity extends Activity {
     	};
 
     	AlertDialog.Builder builder = new AlertDialog.Builder(this);
-    	builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
-    	    .setNegativeButton("No", dialogClickListener).show();
+    	builder.setMessage(getResources().getString(R.string.alert_quit)).setPositiveButton(getResources().getString(R.string.alert_quit_yes), dialogClickListener)
+    	    .setNegativeButton(getResources().getString(R.string.alert_quit_no), dialogClickListener).show();
     }
     
     private void enteredNewEmail(String email) {

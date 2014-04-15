@@ -195,7 +195,7 @@ public class LoginScreenActivity extends Activity implements RegistrationCallbac
 				}
 			}
 			else {
-				Toast.makeText(getApplicationContext(), "Unable to login", Toast.LENGTH_LONG).show();	
+				Toast.makeText(getApplicationContext(), getResources().getString(R.string.login_failed_toast), Toast.LENGTH_LONG).show();	
 			}
 		}
 
@@ -230,6 +230,6 @@ public class LoginScreenActivity extends Activity implements RegistrationCallbac
 		@Override
 		public void loginCallback(String accessToken, String expiration) {
 			this.userCredentials.generateNewAccessToken(accessToken, expiration);
-			Toast.makeText(getApplicationContext(), "Login successfull", Toast.LENGTH_LONG).show();
+			Toast.makeText(getApplicationContext(), getResources().getString(R.string.login_success_toast), Toast.LENGTH_LONG).show();
 		}
 }
