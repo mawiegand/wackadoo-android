@@ -18,7 +18,7 @@ import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpConnectionParams;
 import org.json.JSONObject;
 
-import com.wackadoo.wackadoo_client.interfaces.LoginCallbackInterface;
+import com.wackadoo.wackadoo_client.interfaces.GameLoginCallbackInterface;
 import com.wackadoo.wackadoo_client.model.DeviceInformation;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
 
@@ -28,11 +28,11 @@ import android.util.Log;
 
 public class GameLoginAsyncTask extends AsyncTask<String, Integer, Double> {
 	
-    private LoginCallbackInterface listener;
+    private GameLoginCallbackInterface listener;
     private Context context;
 	private UserCredentials userCredentials;
     
-    public GameLoginAsyncTask(LoginCallbackInterface callback, Context context, UserCredentials userCredentials) {
+    public GameLoginAsyncTask(GameLoginCallbackInterface callback, Context context, UserCredentials userCredentials) {
     	this.listener = callback;
     	this.context = context;
     	this.userCredentials = userCredentials;

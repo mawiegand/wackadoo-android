@@ -7,8 +7,8 @@ import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
 import com.facebook.widget.LoginButton.UserInfoChangedCallback;
-import com.wackadoo.wackadoo_client.interfaces.LoginCallbackInterface;
-import com.wackadoo.wackadoo_client.interfaces.RegistrationCallbackInterface;
+import com.wackadoo.wackadoo_client.interfaces.GameLoginCallbackInterface;
+import com.wackadoo.wackadoo_client.interfaces.CreateAccountCallbackInterface;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
 import com.wackadoo.wackadoo_client.tasks.GameLoginAsyncTask;
 import com.wackadoo.wackadoo_client.tasks.CreateAccountAsyncTask;
@@ -27,7 +27,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class CredentialScreenActivity extends Activity implements RegistrationCallbackInterface, LoginCallbackInterface{
+public class CredentialScreenActivity extends Activity implements CreateAccountCallbackInterface, GameLoginCallbackInterface{
 	
 	private UserCredentials userCredentials;
 	private Button signInButton, createAccountButton, restoreAccountButton;

@@ -18,16 +18,16 @@ import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpConnectionParams;
 import org.json.JSONObject;
 
-import com.wackadoo.wackadoo_client.interfaces.RegistrationCallbackInterface;
+import com.wackadoo.wackadoo_client.interfaces.CreateAccountCallbackInterface;
 
 import android.os.AsyncTask;
 import android.util.Log;
 
 public class CreateAccountAsyncTask extends AsyncTask<String, Integer, Double> {
 	
-    private RegistrationCallbackInterface listener;
+    private CreateAccountCallbackInterface listener;
     
-    public CreateAccountAsyncTask(RegistrationCallbackInterface callback) {
+    public CreateAccountAsyncTask(CreateAccountCallbackInterface callback) {
     	this.listener = callback;
     }
 	
