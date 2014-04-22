@@ -4,7 +4,7 @@ import com.example.wackadoo_webview.R;
 import com.wackadoo.wackadoo_client.interfaces.LoginCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.RegistrationCallbackInterface;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
-import com.wackadoo.wackadoo_client.tasks.LoginAsyncTask;
+import com.wackadoo.wackadoo_client.tasks.GameLoginAsyncTask;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -191,7 +191,7 @@ public class LoginScreenActivity extends Activity implements RegistrationCallbac
 			String email = userCredentials.getEmail();
 			if(identifier.length() > 0 || accessToken.length() > 0 || email.length() > 0){
 				if(userCredentials.getAccessToken().isExpired()) {
-					new LoginAsyncTask(this, getApplicationContext(), this.userCredentials).execute();
+					new GameLoginAsyncTask(this, getApplicationContext(), this.userCredentials).execute();
 				}
 			}
 			else {
@@ -206,7 +206,7 @@ public class LoginScreenActivity extends Activity implements RegistrationCallbac
 			if(accessToken != null && tokenExpiration != null && !this.userCredentials.getAccessToken().isExpired()) {
 				this.startGame(accessToken, tokenExpiration, userId);
 			} else {
-				new LoginAsyncTask(this, getApplicationContext(), userCredentials).execute();
+				new GameLoginAsyncTask(this, getApplicationContext(), userCredentials).execute();
 			}
 		}
 		

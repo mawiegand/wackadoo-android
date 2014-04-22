@@ -23,11 +23,11 @@ import com.wackadoo.wackadoo_client.interfaces.RegistrationCallbackInterface;
 import android.os.AsyncTask;
 import android.util.Log;
 
-public class RegisterAsyncTask extends AsyncTask<String, Integer, Double> {
+public class CreateAccountAsyncTask extends AsyncTask<String, Integer, Double> {
 	
     private RegistrationCallbackInterface listener;
     
-    public RegisterAsyncTask(RegistrationCallbackInterface callback) {
+    public CreateAccountAsyncTask(RegistrationCallbackInterface callback) {
     	this.listener = callback;
     }
 	

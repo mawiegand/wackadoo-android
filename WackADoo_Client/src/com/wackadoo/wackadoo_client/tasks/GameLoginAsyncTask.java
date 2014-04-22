@@ -26,13 +26,13 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-public class LoginAsyncTask extends AsyncTask<String, Integer, Double> {
+public class GameLoginAsyncTask extends AsyncTask<String, Integer, Double> {
 	
     private LoginCallbackInterface listener;
     private Context context;
 	private UserCredentials userCredentials;
     
-    public LoginAsyncTask(LoginCallbackInterface callback, Context context, UserCredentials userCredentials) {
+    public GameLoginAsyncTask(LoginCallbackInterface callback, Context context, UserCredentials userCredentials) {
     	this.listener = callback;
     	this.context = context;
     	this.userCredentials = userCredentials;

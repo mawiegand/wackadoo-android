@@ -10,8 +10,8 @@ import com.facebook.widget.LoginButton.UserInfoChangedCallback;
 import com.wackadoo.wackadoo_client.interfaces.LoginCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.RegistrationCallbackInterface;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
-import com.wackadoo.wackadoo_client.tasks.LoginAsyncTask;
-import com.wackadoo.wackadoo_client.tasks.RegisterAsyncTask;
+import com.wackadoo.wackadoo_client.tasks.GameLoginAsyncTask;
+import com.wackadoo.wackadoo_client.tasks.CreateAccountAsyncTask;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -189,7 +189,7 @@ public class CredentialScreenActivity extends Activity implements RegistrationCa
 	
 	protected void triggerCreateAccount() {
 		this.userCredentials.clearAllCredentials();
-		new RegisterAsyncTask(this).execute();
+		new CreateAccountAsyncTask(this).execute();
 	}
 
 	
@@ -197,7 +197,7 @@ public class CredentialScreenActivity extends Activity implements RegistrationCa
 		if(this.userNameEditText.getText().toString().length() > 0 && this.passwordEditText.getText().toString().length() > 0) {
 			this.userCredentials.setEmail(this.userNameEditText.getText().toString());
 			this.userCredentials.setPassword(this.passwordEditText.getText().toString());
-			new LoginAsyncTask(this, getApplicationContext(), userCredentials).execute();
+			new GameLoginAsyncTask(this, getApplicationContext(), userCredentials).execute();
 		} else {
 			Toast.makeText(getApplicationContext(), getResources().getString(R.string.invalid_credential_toast), Toast.LENGTH_LONG).show();
 		}
