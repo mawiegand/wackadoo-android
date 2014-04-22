@@ -22,7 +22,7 @@ import android.widget.Toast;
 
 public class LoginScreenActivity extends Activity implements CreateAccountCallbackInterface, GameLoginCallbackInterface{
 	
-		private ImageButton playButton, accountmanagerButton;
+		private ImageButton playButton, accountmanagerButton, facebookButton;
 		private Button shopButton;
 		private AnimationDrawable playButtonAnimation;
 		private UserCredentials userCredentials;
@@ -36,6 +36,7 @@ public class LoginScreenActivity extends Activity implements CreateAccountCallba
 		    playButton = (ImageButton) findViewById(R.id.loginButton);
 		    accountmanagerButton = (ImageButton) findViewById(R.id.accountmanagerButton);
 		    shopButton = (Button) findViewById(R.id.shopButton);
+		    facebookButton = (ImageButton) findViewById(R.id.facebookButton);
 		    
 		    userCredentials = new UserCredentials(this.getApplicationContext());
 		    
@@ -53,6 +54,7 @@ public class LoginScreenActivity extends Activity implements CreateAccountCallba
 		   this.setUpPlayButton();
 		   this.setUpShopButton();
 		   this.setUpAccountmanagerButton();
+		   this.setUpFacebookButton();
 	   }
 
 
@@ -82,6 +84,38 @@ public class LoginScreenActivity extends Activity implements CreateAccountCallba
 		    return super.onOptionsItemSelected(item);
 	    }
 	   
+	   private void setUpFacebookButton() {
+		   	facebookButton.setEnabled(true);
+		   	facebookButton.setOnTouchListener(new View.OnTouchListener() {
+				
+				@Override
+				   public boolean onTouch(View v, MotionEvent event) {
+					   switch ( event.getAction() ) {
+				    		case MotionEvent.ACTION_DOWN: 
+				    			{
+				    				facebookButton.setImageResource(R.drawable.title_facebook_button_active);
+				    				break;
+				    			}
+				    		case MotionEvent.ACTION_UP: 
+				    			{
+				    				facebookButton.setImageResource(R.drawable.title_facebook_button);
+				    				break;
+				    			}
+					   }
+					   return false;
+					}
+			   });
+			   
+		   	facebookButton.setOnClickListener(new View.OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						facebookButton.setEnabled(false);
+						triggerFacebook();
+					}
+				});
+		   
+	   }
 
 		private void setUpPlayButton() {
 			playButton.setEnabled(true);
@@ -149,7 +183,7 @@ public class LoginScreenActivity extends Activity implements CreateAccountCallba
 						shopButton.setEnabled(false);
 					}
 				});
-	}
+		}
 	
 		private void setUpAccountmanagerButton() {
 			accountmanagerButton.setEnabled(true);
@@ -182,8 +216,13 @@ public class LoginScreenActivity extends Activity implements CreateAccountCallba
 						startActivity(intent);
 					}
 				});
-	}
+		}
 		
+
+		private void triggerFacebook() {
+		// TODO Login using Facebook
+		
+		}
 		
 		private void triggerLogin() {
 			String identifier = userCredentials.getIdentifier();
