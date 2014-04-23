@@ -16,14 +16,12 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
 public class LoginScreenActivity extends Activity implements CreateAccountCallbackInterface, GameLoginCallbackInterface{
 	
-		private ImageButton playButton, accountmanagerButton, facebookButton;
-		private Button shopButton;
+		private ImageButton playButton, accountmanagerButton, facebookButton, shopButton;
 		private AnimationDrawable playButtonAnimation;
 		private UserCredentials userCredentials;
 	
@@ -35,14 +33,14 @@ public class LoginScreenActivity extends Activity implements CreateAccountCallba
 	        setContentView(R.layout.activity_loginscreen);
 		    playButton = (ImageButton) findViewById(R.id.loginButton);
 		    accountmanagerButton = (ImageButton) findViewById(R.id.accountmanagerButton);
-		    shopButton = (Button) findViewById(R.id.shopButton);
+		    shopButton = (ImageButton) findViewById(R.id.shopButton);
 		    facebookButton = (ImageButton) findViewById(R.id.facebookButton);
 		    
 		    userCredentials = new UserCredentials(this.getApplicationContext());
 		    
 		    this.setUpButtonListeners();
 		    this.setUpPlayButtonAnimation();
-		    this.triggerLogin();
+		    this.triggerLogin();	
 		}
 
 	private void setUpPlayButtonAnimation() {
@@ -111,6 +109,7 @@ public class LoginScreenActivity extends Activity implements CreateAccountCallba
 					@Override
 					public void onClick(View v) {
 						facebookButton.setEnabled(false);
+						facebookButton.setImageResource(R.drawable.title_facebook_button_disabled);
 						triggerFacebook();
 					}
 				});
@@ -161,12 +160,12 @@ public class LoginScreenActivity extends Activity implements CreateAccountCallba
 					   switch ( event.getAction() ) {
 				    		case MotionEvent.ACTION_DOWN: 
 				    			{
-				    				shopButton.setBackground(getResources().getDrawable(R.drawable.title_shop_button_active));
+				    				shopButton.setImageResource(R.drawable.title_shop_button_active);
 				    				break;
 				    			}
 				    		case MotionEvent.ACTION_UP: 
 				    			{
-				    				shopButton.setBackground(getResources().getDrawable(R.drawable.title_shop_button));
+				    				shopButton.setImageResource(R.drawable.title_shop_button);
 				    				break;
 				    			}
 					   }

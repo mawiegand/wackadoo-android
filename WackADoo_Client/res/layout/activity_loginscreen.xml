@@ -44,23 +44,29 @@
 	        		android:id="@+id/shopButtonLinearContainer"
 	    			android:layout_height="fill_parent" 
 			    	android:layout_width="fill_parent"
-	    			android:orientation="horizontal"
-	    			android:weightSum="1.0" >
+	    			android:orientation="vertical"
+	    			android:weightSum="1.0">
+	    			
+	    		    <RelativeLayout
+	    		        android:id="@+id/shopButtonSpacer" 
+	 	    			android:layout_width="fill_parent"
+	 	    			android:layout_weight="0.1"
+	 	    			android:layout_height="0dp" >
+	 				</RelativeLayout>
 	    			
 	    		    <RelativeLayout 
-	      	    		android:id="@+id/shopButtonRelativeContainer"  
-		        		android:layout_height="wrap_content"
+	      	    		android:id="@+id/shopButtonRelativeContainer"
+		        		android:layout_height="0dp"
 	    	    		android:layout_gravity="top|left"
-	        			android:layout_width="0dp"
-	      				android:layout_weight="0.5" >
+	        			android:layout_width="wrap_content"
+	      				android:layout_weight="0.5">
 		    			
-		    			<Button
+		    			<ImageButton
 		    	    		android:id="@+id/shopButton"
+		    	    		android:background="@null"
 		    	    		android:layout_width="wrap_content"
 		    	    		android:layout_height="wrap_content"
-		    	    		android:adjustViewBounds="false"
-		    	    		android:background="@drawable/title_shop_button"
-		    	    		android:scaleType="center"
+		    	    		android:scaleType="fitCenter"
 		    	    		android:src="@drawable/title_shop_button" />
 	    			</RelativeLayout>
 	    		</LinearLayout>
@@ -150,23 +156,7 @@
 		 	    android:adjustViewBounds="true"
 		 	    android:scaleType="fitEnd"
 		 	    android:src="@drawable/title_bar"/>
-
-		 	<ImageButton
-		 	    android:background="@null"
-		 	    android:id="@+id/accountmanagerButton"
-		 	    android:layout_width="wrap_content"
-		 	    android:layout_height="wrap_content"
-		 	    android:layout_centerHorizontal="true"
-		 	    android:layout_centerVertical="true"
-		 	    android:src="@drawable/title_change_button"/>
 		 	
-		 	<ImageButton
-		 	    android:background="@null"
-		 	    android:id="@+id/facebookButton"
-		 	    android:layout_width="wrap_content"
-		 	    android:layout_height="wrap_content"
-		 	    
-		 	    android:src="@drawable/title_facebook_button"/>
 	 	</RelativeLayout>
  	</LinearLayout>
  	
@@ -180,25 +170,50 @@
 	 	<RelativeLayout 
 	     	android:id="@+id/footerSpacer" 
 		    android:layout_width="fill_parent"
-		    android:layout_weight="0.75"
+		    android:layout_weight="0.74"
 	        android:layout_height="0dp">
 		</RelativeLayout>
 	 	
 	 	<LinearLayout
-	 	    android:id="@+id/footerHorizontalContainer" 
+	 	    android:id="@+id/footerHorizontalContainer"
 	    	android:layout_height="0dp" 
 	    	android:layout_width="fill_parent"
 	    	android:orientation="horizontal"
-	    	android:layout_weight="0.25"
+	    	android:layout_weight="0.26"
 	    	android:weightSum="1.0">
 		 	
 	 	    <RelativeLayout 
 	       		android:id="@+id/loginButtonSpacer" 
 		        android:layout_width="0dp"
-		        android:layout_weight="0.58"
+		        android:layout_weight="0.33"
 	            android:layout_height="fill_parent">
 		 	</RelativeLayout>
 		 	
+	 	    <RelativeLayout 
+	       		android:id="@+id/accountmanagerButtonContainer" 
+		        android:layout_width="0dp"
+		        android:layout_weight="0.25"
+	            android:layout_height="wrap_content"
+	            android:layout_gravity="center">
+		 	
+	 	        <LinearLayout
+	 	    		android:id="@+id/footerVerticalAccountmanagerContainer"
+	    			android:layout_height="fill_parent" 
+	    			android:layout_width="fill_parent"
+	    			android:orientation="vertical"
+	    			android:weightSum="1.0">
+	 	        
+		 	        <ImageButton
+			 	    	android:background="@null"
+			 	    	android:id="@+id/accountmanagerButton"
+			 	    	android:layout_width="wrap_content"
+			 	    	android:layout_height="0dp"
+			 	    	android:layout_weight="0.80"
+			 	    	android:scaleType="fitCenter"
+			 	    	android:src="@drawable/title_change_button"/>
+		 	 	</LinearLayout>    
+	 	    </RelativeLayout>
+	 	    
 	 		<RelativeLayout 
 	       		android:id="@+id/loginButtonContainer" 
 		        android:layout_width="0dp"
@@ -214,6 +229,45 @@
 			  	    android:adjustViewBounds="true"
 		  		    android:scaleType="fitCenter"
 		  	    	android:src="@anim/animationlist_loginbutton" />
+	 		</RelativeLayout>
+	 		
+	 		<RelativeLayout 
+	       		android:id="@+id/facebookButtonContainer" 
+		        android:layout_width="0dp"
+		        android:layout_weight="0.12"
+	            android:layout_height="wrap_content"
+	            android:layout_gravity="center">
+		  		
+		  		<LinearLayout 
+        			android:id="@+id/facebookLinearContainer"
+    				android:layout_height="fill_parent" 
+    				android:layout_width="fill_parent"
+    				android:orientation="vertical"
+    				android:weightSum="1.0">
+	    		    
+		  		    <RelativeLayout 
+	     				android:id="@+id/facebookSpacer" 
+		    			android:layout_width="fill_parent"
+		    			android:layout_weight="0.4"
+	        			android:layout_height="0dp">
+					</RelativeLayout>
+		 		    
+		 		    <RelativeLayout 
+	       				android:id="@+id/facebookButtonVerticalContainer" 
+		        		android:layout_width="wrap_content"
+		        		android:layout_weight="0.6"
+	            		android:layout_height="0dp"
+	            		android:layout_gravity="center">
+		 		    		
+		 		    		<ImageButton
+			 	    			android:background="@null"
+			 	    			android:id="@+id/facebookButton"
+			 	    			android:layout_width="wrap_content"
+			 	    			android:layout_height="wrap_content"
+			 	    			android:src="@drawable/title_facebook_button"
+			 	    			android:scaleType="fitCenter"/>
+		 		    </RelativeLayout>
+		 		</LinearLayout>
 	 		</RelativeLayout>	
 	 	</LinearLayout>
 	</LinearLayout>
