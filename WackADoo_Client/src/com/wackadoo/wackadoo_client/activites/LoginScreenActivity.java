@@ -68,7 +68,8 @@ public class LoginScreenActivity extends Activity implements CreateAccountCallba
 		this.userCredentials = new UserCredentials(getApplicationContext());
 		playButton.setEnabled(true);
 		shopButton.setEnabled(true);
-		playButtonAnimation.start();
+		//playButtonAnimation.start();
+		playButtonAnimation.stop(); 
 		//TODO: If(user not logged in && credentials available)
 		// -> Login
 	};
