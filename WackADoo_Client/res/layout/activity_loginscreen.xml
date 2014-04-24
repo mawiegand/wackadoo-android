@@ -7,15 +7,15 @@
     tools:ignore="MergeRootFrame" >
 
     <ImageView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:scaleType="centerCrop"
         android:src="@drawable/title_bg" />
     
     <LinearLayout 
         android:id="@+id/headerVerticalContainer"
-    	android:layout_height="fill_parent" 
-    	android:layout_width="fill_parent"
+    	android:layout_height="match_parent" 
+    	android:layout_width="match_parent"
     	android:orientation="vertical"
     	android:weightSum="1.0">
     
@@ -23,7 +23,7 @@
 	        android:id="@+id/headerHorizontalContainer"
 	        android:layout_weight="0.13"
 	    	android:layout_height="0dp" 
-	    	android:layout_width="fill_parent"
+	    	android:layout_width="match_parent"
 	    	android:orientation="horizontal"
 	    	android:weightSum="1.0">
 	    	
@@ -35,22 +35,22 @@
 	      		android:layout_weight="0.18">
 	      		
 	    		<ImageView
-	        		android:layout_width="fill_parent"
-	        		android:layout_height="fill_parent"
+	        		android:layout_width="match_parent"
+	        		android:layout_height="match_parent"
 		        	android:scaleType="fitStart"
 	    	    	android:src="@drawable/title_left_corner" />
 	    		
 	    		<LinearLayout 
 	        		android:id="@+id/shopButtonLinearContainer"
 	        		android:layout_centerInParent="true"
-	    			android:layout_height="fill_parent" 
-			    	android:layout_width="fill_parent"
+	    			android:layout_height="match_parent" 
+			    	android:layout_width="match_parent"
 	    			android:orientation="vertical"
 	    			android:weightSum="1.0">
 	    			
 	    		    <RelativeLayout
 	    		        android:id="@+id/shopButtonSpacer" 
-	 	    			android:layout_width="fill_parent"
+	 	    			android:layout_width="match_parent"
 	 	    			android:layout_weight="0.1"
 	 	    			android:layout_height="0dp" >
 	 				</RelativeLayout>
@@ -77,7 +77,7 @@
 	       		android:id="@+id/headerSpacer" 
 		        android:layout_width="0dp"
 		        android:layout_weight="0.6"
-	            android:layout_height="fill_parent">
+	            android:layout_height="match_parent">
 			</RelativeLayout>
 	   		
 	   		<RelativeLayout 
@@ -112,8 +112,8 @@
 	    
     <LinearLayout 
         android:id="@+id/logoLinearContainer"
-    	android:layout_height="fill_parent" 
-    	android:layout_width="fill_parent"
+    	android:layout_height="match_parent" 
+    	android:layout_width="match_parent"
     	android:orientation="vertical"
     	android:weightSum="1.0">
    		
@@ -133,25 +133,25 @@
   	</LinearLayout>
   	
     <LinearLayout 
-    	android:layout_height="fill_parent" 
-    	android:layout_width="fill_parent"
+    	android:layout_height="match_parent" 
+    	android:layout_width="match_parent"
     	android:orientation="vertical"
     	android:weightSum="1.0">
     	
 	 	<RelativeLayout 
-	 	    android:layout_width="fill_parent"
+	 	    android:layout_width="match_parent"
 	 	    android:layout_weight="0.62"
 	 	    android:layout_height="0dp" >
 	 	</RelativeLayout>
 	 	
 	 	<RelativeLayout 
-	 	    android:layout_width="fill_parent"
+	 	    android:layout_width="match_parent"
 	 	    android:layout_weight="0.38"
 	 	    android:layout_height="0dp" >
 			
 		 	<ImageView
-		 	    android:layout_width="fill_parent"
-		 	    android:layout_height="fill_parent"
+		 	    android:layout_width="match_parent"
+		 	    android:layout_height="match_parent"
 		 	    android:layout_alignParentLeft="true"
 		 	    android:layout_alignParentBottom="true"
 		 	    android:adjustViewBounds="true"
@@ -163,14 +163,14 @@
  	
     <LinearLayout 
         android:id="@+id/footerVerticalContainer"
-	 	android:layout_height="fill_parent" 
-	    android:layout_width="fill_parent"
+	 	android:layout_height="match_parent" 
+	    android:layout_width="match_parent"
 	    android:orientation="vertical"
 	    android:weightSum="1.0">
 	 	
 	 	<RelativeLayout 
 	     	android:id="@+id/footerSpacer" 
-		    android:layout_width="fill_parent"
+		    android:layout_width="match_parent"
 		    android:layout_weight="0.74"
 	        android:layout_height="0dp">
 		</RelativeLayout>
@@ -178,7 +178,7 @@
 	 	<LinearLayout
 	 	    android:id="@+id/footerHorizontalContainer"
 	    	android:layout_height="0dp" 
-	    	android:layout_width="fill_parent"
+	    	android:layout_width="match_parent"
 	    	android:orientation="horizontal"
 	    	android:layout_weight="0.26"
 	    	android:weightSum="1.0">
@@ -187,7 +187,7 @@
 	       		android:id="@+id/loginButtonSpacer" 
 		        android:layout_width="0dp"
 		        android:layout_weight="0.33"
-	            android:layout_height="fill_parent">
+	            android:layout_height="match_parent">
 		 	</RelativeLayout>
 		 	
 	 	    <RelativeLayout 
@@ -199,8 +199,8 @@
 		 	
 	 	        <LinearLayout
 	 	    		android:id="@+id/footerVerticalAccountmanagerContainer"
-	    			android:layout_height="fill_parent" 
-	    			android:layout_width="fill_parent"
+	    			android:layout_height="match_parent" 
+	    			android:layout_width="match_parent"
 	    			android:orientation="vertical"
 	    			android:weightSum="1.0">
 	 	        
@@ -241,14 +241,14 @@
 		  		
 		  		<LinearLayout 
         			android:id="@+id/facebookLinearContainer"
-    				android:layout_height="fill_parent" 
-    				android:layout_width="fill_parent"
+    				android:layout_height="match_parent" 
+    				android:layout_width="match_parent"
     				android:orientation="vertical"
     				android:weightSum="1.0">
 	    		    
 		  		    <RelativeLayout 
 	     				android:id="@+id/facebookSpacer" 
-		    			android:layout_width="fill_parent"
+		    			android:layout_width="match_parent"
 		    			android:layout_weight="0.4"
 	        			android:layout_height="0dp">
 					</RelativeLayout>
