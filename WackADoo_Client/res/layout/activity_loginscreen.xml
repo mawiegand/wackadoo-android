@@ -133,12 +133,14 @@
   	</LinearLayout>
   	
     <LinearLayout 
+       	android:id="@+id/titleBarContainer" 
     	android:layout_height="match_parent" 
     	android:layout_width="match_parent"
     	android:orientation="vertical"
     	android:weightSum="1.0">
     	
 	 	<RelativeLayout 
+	 	    android:id="@+id/titleBarSpacer"
 	 	    android:layout_width="match_parent"
 	 	    android:layout_weight="0.62"
 	 	    android:layout_height="0dp" >
