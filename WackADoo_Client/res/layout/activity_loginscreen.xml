@@ -133,7 +133,7 @@
   	</LinearLayout>
   	
     <LinearLayout 
-       	android:id="@+id/titleBarContainer" 
+       	android:id="@+id/titleBarLinearContainer" 
     	android:layout_height="match_parent" 
     	android:layout_width="match_parent"
     	android:orientation="vertical"
@@ -147,6 +147,7 @@
 	 	</RelativeLayout>
 	 	
 	 	<RelativeLayout 
+	 	    android:id="@+id/titleBarContainer"
 	 	    android:layout_width="match_parent"
 	 	    android:layout_weight="0.38"
 	 	    android:layout_height="0dp" >
