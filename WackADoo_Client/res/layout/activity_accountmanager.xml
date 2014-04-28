@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+<ScrollView android:layout_width="match_parent" android:layout_height="match_parent" xmlns:android="http://schemas.android.com/apk/res/android">
+<RelativeLayout 
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:orientation="vertical" 
     android:background="#ffffff">
 
@@ -18,7 +19,7 @@
         android:layout_centerHorizontal="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="26dp"
+        android:layout_marginTop="16dp"
         android:textSize="25sp"
         android:textColor="#000000"
         android:text="@string/your_account_headline"
@@ -27,7 +28,7 @@
     <TextView
         android:id="@+id/usernameText"
         android:layout_below="@+id/textHeadline"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:layout_marginLeft="26dp"
         android:layout_marginRight="35dp"
         android:layout_width="wrap_content"
@@ -49,7 +50,7 @@
     <TextView
         android:id="@+id/emailAccountText"
         android:layout_below="@+id/usernameText"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:layout_marginLeft="26dp"
         android:layout_marginRight="35dp"
         android:layout_width="wrap_content"
@@ -71,7 +72,7 @@
     <TextView
         android:id="@+id/emailInformationText"
         android:layout_below="@+id/emailAccountText"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/account_email_information"
@@ -94,7 +95,7 @@
     <TextView
         android:id="@+id/emailText"
         android:layout_below="@+id/setEmailButton"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/account_provide_email"
@@ -106,7 +107,7 @@
     <TextView
         android:id="@+id/characterLockedText"
         android:layout_below="@+id/emailText"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/account_character_locked"
@@ -118,7 +119,7 @@
     <TextView
         android:id="@+id/makeCharacterPortableText"
         android:layout_below="@+id/characterLockedText"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/account_character_portable"
@@ -138,3 +139,4 @@
         android:textColor="#FF7F24"/>
 	
 </RelativeLayout>
+</ScrollView>
