@@ -206,15 +206,38 @@
 	    			android:layout_width="match_parent"
 	    			android:orientation="vertical"
 	    			android:weightSum="1.0">
-	 	        
-		 	        <ImageButton
-			 	    	android:background="@null"
-			 	    	android:id="@+id/accountmanagerButton"
-			 	    	android:layout_width="wrap_content"
+	    			
+	 	            <RelativeLayout 
+	       				android:id="@+id/accountmanagerButtonVerticalContainer" 
+		        		android:layout_width="match_parent"
 			 	    	android:layout_height="0dp"
 			 	    	android:layout_weight="0.80"
-			 	    	android:scaleType="fitCenter"
-			 	    	android:src="@drawable/title_change_button"/>
+	            		android:layout_gravity="center" >
+	 	        		
+	 	                <LinearLayout
+	 	    				android:id="@+id/footerHorizontalAccountmanagerContainer"
+	    					android:layout_height="match_parent" 
+	    					android:layout_width="match_parent"
+	    					android:orientation="horizontal"
+	    					android:weightSum="1.0">
+	    					
+	 	                    <RelativeLayout 
+					       		android:id="@+id/accountmanagerButtonSpacer" 
+						        android:layout_width="0dp"
+						        android:layout_weight="0.24"
+					            android:layout_height="match_parent">
+						 	</RelativeLayout>
+	 	                
+		 	        		<ImageButton
+				 	    		android:background="@null"
+				 	    		android:id="@+id/accountmanagerButton"
+				 	    		android:layout_width="0dp"
+				 	    		android:layout_weight="0.8"
+				 	    		android:layout_height="wrap_content"
+					 	    	android:scaleType="fitStart"
+					 	    	android:src="@drawable/title_change_button"/>
+		 	   			</LinearLayout>
+		 	   		</RelativeLayout>
 		 	 	</LinearLayout>    
 	 	    </RelativeLayout>
 	 	    
