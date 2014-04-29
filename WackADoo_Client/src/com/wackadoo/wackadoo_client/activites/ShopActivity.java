@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.example.wackadoo_webview.R;
+import com.wackadoo.wackadoo_client.adapter.RowItem;
+import com.wackadoo.wackadoo_client.adapter.ShopListViewAdapter;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -14,6 +16,7 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 public class ShopActivity extends Activity {
 	
@@ -36,48 +39,57 @@ public class ShopActivity extends Activity {
         this.setUpListPlatinumCredits();
         this.setUpListGold();
         this.setUpListBonus();
+
 	}
 
 	private void fillTablesWithData() {
 		///TODO: Fill with content from server -> Remove manual added content
 		
-		ArrayAdapter<String> platinumAccountAdapter, platinumCreditsAdapter, goldAdapter, bonusAdapter;
-		List<String> valuesToAdd;
-		
-		// Adding values to platinum account
-		valuesToAdd = new ArrayList<String>();
-		for(int i = 1; i>0; i--)
-		{
-			valuesToAdd.add(String.format(getString(R.string.listPlatinumAccountText), 7,10));
-		}
-		platinumAccountAdapter = new ArrayAdapter<String>(this, R.layout.table_shop, valuesToAdd);
-		listPlatinumAccount.setAdapter(platinumAccountAdapter);
-		
+		ShopListViewAdapter platinumAccountAdapter, platinumCreditsAdapter, goldAdapter, bonusAdapter;
+		ArrayList<RowItem> valuesToAdd;
+
 		// Adding values to platinumCredits
-		valuesToAdd = new ArrayList<String>();
+		valuesToAdd = new ArrayList<RowItem>();
 		for(int i = 1; i>0; i--)
 		{
-			valuesToAdd.add(getString(R.string.listPlatinumCreditsText));
+			String titleToAdd = getString(R.string.listPlatinumCreditsText);
+			RowItem itemToAdd = new RowItem(R.drawable.platinum_small, titleToAdd, 0);
+			valuesToAdd.add(itemToAdd);
 		}
-		platinumCreditsAdapter = new ArrayAdapter<String>(this, R.layout.table_shop, valuesToAdd);
+		platinumCreditsAdapter = new ShopListViewAdapter(this, R.layout.table_shop, valuesToAdd);
 		listPlatinumCredits.setAdapter(platinumCreditsAdapter);
-		
+
 		// Adding values to listGold
-		valuesToAdd = new ArrayList<String>();
-		for(int i = 1; i>0; i--)
+		valuesToAdd = new ArrayList<RowItem>();
+		for(int i = 3; i>0; i--)
 		{
-			valuesToAdd.add(String.format(getString(R.string.listGoldText),15,8));
+			String titleToAdd = String.format(getString(R.string.listGoldText),15,8);
+			RowItem itemToAdd = new RowItem(R.drawable.goldkroete_128px, titleToAdd, 0);
+			valuesToAdd.add(itemToAdd);
 		}
-		goldAdapter = new ArrayAdapter<String>(this, R.layout.table_shop, valuesToAdd);
+		goldAdapter = new ShopListViewAdapter(this, R.layout.table_shop, valuesToAdd);
 		listGold.setAdapter(goldAdapter);
 		
-		// Adding values to listBonus
-		valuesToAdd = new ArrayList<String>();
+		// Adding values to platinum account
+		valuesToAdd = new ArrayList<RowItem>();
 		for(int i = 1; i>0; i--)
 		{
-			valuesToAdd.add(String.format(getString(R.string.listBonusText),5,48,1));
+			String titleToAdd = String.format(getString(R.string.listPlatinumAccountText), 7,10);
+			RowItem itemToAdd = new RowItem(0, titleToAdd, 0);
+			valuesToAdd.add(itemToAdd);
 		}
-		bonusAdapter = new ArrayAdapter<String>(this, R.layout.table_shop, valuesToAdd);
+		platinumAccountAdapter = new ShopListViewAdapter(this, R.layout.table_shop, valuesToAdd);
+		listPlatinumAccount.setAdapter(platinumAccountAdapter);
+		
+		// Adding values to listBonus
+		valuesToAdd = new ArrayList<RowItem>();
+		for(int i = 9; i>0; i--)
+		{
+			String titleToAdd = String.format(getString(R.string.listBonusText),5,48,1);
+			RowItem itemToAdd = new RowItem(R.drawable.resource_stone, titleToAdd, R.drawable.goldkroete_128px);
+			valuesToAdd.add(itemToAdd);
+		}
+		bonusAdapter = new ShopListViewAdapter(this, R.layout.table_shop, valuesToAdd);
 		listBonus.setAdapter(bonusAdapter);
 	}
 

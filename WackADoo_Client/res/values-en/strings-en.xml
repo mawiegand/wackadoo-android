@@ -43,5 +43,6 @@
     <string name="listPlatinumCreditsText" formatted="false">Platinum Credits</string>
     <string name="listGoldText" formatted="false">%d Goldfrogs for %d Credits</string>
     <string name="listBonusText" formatted="false">+%d%% %d h for %d </string>
+    <string name="shopHeadlineText">Buy Credits and purchase Comfortfunctions and Accellerators</string>
     
 </resources>

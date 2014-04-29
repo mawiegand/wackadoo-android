@@ -43,5 +43,6 @@
     <string name="listPlatinumCreditsText" formatted="false">Platinum Credits</string>
     <string name="listGoldText" formatted="false">%d Goldkröten für %d Credits</string>
     <string name="listBonusText" formatted="false">+%d%% %d h für %d </string>
+    <string name="shopHeadlineText">Erwirb Credits und tausche sie gegen Komfortfunktionen und Beschleunigungen</string>
     
 </resources>
