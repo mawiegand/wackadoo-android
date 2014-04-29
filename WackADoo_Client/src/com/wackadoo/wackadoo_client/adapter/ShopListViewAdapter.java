@@ -47,9 +47,13 @@ public class ShopListViewAdapter extends ArrayAdapter<RowItem> {
         holder.title.setText(rowItem.getTitle());
         if(rowItem.getOptionalIconImageId() != 0){
         	holder.optionalImageView.setImageResource(rowItem.getOptionalIconImageId());
+        } else {
+        	holder.optionalImageView.setVisibility(View.GONE);
         }
         if(rowItem.getIconImageId() != 0){
         	holder.imageView.setImageResource(rowItem.getIconImageId());
+        } else {
+        	holder.imageView.setVisibility(View.GONE);;
         }
          
         return convertView;
