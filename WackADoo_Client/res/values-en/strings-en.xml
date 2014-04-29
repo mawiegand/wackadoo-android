@@ -38,4 +38,10 @@
     <string name="credentials_lost_account">Lost access to your account?</string>
     <string name="credentials_restore_account">Restore A Non-Portable Account</string>
     
+    <!-- Shop -->
+    <string name="listPlatinumAccountText" formatted="false">%d days for %d Credits</string>
+    <string name="listPlatinumCreditsText" formatted="false">Platinum Credits</string>
+    <string name="listGoldText" formatted="false">%d Goldfrogs for %d Credits</string>
+    <string name="listBonusText" formatted="false">+%d%% %d h for %d </string>
+    
 </resources>

@@ -38,4 +38,10 @@
     <string name="credentials_lost_account">Haben Sie den Zugriff auf Ihren Account verloren?</string>
     <string name="credentials_restore_account">Nicht portablen Account wiederherstellen</string>
     
+    <!-- Shop -->
+    <string name="listPlatinumAccountText" formatted="false">%d Tage für %d Credits</string>
+    <string name="listPlatinumCreditsText" formatted="false">Platinum Credits</string>
+    <string name="listGoldText" formatted="false">%d Goldkröten für %d Credits</string>
+    <string name="listBonusText" formatted="false">+%d%% %d h für %d </string>
+    
 </resources>
