@@ -6,6 +6,8 @@ import java.util.List;
 import com.example.wackadoo_webview.R;
 import com.wackadoo.wackadoo_client.adapter.RowItem;
 import com.wackadoo.wackadoo_client.adapter.ShopListViewAdapter;
+import com.wackadoo.wackadoo_client.interfaces.ShopOffersCallbackInterface;
+import com.wackadoo.wackadoo_client.tasks.GetShopOffersAsyncTask;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -14,11 +16,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
-public class ShopActivity extends Activity {
+public class ShopActivity extends Activity implements ShopOffersCallbackInterface{
 	
 	ListView listPlatinumAccount, listPlatinumCredits, listGold, listBonus;
 	
@@ -33,64 +34,32 @@ public class ShopActivity extends Activity {
         listGold = (ListView) findViewById(R.id.listGold);
         listBonus = (ListView) findViewById(R.id.listBonus);
         
-        this.fillTablesWithData(); 
-        
-        this.setUpListPlatinumAccount();
-        this.setUpListPlatinumCredits();
-        this.setUpListGold();
-        this.setUpListBonus();
-
+        this.loadShopOffersFromServer(); 
 	}
 
-	private void fillTablesWithData() {
-		///TODO: Fill with content from server -> Remove manual added content
+	private void loadShopOffersFromServer() {
+		new GetShopOffersAsyncTask(this,getApplicationContext(), getString(R.string.platinumCreditsServerPath)).execute();
+		new GetShopOffersAsyncTask(this,getApplicationContext(), getString(R.string.goldFrogsServerPath)).execute();
+		new GetShopOffersAsyncTask(this,getApplicationContext(), getString(R.string.platinumAccountServerPath)).execute();
+		new GetShopOffersAsyncTask(this,getApplicationContext(), getString(R.string.bonusOffersServerPath)).execute();
 		
-		ShopListViewAdapter platinumAccountAdapter, platinumCreditsAdapter, goldAdapter, bonusAdapter;
-		ArrayList<RowItem> valuesToAdd;
+		//TODO:Remove!!!
+		this.getShopOffersCallback(new ArrayList<String>(), "/game_server/shop/bonus_offers");
+	}
+	
+	private void insertRowItemsInList(ArrayList<RowItem> items, ListView list) {
+		ShopListViewAdapter adapter = new ShopListViewAdapter(this, R.layout.table_shop, items);
+		list.setAdapter(adapter);
+		//TODO: calculate right height
+		int height=3000;
+		this.updateListContainersWithHeight(height);
+	}
 
-		// Adding values to platinumCredits
-		valuesToAdd = new ArrayList<RowItem>();
-		for(int i = 1; i>0; i--)
-		{
-			String titleToAdd = getString(R.string.listPlatinumCreditsText);
-			RowItem itemToAdd = new RowItem(R.drawable.platinum_small, titleToAdd, 0);
-			valuesToAdd.add(itemToAdd);
-		}
-		platinumCreditsAdapter = new ShopListViewAdapter(this, R.layout.table_shop, valuesToAdd);
-		listPlatinumCredits.setAdapter(platinumCreditsAdapter);
-
-		// Adding values to listGold
-		valuesToAdd = new ArrayList<RowItem>();
-		for(int i = 3; i>0; i--)
-		{
-			String titleToAdd = String.format(getString(R.string.listGoldText),15,8);
-			RowItem itemToAdd = new RowItem(R.drawable.goldkroete_128px, titleToAdd, 0);
-			valuesToAdd.add(itemToAdd);
-		}
-		goldAdapter = new ShopListViewAdapter(this, R.layout.table_shop, valuesToAdd);
-		listGold.setAdapter(goldAdapter);
-		
-		// Adding values to platinum account
-		valuesToAdd = new ArrayList<RowItem>();
-		for(int i = 1; i>0; i--)
-		{
-			String titleToAdd = String.format(getString(R.string.listPlatinumAccountText), 7,10);
-			RowItem itemToAdd = new RowItem(0, titleToAdd, 0);
-			valuesToAdd.add(itemToAdd);
-		}
-		platinumAccountAdapter = new ShopListViewAdapter(this, R.layout.table_shop, valuesToAdd);
-		listPlatinumAccount.setAdapter(platinumAccountAdapter);
-		
-		// Adding values to listBonus
-		valuesToAdd = new ArrayList<RowItem>();
-		for(int i = 9; i>0; i--)
-		{
-			String titleToAdd = String.format(getString(R.string.listBonusText),5,48,1);
-			RowItem itemToAdd = new RowItem(R.drawable.resource_stone, titleToAdd, R.drawable.goldkroete_128px);
-			valuesToAdd.add(itemToAdd);
-		}
-		bonusAdapter = new ShopListViewAdapter(this, R.layout.table_shop, valuesToAdd);
-		listBonus.setAdapter(bonusAdapter);
+	private void updateListContainersWithHeight(int height) {
+		RelativeLayout layout = (RelativeLayout) findViewById(R.id.listViewContainer);
+		layout.setMinimumHeight(height);
+		layout = (RelativeLayout) findViewById(R.id.scrollViewContainer);
+		layout.setMinimumHeight(height);
 	}
 
 	@Override
@@ -151,7 +120,7 @@ public class ShopActivity extends Activity {
 	}
 	
 	private void buyBonus(Object itemAtPosition) {
-		// TODO buy bonus method
+		// TODO: buy bonus 
 	}
 
 	private void buyPlatinumAccount(Object itemAtPosition) {
@@ -165,7 +134,69 @@ public class ShopActivity extends Activity {
 	private void buyGold(Object itemAtPosition) {
 		// TODO buy gold
 	}
+
+	@Override
+	public void getShopOffersCallback(List<String> offers, String offerType) {
+		
+		///TODO: Fill with content from server -> Remove manual added content, Add right URL to server_values.xml
+		ArrayList<String> valuesToAdd;
+		
+		if(offerType.compareTo(getString(R.string.platinumCreditsServerPath)) == 0) {
+			// Adding values to platinumCredits
+			valuesToAdd = new ArrayList<String>();
+			for(int i = 1; i>0; i--)
+			{
+				valuesToAdd.add(getString(R.string.listPlatinumCreditsText));
+			}
+			ArrayList<RowItem> generatedItems = this.generateRowItemsWithValues(valuesToAdd, R.drawable.platinum_small, 0);
+			this.insertRowItemsInList(generatedItems, listPlatinumCredits);
+	        this.setUpListPlatinumCredits();
+		}
+
+		if(offerType.compareTo(getString(R.string.goldFrogsServerPath)) == 0) {
+			// Adding values to listGold
+			valuesToAdd = new ArrayList<String>();
+			for(int i = 3; i>0; i--)
+			{
+				valuesToAdd.add(String.format(getString(R.string.listGoldText),15,8));
+			}
+			ArrayList<RowItem> generatedItems = this.generateRowItemsWithValues(valuesToAdd, R.drawable.goldkroete_128px, 0);
+			this.insertRowItemsInList(generatedItems, listGold);
+	        this.setUpListGold();
+		}
+		
+		if(offerType.compareTo(getString(R.string.platinumAccountServerPath)) == 0) {
+			// Adding values to platinum account
+			valuesToAdd = new ArrayList<String>();
+			for(int i = 1; i>0; i--)
+			{
+				valuesToAdd.add(String.format(getString(R.string.listPlatinumAccountText), 7,10));
+			}
+			ArrayList<RowItem> generatedItems = this.generateRowItemsWithValues(valuesToAdd, 0, 0);
+			this.insertRowItemsInList(generatedItems, listPlatinumAccount);
+			this.setUpListPlatinumAccount();
+		}
+		
+		if(offerType.compareTo(getString(R.string.bonusOffersServerPath)) == 0) {
+			// Adding values to listBonus
+			valuesToAdd = new ArrayList<String>();
+			for(int i = 9; i>0; i--)
+			{
+				valuesToAdd.add(String.format(getString(R.string.listBonusText),5,48,1));
+			}
+			ArrayList<RowItem> generatedItems = this.generateRowItemsWithValues(valuesToAdd, R.drawable.resource_stone, R.drawable.goldkroete_128px);
+			this.insertRowItemsInList(generatedItems, listBonus);
+			this.setUpListBonus();
+		}
+	}	
 	
-	
-	
+	public ArrayList<RowItem> generateRowItemsWithValues(List<String> offers, int leftImage, int rightImage) {
+		ArrayList<RowItem> valuesToAdd = new ArrayList<RowItem>();
+		for(String current : offers)
+		{
+			RowItem itemToAdd = new RowItem(leftImage, current, rightImage);
+			valuesToAdd.add(itemToAdd);
+		}
+		return valuesToAdd;
+	}
 }

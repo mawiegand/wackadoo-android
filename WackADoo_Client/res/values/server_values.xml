@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string name="bonusOffersServerPath">/game_server/shop/bonus_offers</string>
+    <string name="platinumCreditsServerPath">/game_server/shop/bonus_offers</string>
+    <string name="goldFrogsServerPath">/game_server/shop/bonus_offers</string>
+    <string name="platinumAccountServerPath">/game_server/shop/bonus_offers</string>
+    
+</resources>
