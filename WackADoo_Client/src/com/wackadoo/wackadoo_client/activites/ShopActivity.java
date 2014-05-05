@@ -50,16 +50,16 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 	private void insertRowItemsInList(ArrayList<RowItem> items, ListView list) {
 		ShopListViewAdapter adapter = new ShopListViewAdapter(this, R.layout.table_shop, items);
 		list.setAdapter(adapter);
-		//TODO: calculate right height
-		int height=3000;
-		this.updateListContainersWithHeight(height);
+		this.updateListContainers();
 	}
 
-	private void updateListContainersWithHeight(int height) {
-		RelativeLayout layout = (RelativeLayout) findViewById(R.id.listViewContainer);
-		layout.setMinimumHeight(height);
-		layout = (RelativeLayout) findViewById(R.id.scrollViewContainer);
-		layout.setMinimumHeight(height);
+	private void updateListContainers() {
+		RelativeLayout listView = (RelativeLayout) findViewById(R.id.listViewContainer);
+		RelativeLayout scroll = (RelativeLayout) findViewById(R.id.scrollViewContainer);
+		listView.invalidate();
+		listView.requestLayout();
+		scroll.invalidate();
+		scroll.requestLayout();
 	}
 
 	@Override
