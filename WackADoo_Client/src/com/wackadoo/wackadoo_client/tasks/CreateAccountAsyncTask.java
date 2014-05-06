@@ -18,8 +18,10 @@ import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpConnectionParams;
 import org.json.JSONObject;
 
+import com.example.wackadoo_webview.R;
 import com.wackadoo.wackadoo_client.interfaces.CreateAccountCallbackInterface;
 
+import android.app.Activity;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -42,8 +44,13 @@ public class CreateAccountAsyncTask extends AsyncTask<String, Integer, Double> {
 	}
 	
 	public  void postDataToServer() throws Throwable {
-
-		HttpPost request = new HttpPost("https://wack-a-doo.de/identity_provider/" + Locale.getDefault().getCountry().toLowerCase() + "/identities");
+		
+		Activity parent = (Activity) this.listener;
+		String urlForRequest = parent.getString(R.string.createAccountURL);
+		String baseURL = parent.getString(R.string.baseURL);
+		urlForRequest = baseURL + String.format(urlForRequest, Locale.getDefault().getCountry().toLowerCase());
+		
+		HttpPost request = new HttpPost(urlForRequest);
 		StringBuilder sb=new StringBuilder();
 		
 		List < NameValuePair > nameValuePairs = new ArrayList < NameValuePair > (6);

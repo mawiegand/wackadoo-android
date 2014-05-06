@@ -18,6 +18,7 @@ import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpConnectionParams;
 import org.json.JSONObject;
 
+import com.example.wackadoo_webview.R;
 import com.wackadoo.wackadoo_client.interfaces.ShopOffersCallbackInterface;
 import com.wackadoo.wackadoo_client.model.DeviceInformation;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
@@ -51,9 +52,7 @@ public class GetShopOffersAsyncTask extends AsyncTask<String, Integer, Double> {
 	public  void postDataToServer() throws Throwable
     {
 
-	    DeviceInformation deviceInformation = new DeviceInformation(context);
-
-	    HttpPost request = new HttpPost("https://wack-a-doo.de" + offerType);
+		HttpPost request = new HttpPost(context.getString(R.string.baseURL) + offerType);
 	    StringBuilder sb=new StringBuilder();
 	
 	/*    String username, password;
@@ -71,12 +70,7 @@ public class GetShopOffersAsyncTask extends AsyncTask<String, Integer, Double> {
 		nameValuePairs.add(new BasicNameValuePair("username", username));
 		nameValuePairs.add(new BasicNameValuePair("password", password));
 		nameValuePairs.add(new BasicNameValuePair("grant_type", "password"));
-		nameValuePairs.add(new BasicNameValuePair("scope", ""));
-		nameValuePairs.add(new BasicNameValuePair("operating_system", deviceInformation.getOs()));
-		nameValuePairs.add(new BasicNameValuePair("app_token", deviceInformation.getUniqueTrackingToken()));
-		nameValuePairs.add(new BasicNameValuePair("hardware_string", deviceInformation.getHardware()));
-		nameValuePairs.add(new BasicNameValuePair("hardware_token", deviceInformation.getBundleBuild()));
-		nameValuePairs.add(new BasicNameValuePair("version", deviceInformation.getBundleVersion())); */
+		nameValuePairs.add(new BasicNameValuePair("scope", ""));*/
 		
 		UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nameValuePairs);
 	    entity.setContentType("application/x-www-form-urlencoded;charset=UTF-8");
@@ -104,7 +98,6 @@ public class GetShopOffersAsyncTask extends AsyncTask<String, Integer, Double> {
 	    while((line = reader.readLine()) != null){
 	        sb.append(line);
 	    }
-	    System.out.println("asdf: "+sb.toString());
 	    JSONObject jsonObj = new JSONObject(sb.toString());
 	    List<String> offers = new ArrayList<String>();
 	    this.listener.getShopOffersCallback(offers, this.offerType);

@@ -18,10 +18,12 @@ import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpConnectionParams;
 import org.json.JSONObject;
 
+import com.example.wackadoo_webview.R;
 import com.wackadoo.wackadoo_client.interfaces.GameLoginCallbackInterface;
 import com.wackadoo.wackadoo_client.model.DeviceInformation;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -53,7 +55,11 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Double> {
 
 	    DeviceInformation deviceInformation = new DeviceInformation(context);
 
-	    HttpPost request = new HttpPost("https://wack-a-doo.de/identity_provider/" + Locale.getDefault().getCountry().toLowerCase() + "/oauth2/access_token");
+	    Activity parent = (Activity) this.listener;
+		String urlForRequest = parent.getString(R.string.loginURL);
+		String baseURL = parent.getString(R.string.baseURL);
+		urlForRequest = baseURL + String.format(urlForRequest, Locale.getDefault().getCountry().toLowerCase());
+	    HttpPost request = new HttpPost(urlForRequest);
 	    StringBuilder sb=new StringBuilder();
 	
 	    String username, password;
