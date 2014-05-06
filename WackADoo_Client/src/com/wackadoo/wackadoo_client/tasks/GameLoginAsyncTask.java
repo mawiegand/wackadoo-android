@@ -58,8 +58,8 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Double> {
 	    Activity parent = (Activity) this.listener;
 		String urlForRequest = parent.getString(R.string.loginURL);
 		String baseURL = parent.getString(R.string.baseURL);
-		urlForRequest = baseURL + String.format(urlForRequest, Locale.getDefault().getCountry().toLowerCase());
-	    HttpPost request = new HttpPost(urlForRequest);
+		String completeURL = baseURL + String.format(urlForRequest, Locale.getDefault().getCountry().toLowerCase());
+	    HttpPost request = new HttpPost(completeURL);
 	    StringBuilder sb=new StringBuilder();
 	
 	    String username, password;
