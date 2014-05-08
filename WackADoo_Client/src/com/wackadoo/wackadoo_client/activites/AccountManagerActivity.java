@@ -219,10 +219,10 @@ public class AccountManagerActivity extends Activity {
 	private void loadCredentialsToUI() {
     	String username = userCredentials.getUsername();
     	String email = userCredentials.getEmail();
-    	if(username != null) {
+    	if(!username.isEmpty()) {
     		usernameTextView.setText(username);
     	}
-    	if(email != null) {
+    	if(!email.isEmpty()) {
     		emailTextView.setText(email);
     	}
 	}
