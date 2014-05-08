@@ -1,142 +1,151 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView android:layout_width="match_parent" android:layout_height="match_parent" xmlns:android="http://schemas.android.com/apk/res/android">
-<RelativeLayout 
+<FrameLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" 
     android:background="#ffffff">
-
+    
     <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/title_bg"
-        android:scaleType="centerCrop" />
-
-    <TextView
-        android:id="@+id/textHeadline"
-        android:gravity="center"
-        android:layout_centerHorizontal="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:textSize="25sp"
-        android:textColor="#000000"
-        android:text="@string/your_account_headline"
-        android:textAlignment="center" />
-    
-    <TextView
-        android:id="@+id/usernameText"
-        android:layout_below="@+id/textHeadline"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="26dp"
-        android:layout_marginRight="35dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:textSize="20sp"
-        android:textColor="#000000" />
-
-    <Button
-        android:id="@+id/signOutButton"
-        android:background="@null"
-        android:layout_toRightOf="@+id/usernameText"
-        android:layout_below="@+id/textHeadline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/account_sign_out_button"
-        android:textColor="#FF7F24"/>
-    
-    <TextView
-        android:id="@+id/emailAccountText"
-        android:layout_below="@+id/usernameText"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="26dp"
-        android:layout_marginRight="35dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:textSize="20sp"
-        android:textColor="#000000" />
-
-    <ImageView
-        android:id="@+id/emailAccountCheckedImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/signOutButton"
-        android:layout_toRightOf="@+id/emailAccountText"
-        android:src="@drawable/check_marked_box"
-        android:scaleType="center"
-        android:visibility="invisible" />
-    
-    <TextView
-        android:id="@+id/emailInformationText"
-        android:layout_below="@+id/emailAccountText"
-        android:layout_marginTop="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/account_email_information"
-        android:textSize="16sp"
-        android:textColor="#000000"
-        android:gravity="center"
-        android:textAlignment="center"
-        android:visibility="invisible"  />
-    
-    <Button
-        android:id="@+id/setEmailButton"
-        android:background="@null"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/usernameText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/account_set_email"
-        android:textColor="#FF7F24"/>
-    
-    <TextView
-        android:id="@+id/emailText"
-        android:layout_below="@+id/setEmailButton"
-        android:layout_marginTop="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/account_provide_email"
-        android:textSize="18sp"
-        android:textColor="#000000"
-        android:gravity="center"
-        android:textAlignment="center"  />
-    
-    <TextView
-        android:id="@+id/characterLockedText"
-        android:layout_below="@+id/emailText"
-        android:layout_marginTop="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/account_character_locked"
-        android:textSize="22sp"
-        android:textColor="#FF4040"
-        android:gravity="center"
-        android:textAlignment="center"  />
-    
-    <TextView
-        android:id="@+id/makeCharacterPortableText"
-        android:layout_below="@+id/characterLockedText"
-        android:layout_marginTop="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/account_character_portable"
-        android:textSize="18sp"
-        android:textColor="#000000"
-        android:gravity="center"
-        android:textAlignment="center"  />
-    
-    <Button
-        android:id="@+id/passwordButton"
-        android:background="@null"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/makeCharacterPortableText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/account_set_password"
-        android:textColor="#FF7F24"/>
+	        android:id="@+id/imageView"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:src="@drawable/title_bg"
+	        android:scaleType="centerCrop" />
 	
-</RelativeLayout>
-</ScrollView>
+	<ScrollView 
+	    android:layout_width="match_parent" 
+	    android:layout_height="match_parent" >
+	    
+	    <RelativeLayout 
+	        android:layout_width="match_parent"
+    		android:layout_height="wrap_content"
+    		android:orientation="vertical">
+		    
+			<TextView
+		        android:id="@+id/textHeadline"
+		        android:gravity="center"
+		        android:layout_centerHorizontal="true"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_marginTop="16dp"
+		        android:textSize="25sp"
+		        android:textColor="#000000"
+		        android:text="@string/your_account_headline"
+		        android:textAlignment="center" />
+		    
+		    <TextView
+		        android:id="@+id/usernameText"
+		        android:layout_below="@+id/textHeadline"
+		        android:layout_marginTop="10dp"
+		        android:layout_marginLeft="26dp"
+		        android:layout_marginRight="35dp"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/account_userName_unknown_fallbackText"
+		        android:textSize="20sp"
+		        android:textColor="#000000" />
+		
+		    <Button
+		        android:id="@+id/signOutButton"
+		        android:background="@null"
+		        android:layout_toRightOf="@+id/usernameText"
+		        android:layout_below="@+id/textHeadline"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/account_sign_out_button"
+		        android:textColor="#FF7F24"/>
+		    
+		    <TextView
+		        android:id="@+id/emailAccountText"
+		        android:layout_below="@+id/usernameText"
+		        android:layout_marginTop="10dp"
+		        android:layout_marginLeft="26dp"
+		        android:layout_marginRight="35dp"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text=""
+		        android:textSize="20sp"
+		        android:textColor="#000000" />
+		
+		    <ImageView
+		        android:id="@+id/emailAccountCheckedImage"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_below="@+id/signOutButton"
+		        android:layout_toRightOf="@+id/emailAccountText"
+		        android:src="@drawable/check_marked_box"
+		        android:scaleType="center"
+		        android:visibility="invisible" />
+		    
+		    <TextView
+		        android:id="@+id/emailInformationText"
+		        android:layout_below="@+id/emailAccountText"
+		        android:layout_marginTop="10dp"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/account_email_information"
+		        android:textSize="16sp"
+		        android:textColor="#000000"
+		        android:gravity="center"
+		        android:textAlignment="center"
+		        android:visibility="invisible"  />
+		    
+		    <Button
+		        android:id="@+id/setEmailButton"
+		        android:background="@null"
+		        android:layout_centerHorizontal="true"
+		        android:layout_below="@+id/usernameText"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/account_set_email"
+		        android:textColor="#FF7F24"/>
+		    
+		    <TextView
+		        android:id="@+id/emailText"
+		        android:layout_below="@+id/setEmailButton"
+		        android:layout_marginTop="10dp"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/account_provide_email"
+		        android:textSize="18sp"
+		        android:textColor="#000000"
+		        android:gravity="center"
+		        android:textAlignment="center"  />
+		    
+		    <TextView
+		        android:id="@+id/characterLockedText"
+		        android:layout_below="@+id/emailText"
+		        android:layout_marginTop="10dp"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/account_character_locked"
+		        android:textSize="22sp"
+		        android:textColor="#FF4040"
+		        android:gravity="center"
+		        android:textAlignment="center"  />
+		    
+		    <TextView
+		        android:id="@+id/makeCharacterPortableText"
+		        android:layout_below="@+id/characterLockedText"
+		        android:layout_marginTop="10dp"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/account_character_portable"
+		        android:textSize="18sp"
+		        android:textColor="#000000"
+		        android:gravity="center"
+		        android:textAlignment="center"  />
+		    
+		    <Button
+		        android:id="@+id/passwordButton"
+		        android:background="@null"
+		        android:layout_centerHorizontal="true"
+		        android:layout_below="@+id/makeCharacterPortableText"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/account_set_password"
+		        android:textColor="#FF7F24"/>
+	    </RelativeLayout>
+	</ScrollView>
+</FrameLayout>
