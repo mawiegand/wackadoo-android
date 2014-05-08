@@ -27,6 +27,7 @@
     <string name="account_character_locked">Your character is presently locked to this particular device!</string>
     <string name="account_character_portable">You have these options to make your character &quot;portable&quot;</string>
     <string name="account_set_password">Set A Password</string>
+    <string name="account_userName_unknown_fallbackText">Unknown User</string>
     
     <!-- CredentialScreen -->
     <string name="invalid_credential_toast">Enter valid Credentials</string>

@@ -27,6 +27,7 @@
     <string name="account_character_locked">Ihr Charakter ist derzeit auf dieses Gerät beschränkt!</string>
     <string name="account_character_portable">Sie haben folgende Optionen um Ihn tragbar zu machen:</string>
     <string name="account_set_password">Passwort angeben</string>
+    <string name="account_userName_unknown_fallbackText">Unbekannter Nutzer</string>
     
     <!-- CredentialScreen -->
     <string name="invalid_credential_toast">Geben Sie gültige Daten ein</string>
