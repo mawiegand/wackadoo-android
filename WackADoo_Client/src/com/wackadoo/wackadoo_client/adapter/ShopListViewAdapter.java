@@ -2,8 +2,6 @@ package com.wackadoo.wackadoo_client.adapter;
 
 import java.util.List;
 
-import com.example.wackadoo_webview.R;
-
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.wackadoo.wackadoo_client.R;
  
 public class ShopListViewAdapter extends ArrayAdapter<RowItem> {
  

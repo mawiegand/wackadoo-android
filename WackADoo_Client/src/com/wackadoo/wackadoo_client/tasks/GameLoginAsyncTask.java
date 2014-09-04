@@ -18,15 +18,15 @@ import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpConnectionParams;
 import org.json.JSONObject;
 
-import com.example.wackadoo_webview.R;
-import com.wackadoo.wackadoo_client.interfaces.GameLoginCallbackInterface;
-import com.wackadoo.wackadoo_client.model.DeviceInformation;
-import com.wackadoo.wackadoo_client.model.UserCredentials;
-
 import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+
+import com.wackadoo.wackadoo_client.R;
+import com.wackadoo.wackadoo_client.interfaces.GameLoginCallbackInterface;
+import com.wackadoo.wackadoo_client.model.DeviceInformation;
+import com.wackadoo.wackadoo_client.model.UserCredentials;
 
 public class GameLoginAsyncTask extends AsyncTask<String, Integer, Double> {
 	

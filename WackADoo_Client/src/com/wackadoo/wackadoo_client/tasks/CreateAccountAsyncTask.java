@@ -18,12 +18,12 @@ import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpConnectionParams;
 import org.json.JSONObject;
 
-import com.example.wackadoo_webview.R;
-import com.wackadoo.wackadoo_client.interfaces.CreateAccountCallbackInterface;
-
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.util.Log;
+
+import com.wackadoo.wackadoo_client.R;
+import com.wackadoo.wackadoo_client.interfaces.CreateAccountCallbackInterface;
 
 public class CreateAccountAsyncTask extends AsyncTask<String, Integer, Double> {
 	

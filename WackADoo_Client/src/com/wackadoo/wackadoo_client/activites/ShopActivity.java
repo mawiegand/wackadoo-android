@@ -3,12 +3,6 @@ package com.wackadoo.wackadoo_client.activites;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.wackadoo_webview.R;
-import com.wackadoo.wackadoo_client.adapter.RowItem;
-import com.wackadoo.wackadoo_client.adapter.ShopListViewAdapter;
-import com.wackadoo.wackadoo_client.interfaces.ShopOffersCallbackInterface;
-import com.wackadoo.wackadoo_client.tasks.GetShopOffersAsyncTask;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -18,6 +12,12 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+
+import com.wackadoo.wackadoo_client.R;
+import com.wackadoo.wackadoo_client.adapter.RowItem;
+import com.wackadoo.wackadoo_client.adapter.ShopListViewAdapter;
+import com.wackadoo.wackadoo_client.interfaces.ShopOffersCallbackInterface;
+import com.wackadoo.wackadoo_client.tasks.GetShopOffersAsyncTask;
 
 public class ShopActivity extends Activity implements ShopOffersCallbackInterface{
 	
@@ -65,8 +65,8 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.main, menu);
-		  	return true;
-		}
+		return true;
+	}
 		
 	@Override
 	protected void onResume() {

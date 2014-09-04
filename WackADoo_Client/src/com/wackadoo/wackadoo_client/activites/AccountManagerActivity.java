@@ -1,8 +1,5 @@
 package com.wackadoo.wackadoo_client.activites;
 
-import com.example.wackadoo_webview.R;
-import com.wackadoo.wackadoo_client.model.UserCredentials;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -21,6 +18,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.wackadoo.wackadoo_client.R;
+import com.wackadoo.wackadoo_client.model.UserCredentials;
 
 public class AccountManagerActivity extends Activity {
 	

@@ -1,8 +1,5 @@
 package com.wackadoo.wackadoo_client.activites;
 
-import com.example.wackadoo_webview.R;
-import com.wackadoo.wackadoo_client.javascriptinterfaces.LoginJavaScriptHandler;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
@@ -13,6 +10,9 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
+import com.wackadoo.wackadoo_client.R;
+import com.wackadoo.wackadoo_client.javascriptinterfaces.LoginJavaScriptHandler;
 
 public class WackadooWebviewActivity extends Activity {	
 
@@ -38,9 +38,10 @@ public class WackadooWebviewActivity extends Activity {
 	        webSettings.setAllowFileAccess(true);
 	        Bundle b = getIntent().getExtras();
 	        
-	        final LoginJavaScriptHandler loginHandler = new LoginJavaScriptHandler(b.getString("accessToken"), b.getString("expiration"), b.getString("userId"));
-	        webView.addJavascriptInterface(loginHandler, "LoginHandler");
-	        webView.loadUrl("file:///android_asset/index.html");
+//	        final LoginJavaScriptHandler loginHandler = new LoginJavaScriptHandler(b.getString("accessToken"), b.getString("expiration"), b.getString("userId"));
+//	        webView.addJavascriptInterface(loginHandler, "LoginHandler");
+	        webView.loadUrl("http://www.wack-a-doo.de");
+//	        webView.loadUrl("file:///android_asset/index.html");
 	    }
 
 		@Override

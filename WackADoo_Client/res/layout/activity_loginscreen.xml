@@ -3,15 +3,20 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.wackadoo.wackadoo_client.activites.WackadooWebviewActivity"
+    tools:context="com.wackadoo.wackadoo_client.activites.LoginScreenActivity"
     tools:ignore="MergeRootFrame" >
 
+    
+    <!-- ............... BACKGROUND ............... -->
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
+        android:alpha="0.9"
         android:src="@drawable/title_bg" />
     
+    
+    <!-- ............... HEADER ............... -->
     <LinearLayout 
         android:id="@+id/headerVerticalContainer"
     	android:layout_height="match_parent" 
@@ -51,7 +56,7 @@
 	    		    <RelativeLayout
 	    		        android:id="@+id/shopButtonSpacer" 
 	 	    			android:layout_width="match_parent"
-	 	    			android:layout_weight="0.1"
+	 	    			android:layout_weight="0.10"
 	 	    			android:layout_height="0dp" >
 	 				</RelativeLayout>
 	    			
@@ -87,29 +92,39 @@
 	        	android:layout_width="0dp"
 	      		android:layout_weight="0.2">
 	    		
-	    		<ImageView
-	    	    	android:layout_width="wrap_content"
-	    	    	android:layout_height="wrap_content"
-	    	    	android:layout_gravity="left"
-	    	    	android:layout_centerInParent="true"
-	    	    	android:scaleType="fitCenter"
-	    	    	android:src="@drawable/title_info_button"
-	    	    	android:paddingRight="15dip"
-	    	    	android:layout_alignParentRight="true" />
-	    		
-				<ImageView
+	   		    <ImageButton
+				    android:id="@+id/title_sound_button" 
 	    	    	android:layout_height="wrap_content"
 	    	    	android:layout_width="wrap_content"
 	    	    	android:layout_gravity="right"
 	    	    	android:layout_centerInParent="true"
 	    	    	android:scaleType="fitCenter"
+	    	    	android:background="@null"
 	    	    	android:src="@drawable/title_sound_off" 
-					android:paddingRight="45dip"
+					android:paddingRight="45dp"
+	    	    	android:paddingLeft="0dip"
 	    	    	android:layout_alignParentRight="true" />
+	   		    
+	    		<ImageButton
+	    		    android:id="@+id/title_info_button" 
+	    	    	android:layout_width="wrap_content"
+	    	    	android:layout_height="wrap_content"
+	    	    	android:layout_gravity="right"
+	    	    	android:layout_centerInParent="true"
+	    	    	android:scaleType="fitCenter"
+	    	    	android:background="@null"
+	    	    	android:src="@drawable/title_info_button"
+	    	    	android:paddingRight="10dip"
+	    	    	android:paddingLeft="0dip"
+	    	    	android:layout_alignParentRight="true" />
+	    		
+				
 	   		</RelativeLayout>    		
 	    </LinearLayout>
     </LinearLayout>
 	    
+    
+    <!-- ............... LOGO ............... -->
     <LinearLayout 
         android:id="@+id/logoLinearContainer"
     	android:layout_height="match_parent" 
@@ -132,6 +147,8 @@
 	  	</RelativeLayout>
   	</LinearLayout>
   	
+    
+    <!-- ............... FOOTER ............... -->
     <LinearLayout 
         android:id="@+id/footerVerticalContainer"
 	 	android:layout_height="match_parent" 
@@ -160,6 +177,7 @@
 			 	    android:adjustViewBounds="true"
 			 	    android:scaleType="fitEnd"
 			 	    android:src="@drawable/title_bar"/>
+	 	        
 	 	        <LinearLayout
 			 	    android:id="@+id/footerHorizontalSplittingContainer"
 			    	android:layout_height="match_parent" 
@@ -168,16 +186,38 @@
 			    	android:weightSum="1.0">
 	    		    
 	 	            <RelativeLayout 
-			       		android:id="@+id/loginButtonSpacer" 
+			       		android:id="@+id/characterFrameSpacer" 
 				        android:layout_width="0dp"
-				        android:layout_weight="0.33"
-			            android:layout_height="match_parent">
-				 	</RelativeLayout>
+				        android:layout_weight="0.25"
+			            android:layout_height="match_parent"/>
+				 	
+	 	            <LinearLayout 
+			       		android:id="@+id/characterFrameContainer" 
+				        android:layout_width="wrap_content"
+			            android:layout_height="match_parent"
+				        android:weightSum="1.0"
+				        android:orientation="vertical">
+	    		    
+	 	              	<RelativeLayout 
+				       		android:id="@+id/characterFrameContainerSpacer" 
+					        android:layout_width="wrap_content"
+					        android:layout_weight="0.20"
+				            android:layout_height="1dp"/>  
+	    		    
+	 	                <ImageButton 
+			 	    		android:id="@+id/characterFrame"
+	 	                	android:background="@null"
+			 	    		android:layout_width="match_parent"
+			 	    		android:layout_height="wrap_content"
+				 	    	android:scaleType="fitCenter"
+				 	    	android:layout_weight="0.50"
+				 	    	android:src="@drawable/title_character_frame"/> 
+				 	</LinearLayout>
 		 	
 			 	    <RelativeLayout 
 			       		android:id="@+id/accountmanagerButtonContainer" 
 				        android:layout_width="0dp"
-				        android:layout_weight="0.25"
+				        android:layout_weight="0.10"
 			            android:layout_height="wrap_content"
 			            android:layout_gravity="center">
 				 	
@@ -192,7 +232,7 @@
 			       				android:id="@+id/accountmanagerButtonVerticalSpacer" 
 				        		android:layout_width="match_parent"
 					 	    	android:layout_height="0dp"
-					 	    	android:layout_weight="0.30" />
+					 	    	android:layout_weight="0.29" />
 			 	            
 			 	            <RelativeLayout 
 			       				android:id="@+id/accountmanagerButtonVerticalContainer" 
@@ -231,24 +271,53 @@
 			 		<RelativeLayout 
 			       		android:id="@+id/loginButtonContainer" 
 				        android:layout_width="0dp"
-				        android:layout_weight="0.3"
+				        android:layout_weight="0.35"
 			            android:layout_height="wrap_content"
 			            android:layout_gravity="center">
-					 	
-				  		<ImageButton
-					  	    android:background="@null"
-					  	    android:id="@+id/loginButton"
-				  		    android:layout_width="wrap_content"
-					  	    android:layout_height="wrap_content"
-					  	    android:adjustViewBounds="true"
-				  		    android:scaleType="fitCenter"
-				  	    	android:src="@anim/animationlist_loginbutton" />
+			 		        
+			 		    <!-- <LinearLayout 
+			 		    	    android:id="@+id/loginButtonVerticalContainer" 
+						        android:layout_width="wrap_content"
+						        android:orientation="vertical"
+					            android:layout_height="wrap_content"
+					            android:weightSum="1.0">
+								
+						 		<RelativeLayout 
+						       		android:id="@+id/loginButtonVerticalSpacer" 
+							        android:layout_width="1dp"
+							        android:layout_weight="0.95"
+						            android:layout_height="wrap_content"
+						            android:layout_gravity="center" /> -->
+			 		    	    
+			 		    	    <TextView
+			 		    	        android:id="@+id/title_version_text"
+			 		    	        android:layout_width="fill_parent"
+			 		    	        android:layout_height="wrap_content"
+			 		    	        android:text="Version 1.23#49"
+			 		    	        android:textSize="14sp"
+			 		    	        android:gravity="right"
+			 		    	        android:textColor="#AFAFAF"
+			 		    	        android:layout_alignParentTop="true"
+			 		    	        android:layout_marginTop="45dp"
+			 		    	        android:layout_marginRight="30dp" />
+			 		    	    			 	            
+				 		        <ImageButton
+							  	    android:background="@null"
+							  	    android:id="@+id/loginButton"
+						  		    android:layout_width="wrap_content"
+							  	    android:layout_height="wrap_content"
+							  	    android:adjustViewBounds="true"
+						  		    android:scaleType="fitCenter"
+						  		    android:layout_below="@+id/title_version_text" 
+						  		    android:layout_marginTop="5dp"/>
+				 		        
+			 		    	<!--  </LinearLayout> -->
 			 		</RelativeLayout>
 			 		
 			 		<RelativeLayout 
 			       		android:id="@+id/facebookButtonContainer" 
 				        android:layout_width="0dp"
-				        android:layout_weight="0.12"
+				        android:layout_weight="0.13"
 			            android:layout_height="wrap_content"
 			            android:layout_gravity="center">
 				  		
@@ -262,14 +331,14 @@
 				  		    <RelativeLayout 
 			     				android:id="@+id/facebookSpacer" 
 				    			android:layout_width="match_parent"
-				    			android:layout_weight="0.59"
+				    			android:layout_weight="0.66"
 			        			android:layout_height="0dp">
 							</RelativeLayout>
 				 		    
 				 		    <RelativeLayout 
 			       				android:id="@+id/facebookButtonVerticalContainer" 
 				        		android:layout_width="wrap_content"
-				        		android:layout_weight="0.41"
+				        		android:layout_weight="0.35"
 			            		android:layout_height="0dp"
 			            		android:layout_gravity="center">
 				 		    		

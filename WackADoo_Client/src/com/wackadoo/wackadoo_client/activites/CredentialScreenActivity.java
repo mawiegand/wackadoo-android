@@ -1,18 +1,5 @@
 package com.wackadoo.wackadoo_client.activites;
 
-import com.example.wackadoo_webview.R;
-import com.facebook.Session;
-import com.facebook.SessionState;
-import com.facebook.UiLifecycleHelper;
-import com.facebook.model.GraphUser;
-import com.facebook.widget.LoginButton;
-import com.facebook.widget.LoginButton.UserInfoChangedCallback;
-import com.wackadoo.wackadoo_client.interfaces.GameLoginCallbackInterface;
-import com.wackadoo.wackadoo_client.interfaces.CreateAccountCallbackInterface;
-import com.wackadoo.wackadoo_client.model.UserCredentials;
-import com.wackadoo.wackadoo_client.tasks.GameLoginAsyncTask;
-import com.wackadoo.wackadoo_client.tasks.CreateAccountAsyncTask;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -27,6 +14,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.facebook.Session;
+import com.facebook.SessionState;
+import com.facebook.UiLifecycleHelper;
+import com.facebook.model.GraphUser;
+import com.facebook.widget.LoginButton;
+import com.facebook.widget.LoginButton.UserInfoChangedCallback;
+import com.wackadoo.wackadoo_client.R;
+import com.wackadoo.wackadoo_client.interfaces.CreateAccountCallbackInterface;
+import com.wackadoo.wackadoo_client.interfaces.GameLoginCallbackInterface;
+import com.wackadoo.wackadoo_client.model.UserCredentials;
+import com.wackadoo.wackadoo_client.tasks.CreateAccountAsyncTask;
+import com.wackadoo.wackadoo_client.tasks.GameLoginAsyncTask;
+
 public class CredentialScreenActivity extends Activity implements CreateAccountCallbackInterface, GameLoginCallbackInterface{
 	
 	private UserCredentials userCredentials;
@@ -38,17 +38,17 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
+//		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_credentialscreen);    
 		this.userCredentials = new UserCredentials(this.getApplicationContext());
 		
-		uiHelper = new UiLifecycleHelper(this, statusCallback);
-        uiHelper.onCreate(savedInstanceState);
+//		uiHelper = new UiLifecycleHelper(this, statusCallback);
+//        uiHelper.onCreate(savedInstanceState);
 
 		this.signInButton = (Button) findViewById(R.id.signInButton);
 		this.passwordEditText = (EditText) findViewById(R.id.passwordField);
 		this.userNameEditText = (EditText) findViewById(R.id.usernameField);
-		this.loginBtn = (LoginButton) findViewById(R.id.facebookButton);
+//		this.loginBtn = (LoginButton) findViewById(R.id.facebookButton);
 		this.createAccountButton = (Button) findViewById(R.id.createAccountButton);
 		this.restoreAccountButton = (Button) findViewById(R.id.recoverAccountButton);
 		
@@ -72,7 +72,7 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 	
 	private void setUpButtonListener() {
 		this.setUpSignInButton();
-		this.setUpFacebookButton();
+//		this.setUpFacebookButton();
 		this.setUpCreateAccountButton();
 		this.setUpRestoreAccountButton();
 	}
@@ -216,19 +216,19 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 	    @Override
 	    public void onResume() {
 	        super.onResume();
-	        uiHelper.onResume();
+//	        uiHelper.onResume();
 	    }
 	 
 	    @Override
 	    public void onPause() {
 	        super.onPause();
-	        uiHelper.onPause();
+//	        uiHelper.onPause();
 	    }
 	 
 	    @Override
 	    public void onDestroy() {
 	        super.onDestroy();
-	        uiHelper.onDestroy();
+//	        uiHelper.onDestroy();
 	    }
 	 
 	    @Override

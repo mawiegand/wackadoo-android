@@ -1,11 +1,11 @@
 package com.wackadoo.wackadoo_client.tasks;
 
-import com.example.wackadoo_webview.R;
-import com.facebook.Session;
-import com.wackadoo.wackadoo_client.interfaces.FacebookLoginCallbackInterface;
-
 import android.content.Context;
 import android.os.AsyncTask;
+
+import com.facebook.Session;
+import com.wackadoo.wackadoo_client.R;
+import com.wackadoo.wackadoo_client.interfaces.FacebookLoginCallbackInterface;
 
 public class FacebookLoginAsyncTask extends AsyncTask<String, Integer, Double>{
 
