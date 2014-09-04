@@ -13,9 +13,10 @@
 	
 	<ScrollView 
 	    android:layout_width="match_parent" 
-	    android:layout_height="match_parent" >
+	    android:layout_height="match_parent"
+	    android:layout_marginTop="35dp" >
 	    
-			<RelativeLayout 
+		<RelativeLayout 
 		    android:id="@+id/scrollViewContainer"
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
@@ -35,15 +36,15 @@
 		            android:layout_height="match_parent" />
 		    
 		    	<TextView 
+		    	    style="@style/customTextViewStyle"
 			        android:id="@+id/shopText"
 			        android:layout_width="0dp"
 			        android:layout_weight="0.7"
-			        android:layout_height="wrap_content"
 			        android:text="@string/shopHeadlineText"
 			        android:textColor="#000000"
 			        android:textSize="@dimen/shopHeadlineFontsize"
-			        android:paddingTop="30dp"
-			        android:layout_gravity="center_vertical"/>
+			       	android:gravity="center_vertical|right"
+			       	android:layout_gravity="center_vertical"/>
 			    
 			    <ImageView 
 			        android:id="@+id/shopHeaderIcon"
@@ -58,49 +59,115 @@
 		    
 		    <RelativeLayout 
 		        android:id="@+id/listViewContainer"
-		        android:layout_height="800dp"
+		        android:layout_height="wrap_content"
 		        android:layout_width="match_parent"
-		        android:layout_below="@id/headlineContainer">
+		        android:layout_below="@id/headlineContainer"
+		        android:layout_marginTop="30dp"
+		        android:paddingLeft="50dp"
+	            android:paddingRight="50dp">
 		     
+		        <TextView 
+		            android:id="@+id/subheadingPlatinumCredits"
+		            style="@style/shopSubHeadingStyle"
+		            android:text="@string/subheadingPlatinumCreditsText"/>
+		        
+		        <ImageButton
+			        android:id="@+id/platinumCreditsInfoBtn"
+			        style="@style/customImageButtonStyle"
+			        android:layout_alignTop="@+id/subheadingPlatinumCredits"
+			        android:layout_alignParentRight="true"
+			        android:src="@drawable/title_info_button"/>
+		        
 			    <ListView
 	                android:id="@+id/listPlatinumCredits"
 	                android:layout_width="match_parent"
 	                android:layout_height="wrap_content"
-	                android:layout_centerHorizontal="true" 
-	                android:paddingLeft="50dp"
-	                android:paddingRight="50dp"
-	                android:paddingTop="20dp"/>
+	                android:layout_below="@id/subheadingPlatinumCredits"
+	                android:layout_centerHorizontal="true"/>
 	
+		        <TextView 
+		            android:id="@+id/subheadingGold"
+		            style="@style/shopSubHeadingStyle"
+		            android:text="@string/subheadingGoldText"
+	                android:layout_below="@id/listPlatinumCredits"/>
+		        
 	            <ListView
 	                android:id="@+id/listGold"
 	                android:layout_width="match_parent"
 	                android:layout_height="wrap_content"
-	                android:layout_below="@id/listPlatinumCredits"
-	                android:layout_centerHorizontal="true" 
-	                android:paddingLeft="50dp"
-	                android:paddingRight="50dp"
-	                android:paddingTop="20dp"/>
+	                android:layout_below="@id/subheadingGold"
+	                android:layout_centerHorizontal="true" />
 	
+		        <TextView 
+		            android:id="@+id/currentFrogText"
+		            style="@style/shopSubHeadingStyle"
+		            android:text="@string/currentFrogText"
+		            android:textAllCaps="false"
+		            android:textSize="14sp"
+	                android:layout_below="@id/listGold"
+	                android:layout_marginTop="5dp"/>
+		        
+		        <TextView 
+		            android:id="@+id/subheadingPlatinumAccount"
+		            style="@style/shopSubHeadingStyle"
+		            android:text="@string/subheadingPlatinumAccountText"
+	                android:layout_below="@id/currentFrogText"/>
+		        
 	            <ListView
 	                android:id="@+id/listPlatinumAccount"
 	                android:layout_width="match_parent"
 	                android:layout_height="wrap_content"
-	                android:layout_below="@id/listGold"
-	                android:layout_centerHorizontal="true" 
-	                android:paddingLeft="50dp"
-	                android:paddingRight="50dp"
-	                android:paddingTop="20dp"/>
+	                android:layout_below="@id/subheadingPlatinumAccount"
+	                android:layout_centerHorizontal="true"/>
 	
+		        <TextView 
+		            android:id="@+id/subheadingBonus"
+		            style="@style/shopSubHeadingStyle"
+		            android:text="@string/subheadingBonusText"
+	                android:layout_below="@id/listPlatinumAccount"/>
+		        
 	            <ListView
 	                android:id="@+id/listBonus"
 	                android:layout_width="match_parent"
 	                android:layout_height="wrap_content"
-	                android:layout_below="@id/listPlatinumAccount"
-	                android:layout_centerHorizontal="true" 
-	                android:paddingLeft="50dp"
-	                android:paddingRight="50dp"
-	                android:paddingTop="20dp"/>  
+	                android:layout_below="@id/subheadingBonus"
+	                android:layout_centerHorizontal="true"/>  
             </RelativeLayout>
-		</RelativeLayout>		    
-	</ScrollView> 
+            
+		    <RelativeLayout 
+		        android:id="@+id/footerSpacer"
+		        android:layout_width="match_parent"
+		        android:layout_height="20dp"
+		        android:layout_below="@+id/listViewContainer"/>
+		    
+		</RelativeLayout>	
+	</ScrollView>
+	
+	<RelativeLayout
+ 		android:id="@+id/shop_topbar"
+ 	    android:layout_width="match_parent"
+ 	    android:layout_height="wrap_content"
+ 	    android:background="@color/topbar_background">
+ 	    
+ 	    <TextView 
+ 	        style="@style/customTextViewStyle"
+ 	        android:id="@+id/shop_topbar_text"
+ 	        android:layout_centerInParent="true"
+ 	        android:text="Shop" 
+ 	        android:textSize="@dimen/topBarFontsize"
+ 	        android:textStyle="bold"
+ 	        android:padding="5dp"/>
+ 	    
+ 	    <TextView 
+ 	        style="@style/customTextViewStyle"
+ 	        android:id="@+id/shop_topbar_done"
+ 	        android:layout_alignParentRight="true"
+ 	        android:layout_marginRight="45dp"
+ 	        android:text="@string/done" 
+ 	        android:textSize="@dimen/topBarFontsize"
+ 	        android:textColor="@color/topbar_textbox_orange"
+ 	        android:textStyle="bold"
+ 	        android:padding="5dp"/>
+ 	    
+ 	</RelativeLayout>
 </FrameLayout>

@@ -85,7 +85,6 @@ public class LoginScreenActivity extends Activity implements CreateAccountCallba
 	   	setUpCharacterFrame();
 	}
 
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.main, menu);

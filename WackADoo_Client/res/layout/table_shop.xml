@@ -9,17 +9,17 @@
         android:layout_width="wrap_content"
         android:layout_height="55dp"
         android:paddingLeft="10dp"
-        android:paddingRight="10dp"
+        android:paddingRight="0dp"
         android:scaleType="fitCenter" />
 	
 	<TextView
+	    style="@style/customTextViewStyle"
 	    android:id="@+id/shopListViewItemText"
-	    android:layout_width="wrap_content"
 	    android:layout_height="55dp"
-	    android:textColor="#000000"
 	    android:textStyle="bold"
 	    android:textSize="@dimen/shopStandardListFontsize" 
 	    android:layout_toRightOf="@id/shopListViewItemIcon"
+	    android:layout_marginLeft="10dp"
 	    android:layout_centerVertical="true"
 	    android:gravity="center"/>
 	
@@ -32,4 +32,5 @@
 	    android:layout_toRightOf="@id/shopListViewItemText"
 	    android:layout_centerVertical="true"
 	    android:scaleType="fitCenter" />
+	
 </RelativeLayout>

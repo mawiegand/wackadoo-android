@@ -5,6 +5,7 @@
     <string name="app_name">Wack-A-Doo</string>
     <string name="action_settings">Settings</string>
     <string name="app_id">308180782571605</string>
+    <string name="done">Fertig</string>
     
     <!-- LoginScreen -->
     <string name="login_failed_toast">Login nicht möglich</string> 
@@ -41,9 +42,14 @@
     
     <!-- Shop -->
     <string name="listPlatinumAccountText" formatted="false">%d Tage für %d Credits</string>
+    <string name="subheadingPlatinumAccountText">Platinum Account</string>
     <string name="listPlatinumCreditsText" formatted="false">Platinum Credits</string>
+    <string name="subheadingPlatinumCreditsText">Platinum-Credits</string>
     <string name="listGoldText" formatted="false">%d Goldkröten für %d Credits</string>
+    <string name="subheadingGoldText">Kauf Goldene Frösche</string>
     <string name="listBonusText" formatted="false">+%d%% %d h für %d </string>
+    <string name="subheadingBonusText">Produktions Boost</string>
     <string name="shopHeadlineText">Erwirb Credits und tausche sie gegen Komfortfunktionen und Beschleunigungen</string>
+    <string name="currentFrogText">Derzeitiger Vorrat an Gold Fröschen: %d</string>
     
 </resources>

@@ -1,14 +1,14 @@
 <animation-list xmlns:android="http://schemas.android.com/apk/res/android"
- android:oneshot="false">
-	 <item android:drawable="@drawable/title_play_button_anim0" android:duration="80" />
-	 <item android:drawable="@drawable/title_play_button_anim1" android:duration="80" />
-	 <item android:drawable="@drawable/title_play_button_anim2" android:duration="80" />
-	 <item android:drawable="@drawable/title_play_button_anim3" android:duration="80" />
-	 <item android:drawable="@drawable/title_play_button_anim4" android:duration="80" />
-	 <item android:drawable="@drawable/title_play_button_anim5" android:duration="80" />
-	 <item android:drawable="@drawable/title_play_button_anim6" android:duration="80" />
-	 <item android:drawable="@drawable/title_play_button_anim7" android:duration="80" />
-	 <item android:drawable="@drawable/title_play_button_anim8" android:duration="80" />
-	 <item android:drawable="@drawable/title_play_button_anim9" android:duration="80" />
+ 				android:oneshot="false">
+	 <item android:drawable="@drawable/title_play_button_anim0" android:duration="70" />
+	 <item android:drawable="@drawable/title_play_button_anim1" android:duration="70" />
+	 <item android:drawable="@drawable/title_play_button_anim2" android:duration="70" />
+	 <item android:drawable="@drawable/title_play_button_anim3" android:duration="70" />
+	 <item android:drawable="@drawable/title_play_button_anim4" android:duration="70" />
+	 <item android:drawable="@drawable/title_play_button_anim5" android:duration="70" />
+	 <item android:drawable="@drawable/title_play_button_anim6" android:duration="70" />
+	 <item android:drawable="@drawable/title_play_button_anim7" android:duration="70" />
+	 <item android:drawable="@drawable/title_play_button_anim8" android:duration="70" />
+	 <item android:drawable="@drawable/title_play_button_anim9" android:duration="70" />
 	 <item android:drawable="@drawable/title_play_button" android:duration="1500" />
  </animation-list>

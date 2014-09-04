@@ -3,9 +3,12 @@ package com.wackadoo.wackadoo_client.adapter;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -13,7 +16,7 @@ import android.widget.TextView;
 
 import com.wackadoo.wackadoo_client.R;
  
-public class ShopListViewAdapter extends ArrayAdapter<RowItem> {
+public class ShopListViewAdapter extends ArrayAdapter<RowItem> implements OnTouchListener {
  
     Context context;
  
@@ -56,6 +59,24 @@ public class ShopListViewAdapter extends ArrayAdapter<RowItem> {
         	holder.imageView.setVisibility(View.GONE);;
         }
          
+        convertView.setOnTouchListener(this);
         return convertView;
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+    	int action = event.getActionMasked();
+    	
+    	if(action == (MotionEvent.ACTION_DOWN)) {
+    		v.setBackgroundColor(context.getResources().getColor(R.color.shop_listitem_active));
+    		return true;
+    	} else if (action == MotionEvent.ACTION_CANCEL) {
+    		v.setBackgroundColor(context.getResources().getColor(R.color.white));
+    		return true;
+    	} else if (action == MotionEvent.ACTION_UP) {
+    		v.setBackgroundColor(context.getResources().getColor(R.color.white));
+    		return false;
+    	} 
+    	return false;
     }
 }

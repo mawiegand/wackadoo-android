@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
@@ -16,6 +16,28 @@
     <style name="AppTheme" parent="AppBaseTheme">
 		<item name="android:windowNoTitle">true</item>
    		<item name="android:windowFullscreen">true</item>
+   		<item name="android:textViewStyle">@style/customTextViewStyle</item>
+   		<item name="android:imageButtonStyle">@style/customImageButtonStyle</item>
     </style>
+    
+    <style name="customTextViewStyle" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+    </style> 
+    
+    <style name="shopSubHeadingStyle" parent="@style/customTextViewStyle">
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/shop_subheading_text</item>
+        <item name="android:textSize">@dimen/shopSubheadingFontsize</item>
+        <item name="android:layout_marginTop">30dp</item>
+    </style> 
+    
+    <style name="customImageButtonStyle" parent="android:Widget.ImageButton">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:scaleType">fitCenter</item>
+    </style> 
 
 </resources>

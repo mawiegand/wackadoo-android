@@ -4,14 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
+import android.view.View.MeasureSpec;
+import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
+import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.adapter.RowItem;
@@ -21,22 +28,83 @@ import com.wackadoo.wackadoo_client.tasks.GetShopOffersAsyncTask;
 
 public class ShopActivity extends Activity implements ShopOffersCallbackInterface{
 	
+	private ImageButton platinumCreditsInfoBtn;
+	private TextView doneBtn;
 	ListView listPlatinumAccount, listPlatinumCredits, listGold, listBonus;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-	    requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_shop);
         
+        doneBtn = (TextView) findViewById(R.id.shop_topbar_done);
+        platinumCreditsInfoBtn = (ImageButton) findViewById(R.id.platinumCreditsInfoBtn);
         listPlatinumAccount = (ListView) findViewById(R.id.listPlatinumAccount);
         listPlatinumCredits = (ListView) findViewById(R.id.listPlatinumCredits);
         listGold = (ListView) findViewById(R.id.listGold);
         listBonus = (ListView) findViewById(R.id.listBonus);
-        
+
+        setUpBtns();
         this.loadShopOffersFromServer(); 
 	}
-
+	public void setUpBtns() {
+		setUpDoneBtn();
+		setUpPlatinumCreditsInfoBtn();
+	}
+	
+	private void setUpDoneBtn() {
+		doneBtn.setEnabled(true);
+		doneBtn.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent e) {
+				   switch (e.getAction()) {
+			    		case MotionEvent.ACTION_DOWN: 
+			    			doneBtn.setTextColor(getResources().getColor(R.color.topbar_textbox_orange_active));
+			    			break;
+	
+			    		case MotionEvent.ACTION_UP: 
+			    			doneBtn.setTextColor(getResources().getColor(R.color.topbar_textbox_orange));
+			    			break;
+				   }
+				   return false;
+				}
+		});
+		   
+		doneBtn.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				finish();
+			}
+	   	});
+   
+	}
+	
+	private void setUpPlatinumCreditsInfoBtn() {
+		platinumCreditsInfoBtn.setEnabled(true);
+		platinumCreditsInfoBtn.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent e) {
+				   switch (e.getAction()) {
+			    		case MotionEvent.ACTION_DOWN: 
+			    			platinumCreditsInfoBtn.setImageResource(R.drawable.title_info_button_active);
+			    			break;
+	
+			    		case MotionEvent.ACTION_UP: 
+			    			platinumCreditsInfoBtn.setImageResource(R.drawable.title_info_button);
+			    			break;
+				   }
+				   return false;
+				}
+		});
+		   
+		platinumCreditsInfoBtn.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+			}
+	   	});
+   
+	}
+	
 	private void loadShopOffersFromServer() {
 		new GetShopOffersAsyncTask(this,getApplicationContext(), getString(R.string.platinumCreditsServerPath)).execute();
 		new GetShopOffersAsyncTask(this,getApplicationContext(), getString(R.string.goldFrogsServerPath)).execute();
@@ -50,24 +118,25 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 	private void insertRowItemsInList(ArrayList<RowItem> items, ListView list) {
 		ShopListViewAdapter adapter = new ShopListViewAdapter(this, R.layout.table_shop, items);
 		list.setAdapter(adapter);
-		this.updateListContainers();
+//		this.updateListContainers();
+		setListViewHeightBasedOnChildren(list);
 	}
 
-	private void updateListContainers() {
-		RelativeLayout listView = (RelativeLayout) findViewById(R.id.listViewContainer);
-		RelativeLayout scroll = (RelativeLayout) findViewById(R.id.scrollViewContainer);
-		listView.invalidate();
-		listView.requestLayout();
-		scroll.invalidate();
-		scroll.requestLayout();
-	}
-
+//	private void updateListContainers() {
+//		RelativeLayout listView = (RelativeLayout) findViewById(R.id.listViewContainer);
+//		RelativeLayout scroll = (RelativeLayout) findViewById(R.id.scrollViewContainer);
+//		listView.invalidate();
+//		listView.requestLayout();
+//		scroll.invalidate();
+//		scroll.requestLayout();
+//	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-		
+	
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -91,7 +160,7 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 		      }
 		});
 	}
-
+	
 	private void setUpListPlatinumCredits() {
 		listPlatinumCredits.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 		      @Override
@@ -100,7 +169,7 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 		      }
 		});
 	}
-
+	
 	private void setUpListGold() {
 		listPlatinumAccount.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 		      @Override
@@ -120,18 +189,34 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 	}
 	
 	private void buyBonus(Object itemAtPosition) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage("Nicht genug Credits!")
+			   .setPositiveButton("Ok", null)
+			   .show();
 		// TODO: buy bonus 
 	}
-
+	
 	private void buyPlatinumAccount(Object itemAtPosition) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage("Weiterleitung zum Platinum Account Kauf")
+			   .setPositiveButton("Ok", null)
+			   .show();
 		// TODO buy platinum method
 	}
 	
 	private void buyPlatinumCredits(Object itemAtPosition) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage("Weiterleitung zum Platinum Credits Kauf")
+			   .setPositiveButton("Ok", null)
+			   .show();
 		// TODO buy credits
 	}
-
+	
 	private void buyGold(Object itemAtPosition) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage("Weiterleitung zum Gold Kauf")
+			   .setPositiveButton("Ok", null)
+			   .show();
 		// TODO buy gold
 	}
 
@@ -170,7 +255,7 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 			valuesToAdd = new ArrayList<String>();
 			for(int i = 1; i>0; i--)
 			{
-				valuesToAdd.add(String.format(getString(R.string.listPlatinumAccountText), 7,10));
+				valuesToAdd.add(String.format(getString(R.string.listPlatinumAccountText),7,10));
 			}
 			ArrayList<RowItem> generatedItems = this.generateRowItemsWithValues(valuesToAdd, 0, 0);
 			this.insertRowItemsInList(generatedItems, listPlatinumAccount);
@@ -194,9 +279,33 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 		ArrayList<RowItem> valuesToAdd = new ArrayList<RowItem>();
 		for(String current : offers)
 		{
+			Log.d("Test", "Schleife (generateItemsWithValues) müsste 3 mal RowItem erzeugen");
 			RowItem itemToAdd = new RowItem(leftImage, current, rightImage);
 			valuesToAdd.add(itemToAdd);
 		}
 		return valuesToAdd;
+	}
+
+	// Workaround for dynamic height of the ListView. Fixes issue of not showing every item in listviews when in a scrollview 
+	private void setListViewHeightBasedOnChildren(ListView listView) {
+	    ListAdapter listAdapter = listView.getAdapter();
+	    if (listAdapter == null)
+	        return;
+	
+	    int desiredWidth = MeasureSpec.makeMeasureSpec(listView.getWidth(), MeasureSpec.UNSPECIFIED);
+	    int totalHeight = 0;
+	    View view = null;
+	    for (int i = 0; i < listAdapter.getCount(); i++) {
+	        view = listAdapter.getView(i, view, listView);
+	        if (i == 0) {
+	        	view.setLayoutParams(new ViewGroup.LayoutParams(desiredWidth, LayoutParams.WRAP_CONTENT));
+	        }
+	        view.measure(desiredWidth, MeasureSpec.UNSPECIFIED);
+	        totalHeight += view.getMeasuredHeight();
+	    }
+	    ViewGroup.LayoutParams params = listView.getLayoutParams();
+	    params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+	    listView.setLayoutParams(params);
+	    listView.requestLayout();
 	}
 }
