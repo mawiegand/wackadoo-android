@@ -2,6 +2,7 @@ package com.wackadoo.wackadoo_client.activites;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ public class LoginScreenActivity extends Activity implements CreateAccountCallba
 	private AnimationDrawable playButtonAnimation;
 	private UserCredentials userCredentials;
 	private Handler customHandler;
+	private Fragment infoscreenFragment;
 	
 	@SuppressLint("NewApi")
 	@Override
@@ -69,7 +71,7 @@ public class LoginScreenActivity extends Activity implements CreateAccountCallba
 	// runs the scale animation repeatedly
 	private Runnable updateTimerThread = new Runnable() {
 		public void run() {
-			Animation scaleAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.scaleanimation_loginbutton);
+			Animation scaleAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.scale_loginbutton);
 			playBtn.startAnimation(scaleAnimation);
 			customHandler.postDelayed(this, 4000);
 		}
@@ -239,11 +241,8 @@ public class LoginScreenActivity extends Activity implements CreateAccountCallba
 		infoBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(LoginScreenActivity.this, CredentialScreenActivity.class);
+				Intent intent = new Intent(LoginScreenActivity.this, InfoscreenActivity.class);
 				startActivity(intent);
-				infoBtn.setEnabled(false);
-//				Toast toast = Toast.makeText(getApplicationContext(), "Info Screen noch nicht verfügbar", Toast.LENGTH_SHORT);
-//				toast.show();
 			}
 		});
 	}
@@ -300,9 +299,9 @@ public class LoginScreenActivity extends Activity implements CreateAccountCallba
 		characterFrame.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-//				Intent intent = new Intent(LoginScreenActivity.this, ShopActivity.class);
-//				startActivity(intent);
-//				infoBtn.setEnabled(false);
+				Intent intent = new Intent(LoginScreenActivity.this, CredentialScreenActivity.class);
+				startActivity(intent);
+				infoBtn.setEnabled(false);
 			}
 		});
 	

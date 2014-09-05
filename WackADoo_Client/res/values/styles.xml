@@ -33,6 +33,16 @@
         <item name="android:layout_marginTop">30dp</item>
     </style> 
     
+    <style name="orangeTextView" parent="@style/customTextViewStyle">
+        <item name="android:textColor">@color/textbox_orange</item>
+        <item name="android:textSize">@dimen/shopSubheadingFontsize</item>
+    </style> 
+    
+    <style name="standardPadding">
+        <item name="android:layout_marginLeft">@color/textbox_orange</item>
+        <item name="android:textSize">@dimen/shopSubheadingFontsize</item>
+    </style> 
+    
     <style name="customImageButtonStyle" parent="android:Widget.ImageButton">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>

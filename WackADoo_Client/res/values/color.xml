@@ -3,12 +3,13 @@
 <resources>
     <color name="white">#FFFFFF</color>
   	<color name="black">#000000</color>
+  	<color name="red">#FF4040</color>
   	
 	<color name="title_version_text">#ACACAC</color>
 	 
 	<color name="topbar_background">#BFFFFFFF</color> 
-  	<color name="topbar_textbox_orange">#FEA845</color>
-  	<color name="topbar_textbox_orange_active">#FFD6A7</color>
+  	<color name="textbox_orange">#FEA845</color>
+  	<color name="textbox_orange_active">#FFD6A7</color>
 	
 	<color name="shop_subheading_text">#898989</color> 
   	<color name="shop_listitem_active">#D2D2D2</color>

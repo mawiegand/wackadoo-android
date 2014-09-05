@@ -6,6 +6,7 @@
     <string name="action_settings">Settings</string>
     <string name="app_id">308180782571605</string>
     <string name="done">Fertig</string>
+    <string name="back">Zurück</string>
     
     <!-- LoginScreen -->
     <string name="login_failed_toast">Login nicht möglich</string> 
@@ -51,5 +52,22 @@
     <string name="subheadingBonusText">Produktions Boost</string>
     <string name="shopHeadlineText">Erwirb Credits und tausche sie gegen Komfortfunktionen und Beschleunigungen</string>
     <string name="currentFrogText">Derzeitiger Vorrat an Gold Fröschen: %d</string>
+
+    <!-- Shop Info -->
+   	<string name="shopinfo_topbar_heading">Info Store</string>
+    <string name="shopInfoText_credits">Get some credits to improve your game experience</string>
+    <string name="shopInfoHeadingText_credits">Platinum Credits</string>
+    <string name="shopInfoDescText_credits">Bla bla</string>
     
+    <string name="shopInfoText_gold">Come on, get some Golden Frogs and give me an army!</string>
+    <string name="shopInfoHeadingText_gold">Golden Frogs</string>
+    <string name="shopInfoDescText_gold">Bla bla</string>
+    
+    <string name="shopInfoText_account">What you are waiting for? With a Platinum Account, we will be able to expand our power even more.</string>
+    <string name="shopInfoHeadingText_account">Platinum Account</string>
+    <string name="shopInfoDescText_account">Bla bla</string>
+    
+    <string name="shopInfoText_bonus">More Resources? Everyone needs more resources!</string>
+    <string name="shopInfoHeadingText_bonus">Production Bonus</string>
+    <string name="shopInfoDescText_bonus">Bla bla</string>
 </resources>

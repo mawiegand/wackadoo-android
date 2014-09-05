@@ -1,10 +1,9 @@
 <resources>
 
-    <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
+    <!-- default screen margins -->
+    <dimen name="standard_margin">25dp</dimen>
     
-    <!-- Font sizes -->
+    <!-- font sizes -->
     <dimen name="shopStandardListFontsize">16sp</dimen>
     <dimen name="shopHeadlineFontsize">15sp</dimen>
     <dimen name="shopSubheadingFontsize">18sp</dimen>

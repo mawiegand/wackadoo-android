@@ -4,69 +4,65 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" 
-    android:background="#ffffff">
-    
+    android:background="@color/white">
+        
+    <!-- ............... BACKGROUND ............... -->
     <ImageView
-	        android:id="@+id/imageView"
-	        android:layout_width="match_parent"
-	        android:layout_height="match_parent"
-	        android:src="@drawable/title_bg"
-	        android:scaleType="centerCrop" />
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/title_bg"
+        android:scaleType="centerCrop"
+        android:alpha="0.7" />
 	
 	<ScrollView 
 	    android:layout_width="match_parent" 
-	    android:layout_height="match_parent" >
+	    android:layout_height="match_parent"
+	    android:layout_marginTop="35dp">
 	    
 	    <RelativeLayout 
 	        android:layout_width="match_parent"
     		android:layout_height="wrap_content"
-    		android:orientation="vertical">
+    		android:orientation="vertical"
+    		android:layout_marginRight="@dimen/standard_margin"
+			android:layout_marginLeft="@dimen/standard_margin">
 		    
 			<TextView
 		        android:id="@+id/textHeadline"
+		        style="@style/customTextViewStyle"
 		        android:gravity="center"
 		        android:layout_centerHorizontal="true"
-		        android:layout_width="match_parent"
-		        android:layout_height="wrap_content"
 		        android:layout_marginTop="16dp"
 		        android:textSize="25sp"
-		        android:textColor="#000000"
 		        android:text="@string/your_account_headline"
 		        android:textAlignment="center" />
 		    
 		    <TextView
 		        android:id="@+id/usernameText"
+		        style="@style/customTextViewStyle"
 		        android:layout_below="@+id/textHeadline"
-		        android:layout_marginTop="10dp"
-		        android:layout_marginLeft="26dp"
-		        android:layout_marginRight="35dp"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
+		        android:layout_marginTop="20dp"
+		        android:layout_marginLeft="25dp"
 		        android:text="@string/account_userName_unknown_fallbackText"
-		        android:textSize="20sp"
-		        android:textColor="#000000" />
+		        android:textSize="20sp" />
 		
 		    <Button
 		        android:id="@+id/signOutButton"
+		        style="@style/orangeTextView"
 		        android:background="@null"
-		        android:layout_toRightOf="@+id/usernameText"
+		        android:layout_alignParentRight="true"
+		        android:layout_marginRight="25dp"
 		        android:layout_below="@+id/textHeadline"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:text="@string/account_sign_out_button"
-		        android:textColor="#FF7F24"/>
+		        android:text="@string/account_sign_out_button"/>
 		    
 		    <TextView
 		        android:id="@+id/emailAccountText"
+		        style="@style/customTextViewStyle"
 		        android:layout_below="@+id/usernameText"
 		        android:layout_marginTop="10dp"
 		        android:layout_marginLeft="26dp"
 		        android:layout_marginRight="35dp"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:text=""
-		        android:textSize="20sp"
-		        android:textColor="#000000" />
+		        android:textSize="20sp" />
 		
 		    <ImageView
 		        android:id="@+id/emailAccountCheckedImage"
@@ -80,72 +76,81 @@
 		    
 		    <TextView
 		        android:id="@+id/emailInformationText"
+		        style="@style/customTextViewStyle"
 		        android:layout_below="@+id/emailAccountText"
 		        android:layout_marginTop="10dp"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
 		        android:text="@string/account_email_information"
 		        android:textSize="16sp"
-		        android:textColor="#000000"
 		        android:gravity="center"
 		        android:textAlignment="center"
 		        android:visibility="invisible"  />
 		    
 		    <Button
 		        android:id="@+id/setEmailButton"
+		        style="@style/orangeTextView"
 		        android:background="@null"
 		        android:layout_centerHorizontal="true"
 		        android:layout_below="@+id/usernameText"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:text="@string/account_set_email"
-		        android:textColor="#FF7F24"/>
+		        android:text="@string/account_set_email"/>
 		    
 		    <TextView
 		        android:id="@+id/emailText"
+		        style="@style/customTextViewStyle"
 		        android:layout_below="@+id/setEmailButton"
-		        android:layout_marginTop="10dp"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
+		        android:layout_marginTop="30dp"
 		        android:text="@string/account_provide_email"
-		        android:textSize="18sp"
-		        android:textColor="#000000"
+		        android:layout_centerHorizontal="true"
 		        android:gravity="center"
 		        android:textAlignment="center"  />
 		    
 		    <TextView
 		        android:id="@+id/characterLockedText"
 		        android:layout_below="@+id/emailText"
-		        android:layout_marginTop="10dp"
+		        android:layout_marginTop="25dp"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        android:text="@string/account_character_locked"
-		        android:textSize="22sp"
-		        android:textColor="#FF4040"
+		        android:textSize="20sp"
+		        android:textColor="@color/red"
+		        android:layout_centerHorizontal="true"
 		        android:gravity="center"
 		        android:textAlignment="center"  />
 		    
 		    <TextView
 		        android:id="@+id/makeCharacterPortableText"
+		        style="@style/customTextViewStyle"
 		        android:layout_below="@+id/characterLockedText"
-		        android:layout_marginTop="10dp"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
+		        android:layout_marginTop="30dp"
+		        android:layout_centerHorizontal="true"
 		        android:text="@string/account_character_portable"
-		        android:textSize="18sp"
-		        android:textColor="#000000"
 		        android:gravity="center"
 		        android:textAlignment="center"  />
 		    
 		    <Button
 		        android:id="@+id/passwordButton"
+		        style="@style/orangeTextView"
 		        android:background="@null"
 		        android:layout_centerHorizontal="true"
 		        android:layout_below="@+id/makeCharacterPortableText"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:text="@string/account_set_password"
-		        android:textColor="#FF7F24"/>
+		        android:text="@string/account_set_password"/>
 	    </RelativeLayout>
 	</ScrollView>
+	
+	<RelativeLayout
+	 		android:id="@+id/accountTopbar"
+	 	    android:layout_width="match_parent"
+	 	    android:layout_height="wrap_content"
+	 	    android:background="#E9E9E9">
+	 	    
+	 	    <TextView 
+	 	        android:id="@+id/accountTopbarBack"
+	 	        style="@style/customTextViewStyle"
+	 	        android:layout_alignParentLeft="true"
+			    android:layout_marginLeft="@dimen/standard_margin"
+	 	        android:text="@string/done" 
+	 	        android:textSize="@dimen/topBarFontsize"
+	 	        android:textColor="@color/textbox_orange"
+	 	        android:padding="5dp"/>
+	 	    
+	 	</RelativeLayout>
 </FrameLayout>

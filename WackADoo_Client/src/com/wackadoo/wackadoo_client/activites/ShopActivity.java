@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -14,7 +15,10 @@ import android.view.View;
 import android.view.View.MeasureSpec;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -23,22 +27,28 @@ import android.widget.TextView;
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.adapter.RowItem;
 import com.wackadoo.wackadoo_client.adapter.ShopListViewAdapter;
+import com.wackadoo.wackadoo_client.fragments.ShopInfoFragment;
 import com.wackadoo.wackadoo_client.interfaces.ShopOffersCallbackInterface;
 import com.wackadoo.wackadoo_client.tasks.GetShopOffersAsyncTask;
 
-public class ShopActivity extends Activity implements ShopOffersCallbackInterface{
+public class ShopActivity extends Activity implements ShopOffersCallbackInterface {
 	
-	private ImageButton platinumCreditsInfoBtn;
 	private TextView doneBtn;
+	private ImageButton platinumCreditsInfoBtn, goldInfoBtn, platinumAccountInfoBtn, bonusInfoBtn;
 	ListView listPlatinumAccount, listPlatinumCredits, listGold, listBonus;
+	private Fragment infoFragment;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop);
         
-        doneBtn = (TextView) findViewById(R.id.shop_topbar_done);
+        doneBtn = (TextView) findViewById(R.id.shopTopbarDone);
         platinumCreditsInfoBtn = (ImageButton) findViewById(R.id.platinumCreditsInfoBtn);
+        goldInfoBtn = (ImageButton) findViewById(R.id.goldInfoBtn);
+        platinumAccountInfoBtn = (ImageButton) findViewById(R.id.platinumAccountInfoBtn);
+        bonusInfoBtn = (ImageButton) findViewById(R.id.bonusInfoBtn);
+        
         listPlatinumAccount = (ListView) findViewById(R.id.listPlatinumAccount);
         listPlatinumCredits = (ListView) findViewById(R.id.listPlatinumCredits);
         listGold = (ListView) findViewById(R.id.listGold);
@@ -47,9 +57,13 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
         setUpBtns();
         this.loadShopOffersFromServer(); 
 	}
+	
 	public void setUpBtns() {
 		setUpDoneBtn();
 		setUpPlatinumCreditsInfoBtn();
+		setUpGoldInfoBtn();
+		setUpPlatinumAccountInfoBtn();
+		setUpBonusInfoBtn();
 	}
 	
 	private void setUpDoneBtn() {
@@ -59,11 +73,11 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 			public boolean onTouch(View v, MotionEvent e) {
 				   switch (e.getAction()) {
 			    		case MotionEvent.ACTION_DOWN: 
-			    			doneBtn.setTextColor(getResources().getColor(R.color.topbar_textbox_orange_active));
+			    			doneBtn.setTextColor(getResources().getColor(R.color.textbox_orange_active));
 			    			break;
 	
 			    		case MotionEvent.ACTION_UP: 
-			    			doneBtn.setTextColor(getResources().getColor(R.color.topbar_textbox_orange));
+			    			doneBtn.setTextColor(getResources().getColor(R.color.textbox_orange));
 			    			break;
 				   }
 				   return false;
@@ -88,6 +102,10 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 			    		case MotionEvent.ACTION_DOWN: 
 			    			platinumCreditsInfoBtn.setImageResource(R.drawable.title_info_button_active);
 			    			break;
+			    			
+			    		case MotionEvent.ACTION_CANCEL: 
+			    			platinumCreditsInfoBtn.setImageResource(R.drawable.title_info_button);
+			    			break;
 	
 			    		case MotionEvent.ACTION_UP: 
 			    			platinumCreditsInfoBtn.setImageResource(R.drawable.title_info_button);
@@ -100,9 +118,134 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 		platinumCreditsInfoBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				openShopInfoFragment("platinumCredits");
 			}
 	   	});
    
+	}
+	
+	private void setUpGoldInfoBtn() {
+		goldInfoBtn.setEnabled(true);
+		goldInfoBtn.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent e) {
+				switch (e.getAction()) {
+				case MotionEvent.ACTION_DOWN: 
+					goldInfoBtn.setImageResource(R.drawable.title_info_button_active);
+					break;
+					
+				case MotionEvent.ACTION_CANCEL: 
+					goldInfoBtn.setImageResource(R.drawable.title_info_button);
+					break;
+					
+				case MotionEvent.ACTION_UP: 
+					goldInfoBtn.setImageResource(R.drawable.title_info_button);
+					break;
+				}
+				return false;
+			}
+		});
+		
+		goldInfoBtn.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				openShopInfoFragment("gold");
+			}
+		});
+		
+	}
+	
+	private void setUpPlatinumAccountInfoBtn() {
+		platinumAccountInfoBtn.setEnabled(true);
+		platinumAccountInfoBtn.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent e) {
+				switch (e.getAction()) {
+				case MotionEvent.ACTION_DOWN: 
+					platinumAccountInfoBtn.setImageResource(R.drawable.title_info_button_active);
+					break;
+					
+				case MotionEvent.ACTION_CANCEL: 
+					platinumAccountInfoBtn.setImageResource(R.drawable.title_info_button);
+					break;
+					
+				case MotionEvent.ACTION_UP: 
+					platinumAccountInfoBtn.setImageResource(R.drawable.title_info_button);
+					break;
+				}
+				return false;
+			}
+		});
+		
+		platinumAccountInfoBtn.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				openShopInfoFragment("platinumAccount");
+			}
+		});
+	}
+	
+	private void setUpBonusInfoBtn() {
+		bonusInfoBtn.setEnabled(true);
+		bonusInfoBtn.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent e) {
+				switch (e.getAction()) {
+				case MotionEvent.ACTION_DOWN: 
+					bonusInfoBtn.setImageResource(R.drawable.title_info_button_active);
+					break;
+					
+				case MotionEvent.ACTION_CANCEL: 
+					bonusInfoBtn.setImageResource(R.drawable.title_info_button);
+					break;
+					
+				case MotionEvent.ACTION_UP: 
+					bonusInfoBtn.setImageResource(R.drawable.title_info_button);
+					break;
+				}
+				return false;
+			}
+		});
+		
+		bonusInfoBtn.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				openShopInfoFragment("bonus");
+			}
+		});
+	}
+	
+	private void openShopInfoFragment(String category) {
+		infoFragment = null;
+		
+		if(category.equals("platinumCredits")) {
+			infoFragment = new ShopInfoFragment("platinumCredits");
+		
+		} else if (category.equals("gold")) {
+			infoFragment = new ShopInfoFragment("gold");
+		
+		} else if (category.equals("platinumAccount")) {
+			infoFragment = new ShopInfoFragment("platinumAccount");
+		
+		} else {
+			infoFragment = new ShopInfoFragment("bonus");
+		}
+
+		// slide shop info fragment in window
+        getFragmentManager().beginTransaction()
+         	.setCustomAnimations(R.anim.slide_from_right,
+         						R.anim.slide_to_right)
+        	.add(R.id.activityContainer, infoFragment)
+        	.commit();
+	}
+	
+	public void removeShopInfoFragment() {
+		// slide shop info fragment out of window
+        getFragmentManager().beginTransaction()
+        	.setCustomAnimations(R.anim.slide_from_right,
+         						R.anim.slide_to_right)
+			.remove(infoFragment)
+			.commit();
 	}
 	
 	private void loadShopOffersFromServer() {

@@ -46,6 +46,11 @@
         </activity>
         <activity
             android:configChanges="orientation|screenSize"
+            android:name="com.wackadoo.wackadoo_client.activites.InfoscreenActivity"
+            android:screenOrientation="landscape" >
+        </activity>
+        <activity
+            android:configChanges="orientation|screenSize"
             android:name="com.wackadoo.wackadoo_client.activites.CredentialScreenActivity"
             android:screenOrientation="landscape" >
         </activity>

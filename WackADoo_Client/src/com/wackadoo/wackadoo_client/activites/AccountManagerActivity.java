@@ -25,7 +25,7 @@ import com.wackadoo.wackadoo_client.model.UserCredentials;
 public class AccountManagerActivity extends Activity {
 	
 	private UserCredentials userCredentials;
-	private TextView usernameTextView, provideEmailTextView, characterLockedTextView, makeCharacterPortableTextView, emailTextView, emailInformationTextView;
+	private TextView usernameTextView, provideEmailTextView, characterLockedTextView, makeCharacterPortableTextView, emailTextView, emailInformationTextView, backBtn;
 	private Button signOutButton, setEmailButton, passwordButton;
 	private ImageView emailAccountCheckedImage;
 	private enum AlertCallback { Email, Password }
@@ -49,10 +49,12 @@ public class AccountManagerActivity extends Activity {
         makeCharacterPortableTextView = (TextView) findViewById(R.id.makeCharacterPortableText);
         emailTextView = (TextView) findViewById(R.id.emailAccountText);
         emailInformationTextView = (TextView) findViewById(R.id.emailInformationText);
+        backBtn = (TextView) findViewById(R.id.accountTopbarBack);
         emailAccountCheckedImage = (ImageView) findViewById(R.id.emailAccountCheckedImage);
         
 	    this.loadCredentialsToUI();
 	    this.addButtonListeners();
+	    setUpBackBtn();
     }
 	
 	@Override
@@ -70,6 +72,36 @@ public class AccountManagerActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void setUpBackBtn() {
+		backBtn.setEnabled(true);
+		backBtn.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent e) {
+				switch (e.getAction()) {
+				case MotionEvent.ACTION_DOWN: 
+					backBtn.setTextColor(getResources().getColor(R.color.textbox_orange_active));
+					break;
+					
+				case MotionEvent.ACTION_CANCEL: 
+					backBtn.setTextColor(getResources().getColor(R.color.textbox_orange));
+					break;
+					
+				case MotionEvent.ACTION_UP: 
+					backBtn.setTextColor(getResources().getColor(R.color.textbox_orange));
+					break;
+				}
+				return false;
+			}
+		});
+		
+		backBtn.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				finish();
+			}
+		});
+	}
+    
 	private void addButtonListeners() {
 		if(this.userCredentials.isPasswordGenerated()) {
 			this.setUpPasswordButton();
@@ -116,21 +148,17 @@ public class AccountManagerActivity extends Activity {
 			   public boolean onTouch(View v, MotionEvent event) {
 				   switch ( event.getAction() ) {
 			    		case MotionEvent.ACTION_DOWN: 
-			    			{
-			    				passwordButton.setTextColor(Color.GRAY);
-			    				break;
-			    			}
+		    				passwordButton.setTextColor(getResources().getColor(R.color.textbox_orange_active));
+		    				break;
+		    				
 			    		case MotionEvent.ACTION_UP: 
-			    			{
-			    				passwordButton.setTextColor(Color.parseColor("#FF7F24"));;
-			    				break;
-			    			}
+		    				passwordButton.setTextColor(getResources().getColor(R.color.textbox_orange));
+		    				break;
 				   }
 				   return false;
 				}
 		   });
 		this.passwordButton.setOnClickListener(new View.OnClickListener() {
-			
 			@Override
 			public void onClick(View v) {
 				startChangePassword();
@@ -148,15 +176,12 @@ public class AccountManagerActivity extends Activity {
 			   public boolean onTouch(View v, MotionEvent event) {
 				   switch ( event.getAction() ) {
 			    		case MotionEvent.ACTION_DOWN: 
-			    			{
-			    				setEmailButton.setTextColor(Color.GRAY);
-			    				break;
-			    			}
+		    				setEmailButton.setTextColor(getResources().getColor(R.color.textbox_orange_active));
+		    				break;
+		    				
 			    		case MotionEvent.ACTION_UP: 
-			    			{
-			    				setEmailButton.setTextColor(Color.parseColor("#FF7F24"));;
-			    				break;
-			    			}
+			    			setEmailButton.setTextColor(getResources().getColor(R.color.textbox_orange));
+		    				break;
 				   }
 				   return false;
 				}
@@ -178,17 +203,14 @@ public class AccountManagerActivity extends Activity {
 			@SuppressLint("NewApi")
 			@Override
 			   public boolean onTouch(View v, MotionEvent event) {
-				   switch ( event.getAction() ) {
+				   switch (event.getAction()) {
 			    		case MotionEvent.ACTION_DOWN: 
-			    			{
-			    				signOutButton.setTextColor(Color.GRAY);
-			    				break;
-			    			}
+			    			signOutButton.setTextColor(getResources().getColor(R.color.textbox_orange_active));
+			    			break;
+
 			    		case MotionEvent.ACTION_UP: 
-			    			{
-			    				signOutButton.setTextColor(Color.parseColor("#FF7F24"));;
-			    				break;
-			    			}
+			    			signOutButton.setTextColor(getResources().getColor(R.color.textbox_orange_active));
+			    			break;
 				   }
 				   return false;
 				}
