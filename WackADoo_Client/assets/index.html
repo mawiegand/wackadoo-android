@@ -1,14 +1,16 @@
 <html>
-<head>
-<script type="text/javascript">
-var accessToken = LoginHandler.getAccessToken();
-var userId = LoginHandler.getUserId();
-var expiration = LoginHandler.getExpiration();
-var countryCode = LoginHandler.getCountryCode();
-window.name = "{\"accessToken\":\"" + accessToken + "\",\"expiration\":\"" + expiration + "\",\"locale\":\"" + countryCode + "\",\"playerInvitation\":null,\"allianceInvitation\":null,\"client_id\":\"WACKADOOHTML5-ROUND5\"}";
-window.open('https://gs05.wack-a-doo.com/client?t=" + userId + "');
-</script>
-</head>
-<body>
-</body>
+	<head>
+		<script type="text/javascript">
+			var accessToken = LoginHandler.getAccessToken();
+			var userId = LoginHandler.getUserId();
+			var expiration = LoginHandler.getExpiration();
+			var countryCode = LoginHandler.getCountryCode();
+			
+			window.name = "{\"accessToken\":\"" + accessToken + "\",\"expiration\":\"" + expiration + "\",\"locale\":\"" + countryCode + "\",\"playerInvitation\":null,\"allianceInvitation\":null,\"client_id\":\"WACKADOOHTML5-ROUND5\"}";
+			window.open('https://gs05.wack-a-doo.com/client?t=" + userId + "');
+		</script>
+	</head>
+	
+	<body>
+	</body>
 </html> 

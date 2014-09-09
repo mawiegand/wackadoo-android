@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -23,6 +24,8 @@ import com.wackadoo.wackadoo_client.model.UserCredentials;
 import com.wackadoo.wackadoo_client.tasks.GameLoginAsyncTask;
 
 public class LoginScreenActivity extends Activity implements CreateAccountCallbackInterface, GameLoginCallbackInterface{
+	
+	private static final String TAG = LoginScreenActivity.class.getSimpleName();
 	
 	private ImageButton playBtn, accountmanagerBtn, facebookBtn, shopBtn, soundBtn, infoBtn, characterFrame;
 	private boolean soundOn;
@@ -99,6 +102,7 @@ public class LoginScreenActivity extends Activity implements CreateAccountCallba
 		this.userCredentials = new UserCredentials(getApplicationContext());
 		playBtn.setEnabled(true);
 		shopBtn.setEnabled(true);
+		infoBtn.setEnabled(true);
 		//playButtonAnimation.start();
 		//TODO: If(user not logged in && credentials available)
 		// -> Login
@@ -165,10 +169,10 @@ public class LoginScreenActivity extends Activity implements CreateAccountCallba
 		playBtn.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					playBtn.setEnabled(false);
-					Intent intent = new Intent(LoginScreenActivity.this, WackadooWebviewActivity.class);
-					startActivity(intent);
-//					triggerPlayGame();
+//					playBtn.setEnabled(false);
+//					Intent intent = new Intent(LoginScreenActivity.this, WackadooWebviewActivity.class);
+//					startActivity(intent);
+					triggerPlayGame();
 				}
 		});
 	}
@@ -241,7 +245,7 @@ public class LoginScreenActivity extends Activity implements CreateAccountCallba
 		infoBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(LoginScreenActivity.this, InfoscreenActivity.class);
+				Intent intent = new Intent(LoginScreenActivity.this, InfoScreenActivity.class);
 				startActivity(intent);
 			}
 		});
@@ -333,8 +337,10 @@ public class LoginScreenActivity extends Activity implements CreateAccountCallba
 		String tokenExpiration = this.userCredentials.getAccessToken().getExpireCode();
 		String userId = this.userCredentials.getClientID();
 		if(accessToken != null && tokenExpiration != null && !this.userCredentials.getAccessToken().isExpired()) {
-			this.startGame(accessToken, tokenExpiration, userId);
+			Log.d(TAG, "START GAME CALLED!");
+			startGame(accessToken, tokenExpiration, userId);
 		} else {
+			Log.d(TAG, "GAMELOGIN ASYNCTASK!");
 			new GameLoginAsyncTask(this, getApplicationContext(), userCredentials).execute();
 		}
 	}

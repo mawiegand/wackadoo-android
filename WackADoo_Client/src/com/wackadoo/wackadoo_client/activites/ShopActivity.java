@@ -249,10 +249,10 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 	}
 	
 	private void loadShopOffersFromServer() {
-		new GetShopOffersAsyncTask(this,getApplicationContext(), getString(R.string.platinumCreditsServerPath)).execute();
-		new GetShopOffersAsyncTask(this,getApplicationContext(), getString(R.string.goldFrogsServerPath)).execute();
-		new GetShopOffersAsyncTask(this,getApplicationContext(), getString(R.string.platinumAccountServerPath)).execute();
-		new GetShopOffersAsyncTask(this,getApplicationContext(), getString(R.string.bonusOffersServerPath)).execute();
+		new GetShopOffersAsyncTask(this, getApplicationContext(), getString(R.string.platinumCreditsServerPath)).execute();
+		new GetShopOffersAsyncTask(this, getApplicationContext(), getString(R.string.goldFrogsServerPath)).execute();
+		new GetShopOffersAsyncTask(this, getApplicationContext(), getString(R.string.platinumAccountServerPath)).execute();
+		new GetShopOffersAsyncTask(this, getApplicationContext(), getString(R.string.bonusOffersServerPath)).execute();
 		
 		//TODO:Remove!!!
 		this.getShopOffersCallback(new ArrayList<String>(), "/game_server/shop/bonus_offers");
@@ -420,12 +420,12 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 	
 	public ArrayList<RowItem> generateRowItemsWithValues(List<String> offers, int leftImage, int rightImage) {
 		ArrayList<RowItem> valuesToAdd = new ArrayList<RowItem>();
-		for(String current : offers)
-		{
-			Log.d("Test", "Schleife (generateItemsWithValues) müsste 3 mal RowItem erzeugen");
+		
+		for(String current : offers) {
 			RowItem itemToAdd = new RowItem(leftImage, current, rightImage);
 			valuesToAdd.add(itemToAdd);
 		}
+		
 		return valuesToAdd;
 	}
 

@@ -26,6 +26,18 @@
         <item name="android:layout_width">wrap_content</item>
     </style> 
     
+    <style name="customEditTextStyle" parent="android:Widget.EditText">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:ems">10</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:layout_marginLeft">30dp</item>
+        <item name="android:layout_marginRight">30dp</item>
+        <item name="android:gravity">center</item>
+    </style> 
+    
     <style name="shopSubHeadingStyle" parent="@style/customTextViewStyle">
         <item name="android:textAllCaps">true</item>
         <item name="android:textColor">@color/shop_subheading_text</item>

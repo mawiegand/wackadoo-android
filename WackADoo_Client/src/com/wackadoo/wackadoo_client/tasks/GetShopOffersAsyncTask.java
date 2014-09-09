@@ -74,29 +74,29 @@ public class GetShopOffersAsyncTask extends AsyncTask<String, Integer, Double> {
 	    request.getParams().setParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, Boolean.FALSE);
 	    request.setHeader("Accept", "application/json");
 	    request.setEntity(entity);  
-	    HttpResponse response =null;
+	    HttpResponse response = null;
 	    DefaultHttpClient httpClient = new DefaultHttpClient();
 	    HttpConnectionParams.setSoTimeout(httpClient.getParams(), 10*1000); 
 	    HttpConnectionParams.setConnectionTimeout(httpClient.getParams(),10*1000); 
-	    	try{
-	             response = httpClient.execute(request); 
-	    	}
-	    	catch(SocketException se)
-	    	{
-	    		Log.e("SocketException", se+"");
-	    		throw se;
-	    	}
-	        finally{}
+    	
+	    try {
+             response = httpClient.execute(request); 
+    	}
+    	catch (SocketException se) {
+    		Log.e("SocketException", se+"");
+    		throw se;
+    	}
 	
 	    InputStream in = response.getEntity().getContent();
 	    BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+	    
 	    String line = null;
 	    while((line = reader.readLine()) != null){
 	        sb.append(line);
 	    }
-	    JSONObject jsonObj = new JSONObject(sb.toString());
-	    List<String> offers = new ArrayList<String>();
-	    this.listener.getShopOffersCallback(offers, this.offerType);
+	    
+ 	    JSONObject jsonObj = new JSONObject(sb.toString());
+    	List<String> offers = new ArrayList<String>();
+    	this.listener.getShopOffersCallback(offers, this.offerType);
     }
-
 }

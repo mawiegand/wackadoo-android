@@ -8,6 +8,7 @@
 	<color name="title_version_text">#ACACAC</color>
 	 
 	<color name="topbar_background">#BFFFFFFF</color> 
+	<color name="topbar_background_dark">#E9E9E9</color> 
   	<color name="textbox_orange">#FEA845</color>
   	<color name="textbox_orange_active">#FFD6A7</color>
 	

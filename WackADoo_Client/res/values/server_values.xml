@@ -14,5 +14,4 @@
     <string name="platinumCreditsServerPath">/game_server/shop/bonus_offers</string>
     <string name="goldFrogsServerPath">/game_server/shop/bonus_offers</string>
     <string name="platinumAccountServerPath">/game_server/shop/bonus_offers</string>
-    
 </resources>

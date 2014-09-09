@@ -30,6 +30,8 @@ import com.wackadoo.wackadoo_client.model.UserCredentials;
 
 public class GameLoginAsyncTask extends AsyncTask<String, Integer, Double> {
 	
+	private static final String TAG = GameLoginAsyncTask.class.getSimpleName();
+	
     private GameLoginCallbackInterface listener;
     private Context context;
 	private UserCredentials userCredentials;
@@ -94,15 +96,14 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Double> {
 	    DefaultHttpClient httpClient = new DefaultHttpClient();
 	    HttpConnectionParams.setSoTimeout(httpClient.getParams(), 10*1000); 
 	    HttpConnectionParams.setConnectionTimeout(httpClient.getParams(),10*1000); 
-	    	try{
-	             response = httpClient.execute(request); 
-	    	}
-	    	catch(SocketException se)
-	    	{
-	    		Log.e("SocketException", se+"");
-	    		throw se;
-	    	}
-	        finally{}
+	    
+    	try{
+             response = httpClient.execute(request); 
+    	}
+    	catch(SocketException se) {
+    		Log.e("SocketException", se+"");
+    		throw se;
+    	}
 	
 	    InputStream in = response.getEntity().getContent();
 	    BufferedReader reader = new BufferedReader(new InputStreamReader(in));
@@ -110,6 +111,7 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Double> {
 	    while((line = reader.readLine()) != null){
 	        sb.append(line);
 	    }
+	    Log.d(TAG, "Login Response:" + sb);
 	    JSONObject jsonObj = new JSONObject(sb.toString());
 	    this.listener.loginCallback(jsonObj.get("access_token").toString(), jsonObj.get("expires_in").toString());
     }

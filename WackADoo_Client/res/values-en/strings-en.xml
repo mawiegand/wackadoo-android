@@ -12,6 +12,9 @@
     <string name="login_failed_toast">Unable to login</string> 
     <string name="login_success_toast">Login successful</string>
     
+    <!-- WebView -->
+    <string name="dialog_return_startscreen_text">Do you want to return to den Start Screen?</string>
+    
     <!-- AccountManager -->
     <string name="account_change_password">Change Password</string>
     <string name="alert_change_password">Change Password</string>
@@ -35,6 +38,8 @@
     <string name="invalid_credential_toast">Enter valid Credentials</string>
     <string name="credentials_headline">Sign In</string>
     <string name="credentials_sign_in_button">Sign In</string>
+    <string name="credentials_username_hint">Username or Email</string>
+    <string name="credentials_password_hint">Password</string>
     <string name="credentials_use_facebook">Use your Facebook Account?</string>
     <string name="credentials_no_account">Dont have an account, yet?</string>
     <string name="credentials_new_account">Create New Account</string>
@@ -70,5 +75,14 @@
     <string name="shopInfoText_bonus">More Resources? Everyone needs more resources!</string>
     <string name="shopInfoHeadingText_bonus">Production Bonus</string>
     <string name="shopInfoDescText_bonus">Bla bla</string>
+    
+     <!-- Info Screen -->
+    <string name="infoscreen_support_btn">Support</string>
+    <string name="infoscreen_website_btn">Visit Website</string>
+    <string name="infoscreen_wiki_btn">Open Wiki Manual</string>
+    <string name="infoscreen_copyright_btn">Copyright Notice</string>
+    <string name="infoscreen_supported">Supported by</string>
+   	<string name="infoscreen_contributors">Contributors: Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata </string>
+   	<string name="infoscreen_copyright">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata </string>
     
 </resources>

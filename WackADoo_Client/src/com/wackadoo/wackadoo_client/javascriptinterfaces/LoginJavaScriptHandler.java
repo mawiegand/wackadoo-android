@@ -9,15 +9,19 @@ public class LoginJavaScriptHandler {
 
     	private String accessToken, expiration, userId, country;
     	private String[] serverSupportedLanguageCodes = {"en","de"};
+    	private int screenSizeX, screenSizeY;
     	
     	public LoginJavaScriptHandler (String accessToken, String expiration, String userId) {
+//    		public LoginJavaScriptHandler (String accessToken, String expiration, String userId, int screenSizeX, int screenSizeY) {
         	this.accessToken = accessToken;
         	this.expiration = expiration;
         	this.userId = userId;
         	this.country = this.getCountry();
+        	this.screenSizeX = screenSizeX;
+        	this.screenSizeY = screenSizeY;
         }
         
-    	private String getCountry() {
+		private String getCountry() {
     		String country;
     		String temp = Locale.getDefault().getLanguage(); 
     		if(temp.length() == 2 && Arrays.asList(serverSupportedLanguageCodes).contains(temp)) {
@@ -51,4 +55,15 @@ public class LoginJavaScriptHandler {
         public String getCountryCode() {
 	        return this.country;
 	    }
+
+    	@JavascriptInterface
+    	public int getScreenSizeX() {
+			return screenSizeX;
+		}
+
+    	@JavascriptInterface
+		public int getScreenSizeY() {
+			return screenSizeY;
+		}
+
 }

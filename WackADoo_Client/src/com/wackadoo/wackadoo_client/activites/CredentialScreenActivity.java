@@ -9,9 +9,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.Session;
@@ -34,6 +34,7 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 	private EditText userNameEditText, passwordEditText;
 	private LoginButton loginBtn;
 	private UiLifecycleHelper uiHelper;
+	private TextView backBtn;
 	 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -45,14 +46,15 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 //		uiHelper = new UiLifecycleHelper(this, statusCallback);
 //        uiHelper.onCreate(savedInstanceState);
 
-		this.signInButton = (Button) findViewById(R.id.signInButton);
-		this.passwordEditText = (EditText) findViewById(R.id.passwordField);
-		this.userNameEditText = (EditText) findViewById(R.id.usernameField);
+		signInButton = (Button) findViewById(R.id.signInButton);
+		passwordEditText = (EditText) findViewById(R.id.passwordField);
+		userNameEditText = (EditText) findViewById(R.id.usernameField);
 //		this.loginBtn = (LoginButton) findViewById(R.id.facebookButton);
-		this.createAccountButton = (Button) findViewById(R.id.createAccountButton);
-		this.restoreAccountButton = (Button) findViewById(R.id.recoverAccountButton);
+		createAccountButton = (Button) findViewById(R.id.createAccountButton);
+		restoreAccountButton = (Button) findViewById(R.id.recoverAccountButton);
+		backBtn = (TextView) findViewById(R.id.credentialscreenTopbarBack);
 		
-		this.setUpButtonListener();
+		setUpButtonListener();
 	}
 
 	@Override
@@ -71,12 +73,40 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 	}
 	
 	private void setUpButtonListener() {
-		this.setUpSignInButton();
+		setUpSignInButton();
 //		this.setUpFacebookButton();
-		this.setUpCreateAccountButton();
-		this.setUpRestoreAccountButton();
+		setUpCreateAccountButton();
+		setUpRestoreAccountButton();
+		setUpBackBtn();
 	}
 
+	private void setUpBackBtn() {
+		backBtn.setOnTouchListener(new View.OnTouchListener() {
+			@SuppressLint("NewApi")
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				switch (event.getAction()) {
+		    		case MotionEvent.ACTION_DOWN: 			    			
+		    			backBtn.setTextColor(getResources().getColor(R.color.textbox_orange_active));
+		    			break;
+		    			
+		    		case MotionEvent.ACTION_UP: 
+		    			backBtn.setTextColor(getResources().getColor(R.color.textbox_orange));
+					break;
+				}
+			return false;
+			}
+		});
+		backBtn.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				finish();
+			}
+
+		});
+	
+	}
+	
 	private void setUpFacebookButton() {
 		loginBtn.setUserInfoChangedCallback(new UserInfoChangedCallback() {
             @Override
@@ -91,28 +121,23 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 	}
 
 	private void setUpSignInButton() {
-		this.signInButton.setOnTouchListener(new View.OnTouchListener() {
-			
+		signInButton.setOnTouchListener(new View.OnTouchListener() {
 			@SuppressLint("NewApi")
 			@Override
-			   public boolean onTouch(View v, MotionEvent event) {
-				   switch ( event.getAction() ) {
-			    		case MotionEvent.ACTION_DOWN: 
-			    			{
-			    				signInButton.setTextColor(Color.GRAY);
-			    				break;
-			    			}
-			    		case MotionEvent.ACTION_UP: 
-			    			{
-			    				signInButton.setTextColor(Color.parseColor("#FF7F24"));;
-			    				break;
-			    			}
-				   }
-				   return false;
+			public boolean onTouch(View v, MotionEvent event) {
+				switch (event.getAction()) {
+		    		case MotionEvent.ACTION_DOWN: 
+	    				signInButton.setTextColor(getResources().getColor(R.color.textbox_orange_active));
+	    				break;
+	    				
+		    		case MotionEvent.ACTION_UP: 
+		    			signInButton.setTextColor(getResources().getColor(R.color.textbox_orange));
+	    				break;
 				}
-		   });
-		this.signInButton.setOnClickListener(new View.OnClickListener() {
-			
+				return false;
+			}
+		});
+		signInButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				triggerLogin();
@@ -122,59 +147,48 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 	}
 	
 	private void setUpCreateAccountButton() {
-		this.createAccountButton.setOnTouchListener(new View.OnTouchListener() {
-			
+		createAccountButton.setOnTouchListener(new View.OnTouchListener() {
 			@SuppressLint("NewApi")
 			@Override
-			   public boolean onTouch(View v, MotionEvent event) {
-				   switch ( event.getAction() ) {
-			    		case MotionEvent.ACTION_DOWN: 
-			    			{
-			    				createAccountButton.setTextColor(Color.GRAY);
-			    				break;
-			    			}
-			    		case MotionEvent.ACTION_UP: 
-			    			{
-			    				createAccountButton.setTextColor(Color.parseColor("#FF7F24"));;
-			    				break;
-			    			}
-				   }
-				   return false;
+		    public boolean onTouch(View v, MotionEvent event) {
+				switch (event.getAction()) {
+		    		case MotionEvent.ACTION_DOWN: 
+	    				createAccountButton.setTextColor(getResources().getColor(R.color.textbox_orange_active));
+	    				break;
+	    				
+		    		case MotionEvent.ACTION_UP: 
+		    			createAccountButton.setTextColor(getResources().getColor(R.color.textbox_orange));
+						break;
 				}
-		   });
-		this.createAccountButton.setOnClickListener(new View.OnClickListener() {
-			
+				return false;
+			}
+		});
+		createAccountButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				triggerCreateAccount();
 			}
-
 		});
 	}
 	
 	private void setUpRestoreAccountButton() {
-		this.restoreAccountButton.setOnTouchListener(new View.OnTouchListener() {
-			
+		restoreAccountButton.setOnTouchListener(new View.OnTouchListener() {
 			@SuppressLint("NewApi")
 			@Override
-			   public boolean onTouch(View v, MotionEvent event) {
-				   switch ( event.getAction() ) {
-			    		case MotionEvent.ACTION_DOWN: 
-			    			{
-			    				restoreAccountButton.setTextColor(Color.GRAY);
-			    				break;
-			    			}
-			    		case MotionEvent.ACTION_UP: 
-			    			{
-			    				restoreAccountButton.setTextColor(Color.parseColor("#FF7F24"));;
-			    				break;
-			    			}
-				   }
-				   return false;
-				}
-		   });
-		this.restoreAccountButton.setOnClickListener(new View.OnClickListener() {
-			
+			public boolean onTouch(View v, MotionEvent event) {
+				switch (event.getAction()) {
+		    		case MotionEvent.ACTION_DOWN: 
+	    				restoreAccountButton.setTextColor(getResources().getColor(R.color.textbox_orange_active));
+	    				break;
+		    				
+		    		case MotionEvent.ACTION_UP: 
+		    			restoreAccountButton.setTextColor(getResources().getColor(R.color.textbox_orange));
+	    				break;
+			   }
+			   return false;
+			}
+		});
+		restoreAccountButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				restoreAccount();

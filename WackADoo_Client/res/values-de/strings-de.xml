@@ -12,6 +12,9 @@
     <string name="login_failed_toast">Login nicht möglich</string> 
     <string name="login_success_toast">Login erfolgreich</string>
     
+    <!-- WebView -->
+    <string name="dialog_return_startscreen_text">Willst du zum Startbildschirm zurückkehren?</string>
+    
     <!-- AccountManager -->
     <string name="account_change_password">Passwort ändern</string>
     <string name="alert_change_password">Passwort ändern</string>
@@ -35,6 +38,8 @@
     <string name="invalid_credential_toast">Geben Sie gültige Daten ein</string>
     <string name="credentials_headline">Einloggen</string>
     <string name="credentials_sign_in_button">Einloggen</string>
+    <string name="credentials_username_hint">Benutzername oder E-Mail</string>
+    <string name="credentials_password_hint">Passwort</string>
     <string name="credentials_use_facebook">Facebook Account nutzen?</string>
     <string name="credentials_no_account">Haben Sie noch keinen Account?</string>
     <string name="credentials_new_account">Neuen Account erstellen</string>
@@ -70,4 +75,14 @@
     <string name="shopInfoText_bonus">More Resources? Everyone needs more resources!</string>
     <string name="shopInfoHeadingText_bonus">Production Bonus</string>
     <string name="shopInfoDescText_bonus">Bla bla</string>
+    
+    <!-- Info Screen -->
+    <string name="infoscreen_support_btn">Support</string>
+    <string name="infoscreen_website_btn">Webseite besuchen</string>
+    <string name="infoscreen_wiki_btn">Wiki öffnen</string>
+    <string name="infoscreen_copyright_btn">Copyright Hinweis</string>
+    <string name="infoscreen_supported">Unterstützt von</string>
+   	<string name="infoscreen_copyright">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata </string>
+   	<string name="infoscreen_contributors">Contributors: Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd.</string>
+   	
 </resources>
