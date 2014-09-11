@@ -15,6 +15,12 @@
     <!-- WebView -->
     <string name="dialog_return_startscreen_text">Willst du zum Startbildschirm zurückkehren?</string>
     
+    <!-- SelectGame -->
+    <string name="selectgame_heading">Derzeitige Runden</string>
+    <string name="selectgame_topbar_heading">Wähle eine Runde</string>
+    <string name="selectgame_item_days">Tag: %d</string>
+    <string name="selectgame_item_days_till_start">startet in %d Tagen</string>
+    
     <!-- AccountManager -->
     <string name="account_change_password">Passwort ändern</string>
     <string name="alert_change_password">Passwort ändern</string>

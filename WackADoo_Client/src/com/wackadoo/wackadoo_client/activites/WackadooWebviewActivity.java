@@ -3,9 +3,12 @@ package com.wackadoo.wackadoo_client.activites;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,9 +16,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.Window;
+import android.view.WindowManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
-import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -24,7 +27,10 @@ import com.wackadoo.wackadoo_client.javascriptinterfaces.LoginJavaScriptHandler;
 
 public class WackadooWebviewActivity extends Activity {	
 
+		private static final String TAG = WackadooWebviewActivity.class.getSimpleName();
+		
 		private WebView webView;
+		int width;
 		
 	    @SuppressLint({ "NewApi", "JavascriptInterface" })
 		@Override
@@ -32,60 +38,45 @@ public class WackadooWebviewActivity extends Activity {
 	        super.onCreate(savedInstanceState);
 	        requestWindowFeature(Window.FEATURE_NO_TITLE);
 	        setContentView(R.layout.activity_wackadoowebview);
+	        
 	        webView = (WebView) findViewById(R.id.main_webView);
 	        if (savedInstanceState != null) {
 	            webView.restoreState(savedInstanceState);
 	        }
-
+	        
+	        // test: scale webview to fit device window
+	        WindowManager manager = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
+    	    DisplayMetrics metrics = new DisplayMetrics();
+    	    manager.getDefaultDisplay().getMetrics(metrics);
+    	    metrics.widthPixels /= metrics.density;
+	        width = metrics.widthPixels;
+	        
+	        webView.setWebViewClient(new WebViewClient() {
+	        	@Override
+	        	public void onPageFinished(WebView view, String url) {
+	        		super.onPageFinished(view, url);
+	        	    webView.loadUrl("javascript:var scale = " + width + " / document.body.scrollWidth; document.body.style.zoom = scale;");
+	        	}
+	        	
+	        	public void onScaleChanged(WebView view, float oldScale, float newScale) {
+	        		super.onScaleChanged(view, oldScale, newScale);
+	        		Log.d(TAG, "Scale changed!");
+	        	}
+	        });
+	        
 	        webView.setWebChromeClient(new WebChromeClient());
-	        webView.setWebViewClient(new WebViewClient());
 	        
 	        WebSettings webSettings = webView.getSettings();
 	        webSettings.setJavaScriptEnabled(true);
 	        webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
-//	        webSettings.setAllowFileAccess(true);
-//	        webSettings.setLoadsImagesAutomatically(true);
+	        webSettings.setLoadWithOverviewMode(true);
+	        webSettings.setUseWideViewPort(true);
+	        
 	        Bundle b = getIntent().getExtras();
-	        
-	        // get display size
-//	        Display display = getWindowManager().getDefaultDisplay();
-//	        Point size = new Point(); 
-//	        display.getSize(new Point());
-//	        int screenSizeX = size.x;
-//	        int screenSizeY = size.y;
-	        
-	        final LoginJavaScriptHandler loginHandler = new LoginJavaScriptHandler(b.getString("accessToken"), b.getString("expiration"), b.getString("userId"));
-//	        final LoginJavaScriptHandler loginHandler = new LoginJavaScriptHandler(b.getString("accessToken"), b.getString("expiration"), b.getString("userId"), screenSizeX, screenSizeY);
+	        final LoginJavaScriptHandler loginHandler = new LoginJavaScriptHandler(this, b.getString("accessToken"), b.getString("expiration"), b.getString("userId"));
 	        webView.addJavascriptInterface(loginHandler, "LoginHandler");
 	        
-	        // dont show scrollbars
-//	        webView.setVerticalScrollBarEnabled(false);
-//	        webView.setHorizontalScrollBarEnabled(false);
-//	        
-	        webView.setInitialScale(175);
-//	        webView.getSettings().setDomStorageEnabled(true);
-//	        webView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
-	        
-//	        webView.setScrollbarFadingEnabled(false);
-//	        webView.getSettings().setLoadWithOverviewMode(true);
-//	        webView.getSettings().setUseWideViewPort(true);
 	        webView.loadUrl("file:///android_asset/index.html");
-//	        webView.loadUrl("javascript:(function(){" + js + "})()"); // js is javascript to be executed
-	    
-	        webView.setOnTouchListener(new OnTouchListener() {
-				@Override
-				public boolean onTouch(View v, MotionEvent event) {
-					int action = event.getActionMasked();
-					
-					if(action == MotionEvent.ACTION_UP) {
-						int x = webView.getScrollX();
-						int y = webView.getScrollY();
-//						webView.scrollTo(x, y + 50);
-						
-					}
-					return false;
-				}
-			});
 	    }
 
 		@Override
@@ -136,6 +127,3 @@ public class WackadooWebviewActivity extends Activity {
 	    	return super.onKeyDown(keyCode, event);
 	    }
 }
-
-
-

@@ -1,4 +1,4 @@
-package com.wackadoo.wackadoo_client.activites;
+ package com.wackadoo.wackadoo_client.activites;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,7 +7,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -15,19 +14,18 @@ import android.view.View;
 import android.view.View.MeasureSpec;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.wackadoo.wackadoo_client.R;
-import com.wackadoo.wackadoo_client.adapter.RowItem;
+import com.wackadoo.wackadoo_client.adapter.ShopRowItem;
 import com.wackadoo.wackadoo_client.adapter.ShopListViewAdapter;
 import com.wackadoo.wackadoo_client.fragments.ShopInfoFragment;
+import com.wackadoo.wackadoo_client.helper.UtilityHelper;
 import com.wackadoo.wackadoo_client.interfaces.ShopOffersCallbackInterface;
 import com.wackadoo.wackadoo_client.tasks.GetShopOffersAsyncTask;
 
@@ -258,11 +256,11 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 		this.getShopOffersCallback(new ArrayList<String>(), "/game_server/shop/bonus_offers");
 	}
 	
-	private void insertRowItemsInList(ArrayList<RowItem> items, ListView list) {
-		ShopListViewAdapter adapter = new ShopListViewAdapter(this, R.layout.table_shop, items);
+	private void insertRowItemsInList(ArrayList<ShopRowItem> items, ListView list) {
+		ShopListViewAdapter adapter = new ShopListViewAdapter(this, R.layout.table_item_shop, items);
 		list.setAdapter(adapter);
 //		this.updateListContainers();
-		setListViewHeightBasedOnChildren(list);
+		UtilityHelper.setListViewHeightBasedOnChildren(list);
 	}
 
 //	private void updateListContainers() {
@@ -376,7 +374,7 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 			{
 				valuesToAdd.add(getString(R.string.listPlatinumCreditsText));
 			}
-			ArrayList<RowItem> generatedItems = this.generateRowItemsWithValues(valuesToAdd, R.drawable.platinum_small, 0);
+			ArrayList<ShopRowItem> generatedItems = this.generateRowItemsWithValues(valuesToAdd, R.drawable.platinum_small, 0);
 			this.insertRowItemsInList(generatedItems, listPlatinumCredits);
 	        this.setUpListPlatinumCredits();
 		}
@@ -388,7 +386,7 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 			{
 				valuesToAdd.add(String.format(getString(R.string.listGoldText),15,8));
 			}
-			ArrayList<RowItem> generatedItems = this.generateRowItemsWithValues(valuesToAdd, R.drawable.goldkroete_128px, 0);
+			ArrayList<ShopRowItem> generatedItems = this.generateRowItemsWithValues(valuesToAdd, R.drawable.goldkroete_128px, 0);
 			this.insertRowItemsInList(generatedItems, listGold);
 	        this.setUpListGold();
 		}
@@ -400,7 +398,7 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 			{
 				valuesToAdd.add(String.format(getString(R.string.listPlatinumAccountText),7,10));
 			}
-			ArrayList<RowItem> generatedItems = this.generateRowItemsWithValues(valuesToAdd, 0, 0);
+			ArrayList<ShopRowItem> generatedItems = this.generateRowItemsWithValues(valuesToAdd, 0, 0);
 			this.insertRowItemsInList(generatedItems, listPlatinumAccount);
 			this.setUpListPlatinumAccount();
 		}
@@ -412,43 +410,22 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 			{
 				valuesToAdd.add(String.format(getString(R.string.listBonusText),5,48,1));
 			}
-			ArrayList<RowItem> generatedItems = this.generateRowItemsWithValues(valuesToAdd, R.drawable.resource_stone, R.drawable.goldkroete_128px);
+			ArrayList<ShopRowItem> generatedItems = this.generateRowItemsWithValues(valuesToAdd, R.drawable.resource_stone, R.drawable.goldkroete_128px);
 			this.insertRowItemsInList(generatedItems, listBonus);
 			this.setUpListBonus();
 		}
 	}	
 	
-	public ArrayList<RowItem> generateRowItemsWithValues(List<String> offers, int leftImage, int rightImage) {
-		ArrayList<RowItem> valuesToAdd = new ArrayList<RowItem>();
+	public ArrayList<ShopRowItem> generateRowItemsWithValues(List<String> offers, int leftImage, int rightImage) {
+		ArrayList<ShopRowItem> valuesToAdd = new ArrayList<ShopRowItem>();
 		
 		for(String current : offers) {
-			RowItem itemToAdd = new RowItem(leftImage, current, rightImage);
+			ShopRowItem itemToAdd = new ShopRowItem(leftImage, current, rightImage);
 			valuesToAdd.add(itemToAdd);
 		}
 		
 		return valuesToAdd;
 	}
 
-	// Workaround for dynamic height of the ListView. Fixes issue of not showing every item in listviews when in a scrollview 
-	private void setListViewHeightBasedOnChildren(ListView listView) {
-	    ListAdapter listAdapter = listView.getAdapter();
-	    if (listAdapter == null)
-	        return;
 	
-	    int desiredWidth = MeasureSpec.makeMeasureSpec(listView.getWidth(), MeasureSpec.UNSPECIFIED);
-	    int totalHeight = 0;
-	    View view = null;
-	    for (int i = 0; i < listAdapter.getCount(); i++) {
-	        view = listAdapter.getView(i, view, listView);
-	        if (i == 0) {
-	        	view.setLayoutParams(new ViewGroup.LayoutParams(desiredWidth, LayoutParams.WRAP_CONTENT));
-	        }
-	        view.measure(desiredWidth, MeasureSpec.UNSPECIFIED);
-	        totalHeight += view.getMeasuredHeight();
-	    }
-	    ViewGroup.LayoutParams params = listView.getLayoutParams();
-	    params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-	    listView.setLayoutParams(params);
-	    listView.requestLayout();
-	}
 }

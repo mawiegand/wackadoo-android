@@ -2,7 +2,6 @@ package com.wackadoo.wackadoo_client.activites;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
@@ -17,33 +16,36 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.interfaces.CreateAccountCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.GameLoginCallbackInterface;
+import com.wackadoo.wackadoo_client.model.ClientCredentials;
+import com.wackadoo.wackadoo_client.model.DeviceInformation;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
 import com.wackadoo.wackadoo_client.tasks.GameLoginAsyncTask;
+
 
 public class LoginScreenActivity extends Activity implements CreateAccountCallbackInterface, GameLoginCallbackInterface{
 	
 	private static final String TAG = LoginScreenActivity.class.getSimpleName();
 	
-	private ImageButton playBtn, accountmanagerBtn, facebookBtn, shopBtn, soundBtn, infoBtn, characterFrame;
-	private boolean soundOn;
+	private ImageButton playBtn, accountmanagerBtn, chooseworldBtn, facebookBtn, shopBtn, soundBtn, infoBtn, characterFrame;
+	private boolean soundOn, lastWorldAccessible;
 	private AnimationDrawable playButtonAnimation;
 	private UserCredentials userCredentials;
 	private Handler customHandler;
-	private Fragment infoscreenFragment;
 	
 	@SuppressLint("NewApi")
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//	    requestWindowFeature(Window.FEATURE_NO_TITLE);
-//	    getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_loginscreen);
         
 	    playBtn = (ImageButton) findViewById(R.id.loginButton);
 	    accountmanagerBtn = (ImageButton) findViewById(R.id.accountmanagerButton);
+	    chooseworldBtn = (ImageButton) findViewById(R.id.chooseworldButton);
 	    shopBtn = (ImageButton) findViewById(R.id.shopButton);
 	    facebookBtn = (ImageButton) findViewById(R.id.facebookButton);
 	    soundBtn = (ImageButton) findViewById(com.wackadoo.wackadoo_client.R.id.title_sound_button);
@@ -59,7 +61,7 @@ public class LoginScreenActivity extends Activity implements CreateAccountCallba
 	    setUpPlayButtonAnimation();
 	    triggerLogin();	
 	}
-
+	
 	private void setUpPlayButtonAnimation() {
 		// start animation of glance
 		playBtn.setImageResource(R.anim.animationlist_loginbutton);
@@ -84,6 +86,7 @@ public class LoginScreenActivity extends Activity implements CreateAccountCallba
 		setUpPlayBtn();
 	   	setUpShopBtn();
 	   	setUpAccountmanagerBtn();
+	   	setUpChooseworldBtn();
 	   	setUpFacebookBtn();
 	   	setUpSoundBtn();
 	   	setUpInfoBtn();
@@ -139,7 +142,6 @@ public class LoginScreenActivity extends Activity implements CreateAccountCallba
 			@Override
 			public void onClick(View v) {
 //				facebookButton.setEnabled(false);
-				facebookBtn.setImageResource(R.drawable.title_facebook_button_disabled);
 				triggerFacebook();
 			}
 	   	});
@@ -275,8 +277,53 @@ public class LoginScreenActivity extends Activity implements CreateAccountCallba
 			public void onClick(View v) {
 				Intent intent = new Intent(LoginScreenActivity.this, AccountManagerActivity.class);
 				startActivity(intent);
-//				Toast toast = Toast.makeText(getApplicationContext(), "Accountverwaltung noch nicht verfügbar", Toast.LENGTH_SHORT);
-//				toast.show();
+			}
+		});
+	}
+	
+	private void setUpChooseworldBtn() {
+		chooseworldBtn.setEnabled(true);
+		
+		// TODO: is last world accessible?
+		lastWorldAccessible = true;
+		
+		if(lastWorldAccessible) {
+			chooseworldBtn.setImageResource(R.drawable.title_changegame_button);
+		} else {
+			chooseworldBtn.setImageResource(R.drawable.title_changegame_warn_button);
+		}
+			
+		
+		chooseworldBtn.setOnTouchListener(new View.OnTouchListener() {
+			@SuppressLint("NewApi")
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				switch (event.getAction()) {
+				case MotionEvent.ACTION_DOWN: 
+					if(lastWorldAccessible) {
+						chooseworldBtn.setImageResource(R.drawable.title_changegame_button_active);
+					} else {
+						chooseworldBtn.setImageResource(R.drawable.title_changegame_warn_button_active);
+					}
+					break;
+					
+				case MotionEvent.ACTION_UP: 
+					if(lastWorldAccessible) {
+						chooseworldBtn.setImageResource(R.drawable.title_changegame_button);
+					} else {
+						chooseworldBtn.setImageResource(R.drawable.title_changegame_warn_button);
+					}
+					break;
+				}
+				return false;
+			}
+		});
+		
+		chooseworldBtn.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(LoginScreenActivity.this, SelectGameActivity.class);
+				startActivity(intent);
 			}
 		});
 	}

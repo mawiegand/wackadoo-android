@@ -16,10 +16,11 @@
         android:alpha="0.7" />
 	
     <!-- ............... CONTENT ............... -->
-	<ScrollView 
+	<com.wackadoo.wackadoo_client.helper.BounceScrollView 
 	    android:layout_width="match_parent" 
 	    android:layout_height="match_parent"
-	    android:layout_marginTop="35dp">
+	    android:layout_marginTop="35dp"
+	    android:scrollbars="none">
 	    
 	    <RelativeLayout 
 	        android:layout_width="match_parent"
@@ -135,7 +136,7 @@
 		        android:layout_below="@+id/makeCharacterPortableText"
 		        android:text="@string/account_set_password"/>
 	    </RelativeLayout>
-	</ScrollView>
+	</com.wackadoo.wackadoo_client.helper.BounceScrollView>
 	
 	<RelativeLayout
 	 		android:id="@+id/accountTopbar"

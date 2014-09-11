@@ -2,9 +2,14 @@ package com.wackadoo.wackadoo_client.model;
 
 import android.content.Context;
 
+import com.google.gson.annotations.Expose;
+
 public class ClientCredentials {
 	
-	private String uid, password, grantType, scope;
+	private String uid;
+	private String password;
+	private String grantType;
+	private String scope;
 	private DeviceInformation deviceInformation;
 	
 	public ClientCredentials(Context context) {

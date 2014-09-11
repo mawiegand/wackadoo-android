@@ -16,16 +16,16 @@ import android.widget.TextView;
 
 import com.wackadoo.wackadoo_client.R;
  
-public class ShopListViewAdapter extends ArrayAdapter<RowItem> implements OnTouchListener {
+public class ShopListViewAdapter extends ArrayAdapter<ShopRowItem> implements OnTouchListener {
  
     Context context;
  
-    public ShopListViewAdapter(Context context, int resourceId, List<RowItem> items) {
+    public ShopListViewAdapter(Context context, int resourceId, List<ShopRowItem> items) {
         super(context, resourceId, items);
         this.context = context;
     }
      
-    /*private view holder class*/
+    // private view holder class 
     private class ViewHolder {
         ImageView imageView;
         TextView title;
@@ -34,11 +34,11 @@ public class ShopListViewAdapter extends ArrayAdapter<RowItem> implements OnTouc
      
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
-        RowItem rowItem = getItem(position);
+        ShopRowItem rowItem = getItem(position);
          
         LayoutInflater mInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.table_shop, null);
+            convertView = mInflater.inflate(R.layout.table_item_shop, null);
             holder = new ViewHolder();
             holder.title = (TextView) convertView.findViewById(R.id.shopListViewItemText);
             holder.imageView = (ImageView) convertView.findViewById(R.id.shopListViewItemIcon);

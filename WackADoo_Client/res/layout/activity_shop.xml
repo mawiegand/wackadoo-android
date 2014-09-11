@@ -17,10 +17,11 @@
 		    android:scaleType="centerCrop"
 		    android:adjustViewBounds="true"/>
 		
-		<ScrollView 
+		<com.wackadoo.wackadoo_client.helper.BounceScrollView 
 		    android:layout_width="match_parent" 
 		    android:layout_height="match_parent"
-		    android:layout_marginTop="35dp" >
+		    android:layout_marginTop="35dp"
+		    android:scrollbars="none" >
 		    
 			<RelativeLayout 
 			    android:id="@+id/scrollViewContainer"
@@ -161,7 +162,7 @@
 			        android:layout_below="@+id/listViewContainer"/>
 			    
 			</RelativeLayout>	
-		</ScrollView>
+		</com.wackadoo.wackadoo_client.helper.BounceScrollView>
 		
 		<RelativeLayout
 	 		android:id="@+id/shopTopbar"

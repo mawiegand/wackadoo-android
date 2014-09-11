@@ -15,6 +15,12 @@
     <!-- WebView -->
     <string name="dialog_return_startscreen_text">Do you want to return to den Start Screen?</string>
     
+    <!-- SelectGame -->
+    <string name="selectgame_heading">Ongoing Rounds</string>
+    <string name="selectgame_topbar_heading">Select Round</string>
+    <string name="selectgame_item_days">Day: %d</string>
+    <string name="selectgame_item_days_till_start">to start in %d days</string>
+    
     <!-- AccountManager -->
     <string name="account_change_password">Change Password</string>
     <string name="alert_change_password">Change Password</string>

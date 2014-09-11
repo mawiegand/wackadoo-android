@@ -8,5 +8,7 @@
     <dimen name="shopHeadlineFontsize">15sp</dimen>
     <dimen name="shopSubheadingFontsize">18sp</dimen>
     <dimen name="topBarFontsize">18sp</dimen>
+    <dimen name="gameItemBigTextsize">20sp</dimen>
+    <dimen name="gameItemSmallTextsize">12sp</dimen>
 
 </resources>

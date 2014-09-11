@@ -10,13 +10,5 @@
         android:id="@+id/main_webView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
-    <!-- <TabWidget
-        android:id="@+id/webviewNavigationBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@color/topbar_background" >
-    </TabWidget> -->
     
 </RelativeLayout>

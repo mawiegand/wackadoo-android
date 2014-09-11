@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+	android:background="@color/white" 
+	android:padding="5dp">
+	
+	<ImageView
+        android:id="@+id/worldItemIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginLeft="10dp"
+        android:scaleType="fitCenter" />
+	
+	<TextView
+	    android:id="@+id/worldItemNameText"
+	    style="@style/customTextViewStyle"
+	    android:layout_height="wrap_content"
+	    android:textSize="@dimen/gameItemBigTextsize" 
+	    android:layout_alignParentTop="true"
+	    android:layout_toRightOf="@id/worldItemIcon"
+	    android:layout_marginLeft="20dp"/>
+	
+	<ImageView
+        android:id="@+id/worldItemPlayerIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+	    android:layout_below="@+id/worldItemNameText"
+	    android:layout_alignLeft="@+id/worldItemNameText"
+	    android:layout_alignBaseline="@+id/worldItemIcon"
+	    android:scaleType="fitCenter" 
+	    android:src="@drawable/heads_black"/>
+	
+	<TextView
+	    android:id="@+id/worldItemPlayerCount"
+	    style="@style/customTextViewStyle"
+	    android:layout_height="wrap_content"
+	    android:layout_width="wrap_content"
+	    android:textSize="@dimen/gameItemSmallTextsize" 
+	    android:layout_below="@+id/worldItemNameText"
+	    android:layout_marginTop="5dp"
+	    android:layout_toRightOf="@id/worldItemPlayerIcon"
+	    android:layout_marginLeft="5dp"/>
+	
+	<TextView
+	    android:id="@+id/worldItemScopeText"
+	    style="@style/customTextViewStyle"
+	    android:layout_height="wrap_content"
+	    android:textSize="@dimen/gameItemBigTextsize" 
+	    android:layout_alignParentTop="true"
+	    android:layout_alignParentRight="true"
+	    android:layout_marginRight="10dp"/>
+	
+	<TextView
+	    android:id="@+id/worldItemDayText"
+	    style="@style/customTextViewStyle"
+	    android:layout_height="wrap_content"
+	    android:layout_width="wrap_content"
+	    android:textSize="@dimen/gameItemSmallTextsize" 
+	    android:layout_alignRight="@+id/worldItemScopeText"
+	    android:layout_alignTop="@+id/worldItemPlayerCount"/>
+	
+</RelativeLayout>

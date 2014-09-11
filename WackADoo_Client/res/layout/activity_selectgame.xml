@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout 
+    android:id="@+id/activityContainer"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+	    
+ 	<ImageView 
+	    android:src="@drawable/table_background"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:scaleType="centerCrop"
+	    android:adjustViewBounds="true"/>
+		
+	<com.wackadoo.wackadoo_client.helper.BounceScrollView 
+	    android:layout_width="match_parent" 
+	    android:layout_height="match_parent"
+	    android:layout_marginTop="35dp"
+	    android:scrollbars="none">
+	    
+	   
+		    
+		<RelativeLayout 
+		    android:id="@+id/scrollViewContainer"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:orientation="vertical"
+		    android:layout_marginLeft="@dimen/standard_margin"
+		    android:layout_marginRight="@dimen/standard_margin">
+			    
+		    <TextView 
+	            android:id="@+id/headingGames"
+	            style="@style/shopSubHeadingStyle"
+	            android:text="@string/selectgame_heading"
+   				android:layout_alignParentTop="true"
+	    		android:focusableInTouchMode="true">
+   				<requestFocus />
+   			</TextView>
+		    	    
+		    <ListView
+                android:id="@+id/listGames"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/headingGames"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="30dp"
+                android:layout_centerHorizontal="true"/>
+		</RelativeLayout>	
+	</com.wackadoo.wackadoo_client.helper.BounceScrollView>
+		
+	<RelativeLayout
+ 		android:id="@+id/selectgamesTopbar"
+ 	    android:layout_width="match_parent"
+ 	    android:layout_height="wrap_content"
+ 	    android:background="@color/topbar_background">
+ 	    
+ 	    <TextView 
+ 	        android:id="@+id/selectgamesTopbarText"
+ 	        style="@style/customTextViewStyle"
+ 	        android:layout_centerInParent="true"
+ 	        android:text="@string/selectgame_topbar_heading" 
+ 	        android:textSize="@dimen/topBarFontsize"
+ 	        android:textStyle="bold"
+ 	        android:padding="5dp"/>
+ 	    
+ 	    <TextView 
+ 	        android:id="@+id/selectgamesTopbarDone"
+ 	        style="@style/customTextViewStyle"
+ 	        android:layout_alignParentRight="true"
+ 	        android:layout_marginRight="@dimen/standard_margin"
+ 	        android:text="@string/done" 
+ 	        android:textSize="@dimen/topBarFontsize"
+ 	        android:textColor="@color/textbox_orange"
+ 	        android:textStyle="bold"
+ 	        android:padding="5dp"/>
+ 	    
+ 	</RelativeLayout>
+</FrameLayout>

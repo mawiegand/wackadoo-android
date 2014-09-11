@@ -1,11 +1,12 @@
 package com.wackadoo.wackadoo_client.adapter;
 
-public class RowItem {
+public class ShopRowItem {
+	
     private int iconImageId;
     private String title;
     private int optionalIconImageId;
      
-    public RowItem(int iconImageId, String title, int optionalImageId) {
+    public ShopRowItem(int iconImageId, String title, int optionalImageId) {
         this.iconImageId = iconImageId;
         this.title = title;
         this.optionalIconImageId = optionalImageId;

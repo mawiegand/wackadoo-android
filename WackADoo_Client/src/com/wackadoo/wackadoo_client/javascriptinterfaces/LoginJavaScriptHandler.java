@@ -3,22 +3,22 @@ package com.wackadoo.wackadoo_client.javascriptinterfaces;
 import java.util.Arrays;
 import java.util.Locale;
 
+import android.content.Context;
 import android.webkit.JavascriptInterface;
+import android.widget.Toast;
 
 public class LoginJavaScriptHandler {
 
+		private Context context;
     	private String accessToken, expiration, userId, country;
     	private String[] serverSupportedLanguageCodes = {"en","de"};
-    	private int screenSizeX, screenSizeY;
     	
-    	public LoginJavaScriptHandler (String accessToken, String expiration, String userId) {
-//    		public LoginJavaScriptHandler (String accessToken, String expiration, String userId, int screenSizeX, int screenSizeY) {
-        	this.accessToken = accessToken;
+   		public LoginJavaScriptHandler (Context context, String accessToken, String expiration, String userId) {
+        	this.context = context;
+   			this.accessToken = accessToken;
         	this.expiration = expiration;
         	this.userId = userId;
         	this.country = this.getCountry();
-        	this.screenSizeX = screenSizeX;
-        	this.screenSizeY = screenSizeY;
         }
         
 		private String getCountry() {
@@ -57,13 +57,8 @@ public class LoginJavaScriptHandler {
 	    }
 
     	@JavascriptInterface
-    	public int getScreenSizeX() {
-			return screenSizeX;
-		}
-
-    	@JavascriptInterface
-		public int getScreenSizeY() {
-			return screenSizeY;
-		}
-
+    	public void doEchoTest(String echo){
+	        Toast toast = Toast.makeText(context, echo, Toast.LENGTH_SHORT);
+	        toast.show();
+	    }
 }
