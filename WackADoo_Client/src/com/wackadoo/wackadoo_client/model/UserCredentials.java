@@ -14,7 +14,7 @@ public class UserCredentials {
 	private boolean generatedPassword=true;
 	
 	public UserCredentials(Context context) {
-		context = context;
+		this.context = context;
 		accessToken = new AccessToken();
 		clientCredentials = new ClientCredentials(context);
 		loadCredentials();
