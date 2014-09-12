@@ -9,6 +9,11 @@
     <!-- Login -->
     <string name="loginURL">/identity_provider/%s/oauth2/access_token</string>
     
+    <!-- Change Email -->
+    <string name="changeEmailURL"></string>
+    <!-- Change Password -->
+    <string name="changePasswordURL"></string>
+    
     <!-- Shop -->
     <string name="bonusOffersServerPath">/game_server/shop/bonus_offers</string>
     <string name="platinumCreditsServerPath">/game_server/shop/bonus_offers</string>

@@ -4,15 +4,11 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputType;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -34,12 +30,11 @@ public class AccountManagerActivity extends Activity {
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-	    requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(R.layout.activity_accountmanager);
 	    
-	    this.userCredentials = new UserCredentials(this.getApplicationContext());
-	    this.checkUserIsLoggedIn();
+	    userCredentials = new UserCredentials(this.getApplicationContext());
+//	    checkUserIsLoggedIn();
 	    
-	    setContentView(R.layout.activity_accountmanager);
         usernameTextView = (TextView) findViewById(R.id.usernameText);
         signOutButton = (Button) findViewById(R.id.signOutButton);
         setEmailButton = (Button) findViewById(R.id.setEmailButton);
@@ -52,26 +47,11 @@ public class AccountManagerActivity extends Activity {
         backBtn = (TextView) findViewById(R.id.accountTopbarBack);
         emailAccountCheckedImage = (ImageView) findViewById(R.id.emailAccountCheckedImage);
         
-	    this.loadCredentialsToUI();
-	    this.addButtonListeners();
+	    loadCredentialsToUI();
+	    addButtonListeners();
 	    setUpBackBtn();
     }
 	
-	@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     private void setUpBackBtn() {
 		backBtn.setEnabled(true);
 		backBtn.setOnTouchListener(new View.OnTouchListener() {
@@ -121,22 +101,23 @@ public class AccountManagerActivity extends Activity {
 	
 	private void setButtonVisibility (boolean setPasswordButtonVisible, boolean emailButtonVisible) {
 		if(!passwordButtonVisible) {
-			this.passwordButton.setText(getResources().getString(R.string.account_change_password));
+			passwordButton.setText(getResources().getString(R.string.account_change_password));
 			RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)passwordButton.getLayoutParams();
 			params.addRule(RelativeLayout.BELOW, R.id.emailInformationText);
 			passwordButton.setLayoutParams(params); 
-			this.setUpPasswordButton();
+			setUpPasswordButton();
 			
-			this.characterLockedTextView.setVisibility(View.GONE);
-			this.makeCharacterPortableTextView.setVisibility(View.GONE);
+			characterLockedTextView.setVisibility(View.GONE);
+			makeCharacterPortableTextView.setVisibility(View.GONE);
 		}
 		if(!emailButtonVisible) {
-			this.setEmailButton.setEnabled(false);
-			this.setEmailButton.setVisibility(View.GONE);
-			this.provideEmailTextView.setVisibility(View.GONE);
-			this.emailTextView.setVisibility(View.VISIBLE);
-			this.emailInformationTextView.setVisibility(View.VISIBLE);
-			this.emailAccountCheckedImage.setVisibility(View.VISIBLE);
+			setEmailButton.setEnabled(false);
+			setEmailButton.setVisibility(View.GONE);
+			provideEmailTextView.setVisibility(View.GONE);
+			emailTextView.setVisibility(View.VISIBLE);
+			emailTextView.setText(userCredentials.getEmail());
+			emailInformationTextView.setVisibility(View.INVISIBLE);
+			emailAccountCheckedImage.setVisibility(View.VISIBLE);
 		}
 	}
 
@@ -167,7 +148,6 @@ public class AccountManagerActivity extends Activity {
 		});
 	}
 
-
 	private void setUpEmailButton() {
 		this.setEmailButton.setOnTouchListener(new View.OnTouchListener() {
 			
@@ -196,10 +176,8 @@ public class AccountManagerActivity extends Activity {
 		});		
 	}
 
-
 	private void setUpSignOutButton() {
 		this.signOutButton.setOnTouchListener(new View.OnTouchListener() {
-			
 			@SuppressLint("NewApi")
 			@Override
 			   public boolean onTouch(View v, MotionEvent event) {
@@ -209,14 +187,13 @@ public class AccountManagerActivity extends Activity {
 			    			break;
 
 			    		case MotionEvent.ACTION_UP: 
-			    			signOutButton.setTextColor(getResources().getColor(R.color.textbox_orange_active));
+			    			signOutButton.setTextColor(getResources().getColor(R.color.textbox_orange));
 			    			break;
 				   }
 				   return false;
 				}
 		   });
 		this.signOutButton.setOnClickListener(new View.OnClickListener() {
-			
 			@Override
 			public void onClick(View v) {
 				triggerSignOut();
@@ -224,7 +201,6 @@ public class AccountManagerActivity extends Activity {
 
 		});		
 	}
-
 
 	private void startChangePassword() {
 		this.showInputAlertDialogWithText(getResources().getString(R.string.alert_change_password), AlertCallback.Password);
@@ -235,7 +211,29 @@ public class AccountManagerActivity extends Activity {
 	}
 	
 	private void triggerSignOut() {
-		this.showSignOutAlertDialog();
+		DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+    	    @Override	
+    	    public void onClick(DialogInterface dialog, int which) {
+    	        switch (which){
+    	        	case DialogInterface.BUTTON_POSITIVE: signOut(); break;
+    	        	case DialogInterface.BUTTON_NEGATIVE: break;
+    	        }
+    	    }
+    	};
+
+    	AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    	builder.setPositiveButton(getResources().getString(R.string.account_sign_out_button), dialogClickListener)
+    		   .setNegativeButton(getResources().getString(R.string.alert_cancel_button), dialogClickListener);
+    		 
+    	// user without mail wants to log out
+    	if(userCredentials.getPassword().equals("")) {
+    		builder.setTitle(getResources().getString(R.string.account_really_sign_out))
+    			   .setMessage(getResources().getString(R.string.account_character_lost_when_signout));
+    	} else {
+    		builder.setTitle(getResources().getString(R.string.account_sign_out_button))
+    			   .setMessage(getResources().getString(R.string.alert_quit));
+    	}
+	    builder.show();
 	}
 
 	private void loadCredentialsToUI() {
@@ -248,7 +246,6 @@ public class AccountManagerActivity extends Activity {
     		emailTextView.setText(email);
     	}
 	}
-	
 
     private void showInputAlertDialogWithText(String text, final AlertCallback callback) {
     	AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -277,51 +274,36 @@ public class AccountManagerActivity extends Activity {
 
     	builder.show();
     }
-
-    private void showSignOutAlertDialog() {
-    	DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-    	    @Override
-    	    public void onClick(DialogInterface dialog, int which) {
-    	        switch (which){
-    	        	case DialogInterface.BUTTON_POSITIVE: signOut(); break;
-    	        	case DialogInterface.BUTTON_NEGATIVE: break;
-    	        }
-    	    }
-    	};
-
-    	AlertDialog.Builder builder = new AlertDialog.Builder(this);
-    	builder.setMessage(getResources().getString(R.string.alert_quit)).setPositiveButton(getResources().getString(R.string.alert_quit_yes), dialogClickListener)
-    	    .setNegativeButton(getResources().getString(R.string.alert_quit_no), dialogClickListener).show();
-    }
     
     private void enteredNewEmail(String email) {
 		userCredentials.setEmail(email);
-		this.emailButtonVisible = false;
-		this.setButtonVisibility(passwordButtonVisible, emailButtonVisible);
+		emailButtonVisible = false;
+		setButtonVisibility(passwordButtonVisible, emailButtonVisible);
 	}
 	
 	private void enteredNewPassword(String password) {
 		userCredentials.setPassword(password);
-		this.passwordButtonVisible = false;
-		this.setButtonVisibility(passwordButtonVisible, emailButtonVisible);
+		passwordButtonVisible = false;
+		setButtonVisibility(passwordButtonVisible, emailButtonVisible);
 	}
 	
 	private void signOut() {
-		this.userCredentials.clearAllCredentials();
-		this.userCredentials = new UserCredentials(this.getApplicationContext());
-		this.checkUserIsLoggedIn();
+		userCredentials.clearAllCredentials();
+		userCredentials = new UserCredentials(getApplicationContext());
+		finish();
+//		checkUserIsLoggedIn();
 	}
 	
-	private void checkUserIsLoggedIn() {
-		String identifier = this.userCredentials.getIdentifier();
-		String email = this.userCredentials.getEmail();
-		
-		////TODO: Might check facebook login 
-		if((identifier.length() <= 0) && (email.length() <= 0)) {
-			Intent intent = new Intent(AccountManagerActivity.this, CredentialScreenActivity.class);
-			startActivity(intent);
-			this.finish();
-		}
-	}
+//	private void checkUserIsLoggedIn() {
+//		String identifier = this.userCredentials.getIdentifier();
+//		String email = this.userCredentials.getEmail();
+//		
+//		////TODO: Might check facebook login 
+//		if((identifier.length() <= 0) && (email.length() <= 0)) {
+//			Intent intent = new Intent(AccountManagerActivity.this, CredentialScreenActivity.class);
+//			startActivity(intent);
+//			finish();
+//		}
+//	}
 	
 }

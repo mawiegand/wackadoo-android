@@ -10,5 +10,5 @@
 	 <item android:drawable="@drawable/title_play_button_anim7" android:duration="70" />
 	 <item android:drawable="@drawable/title_play_button_anim8" android:duration="70" />
 	 <item android:drawable="@drawable/title_play_button_anim9" android:duration="70" />
-	 <item android:drawable="@drawable/title_play_button" android:duration="1500" />
+	 <item android:drawable="@drawable/title_play_button" android:duration="2500" />
  </animation-list>

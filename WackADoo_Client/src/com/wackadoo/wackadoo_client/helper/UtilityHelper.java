@@ -1,11 +1,15 @@
 package com.wackadoo.wackadoo_client.helper;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.MeasureSpec;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+
+import com.wackadoo.wackadoo_client.R;
 
 public class UtilityHelper {
 
@@ -31,4 +35,5 @@ public class UtilityHelper {
 	    listView.setLayoutParams(params);
 	    listView.requestLayout();
 	}
+
 }

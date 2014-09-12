@@ -13,12 +13,11 @@
 	    android:adjustViewBounds="true"/>
 		
 	<com.wackadoo.wackadoo_client.helper.BounceScrollView 
+	    android:id="@+id/scrollView"
 	    android:layout_width="match_parent" 
 	    android:layout_height="match_parent"
 	    android:layout_marginTop="35dp"
 	    android:scrollbars="none">
-	    
-	   
 		    
 		<RelativeLayout 
 		    android:id="@+id/scrollViewContainer"
@@ -33,9 +32,7 @@
 	            style="@style/shopSubHeadingStyle"
 	            android:text="@string/selectgame_heading"
    				android:layout_alignParentTop="true"
-	    		android:focusableInTouchMode="true">
-   				<requestFocus />
-   			</TextView>
+	    		android:focusableInTouchMode="true"/>
 		    	    
 		    <ListView
                 android:id="@+id/listGames"

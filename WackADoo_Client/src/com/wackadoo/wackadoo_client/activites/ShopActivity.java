@@ -272,26 +272,12 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 //		scroll.requestLayout();
 //	}
 	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
 	
 	@Override
 	protected void onResume() {
 		super.onResume();
 		////TODO: Remove if not needed
 		};
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}	
 
 	private void setUpListPlatinumAccount() {
 		listPlatinumAccount.setOnItemClickListener(new AdapterView.OnItemClickListener() {

@@ -2,8 +2,8 @@ package com.wackadoo.wackadoo_client.activites;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,6 +21,7 @@ import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
 import com.facebook.widget.LoginButton.UserInfoChangedCallback;
 import com.wackadoo.wackadoo_client.R;
+import com.wackadoo.wackadoo_client.helper.UtilityHelper;
 import com.wackadoo.wackadoo_client.interfaces.CreateAccountCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.GameLoginCallbackInterface;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
@@ -35,16 +36,17 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 	private LoginButton loginBtn;
 	private UiLifecycleHelper uiHelper;
 	private TextView backBtn;
+	private ProgressDialog progressDialog;
 	 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.activity_credentialscreen);    
+		setContentView(R.layout.activity_credentialscreen);   
+		
 		this.userCredentials = new UserCredentials(this.getApplicationContext());
 		
 //		uiHelper = new UiLifecycleHelper(this, statusCallback);
-//        uiHelper.onCreate(savedInstanceState);
+//      uiHelper.onCreate(savedInstanceState);
 
 		signInButton = (Button) findViewById(R.id.signInButton);
 		passwordEditText = (EditText) findViewById(R.id.passwordField);
@@ -54,24 +56,12 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 		restoreAccountButton = (Button) findViewById(R.id.recoverAccountButton);
 		backBtn = (TextView) findViewById(R.id.credentialscreenTopbarBack);
 		
+		// set up standard server communication dialog
+	    setUpDialog();
+	    
 		setUpButtonListener();
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.main, menu);
-	 	return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		int id = item.getItemId();
-	    if (id == R.id.action_settings) {
-	    	return true;
-	    }
-	    return super.onOptionsItemSelected(item);
-	}
-	
 	private void setUpButtonListener() {
 		setUpSignInButton();
 //		this.setUpFacebookButton();
@@ -202,16 +192,18 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 	}
 	
 	protected void triggerCreateAccount() {
-		this.userCredentials.clearAllCredentials();
-		new CreateAccountAsyncTask(this).execute();
+		userCredentials.clearAllCredentials();
+		progressDialog.show();
+		new CreateAccountAsyncTask(this, progressDialog).execute();
 	}
 
-	
 	private void triggerLogin() {
-		if(this.userNameEditText.getText().toString().length() > 0 && this.passwordEditText.getText().toString().length() > 0) {
-			this.userCredentials.setEmail(this.userNameEditText.getText().toString());
-			this.userCredentials.setPassword(this.passwordEditText.getText().toString());
-			new GameLoginAsyncTask(this, getApplicationContext(), userCredentials).execute();
+		if(userNameEditText.getText().toString().length() > 0 && this.passwordEditText.getText().toString().length() > 0) {
+			userCredentials.setEmail(this.userNameEditText.getText().toString());
+			userCredentials.setPassword(this.passwordEditText.getText().toString());
+			progressDialog.show();
+			new GameLoginAsyncTask(this, getApplicationContext(), userCredentials, progressDialog).execute();
+			
 		} else {
 			Toast.makeText(getApplicationContext(), getResources().getString(R.string.invalid_credential_toast), Toast.LENGTH_LONG).show();
 		}
@@ -228,46 +220,65 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 		}};
 	 
 	    @Override
-	    public void onResume() {
-	        super.onResume();
+    public void onResume() {
+        super.onResume();
 //	        uiHelper.onResume();
-	    }
-	 
-	    @Override
-	    public void onPause() {
-	        super.onPause();
+    }
+ 
+    @Override
+    public void onPause() {
+        super.onPause();
 //	        uiHelper.onPause();
-	    }
-	 
-	    @Override
-	    public void onDestroy() {
-	        super.onDestroy();
+    }
+ 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
 //	        uiHelper.onDestroy();
-	    }
-	 
-	    @Override
-	    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-	        super.onActivityResult(requestCode, resultCode, data);
-	        uiHelper.onActivityResult(requestCode, resultCode, data);
-	    }
-	 
-	    @Override
-	    public void onSaveInstanceState(Bundle savedState) {
-	        super.onSaveInstanceState(savedState);
-	        uiHelper.onSaveInstanceState(savedState);
-	    }
+    }
+    
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        uiHelper.onActivityResult(requestCode, resultCode, data);
+    }
+ 
+    @Override
+    public void onSaveInstanceState(Bundle savedState) {
+        super.onSaveInstanceState(savedState);
+        uiHelper.onSaveInstanceState(savedState);
+    }
 
-		@Override
-		public void onRegistrationCompleted(String identifier, String clientID, String nickname) {
-			this.userCredentials.setIdentifier(identifier);
-			this.userCredentials.setClientID(clientID);
-			this.userCredentials.setUsername(nickname);
-			this.finish();
+	@Override
+	public void onRegistrationCompleted(String identifier, String clientID, String nickname) {
+		userCredentials.setIdentifier(identifier);
+		userCredentials.setClientID(clientID);
+		userCredentials.setUsername(nickname);
+		finish();
+	}
+	
+	@Override
+	public void loginCallback(String accessToken, String expiration) {
+		userCredentials.generateNewAccessToken(accessToken, expiration);
+		finish();
+	}
+	
+	@Override
+	public void loginCallbackError(String error) {
+		if(error.equals("invalid_grant")) {
+			Toast.makeText(getApplicationContext(), getResources().getString(R.string.login_invalid_grant), Toast.LENGTH_LONG)
+			.show();
+			
+		} else {
+			Toast.makeText(getApplicationContext(), getResources().getString(R.string.login_failed_toast), Toast.LENGTH_LONG)
+			.show();
 		}
-		
-		@Override
-		public void loginCallback(String accessToken, String expiration) {
-			this.userCredentials.generateNewAccessToken(accessToken, expiration);
-			this.finish();
-		}
+	}
+
+	// Set up the standard server communiation dialog
+	private void setUpDialog() {
+		progressDialog = new ProgressDialog(this);
+		progressDialog.setTitle(getResources().getString(R.string.server_communication));
+		progressDialog.setMessage(getResources().getString(R.string.please_wait));
+	}
 }

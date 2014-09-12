@@ -19,33 +19,28 @@ import org.apache.http.params.HttpConnectionParams;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.interfaces.CreateAccountCallbackInterface;
 
-public class CreateAccountAsyncTask extends AsyncTask<String, Integer, Double> {
+public class CreateAccountAsyncTask extends AsyncTask<String, Integer, Boolean> {
+	
+	private final static String TAG = CreateAccountAsyncTask.class.getSimpleName();
 	
     private CreateAccountCallbackInterface listener;
+    private ProgressDialog progressDialog;
     
-    public CreateAccountAsyncTask(CreateAccountCallbackInterface callback) {
+    public CreateAccountAsyncTask(CreateAccountCallbackInterface callback, ProgressDialog progressDialog) {
     	this.listener = callback;
+    	this.progressDialog = progressDialog;
     }
 	
 	@Override
-	protected Double doInBackground(String... params) {
-		try {
-			postDataToServer();
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-	
-	public  void postDataToServer() throws Throwable {
-		
-		Activity parent = (Activity) this.listener;
+	protected Boolean doInBackground(String... params) {
+		Activity parent = (Activity) listener;
 		String urlForRequest = parent.getString(R.string.createAccountURL);
 		String baseURL = parent.getString(R.string.baseURL);
 		String completeURL = baseURL + String.format(urlForRequest, Locale.getDefault().getCountry().toLowerCase());
@@ -60,35 +55,56 @@ public class CreateAccountAsyncTask extends AsyncTask<String, Integer, Double> {
 		nameValuePairs.add(new BasicNameValuePair("nickname_base", "WackyUser"));
 		nameValuePairs.add(new BasicNameValuePair("password", "egjzdsgt"));
 		nameValuePairs.add(new BasicNameValuePair("password_confirmation", "egjzdsgt"));
-	    
-		UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nameValuePairs);
-	    entity.setContentType("application/x-www-form-urlencoded;charset=UTF-8");
-	    
-	    request.getParams().setParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, Boolean.FALSE);
-	    request.setHeader("Accept", "application/json");
-	    request.setEntity(entity);  
-	    HttpResponse response =null;
-	    DefaultHttpClient httpClient = new DefaultHttpClient();
-	    HttpConnectionParams.setSoTimeout(httpClient.getParams(), 10*1000); 
-	    HttpConnectionParams.setConnectionTimeout(httpClient.getParams(),10*1000); 
-	    	try{
-	             response = httpClient.execute(request); 
-	    	}
-	    	catch(SocketException se)
-	    	{
-	    		Log.e("SocketException", se+"");
-	    		throw se;
-	    	}
-	        finally{}
-	
-	    InputStream in = response.getEntity().getContent();
-	    BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-	    String line = null;
-	    while((line = reader.readLine()) != null){
-	        sb.append(line);
-	    }
-	    JSONObject jsonObj = new JSONObject(sb.toString());
-	    this.listener.onRegistrationCompleted(jsonObj.get("identifier").toString(), jsonObj.get("id").toString(), jsonObj.get("nickname").toString());
+
+		try {
+			UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nameValuePairs);
+		    entity.setContentType("application/x-www-form-urlencoded;charset=UTF-8");
+		    
+		    request.getParams().setParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, Boolean.FALSE);
+		    request.setHeader("Accept", "application/json");
+		    request.setEntity(entity);  
+		    
+		    HttpResponse response = null;
+		    DefaultHttpClient httpClient = new DefaultHttpClient();
+		    HttpConnectionParams.setSoTimeout(httpClient.getParams(), 10*1000); 
+		    HttpConnectionParams.setConnectionTimeout(httpClient.getParams(),10*1000); 
+
+		    Log.d(TAG, "Create Account Request:" + request);
+		    response = httpClient.execute(request); 
+		
+		    InputStream in = response.getEntity().getContent();
+		    BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+		    String line = null;
+		    while((line = reader.readLine()) != null){
+		        sb.append(line);
+		    }
+		    
+		    JSONObject jsonResponse = new JSONObject(sb.toString());
+		    Log.d(TAG, "Create Account Response:" + jsonResponse);
+		    listener.onRegistrationCompleted(jsonResponse.get("identifier").toString(), jsonResponse.get("id").toString(), jsonResponse.get("nickname").toString());
+		    return true;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
+	
+	@Override
+	protected void onPostExecute(Boolean result) {
+		super.onPostExecute(result);
+		
+		if(progressDialog.isShowing()){
+			progressDialog.dismiss();
+		}
+		
+		
+		if(result) {
+			
+		} else {
+			
+		}
+	}
+
 
 }

@@ -2,18 +2,18 @@ package com.wackadoo.wackadoo_client.activites;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +38,14 @@ public class SelectGameActivity extends Activity implements CurrentGamesCallback
 		
 		setUpButtons();
 		setUpListView();
+	
+		// TODO: find a nicer solution for this hack. problem: scrollview is not scrolled to top on start of activity
+		final ScrollView scrollview = ((ScrollView) findViewById(R.id.scrollView)); 
+		scrollview.post(new Runnable() {
+			  @Override public void run() {
+			    scrollview.fullScroll(ScrollView.FOCUS_UP);
+			  }
+		});
 	}
 	
 	private void setUpButtons() {
@@ -82,20 +90,20 @@ public class SelectGameActivity extends Activity implements CurrentGamesCallback
 		// TODO: remove generateTestItems() and fetch items from server in GetCurrentGamesAsyncTask();
 		generateTestItems();
 		
-		listView.setOnItemClickListener(new OnItemClickListener() {
+		listView.setOnItemLongClickListener(new OnItemLongClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-	    		view.setBackgroundColor(getResources().getColor(R.color.white));
+			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+				GameInformation clickedGame = games.get(position);
 				
 				Toast toast = Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT);
-				GameInformation clickedGame = games.get(position);
+				Calendar c = Calendar.getInstance();		// date today
 				
 				// game is full
 				if(clickedGame.getMaxPlayers() == clickedGame.getPresentPlayers()){
 					toast.setText("Das Spiel ist bereits voll!");
 				
 				// already joined
-				} else if(clickedGame.isJoined()) {
+				} else if(clickedGame.isJoined() && clickedGame.isSigninEnabled()) {
 					toast.setText("Einloggen in Welt " + clickedGame.getName());
 					
 				// signup is disabled 	
@@ -103,20 +111,23 @@ public class SelectGameActivity extends Activity implements CurrentGamesCallback
 					toast.setText("Du kannst derzeit nicht in dieser Welt starten!");
 					
 				// signin is disabled 	
-				} else if(clickedGame.isJoined() && !clickedGame.isSignupEnabled()) {
+				} else if(clickedGame.isJoined() && !clickedGame.isSigninEnabled()) {
 					toast.setText("Du kannst dich derzeit nicht einloggen!");
 				
 				// game not started yet	
-				// TODO
-					
+				} else if(clickedGame.getStartedAt().after(c.getTime())) {
+					toast.setText("Das Spiel hat noch nicht begonnen!");
+				
 				// game already finished
-				// TODO
+				} else if(clickedGame.getEndedAt().before(c.getTime())) {
+					toast.setText("Das Spiel ist bereits vorbei!");
 					
 				// join world	
 				} else {
 					toast.setText("Erstelle neuen Account in Welt " + clickedGame.getName()); 
 				}
 				toast.show();
+				return true;
 			}
 		});
 	}
@@ -128,6 +139,7 @@ public class SelectGameActivity extends Activity implements CurrentGamesCallback
 		UtilityHelper.setListViewHeightBasedOnChildren(listView);
 	}
 	
+	// TODO: remove method to generate test items
 	private void generateTestItems() {
 		for(int i=0; i<10; i++) {
 			GameInformation newGame = new GameInformation();
@@ -136,45 +148,48 @@ public class SelectGameActivity extends Activity implements CurrentGamesCallback
 			newGame.setMaxPlayers((i+5)*10);
 			newGame.setName("Welt " + (i+1));
 			newGame.setScope("Testwelt | Insider");
-			newGame.setStartedAt(new Date());
-			newGame.setEndedAt(new Date());
+			Calendar c = Calendar.getInstance();
+			c.set(Calendar.YEAR, 2013);
+			newGame.setStartedAt(c.getTime());
+			c.add(Calendar.YEAR, 13);
+			newGame.setEndedAt(c.getTime());
 			newGame.setJoined(false);
 			newGame.setSigninEnabled(true);
 			newGame.setSignupEnabled(true);
 			games.add(newGame);
 		}
 		
-		// test: game already ended
-		games.get(4).setName("GAME ALREADY ENDED");
-		Calendar c = Calendar.getInstance(); 
-        c.set(Calendar.MONTH, c.get(Calendar.MONTH)-2);
-		games.get(4).setEndedAt(c.getTime());
-		
 		// test: full game
-		games.get(5).setName("FULL");
-		games.get(5).setPresentPlayers(games.get(5).getMaxPlayers());
+		games.get(4).setName("Game full");
+		games.get(4).setPresentPlayers(games.get(4).getMaxPlayers());
 		
 		// test: game already joined
-		games.get(6).setName("ALREADY JOINED");
-		games.get(6).setJoined(true);
-		c = Calendar.getInstance(); 
+		games.get(5).setName("Already joined");
+		games.get(5).setJoined(true);
+		Calendar c = Calendar.getInstance(); 
 		c.set(Calendar.MONTH, c.get(Calendar.MONTH)-4);
 		games.get(5).setStartedAt(c.getTime());
 		
 		// test: game not joined, but also signup disabled
-		games.get(7).setName("SIGNUP DISABLED");
-		games.get(7).setSignupEnabled(false);
+		games.get(6).setName("Sigup disabled");
+		games.get(6).setSignupEnabled(false);
 		
 		// test: game joined, but signin is disabled
-		games.get(8).setName("SIGNIN DISABLED");
-		games.get(8).setJoined(true);
-		games.get(8).setSigninEnabled(false);
+		games.get(7).setName("Signin disabled");
+		games.get(7).setJoined(true);
+		games.get(7).setSigninEnabled(false);
 		
 		// test: game is not open yet
-		games.get(9).setName("GAME NOT OPEN YET");
+		games.get(8).setName("Game not open yet");
 		c = Calendar.getInstance(); 
 		c.set(Calendar.MONTH, c.get(Calendar.MONTH)+2);
-		games.get(9).setStartedAt(c.getTime());
+		games.get(8).setStartedAt(c.getTime());
+		
+		// test: game is already finished
+		games.get(9).setName("Game finished");
+		c = Calendar.getInstance(); 
+		c.set(Calendar.MONTH, c.get(Calendar.MONTH)-4);
+		games.get(9).setEndedAt(c.getTime());
 		
 		getCurrentGamesCallback(games);
 	}

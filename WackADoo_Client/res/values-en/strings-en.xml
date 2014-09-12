@@ -11,6 +11,11 @@
     <!-- LoginScreen -->
     <string name="login_failed_toast">Unable to login</string> 
     <string name="login_success_toast">Login successful</string>
+    <string name="login_necessary">First log in!</string>
+    <string name="login_invalid_grant">Email and/or Password wrong!</string>
+    <string name="server_communication">Connecting to server</string>
+    <string name="please_wait">Please wait&#8230;</string>
+    
     
     <!-- WebView -->
     <string name="dialog_return_startscreen_text">Do you want to return to den Start Screen?</string>
@@ -19,7 +24,9 @@
     <string name="selectgame_heading">Ongoing Rounds</string>
     <string name="selectgame_topbar_heading">Select Round</string>
     <string name="selectgame_item_days">Day: %d</string>
+    <string name="selectgame_item_days_today">Starts today!</string>
     <string name="selectgame_item_days_till_start">to start in %d days</string>
+    <string name="selectgame_item_days_finished">Game already finished</string>
     
     <!-- AccountManager -->
     <string name="account_change_password">Change Password</string>
@@ -39,6 +46,8 @@
     <string name="account_character_portable">You have these options to make your character &quot;portable&quot;</string>
     <string name="account_set_password">Set A Password</string>
     <string name="account_userName_unknown_fallbackText">Unknown User</string>
+    <string name="account_really_sign_out">Really Sign Out?</string>
+    <string name="account_character_lost_when_signout">The present user will be lost in case you sign out now. To be able to access this user again, make it portable.</string>
     
     <!-- CredentialScreen -->
     <string name="invalid_credential_toast">Enter valid Credentials</string>
@@ -69,15 +78,12 @@
     <string name="shopInfoText_credits">Get some credits to improve your game experience</string>
     <string name="shopInfoHeadingText_credits">Platinum Credits</string>
     <string name="shopInfoDescText_credits">Bla bla</string>
-    
     <string name="shopInfoText_gold">Come on, get some Golden Frogs and give me an army!</string>
     <string name="shopInfoHeadingText_gold">Golden Frogs</string>
     <string name="shopInfoDescText_gold">Bla bla</string>
-    
     <string name="shopInfoText_account">What you are waiting for? With a Platinum Account, we will be able to expand our power even more.</string>
     <string name="shopInfoHeadingText_account">Platinum Account</string>
     <string name="shopInfoDescText_account">Bla bla</string>
-    
     <string name="shopInfoText_bonus">More Resources? Everyone needs more resources!</string>
     <string name="shopInfoHeadingText_bonus">Production Bonus</string>
     <string name="shopInfoDescText_bonus">Bla bla</string>

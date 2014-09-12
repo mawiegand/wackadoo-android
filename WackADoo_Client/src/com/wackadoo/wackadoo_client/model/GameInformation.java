@@ -79,7 +79,6 @@ public class GameInformation {
 		this.signinEnabled = signinEnabled;
 	}
 	
-	
 	public boolean isJoined() {
 		return joined;
 	}

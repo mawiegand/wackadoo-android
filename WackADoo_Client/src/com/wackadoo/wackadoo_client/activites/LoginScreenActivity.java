@@ -2,6 +2,7 @@ package com.wackadoo.wackadoo_client.activites;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
@@ -13,16 +14,15 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.interfaces.CreateAccountCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.GameLoginCallbackInterface;
-import com.wackadoo.wackadoo_client.model.ClientCredentials;
-import com.wackadoo.wackadoo_client.model.DeviceInformation;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
 import com.wackadoo.wackadoo_client.tasks.GameLoginAsyncTask;
 
@@ -31,11 +31,13 @@ public class LoginScreenActivity extends Activity implements CreateAccountCallba
 	
 	private static final String TAG = LoginScreenActivity.class.getSimpleName();
 	
-	private ImageButton playBtn, accountmanagerBtn, chooseworldBtn, facebookBtn, shopBtn, soundBtn, infoBtn, characterFrame;
-	private boolean soundOn, lastWorldAccessible;
+	private ImageButton playBtn, accountmanagerBtn, selectGameBtn, facebookBtn, shopBtn, soundBtn, infoBtn;
+	private Button characterFrame;
+	private boolean soundOn, lastWorldAccessible, loggedIn;
 	private AnimationDrawable playButtonAnimation;
 	private UserCredentials userCredentials;
 	private Handler customHandler;
+	private ProgressDialog progressDialog;
 	
 	@SuppressLint("NewApi")
 	@Override
@@ -45,17 +47,23 @@ public class LoginScreenActivity extends Activity implements CreateAccountCallba
         
 	    playBtn = (ImageButton) findViewById(R.id.loginButton);
 	    accountmanagerBtn = (ImageButton) findViewById(R.id.accountmanagerButton);
-	    chooseworldBtn = (ImageButton) findViewById(R.id.chooseworldButton);
+	    selectGameBtn = (ImageButton) findViewById(R.id.chooseworldButton);
 	    shopBtn = (ImageButton) findViewById(R.id.shopButton);
 	    facebookBtn = (ImageButton) findViewById(R.id.facebookButton);
 	    soundBtn = (ImageButton) findViewById(com.wackadoo.wackadoo_client.R.id.title_sound_button);
 	    infoBtn = (ImageButton) findViewById(R.id.title_info_button);
-	    characterFrame = (ImageButton) findViewById(R.id.characterFrame);
+	    characterFrame = (Button) findViewById(R.id.characterFrame);
 	    
 	    userCredentials = new UserCredentials(this.getApplicationContext());
 	    
 	    // sound is off by default
 	    soundOn = false;
+	    
+	    // user logged outby default
+	    loggedIn = false;
+
+	    // set up standard server communication dialog
+	    setUpDialog();
 	    
 	    setUpButtons();
 	    setUpPlayButtonAnimation();
@@ -78,7 +86,7 @@ public class LoginScreenActivity extends Activity implements CreateAccountCallba
 		public void run() {
 			Animation scaleAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.scale_loginbutton);
 			playBtn.startAnimation(scaleAnimation);
-			customHandler.postDelayed(this, 4000);
+			customHandler.postDelayed(this, 6000);
 		}
 	};
 	
@@ -86,7 +94,7 @@ public class LoginScreenActivity extends Activity implements CreateAccountCallba
 		setUpPlayBtn();
 	   	setUpShopBtn();
 	   	setUpAccountmanagerBtn();
-	   	setUpChooseworldBtn();
+	   	setUpSelectgameBtn();
 	   	setUpFacebookBtn();
 	   	setUpSoundBtn();
 	   	setUpInfoBtn();
@@ -94,31 +102,11 @@ public class LoginScreenActivity extends Activity implements CreateAccountCallba
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-	
-	@Override
 	protected void onResume() {
 		super.onResume();
 		this.userCredentials = new UserCredentials(getApplicationContext());
-		playBtn.setEnabled(true);
-		shopBtn.setEnabled(true);
-		infoBtn.setEnabled(true);
-		//playButtonAnimation.start();
-		//TODO: If(user not logged in && credentials available)
-		// -> Login
-	};
-
-	@Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-        	return true;
-        }
-	    return super.onOptionsItemSelected(item);
-    }
+		triggerLogin();
+	}
 	   
     private void setUpFacebookBtn() {
     	facebookBtn.setEnabled(true);
@@ -169,13 +157,15 @@ public class LoginScreenActivity extends Activity implements CreateAccountCallba
 		});
 			   
 		playBtn.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-//					playBtn.setEnabled(false);
-//					Intent intent = new Intent(LoginScreenActivity.this, WackadooWebviewActivity.class);
-//					startActivity(intent);
+			@Override
+			public void onClick(View v) {
+				if(loggedIn) {
 					triggerPlayGame();
+				} else {
+					Toast.makeText(getApplicationContext(), getResources().getString(R.string.login_necessary), Toast.LENGTH_SHORT)
+						 .show();
 				}
+			}
 		});
 	}
 
@@ -254,6 +244,7 @@ public class LoginScreenActivity extends Activity implements CreateAccountCallba
 	}
 	
 	private void setUpAccountmanagerBtn() {
+		accountmanagerBtn.setVisibility(View.VISIBLE);
 		accountmanagerBtn.setEnabled(true);
 		accountmanagerBtn.setOnTouchListener(new View.OnTouchListener() {
 			@SuppressLint("NewApi")
@@ -281,37 +272,38 @@ public class LoginScreenActivity extends Activity implements CreateAccountCallba
 		});
 	}
 	
-	private void setUpChooseworldBtn() {
-		chooseworldBtn.setEnabled(true);
+	private void setUpSelectgameBtn() {
+		selectGameBtn.setVisibility(View.VISIBLE);
+		selectGameBtn.setEnabled(true);
 		
 		// TODO: is last world accessible?
 		lastWorldAccessible = true;
 		
 		if(lastWorldAccessible) {
-			chooseworldBtn.setImageResource(R.drawable.title_changegame_button);
+			selectGameBtn.setImageResource(R.drawable.title_changegame_button);
 		} else {
-			chooseworldBtn.setImageResource(R.drawable.title_changegame_warn_button);
+			selectGameBtn.setImageResource(R.drawable.title_changegame_warn_button);
 		}
 			
 		
-		chooseworldBtn.setOnTouchListener(new View.OnTouchListener() {
+		selectGameBtn.setOnTouchListener(new View.OnTouchListener() {
 			@SuppressLint("NewApi")
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN: 
 					if(lastWorldAccessible) {
-						chooseworldBtn.setImageResource(R.drawable.title_changegame_button_active);
+						selectGameBtn.setImageResource(R.drawable.title_changegame_button_active);
 					} else {
-						chooseworldBtn.setImageResource(R.drawable.title_changegame_warn_button_active);
+						selectGameBtn.setImageResource(R.drawable.title_changegame_warn_button_active);
 					}
 					break;
 					
 				case MotionEvent.ACTION_UP: 
 					if(lastWorldAccessible) {
-						chooseworldBtn.setImageResource(R.drawable.title_changegame_button);
+						selectGameBtn.setImageResource(R.drawable.title_changegame_button);
 					} else {
-						chooseworldBtn.setImageResource(R.drawable.title_changegame_warn_button);
+						selectGameBtn.setImageResource(R.drawable.title_changegame_warn_button);
 					}
 					break;
 				}
@@ -319,7 +311,7 @@ public class LoginScreenActivity extends Activity implements CreateAccountCallba
 			}
 		});
 		
-		chooseworldBtn.setOnClickListener(new View.OnClickListener() {
+		selectGameBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(LoginScreenActivity.this, SelectGameActivity.class);
@@ -336,11 +328,11 @@ public class LoginScreenActivity extends Activity implements CreateAccountCallba
 			public boolean onTouch(View v, MotionEvent event) {
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN: 
-					characterFrame.setImageResource(R.drawable.title_character_frame_active);
+					characterFrame.setBackgroundResource(R.drawable.title_character_frame_active);
 					break;
 					
 				case MotionEvent.ACTION_UP: 
-					characterFrame.setImageResource(R.drawable.title_character_frame);
+					characterFrame.setBackgroundResource(R.drawable.title_character_frame);
 					break;
 				}
 				return false;
@@ -350,9 +342,13 @@ public class LoginScreenActivity extends Activity implements CreateAccountCallba
 		characterFrame.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(LoginScreenActivity.this, CredentialScreenActivity.class);
+				Intent intent = null;
+				if(loggedIn) {
+					intent = new Intent(LoginScreenActivity.this, AccountManagerActivity.class);
+				} else {
+					intent = new Intent(LoginScreenActivity.this, CredentialScreenActivity.class);
+				}
 				startActivity(intent);
-				infoBtn.setEnabled(false);
 			}
 		});
 	
@@ -366,17 +362,22 @@ public class LoginScreenActivity extends Activity implements CreateAccountCallba
 	}
 		
 	private void triggerLogin() {
-		String identifier = userCredentials.getIdentifier();
+		String identifier = userCredentials.getIdentifier();		
 		String accessToken = userCredentials.getAccessToken().getToken();
 		String email = userCredentials.getEmail();
+		
 		if(identifier.length() > 0 || accessToken.length() > 0 || email.length() > 0){
 			if(userCredentials.getAccessToken().isExpired()) {
-				new GameLoginAsyncTask(this, getApplicationContext(), this.userCredentials).execute();
+				progressDialog.show();
+				new GameLoginAsyncTask(this, getApplicationContext(), this.userCredentials, progressDialog).execute();
+			
+			} else {
+				loggedIn = true;
 			}
+		} else {
+			loggedIn = false;
 		}
-		else {
-			Toast.makeText(getApplicationContext(), getResources().getString(R.string.login_failed_toast), Toast.LENGTH_LONG).show();	
-		}
+		updateUi();
 	}
 
 	private void triggerPlayGame() {
@@ -384,11 +385,11 @@ public class LoginScreenActivity extends Activity implements CreateAccountCallba
 		String tokenExpiration = this.userCredentials.getAccessToken().getExpireCode();
 		String userId = this.userCredentials.getClientID();
 		if(accessToken != null && tokenExpiration != null && !this.userCredentials.getAccessToken().isExpired()) {
-			Log.d(TAG, "START GAME CALLED!");
 			startGame(accessToken, tokenExpiration, userId);
+		
 		} else {
-			Log.d(TAG, "GAMELOGIN ASYNCTASK!");
-			new GameLoginAsyncTask(this, getApplicationContext(), userCredentials).execute();
+			progressDialog.show();
+			new GameLoginAsyncTask(this, getApplicationContext(), userCredentials, progressDialog).execute();
 		}
 	}
 		
@@ -407,12 +408,44 @@ public class LoginScreenActivity extends Activity implements CreateAccountCallba
 		userCredentials.setIdentifier(identifier);
 		userCredentials.setClientID(clientID);
 		userCredentials.setUsername(nickname);
-		this.triggerLogin();
+		triggerLogin();
 	}
 		
 	@Override
 	public void loginCallback(String accessToken, String expiration) {
-		this.userCredentials.generateNewAccessToken(accessToken, expiration);
+		userCredentials.generateNewAccessToken(accessToken, expiration);
 		Toast.makeText(getApplicationContext(), getResources().getString(R.string.login_success_toast), Toast.LENGTH_LONG).show();
+		
+		loggedIn = true;
+		updateUi();
+	}
+	
+	@Override
+	public void loginCallbackError(String error) {}
+	
+	// update views in UI depending on user logged in or not
+	private void updateUi() {
+		if(loggedIn) {
+			setUpAccountmanagerBtn();
+			setUpSelectgameBtn();
+			((RelativeLayout) findViewById(R.id.headerShopContainer)).setVisibility(View.VISIBLE);
+			characterFrame.setText("");	
+			((ImageView) findViewById(R.id.characterFrameImageView)).setVisibility(View.VISIBLE);
+			
+			
+		} else {
+			accountmanagerBtn.setVisibility(View.INVISIBLE);
+			selectGameBtn.setVisibility(View.INVISIBLE);
+			((RelativeLayout) findViewById(R.id.headerShopContainer)).setVisibility(View.INVISIBLE);
+			characterFrame.setText(getResources().getString(R.string.credentials_headline));
+			((ImageView) findViewById(R.id.characterFrameImageView)).setVisibility(View.INVISIBLE);
+		}
+	}
+
+	// Set up the standard server communiation dialog
+	private void setUpDialog() {
+		progressDialog = new ProgressDialog(this);
+		progressDialog.setTitle(getResources().getString(R.string.server_communication));
+		progressDialog.setMessage(getResources().getString(R.string.please_wait));
 	}
 }
