@@ -63,7 +63,7 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	    StringBuilder sb = new StringBuilder();
 	
 	    String username, password;
-	    if(this.userCredentials.getEmail().length() > 0 && this.userCredentials.getPassword().length() > 0) {
+	    if(userCredentials.getEmail().length() > 0 && userCredentials.getPassword().length() > 0) {
 	    	username = userCredentials.getEmail();
 	    	password = userCredentials.getPassword();
 	    } else {
@@ -71,7 +71,7 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	    	password = "egjzdsgt";
 	    }
 	    
-	    List < NameValuePair > nameValuePairs = new ArrayList < NameValuePair > (7);
+	    List <NameValuePair> nameValuePairs = new ArrayList <NameValuePair> (7);
 		nameValuePairs.add(new BasicNameValuePair("client_id", "WACKADOO-IOS"));
 		nameValuePairs.add(new BasicNameValuePair("client_password", "5d"));
 		nameValuePairs.add(new BasicNameValuePair("username", username));
@@ -83,7 +83,7 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
 		nameValuePairs.add(new BasicNameValuePair("hardware_string", deviceInformation.getHardware()));
 		nameValuePairs.add(new BasicNameValuePair("hardware_token", deviceInformation.getBundleBuild()));
 		nameValuePairs.add(new BasicNameValuePair("version", deviceInformation.getBundleVersion()));
-		
+
 		try {
 			UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nameValuePairs);
 			entity.setContentType("application/x-www-form-urlencoded;charset=UTF-8");

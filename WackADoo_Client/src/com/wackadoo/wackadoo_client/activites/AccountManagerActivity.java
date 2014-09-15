@@ -3,10 +3,10 @@ package com.wackadoo.wackadoo_client.activites;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.InputType;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -14,11 +14,16 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.wackadoo.wackadoo_client.R;
+import com.wackadoo.wackadoo_client.helper.UtilityHelper;
+import com.wackadoo.wackadoo_client.interfaces.AccountManagerCallbackInterface;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
+import com.wackadoo.wackadoo_client.tasks.AccountManagerAsyncTask;
+import com.wackadoo.wackadoo_client.tasks.GameLoginAsyncTask;
 
-public class AccountManagerActivity extends Activity {
+public class AccountManagerActivity extends Activity implements AccountManagerCallbackInterface{
 	
 	private UserCredentials userCredentials;
 	private TextView usernameTextView, provideEmailTextView, characterLockedTextView, makeCharacterPortableTextView, emailTextView, emailInformationTextView, backBtn;
@@ -26,6 +31,7 @@ public class AccountManagerActivity extends Activity {
 	private ImageView emailAccountCheckedImage;
 	private enum AlertCallback { Email, Password }
 	private boolean passwordButtonVisible, emailButtonVisible;
+	private ProgressDialog progressDialog;
 	
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -276,15 +282,19 @@ public class AccountManagerActivity extends Activity {
     }
     
     private void enteredNewEmail(String email) {
-		userCredentials.setEmail(email);
-		emailButtonVisible = false;
-		setButtonVisibility(passwordButtonVisible, emailButtonVisible);
+		if(UtilityHelper.isValidMail(email)){
+			new AccountManagerAsyncTask(this, progressDialog, userCredentials, "mail", email).execute();
+		} else {
+			Toast.makeText(getApplicationContext(), getResources().getString(R.string.credentials_email_not_valid), Toast.LENGTH_SHORT).show();
+		}
 	}
 	
 	private void enteredNewPassword(String password) {
-		userCredentials.setPassword(password);
-		passwordButtonVisible = false;
-		setButtonVisibility(passwordButtonVisible, emailButtonVisible);
+		if(password.length() > 6){
+			new AccountManagerAsyncTask(this, progressDialog, userCredentials, "password", password).execute();
+		} else {
+			Toast.makeText(getApplicationContext(), getResources().getString(R.string.credentials_password_too_short), Toast.LENGTH_SHORT).show();
+		}
 	}
 	
 	private void signOut() {
@@ -292,6 +302,23 @@ public class AccountManagerActivity extends Activity {
 		userCredentials = new UserCredentials(getApplicationContext());
 		finish();
 //		checkUserIsLoggedIn();
+	}
+
+	@Override
+	public void accountManagerCallback(String type, Boolean result, String newValue) {
+		if(result) {
+			if(type.equals("mail")) {
+				emailButtonVisible = false;
+				setButtonVisibility(passwordButtonVisible, emailButtonVisible);
+		    	userCredentials.setEmail(newValue);
+				
+			} else {
+				passwordButtonVisible = false;
+				setButtonVisibility(passwordButtonVisible, emailButtonVisible);
+				userCredentials.setPassword(newValue);
+			}
+		}
+		
 	}
 	
 //	private void checkUserIsLoggedIn() {

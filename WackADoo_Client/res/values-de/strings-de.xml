@@ -59,6 +59,10 @@
     <string name="credentials_new_account">Neuen Account erstellen</string>
     <string name="credentials_lost_account">Haben Sie den Zugriff auf Ihren Account verloren?</string>
     <string name="credentials_restore_account">Nicht portablen Account wiederherstellen</string>
+    <string name="credentials_email_not_valid">Bitte eine gültige E-Mail Adresse eingeben</string>
+    <string name="credentials_password_too_short">Das Passwort muss mindestens 6 Zeichen lang sein</string>
+    <string name="credentials_lost_access_mail_subject">Verlorener Zugang zum Wack-A-Doo Account</string>
+    <string name="credentials_lost_access_mail">Ich habe den Zugang zu folgendem Account verloren: [BITTE HIER DEN ACCOUNTNAMEN EINTRAGEN].\nKönnten Sie mir bitte helfen?\n\nVendor Token:\nDevice Token: \n>App Version: \n(diese Informationen helfen uns ihren Account wieder zu finden)</string>
     
     <!-- Shop -->
     <string name="listPlatinumAccountText" formatted="false">%d Tage für %d Credits</string>

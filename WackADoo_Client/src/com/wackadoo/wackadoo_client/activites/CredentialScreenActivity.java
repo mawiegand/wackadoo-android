@@ -2,11 +2,12 @@ package com.wackadoo.wackadoo_client.activites;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -21,7 +22,6 @@ import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
 import com.facebook.widget.LoginButton.UserInfoChangedCallback;
 import com.wackadoo.wackadoo_client.R;
-import com.wackadoo.wackadoo_client.helper.UtilityHelper;
 import com.wackadoo.wackadoo_client.interfaces.CreateAccountCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.GameLoginCallbackInterface;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
@@ -188,7 +188,33 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 	}
 	
 	protected void restoreAccount() {
-		// TODO Implement restoring
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		// TODO: restore account
+		
+		String title = "Restore Failed";
+		String message = "There was no account that could be restored. Please contact support.";
+		
+    	builder.setTitle(title)
+    		   .setMessage(message)
+    		   .setPositiveButton(getResources().getString(R.string.alert_ok_button), new DialogInterface.OnClickListener() { 
+		    	    @Override
+		    	    public void onClick(DialogInterface dialog, int which) { }
+		    	})
+	    	   .setNegativeButton(getResources().getString(R.string.infoscreen_support_btn), new DialogInterface.OnClickListener() {
+		    	    @Override
+		    	    public void onClick(DialogInterface dialog, int which) {
+		    	        dialog.cancel();
+		    	        
+		    	        Intent intent = new Intent(Intent.ACTION_SENDTO); 
+		    	        intent.setType("text/plain");
+		    	        intent.setData(Uri.parse("mailto:support@5dlab.com")); 
+		    	        intent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.credentials_lost_access_mail_subject));
+		    	        intent.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.credentials_lost_access_mail));
+		    	        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // this will make such that when user returns to your app, your app is displayed, instead of the email app.
+		    	        startActivity(intent);
+		    	    }
+		    	})
+    		   .show();
 	}
 	
 	protected void triggerCreateAccount() {
@@ -198,14 +224,17 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 	}
 
 	private void triggerLogin() {
-		if(userNameEditText.getText().toString().length() > 0 && this.passwordEditText.getText().toString().length() > 0) {
-			userCredentials.setEmail(this.userNameEditText.getText().toString());
-			userCredentials.setPassword(this.passwordEditText.getText().toString());
-			progressDialog.show();
-			new GameLoginAsyncTask(this, getApplicationContext(), userCredentials, progressDialog).execute();
-			
+		if(userNameEditText.getText().length() > 0){
+			if(passwordEditText.getText().length() > 6) {
+				userCredentials.setEmail(this.userNameEditText.getText().toString());
+				userCredentials.setPassword(this.passwordEditText.getText().toString());
+				progressDialog.show();
+				new GameLoginAsyncTask(this, getApplicationContext(), userCredentials, progressDialog).execute();
+			} else {
+				Toast.makeText(getApplicationContext(), getResources().getString(R.string.credentials_password_too_short), Toast.LENGTH_SHORT).show();
+			}
 		} else {
-			Toast.makeText(getApplicationContext(), getResources().getString(R.string.invalid_credential_toast), Toast.LENGTH_LONG).show();
+			Toast.makeText(getApplicationContext(), getResources().getString(R.string.credentials_email_not_valid), Toast.LENGTH_SHORT).show();
 		}
 	}
 	
@@ -246,7 +275,7 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
     @Override
     public void onSaveInstanceState(Bundle savedState) {
         super.onSaveInstanceState(savedState);
-        uiHelper.onSaveInstanceState(savedState);
+//        uiHelper.onSaveInstanceState(savedState);
     }
 
 	@Override

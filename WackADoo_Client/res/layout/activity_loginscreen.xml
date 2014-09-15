@@ -217,6 +217,12 @@
 					 	    	android:text="@string/credentials_headline"
 					 	    	android:textSize="12sp"
 					 	    	android:textColor="@color/white"/> 
+					 	    	
+	 	              	    <TextView 
+	 	              	        android:id="@+id/characterFrameTextview"
+	 	              	        style="@style/customTextViewStyle" 
+	 	              	        android:layout_width="match_parent"
+	 	              	        android:textSize="8sp"/>
 	 	              	    
 	 	              	</FrameLayout>
 				 	</LinearLayout>

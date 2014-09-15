@@ -5,14 +5,14 @@
     
     <!-- Create Account -->
     <string name="createAccountURL">/identity_provider/%s/identities</string>
-    
     <!-- Login -->
     <string name="loginURL">/identity_provider/%s/oauth2/access_token</string>
     
     <!-- Change Email -->
     <string name="changeEmailURL"></string>
     <!-- Change Password -->
-    <string name="changePasswordURL"></string>
+    <string name="changePasswordURL">/game_server/action/fundamental/change_character_password_actions</string>
+    <!--  https://gs06.wack-a-doo.de/game_server/action/fundamental/change_character_password_actions -->
     
     <!-- Shop -->
     <string name="bonusOffersServerPath">/game_server/shop/bonus_offers</string>

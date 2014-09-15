@@ -3,7 +3,6 @@ package com.wackadoo.wackadoo_client.tasks;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -16,7 +15,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpConnectionParams;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -25,38 +23,51 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.wackadoo.wackadoo_client.R;
-import com.wackadoo.wackadoo_client.interfaces.CreateAccountCallbackInterface;
+import com.wackadoo.wackadoo_client.interfaces.AccountManagerCallbackInterface;
+import com.wackadoo.wackadoo_client.model.UserCredentials;
 
-public class CreateAccountAsyncTask extends AsyncTask<String, Integer, Boolean> {
+public class AccountManagerAsyncTask extends AsyncTask<String, Integer, Boolean>{
+
+	private final static String TAG = AccountManagerAsyncTask.class.getSimpleName();
 	
-	private final static String TAG = CreateAccountAsyncTask.class.getSimpleName();
-	
-    private CreateAccountCallbackInterface listener;
+    private AccountManagerCallbackInterface listener;
     private ProgressDialog progressDialog;
-    private String identifier, cliendId, username;
+    private String value, type;
+    private UserCredentials userCredentials;
     
-    public CreateAccountAsyncTask(CreateAccountCallbackInterface callback, ProgressDialog progressDialog) {
+    public AccountManagerAsyncTask(AccountManagerCallbackInterface callback, ProgressDialog progressDialog, UserCredentials userCredentials, String type, String value) {
     	this.listener = callback;
     	this.progressDialog = progressDialog;
+    	this.userCredentials = userCredentials;
+    	this.value = value;
+    	this.type = type;
     }
 	
 	@Override
 	protected Boolean doInBackground(String... params) {
 		Activity parent = (Activity) listener;
-		String urlForRequest = parent.getString(R.string.createAccountURL);
+		
+		String urlForRequest;
+		
+		if(type.equals("mail")) {
+			urlForRequest = parent.getString(R.string.changeEmailURL);
+		} else {
+			urlForRequest = parent.getString(R.string.changePasswordURL);
+		}
 		String baseURL = parent.getString(R.string.baseURL);
 		String completeURL = baseURL + String.format(urlForRequest, Locale.getDefault().getCountry().toLowerCase());
 		
 		HttpPost request = new HttpPost(completeURL);
-		StringBuilder sb=new StringBuilder();
+		StringBuilder sb = new StringBuilder();
 		
-		List < NameValuePair > nameValuePairs = new ArrayList < NameValuePair > (6);
-		nameValuePairs.add(new BasicNameValuePair("client_id", "WACKADOO-IOS"));
-		nameValuePairs.add(new BasicNameValuePair("client_password", "5d"));
-		nameValuePairs.add(new BasicNameValuePair("generic_password", "1"));
-		nameValuePairs.add(new BasicNameValuePair("nickname_base", "WackyUser"));
-		nameValuePairs.add(new BasicNameValuePair("password", "egjzdsgt"));
-		nameValuePairs.add(new BasicNameValuePair("password_confirmation", "egjzdsgt"));
+		List <NameValuePair> nameValuePairs = new ArrayList <NameValuePair> (6);
+		if(type.equals("mail")) {
+			nameValuePairs.add(new BasicNameValuePair("characterNewMail", value));
+		} else {
+			nameValuePairs.add(new BasicNameValuePair("characterNewPassword", value));
+		}
+		nameValuePairs.add(new BasicNameValuePair("grant_type", "bearer"));
+		nameValuePairs.add(new BasicNameValuePair("access_token", userCredentials.getAccessToken().getToken()));
 
 		try {
 			UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nameValuePairs);
@@ -69,9 +80,9 @@ public class CreateAccountAsyncTask extends AsyncTask<String, Integer, Boolean> 
 		    HttpResponse response = null;
 		    DefaultHttpClient httpClient = new DefaultHttpClient();
 		    HttpConnectionParams.setSoTimeout(httpClient.getParams(), 10*1000); 
-		    HttpConnectionParams.setConnectionTimeout(httpClient.getParams(),10*1000); 
+		    HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 10*1000); 
 
-		    Log.d(TAG, "Create Account Request:" + request);
+		    Log.d(TAG, "Account Manager Request Type: " + type);
 		    response = httpClient.execute(request); 
 		
 		    InputStream in = response.getEntity().getContent();
@@ -81,12 +92,15 @@ public class CreateAccountAsyncTask extends AsyncTask<String, Integer, Boolean> 
 		        sb.append(line);
 		    }
 		    
+		    Log.d(TAG, "Account Manager Response: " + sb);
 		    JSONObject jsonResponse = new JSONObject(sb.toString());
-		    Log.d(TAG, "Create Account Response:" + jsonResponse);
-		    identifier = jsonResponse.getString("identifier");
-		    cliendId = jsonResponse.getString("id");
-		    username = jsonResponse.getString("nickname");
-		    return true;
+		    Log.d(TAG, "Account Manager Response: " + jsonResponse);
+		    
+		    if(jsonResponse.has("result")){
+		    	if(jsonResponse.getBoolean("result")) {
+		    		return true;
+		    	}
+		    }
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -98,15 +112,8 @@ public class CreateAccountAsyncTask extends AsyncTask<String, Integer, Boolean> 
 	protected void onPostExecute(Boolean result) {
 		super.onPostExecute(result);
 		
-		if(progressDialog.isShowing()){
-			progressDialog.dismiss();
-		}
-		
 		if(result) {
-			listener.onRegistrationCompleted(identifier, cliendId, username);
-			
-		} else {
+			listener.accountManagerCallback("passwort", true, value);
 		}
 	}
-
 }

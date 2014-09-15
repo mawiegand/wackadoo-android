@@ -60,6 +60,10 @@
     <string name="credentials_new_account">Create New Account</string>
     <string name="credentials_lost_account">Lost access to your account?</string>
     <string name="credentials_restore_account">Restore A Non-Portable Account</string>
+    <string name="credentials_email_not_valid">Email is not valid</string>
+    <string name="credentials_password_too_short">The password must consist of at least 6 characters</string>
+    <string name="credentials_lost_access_mail_subject">Lost access to your Wack-A-Doo account</string>
+    <string name="credentials_lost_access_mail" >I\'ve lost access to my account [PLEASE INSERT YOUR ACCOUNT NAME HERE].\nCould you please help?\n\nVendor Token:\nDevice Token: \nApp Version: \n(the above information will help us to find your account)</string>
     
     <!-- Shop -->
     <string name="listPlatinumAccountText" formatted="false">%d days for %d Credits</string>

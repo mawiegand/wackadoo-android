@@ -10,7 +10,6 @@ public class AccessToken {
 	public AccessToken() {
 	
 	}
-	
 	public AccessToken(String token, String fbToken, String identifier) {
 		this.token = token;
 		this.fbToken = fbToken;
@@ -20,7 +19,6 @@ public class AccessToken {
 	public String getExpireCode() {
 		return this.expireCode;
 	}
-	
 	public void setExpireCode(String expireCode) {
 		this.expireCode = expireCode;
 	}
@@ -28,7 +26,6 @@ public class AccessToken {
 	public String getToken() {
 		return token;
 	}
-
 	public void setToken(String token) {
 		this.token = token;
 	}
@@ -36,7 +33,6 @@ public class AccessToken {
 	public String getFbToken() {
 		return fbToken;
 	}
-
 	public void setFbToken(String fbToken) {
 		this.fbToken = fbToken;
 	}
@@ -44,7 +40,6 @@ public class AccessToken {
 	public String getIdentifier() {
 		return identifier;
 	}
-
 	public void setIdentifier(String identifier) {
 		this.identifier = identifier;
 	}
@@ -52,7 +47,6 @@ public class AccessToken {
 	public boolean isValid() {
 		return (this.token != null) && !this.isExpired();
 	}
-	
 	public boolean isExpired() {
 		return this.isExpiredAt(new Date());
 	}
@@ -62,7 +56,6 @@ public class AccessToken {
 		Date actualTime = new Date();
 		return (this.createdAt != null) && ((actualTime.getTime() - this.createdAt.getTime()) > tokenExpiration);
 	}
-	
 	public void restoreExpireDate(Date date) {
 		this.createdAt = date;
 	}
@@ -70,7 +63,6 @@ public class AccessToken {
 	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
 	}
-
 	public Date getCreatedAt() {
 		return createdAt;
 	}

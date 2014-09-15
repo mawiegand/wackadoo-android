@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fivedlab.sample.sample_java.Sample;
@@ -396,6 +397,10 @@ public class LoginScreenActivity extends Activity implements
 			} else {
 				loggedIn = true;
 			}
+		} else if (email.contains("generic") && email.contains("@5dlab.com") ) {
+			progressDialog.show();
+			new GameLoginAsyncTask(this, getApplicationContext(), this.userCredentials, progressDialog).execute();
+			
 		} else {
 			loggedIn = false;
 		}
@@ -428,8 +433,7 @@ public class LoginScreenActivity extends Activity implements
 	}
 
 	@Override
-	public void onRegistrationCompleted(String identifier, String clientID,
-			String nickname) {
+	public void onRegistrationCompleted(String identifier, String clientID,	String nickname) {
 		userCredentials.setIdentifier(identifier);
 		userCredentials.setClientID(clientID);
 		userCredentials.setUsername(nickname);
@@ -456,7 +460,7 @@ public class LoginScreenActivity extends Activity implements
 			((RelativeLayout) findViewById(R.id.headerShopContainer)).setVisibility(View.VISIBLE);
 			characterFrame.setText("");	
 			((ImageView) findViewById(R.id.characterFrameImageView)).setVisibility(View.VISIBLE);
-			
+			((TextView) findViewById(R.id.characterFrameTextview)).setText(userCredentials.getUsername());
 			
 		} else {
 			accountmanagerBtn.setVisibility(View.INVISIBLE);
@@ -464,6 +468,7 @@ public class LoginScreenActivity extends Activity implements
 			((RelativeLayout) findViewById(R.id.headerShopContainer)).setVisibility(View.INVISIBLE);
 			characterFrame.setText(getResources().getString(R.string.credentials_headline));
 			((ImageView) findViewById(R.id.characterFrameImageView)).setVisibility(View.INVISIBLE);
+			((TextView) findViewById(R.id.characterFrameTextview)).setText("");
 		}
 	}
 

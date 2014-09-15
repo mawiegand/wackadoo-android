@@ -11,7 +11,7 @@ public class UserCredentials {
 	private String username, password, gcPlayerId, fbPlayerId, fbAccessToken, clientID, email;
 	private AccessToken accessToken;
 	private ClientCredentials clientCredentials;
-	private boolean generatedPassword=true;
+	private boolean generatedPassword = true;
 	
 	public UserCredentials(Context context) {
 		this.context = context;
@@ -68,7 +68,7 @@ public class UserCredentials {
 	}
 	
 	private void loadCredentials() {
-		SharedPreferences myPrefs = context.getSharedPreferences("myPrefs", 0);
+		SharedPreferences myPrefs = context.getSharedPreferences("wad_prefs", 0);
 		accessToken.setIdentifier(myPrefs.getString("identifier", ""));
 		accessToken.setExpireCode(myPrefs.getString("expire_code", ""));
 		accessToken.setToken(myPrefs.getString("accesstoken", ""));
@@ -80,7 +80,7 @@ public class UserCredentials {
 		generatedPassword = myPrefs.getBoolean("generatedPassword", true);
 	}
 	private void persistCredentials() {
-		SharedPreferences myPrefs = context.getSharedPreferences("myPrefs", 0);
+		SharedPreferences myPrefs = context.getSharedPreferences("wad_prefs", 0);
 		SharedPreferences.Editor e = myPrefs.edit();
 		e.putString("identifier", accessToken.getIdentifier());
 		e.putLong("expire_date", accessToken.getCreatedAt().getTime());
@@ -115,7 +115,7 @@ public class UserCredentials {
 	}
 
 	public void clearAllCredentials() {
-		SharedPreferences myPrefs = context.getSharedPreferences("myPrefs", 0);
+		SharedPreferences myPrefs = context.getSharedPreferences("wad_prefs", 0);
 		SharedPreferences.Editor e = myPrefs.edit();
 		e.clear();
 		e.commit();
