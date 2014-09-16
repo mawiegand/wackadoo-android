@@ -9,6 +9,10 @@
     <!-- Login -->
     <string name="loginURL">/identity_provider/%s/oauth2/access_token</string>
     
+    
+    <!-- Games -->
+    <string name="gamesURL">/identity_provider/%s/game/game_instances</string>
+    
     <!-- Change Email -->
     <string name="changeEmailURL"></string>
     <!-- Change Password -->

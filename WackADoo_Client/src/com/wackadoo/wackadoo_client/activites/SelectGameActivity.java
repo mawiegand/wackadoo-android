@@ -22,17 +22,22 @@ import com.wackadoo.wackadoo_client.adapter.GamesListViewAdapter;
 import com.wackadoo.wackadoo_client.helper.UtilityHelper;
 import com.wackadoo.wackadoo_client.interfaces.CurrentGamesCallbackInterface;
 import com.wackadoo.wackadoo_client.model.GameInformation;
+import com.wackadoo.wackadoo_client.model.UserCredentials;
+import com.wackadoo.wackadoo_client.tasks.GetCurrentGamesAsyncTask;
 
 public class SelectGameActivity extends Activity implements CurrentGamesCallbackInterface {
 	
 	private ListView listView;
 	private ArrayList<GameInformation> games;
 	private TextView doneBtn;
+	private UserCredentials userCredentials;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_selectgame);
+		
+		userCredentials = new UserCredentials(this.getApplicationContext());
 		
 		games = new ArrayList<GameInformation>();
 		
@@ -85,10 +90,10 @@ public class SelectGameActivity extends Activity implements CurrentGamesCallback
 		listView = (ListView) findViewById(R.id.listGames);
 
 		// fetch current games from server
-//		new GetCurrentGamesAsyncTask(this, getApplicationContext()).execute();
+		new GetCurrentGamesAsyncTask(this, getApplicationContext(), userCredentials).execute();
 		
 		// TODO: remove generateTestItems() and fetch items from server in GetCurrentGamesAsyncTask();
-		generateTestItems();
+		//generateTestItems();
 		
 		listView.setOnItemLongClickListener(new OnItemLongClickListener() {
 			@Override
