@@ -92,9 +92,6 @@ public class SelectGameActivity extends Activity implements CurrentGamesCallback
 		// fetch current games from server
 		new GetCurrentGamesAsyncTask(this, getApplicationContext(), userCredentials).execute();
 		
-		// TODO: remove generateTestItems() and fetch items from server in GetCurrentGamesAsyncTask();
-		//generateTestItems();
-		
 		listView.setOnItemLongClickListener(new OnItemLongClickListener() {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -139,6 +136,7 @@ public class SelectGameActivity extends Activity implements CurrentGamesCallback
 
 	@Override
 	public void getCurrentGamesCallback(ArrayList<GameInformation> games) {
+		this.games = games;
 		GamesListViewAdapter adapter = new GamesListViewAdapter(getApplicationContext(), R.layout.table_item_game, games);
 		listView.setAdapter(adapter);
 		UtilityHelper.setListViewHeightBasedOnChildren(listView);

@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -22,7 +23,9 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.interfaces.CurrentGamesCallbackInterface;
 import com.wackadoo.wackadoo_client.model.GameInformation;
@@ -55,15 +58,11 @@ public class GetCurrentGamesAsyncTask extends AsyncTask<String, Integer, Boolean
 	    
 	    games = new ArrayList<GameInformation>();
 	    
-	    List < NameValuePair > nameValuePairs = new ArrayList < NameValuePair > (2);
 	    
 	    try {
 		    request.getParams().setParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, Boolean.FALSE);
 		    request.setHeader("Authorization", "Bearer " + accessToken);
 		    request.setHeader("Accept", "application/json");
-			
-		    UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nameValuePairs);
-			entity.setContentType("application/x-www-form-urlencoded;charset=UTF-8");
 		    
 		    DefaultHttpClient httpClient = new DefaultHttpClient();
 		    HttpConnectionParams.setSoTimeout(httpClient.getParams(), 10*1000); 
@@ -78,10 +77,9 @@ public class GetCurrentGamesAsyncTask extends AsyncTask<String, Integer, Boolean
 		        sb.append(line);
 		    }
 		    
-	 	    JSONArray jsonArray = new JSONArray(sb.toString());
-	 	    Gson gson = new Gson();
-			GameInformation gameInformation = gson.fromJson(jsonArray.getJSONObject(0).toString(), GameInformation.class);
-	 	    games.add(gameInformation);
+	 	    Log.d("JSON games", sb.toString());
+	 	    Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
+	 	    games = new ArrayList<GameInformation>(Arrays.asList(gson.fromJson(sb.toString(), GameInformation[].class)));
 			
 	    } catch (Exception e) {
     		Log.e("SocketException", e + "");

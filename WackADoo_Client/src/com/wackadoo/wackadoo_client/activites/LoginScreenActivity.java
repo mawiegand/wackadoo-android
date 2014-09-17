@@ -406,7 +406,7 @@ public class LoginScreenActivity extends Activity implements
 		String accessToken = this.userCredentials.getAccessToken().getToken();
 		String tokenExpiration = this.userCredentials.getAccessToken()
 				.getExpireCode();
-		String userId = this.userCredentials.getClientID();
+		String userId = this.userCredentials.getIdentifier();
 		if(accessToken != null && tokenExpiration != null && !this.userCredentials.getAccessToken().isExpired()) {
 			startGame(accessToken, tokenExpiration, userId);
 		

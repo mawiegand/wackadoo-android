@@ -4,16 +4,16 @@ import java.util.Date;
 
 public class GameInformation {
 	
-	private int uId, presentPlayers, maxPlayers;
+	private int id, presentPlayers, maxPlayers;
 	private String name, scope;
 	private Date startedAt, endedAt, availableSince;
 	private boolean signupEnabled, signinEnabled, joined;
 	
-	public int getuId() {
-		return uId;
+	public int getId() {
+		return id;
 	}
-	public void setuId(int uId) {
-		this.uId = uId;
+	public void setuId(int id) {
+		this.id = id;
 	}
 	
 	public int getPresentPlayers() {
