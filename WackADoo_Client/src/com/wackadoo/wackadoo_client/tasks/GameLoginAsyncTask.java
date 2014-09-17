@@ -1,24 +1,20 @@
 package com.wackadoo.wackadoo_client.tasks;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpConnectionParams;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -26,10 +22,9 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
+import com.google.gson.JsonArray;
 import com.wackadoo.wackadoo_client.R;
-import com.wackadoo.wackadoo_client.activites.LoginScreenActivity;
 import com.wackadoo.wackadoo_client.interfaces.GameLoginCallbackInterface;
 import com.wackadoo.wackadoo_client.model.DeviceInformation;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
@@ -120,6 +115,8 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	
 	@Override
 	protected void onPostExecute(Boolean result) {
+		super.onPostExecute(result);
+
 		if(progressDialog.isShowing()) {
 			progressDialog.dismiss();
 		}
@@ -130,7 +127,10 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
 					listener.loginCallbackError(jsonResponse.getString("error"));
 				
 				} else {
-					listener.loginCallback(jsonResponse.get("access_token").toString(), jsonResponse.get("expires_in").toString());
+					String accessToken = jsonResponse.getString("access_token");
+					String expiresIn = jsonResponse.getString("expires_in");
+					String identifier = jsonResponse.getString("user_identifer");
+					listener.loginCallback(accessToken, expiresIn, identifier);
 				}
 			}
 		} catch (Exception e) {

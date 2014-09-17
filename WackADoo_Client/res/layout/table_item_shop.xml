@@ -13,8 +13,8 @@
         android:scaleType="fitCenter" />
 	
 	<TextView
-	    style="@style/customTextViewStyle"
 	    android:id="@+id/shopListViewItemText"
+	    style="@style/customTextViewStyle"
 	    android:layout_height="55dp"
 	    android:textStyle="bold"
 	    android:textSize="@dimen/shopStandardListFontsize" 

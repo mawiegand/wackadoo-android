@@ -3,43 +3,60 @@
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.MeasureSpec;
-import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.ScrollView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.vending.billing.IabHelper;
+import com.android.vending.billing.IabHelper.OnConsumeFinishedListener;
+import com.android.vending.billing.IabHelper.OnIabPurchaseFinishedListener;
+import com.android.vending.billing.IabResult;
+import com.android.vending.billing.Purchase;
+import com.android.vending.billing.SkuDetails;
 import com.wackadoo.wackadoo_client.R;
-import com.wackadoo.wackadoo_client.adapter.ShopRowItem;
 import com.wackadoo.wackadoo_client.adapter.ShopListViewAdapter;
+import com.wackadoo.wackadoo_client.adapter.ShopRowItem;
+import com.wackadoo.wackadoo_client.fragments.ShopCreditsFragment;
 import com.wackadoo.wackadoo_client.fragments.ShopInfoFragment;
 import com.wackadoo.wackadoo_client.helper.UtilityHelper;
+import com.wackadoo.wackadoo_client.interfaces.CreditsFragmentCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.ShopOffersCallbackInterface;
+import com.wackadoo.wackadoo_client.model.UserCredentials;
 import com.wackadoo.wackadoo_client.tasks.GetShopOffersAsyncTask;
 
-public class ShopActivity extends Activity implements ShopOffersCallbackInterface {
+public class ShopActivity extends Activity implements ShopOffersCallbackInterface, CreditsFragmentCallbackInterface, OnIabPurchaseFinishedListener, OnConsumeFinishedListener {
+	
+	private static final String TAG = ShopActivity.class.getSimpleName();
 	
 	private TextView doneBtn;
 	private ImageButton platinumCreditsInfoBtn, goldInfoBtn, platinumAccountInfoBtn, bonusInfoBtn;
-	ListView listPlatinumAccount, listPlatinumCredits, listGold, listBonus;
-	private Fragment infoFragment;
+	private ListView listPlatinumAccount, listPlatinumCredits, listGold, listBonus;
+	private Fragment fragment;
+	private UserCredentials userCredentials;
+	private ProgressDialog progressDialog;	
+	private IabHelper billingHelper;
+
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop);
+        
+        userCredentials = new UserCredentials(this);
         
         doneBtn = (TextView) findViewById(R.id.shopTopbarDone);
         platinumCreditsInfoBtn = (ImageButton) findViewById(R.id.platinumCreditsInfoBtn);
@@ -53,7 +70,15 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
         listBonus = (ListView) findViewById(R.id.listBonus);
 
         setUpBtns();
-        this.loadShopOffersFromServer(); 
+        loadShopOffersFromServer(); 
+	}
+	
+	@Override
+	public void onDestroy() {
+	    super.onDestroy();
+	    if(billingHelper != null) {
+	    	billingHelper.dispose();
+	    }
 	}
 	
 	public void setUpBtns() {
@@ -62,6 +87,7 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 		setUpGoldInfoBtn();
 		setUpPlatinumAccountInfoBtn();
 		setUpBonusInfoBtn();
+		setUpCreditsBtn();
 	}
 	
 	private void setUpDoneBtn() {
@@ -152,7 +178,7 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 		});
 		
 	}
-	
+		
 	private void setUpPlatinumAccountInfoBtn() {
 		platinumAccountInfoBtn.setEnabled(true);
 		platinumAccountInfoBtn.setOnTouchListener(new View.OnTouchListener() {
@@ -213,36 +239,70 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 		});
 	}
 	
+	private void setUpCreditsBtn() {
+		// TODO: fill in credit amount
+		RelativeLayout shopCreditsBtn = (RelativeLayout) findViewById(R.id.shopCreditsButton); 
+		shopCreditsBtn.setOnTouchListener(new View.OnTouchListener() {
+			public boolean onTouch(View v, MotionEvent event) {
+		    	int action = event.getActionMasked();
+		    	
+		    	if(action == (MotionEvent.ACTION_DOWN)) {
+		    		v.setBackgroundColor(getResources().getColor(R.color.shop_listitem_active));
+		    		return true;
+		    	} else if (action == MotionEvent.ACTION_CANCEL) {
+		    		v.setBackgroundColor(getResources().getColor(R.color.white));
+		    		return true;
+		    	} else if (action == MotionEvent.ACTION_UP) {
+		    		v.setBackgroundColor(getResources().getColor(R.color.white));
+		    		setUpBilling();
+		    		return false;
+		    	} 
+		    	return false;
+		    }
+		});
+	}
+	
 	private void openShopInfoFragment(String category) {
-		infoFragment = null;
+		fragment = null;
 		
 		if(category.equals("platinumCredits")) {
-			infoFragment = new ShopInfoFragment("platinumCredits");
+			fragment = new ShopInfoFragment("platinumCredits");
 		
 		} else if (category.equals("gold")) {
-			infoFragment = new ShopInfoFragment("gold");
+			fragment = new ShopInfoFragment("gold");
 		
 		} else if (category.equals("platinumAccount")) {
-			infoFragment = new ShopInfoFragment("platinumAccount");
+			fragment = new ShopInfoFragment("platinumAccount");
 		
 		} else {
-			infoFragment = new ShopInfoFragment("bonus");
+			fragment = new ShopInfoFragment("bonus");
 		}
 
 		// slide shop info fragment in window
         getFragmentManager().beginTransaction()
          	.setCustomAnimations(R.anim.slide_from_right,
          						R.anim.slide_to_right)
-        	.add(R.id.activityContainer, infoFragment)
+        	.add(R.id.activityContainer, fragment)
         	.commit();
 	}
 	
-	public void removeShopInfoFragment() {
+	private void openCreditsFragment(ArrayList<ShopRowItem> rowItemsList) {
+		fragment = new ShopCreditsFragment(this, userCredentials, rowItemsList);
+		
+		// slide shop info fragment in window
+		getFragmentManager().beginTransaction()
+		.setCustomAnimations(R.anim.slide_from_right,
+				R.anim.slide_to_right)
+				.add(R.id.activityContainer, fragment)
+				.commit();
+	}
+	
+	public void removeShopFragment() {
 		// slide shop info fragment out of window
         getFragmentManager().beginTransaction()
         	.setCustomAnimations(R.anim.slide_from_right,
          						R.anim.slide_to_right)
-			.remove(infoFragment)
+			.remove(fragment)
 			.commit();
 	}
 	
@@ -272,7 +332,6 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 //		scroll.requestLayout();
 //	}
 	
-	
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -284,15 +343,6 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 		      @Override
 		      public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
 		    	  buyPlatinumAccount(parent.getItemAtPosition(position));
-		      }
-		});
-	}
-	
-	private void setUpListPlatinumCredits() {
-		listPlatinumCredits.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-		      @Override
-		      public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
-		    	  buyPlatinumCredits(parent.getItemAtPosition(position));
 		      }
 		});
 	}
@@ -353,28 +403,28 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 		///TODO: Fill with content from server -> Remove manual added content, Add right URL to server_values.xml
 		ArrayList<String> valuesToAdd;
 		
-		if(offerType.compareTo(getString(R.string.platinumCreditsServerPath)) == 0) {
-			// Adding values to platinumCredits
-			valuesToAdd = new ArrayList<String>();
-			for(int i = 1; i>0; i--)
-			{
-				valuesToAdd.add(getString(R.string.listPlatinumCreditsText));
-			}
-			ArrayList<ShopRowItem> generatedItems = this.generateRowItemsWithValues(valuesToAdd, R.drawable.platinum_small, 0);
-			this.insertRowItemsInList(generatedItems, listPlatinumCredits);
-	        this.setUpListPlatinumCredits();
-		}
+//		if(offerType.compareTo(getString(R.string.platinumCreditsServerPath)) == 0) {
+//			// Adding values to platinumCredits
+//			valuesToAdd = new ArrayList<String>();
+//			for(int i = 1; i>0; i--)
+//			{
+//				valuesToAdd.add(getString(R.string.list_platinum_credits_text));
+//			}
+//			ArrayList<ShopRowItem> generatedItems = this.generateRowItemsWithValues(valuesToAdd, R.drawable.platinum_small, 0);
+//			insertRowItemsInList(generatedItems, listPlatinumCredits);
+//	        setUpListPlatinumCredits();
+//		}
 
 		if(offerType.compareTo(getString(R.string.goldFrogsServerPath)) == 0) {
 			// Adding values to listGold
 			valuesToAdd = new ArrayList<String>();
 			for(int i = 3; i>0; i--)
 			{
-				valuesToAdd.add(String.format(getString(R.string.listGoldText),15,8));
+				valuesToAdd.add(String.format(getString(R.string.list_gold_text),15,8));
 			}
 			ArrayList<ShopRowItem> generatedItems = this.generateRowItemsWithValues(valuesToAdd, R.drawable.goldkroete_128px, 0);
-			this.insertRowItemsInList(generatedItems, listGold);
-	        this.setUpListGold();
+			insertRowItemsInList(generatedItems, listGold);
+	        setUpListGold();
 		}
 		
 		if(offerType.compareTo(getString(R.string.platinumAccountServerPath)) == 0) {
@@ -382,11 +432,11 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 			valuesToAdd = new ArrayList<String>();
 			for(int i = 1; i>0; i--)
 			{
-				valuesToAdd.add(String.format(getString(R.string.listPlatinumAccountText),7,10));
+				valuesToAdd.add(String.format(getString(R.string.list_platinum_account_text),7,10));
 			}
 			ArrayList<ShopRowItem> generatedItems = this.generateRowItemsWithValues(valuesToAdd, 0, 0);
-			this.insertRowItemsInList(generatedItems, listPlatinumAccount);
-			this.setUpListPlatinumAccount();
+			insertRowItemsInList(generatedItems, listPlatinumAccount);
+			setUpListPlatinumAccount();
 		}
 		
 		if(offerType.compareTo(getString(R.string.bonusOffersServerPath)) == 0) {
@@ -394,11 +444,11 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 			valuesToAdd = new ArrayList<String>();
 			for(int i = 9; i>0; i--)
 			{
-				valuesToAdd.add(String.format(getString(R.string.listBonusText),5,48,1));
+				valuesToAdd.add(String.format(getString(R.string.list_bonus_text),5,48,1));
 			}
 			ArrayList<ShopRowItem> generatedItems = this.generateRowItemsWithValues(valuesToAdd, R.drawable.resource_stone, R.drawable.goldkroete_128px);
-			this.insertRowItemsInList(generatedItems, listBonus);
-			this.setUpListBonus();
+			insertRowItemsInList(generatedItems, listBonus);
+			setUpListBonus();
 		}
 	}	
 	
@@ -413,5 +463,116 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 		return valuesToAdd;
 	}
 
+	// Set up the standard server communiation dialog
+	private void setUpDialog() {
+		progressDialog = new ProgressDialog(this);
+		progressDialog.setTitle(getResources().getString(R.string.server_communication));
+		progressDialog.setMessage(getResources().getString(R.string.please_wait));
+	}
+
+	// set up google play store billing
+	private void setUpBilling(){
+		setUpDialog();
+		progressDialog.show();
+		
+		// establish connection to play store
+		String base64PublicKey = getResources().getString(R.string.playPublicKey); 	
+		billingHelper = new IabHelper(this, base64PublicKey);
+		
+		// TODO: remove before publishing
+		billingHelper.enableDebugLogging(true);
 	
+		Log.d(TAG, "Starting setup.");
+		billingHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
+	        public void onIabSetupFinished(IabResult result) {
+	            if (!result.isSuccess()) {
+	            	Log.d(TAG, "-----> Error: " + result.getMessage());
+	                return;
+	            }
+	
+	            if (billingHelper == null) {
+	            	Log.d(TAG, "-----> Error: billingHelper is null");
+	            	return;
+	            }
+	            // IAB is fully set up 
+	            Log.d(TAG, "-----> Setup successful");
+	            
+	            // get platinum credit packages from play store
+	            billingHelper.getProductsAsyncInternal(ShopActivity.this);
+	        }
+        });
+	}
+	
+	// fragment calls which product was clicked
+	public void creditsFragmentCallback(int clickedPackage) {
+//		SkuDetails product = get(clickedPackage);
+		billingHelper.launchPurchaseFlow(this, "android.test.purchased", 1337, this);
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		billingHelper.handleActivityResult(requestCode, resultCode, data);
+		
+    	// error = already owned -> consume item and buy again
+//        String purchaseData = data.getStringExtra("INAPP_PURCHASE_DATA");
+//        String dataSignature = data.getStringExtra("INAPP_DATA_SIGNATURE");
+//		Purchase purchase = new Purchase("android.text.purchased", purchaseData, dataSignature);
+		
+	}
+	
+	@Override
+	public void getProductsCallback(Bundle skuDetails){
+		int response = skuDetails.getInt("RESPONSE_CODE");
+		
+		if(response == 0) {
+			Log.d(TAG, "-----> PRODUKTE ERFOLGREICH VOM SERVER GEHOLT!");
+			if(progressDialog.isShowing()) {
+				progressDialog.dismiss();
+			}
+			Log.d(TAG, "**** skudDetails: " + skuDetails.toString());
+			ArrayList<String> productList = skuDetails.getStringArrayList("DETAILS_LIST");
+			Log.d(TAG, "productList: " + productList.toString());
+	
+			ArrayList<ShopRowItem> rowItems = jsonProductToShopRowItem(productList);
+			openCreditsFragment(rowItems);
+		}
+	}
+
+	// returns list of ShopRowItems for given list of json products
+	private ArrayList<ShopRowItem> jsonProductToShopRowItem(ArrayList<String> stringList) {
+		ArrayList<ShopRowItem> rowItemList = new ArrayList<ShopRowItem>();
+		
+		try {
+			// TODO: remove testitems
+//			for(String stringProduct : stringList) {
+			for(int i=0; i<4; i++) {
+				String title = (i+5) + " 5D Platinum Credits für " + i + "€";
+				ShopRowItem item = new ShopRowItem(R.drawable.platinum_small, title, 0);
+				rowItemList.add(item);
+			}
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return rowItemList;
+	}
+	
+	@Override
+	public void onIabPurchaseFinished(IabResult result, Purchase info) {
+		if(result.getResponse() == 7) {
+    		Log.d(TAG, "Unable to buy item, Error Code 7 ---> Consume and Buy again");
+    		billingHelper.consumeAsync(info, this);
+
+		} else if(result.getResponse() == 0) {
+			Log.d(TAG, "Item successfully bought ---> Consume");
+			billingHelper.consumeAsync(info, this);
+		}
+	}
+
+	@Override
+	public void onConsumeFinished(Purchase purchase, IabResult result) {
+		Log.d(TAG, "Consume Finished: " + result.getResponse());
+	}
+
 }

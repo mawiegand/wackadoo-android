@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -30,6 +31,8 @@ import com.wackadoo.wackadoo_client.tasks.GameLoginAsyncTask;
 
 public class CredentialScreenActivity extends Activity implements CreateAccountCallbackInterface, GameLoginCallbackInterface{
 	
+	private static final String TAG = CredentialScreenActivity.class.getSimpleName();
+	
 	private UserCredentials userCredentials;
 	private Button signInButton, createAccountButton, restoreAccountButton;
 	private EditText userNameEditText, passwordEditText;
@@ -43,7 +46,7 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_credentialscreen);   
 		
-		this.userCredentials = new UserCredentials(this.getApplicationContext());
+		this.userCredentials = new UserCredentials(getApplicationContext());
 		
 //		uiHelper = new UiLifecycleHelper(this, statusCallback);
 //      uiHelper.onCreate(savedInstanceState);
@@ -190,9 +193,17 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 	protected void restoreAccount() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		// TODO: restore account
+		String title, message;
+		boolean success = false;
 		
-		String title = "Restore Failed";
-		String message = "There was no account that could be restored. Please contact support.";
+		if(success) {
+			title = "WackyUser1337";
+			message = String.format(getResources().getString(R.string.account_character_restore_success), "WackyUser1337");
+
+		} else {
+			title = getResources().getString(R.string.account_character_restore_failed);
+			message = getResources().getString(R.string.account_character_restore_failure_message);
+		}
 		
     	builder.setTitle(title)
     		   .setMessage(message)
@@ -225,7 +236,7 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 
 	private void triggerLogin() {
 		if(userNameEditText.getText().length() > 0){
-			if(passwordEditText.getText().length() > 6) {
+			if(passwordEditText.getText().length() > 5) {
 				userCredentials.setEmail(this.userNameEditText.getText().toString());
 				userCredentials.setPassword(this.passwordEditText.getText().toString());
 				progressDialog.show();
@@ -283,12 +294,14 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 		userCredentials.setIdentifier(identifier);
 		userCredentials.setClientID(clientID);
 		userCredentials.setUsername(nickname);
+		Log.d(TAG, "----------> vor finish(): " + userCredentials.getIdentifier());
 		finish();
 	}
 	
 	@Override
-	public void loginCallback(String accessToken, String expiration) {
+	public void loginCallback(String accessToken, String expiration, String userIdentifier) {
 		userCredentials.generateNewAccessToken(accessToken, expiration);
+		userCredentials.setClientID(userIdentifier);
 		finish();
 	}
 	

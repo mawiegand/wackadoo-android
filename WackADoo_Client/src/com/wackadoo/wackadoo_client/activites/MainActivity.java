@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,10 +29,10 @@ import com.wackadoo.wackadoo_client.interfaces.GameLoginCallbackInterface;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
 import com.wackadoo.wackadoo_client.tasks.GameLoginAsyncTask;
 
-public class LoginScreenActivity extends Activity implements
+public class MainActivity extends Activity implements
 		CreateAccountCallbackInterface, GameLoginCallbackInterface {
 
-	private static final String TAG = LoginScreenActivity.class.getSimpleName();
+	private static final String TAG = MainActivity.class.getSimpleName();
 	
 	private ImageButton playBtn, accountmanagerBtn, selectGameBtn, 
 			facebookBtn, shopBtn, soundBtn, infoBtn;
@@ -46,7 +47,7 @@ public class LoginScreenActivity extends Activity implements
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_loginscreen);
+        setContentView(R.layout.activity_main);
         
 	    playBtn = (ImageButton) findViewById(R.id.loginButton);
 	    accountmanagerBtn = (ImageButton) findViewById(R.id.accountmanagerButton);
@@ -67,6 +68,15 @@ public class LoginScreenActivity extends Activity implements
 
 	    // set up standard server communication dialog
 	    setUpDialog();
+	    
+	    // put version number in textview
+		try {
+			String versionName = "Version " + getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+			((TextView) findViewById(R.id.title_version_text)).setText(versionName);
+		} 
+		catch (NameNotFoundException e) {
+			e.printStackTrace(); 
+		} 
 	    
 	    setUpButtons();
 	    setUpPlayButtonAnimation();
@@ -208,10 +218,8 @@ public class LoginScreenActivity extends Activity implements
 		shopBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(LoginScreenActivity.this,
-						ShopActivity.class);
+				Intent intent = new Intent(MainActivity.this, ShopActivity.class);
 				startActivity(intent);
-				shopBtn.setEnabled(false);
 			}
 		});
 	}
@@ -255,7 +263,7 @@ public class LoginScreenActivity extends Activity implements
 		infoBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(LoginScreenActivity.this,
+				Intent intent = new Intent(MainActivity.this,
 						InfoScreenActivity.class);
 				startActivity(intent);
 			}
@@ -287,7 +295,7 @@ public class LoginScreenActivity extends Activity implements
 		accountmanagerBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(LoginScreenActivity.this,
+				Intent intent = new Intent(MainActivity.this,
 						AccountManagerActivity.class);
 				startActivity(intent);
 			}
@@ -335,7 +343,7 @@ public class LoginScreenActivity extends Activity implements
 		selectGameBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(LoginScreenActivity.this,
+				Intent intent = new Intent(MainActivity.this,
 						SelectGameActivity.class);
 				startActivity(intent);
 			}
@@ -366,9 +374,9 @@ public class LoginScreenActivity extends Activity implements
 			public void onClick(View v) {
 				Intent intent = null;
 				if(loggedIn) {
-					intent = new Intent(LoginScreenActivity.this, AccountManagerActivity.class);
+					intent = new Intent(MainActivity.this, AccountManagerActivity.class);
 				} else {
-					intent = new Intent(LoginScreenActivity.this, CredentialScreenActivity.class);
+					intent = new Intent(MainActivity.this, CredentialScreenActivity.class);
 				}
 				startActivity(intent);
 			}
@@ -422,7 +430,7 @@ public class LoginScreenActivity extends Activity implements
 	}
 
 	private void startGame(String accessToken, String expiration, String userId) {
-		Intent intent = new Intent(LoginScreenActivity.this,
+		Intent intent = new Intent(MainActivity.this,
 				WackadooWebviewActivity.class);
 		Bundle bundle = new Bundle();
 		bundle.putString("accessToken", accessToken);
@@ -441,8 +449,9 @@ public class LoginScreenActivity extends Activity implements
 	}
 
 	@Override
-	public void loginCallback(String accessToken, String expiration) {
+	public void loginCallback(String accessToken, String expiration, String identifier) {
 		userCredentials.generateNewAccessToken(accessToken, expiration);
+		userCredentials.setIdentifier(identifier);
 		Toast.makeText(getApplicationContext(), getResources().getString(R.string.login_success_toast), Toast.LENGTH_LONG).show();
 		
 		loggedIn = true;

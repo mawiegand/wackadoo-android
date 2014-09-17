@@ -2,11 +2,16 @@ package com.wackadoo.wackadoo_client.model;
 
 import java.util.Date;
 
+import com.wackadoo.wackadoo_client.activites.CredentialScreenActivity;
+
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 public class UserCredentials {
 	
+	private static final String TAG = UserCredentials.class.getSimpleName();
+
 	private Context context;
 	private String username, password, gcPlayerId, fbPlayerId, fbAccessToken, clientID, email;
 	private AccessToken accessToken;

@@ -3,6 +3,382 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context="com.wackadoo.wackadoo_client.activites.MainActivity"
     tools:ignore="MergeRootFrame" >
+
+    
+    <!-- ............... BACKGROUND ............... -->
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:alpha="0.7"
+        android:src="@drawable/title_bg" />
+    
+    
+    <!-- ............... HEADER ............... -->
+    <LinearLayout 
+        android:id="@+id/headerVerticalContainer"
+    	android:layout_height="match_parent" 
+    	android:layout_width="match_parent"
+    	android:orientation="vertical"
+    	android:weightSum="1.0">
+    
+	    <LinearLayout 
+	        android:id="@+id/headerHorizontalContainer"
+	        android:layout_weight="0.13"
+	    	android:layout_height="0dp" 
+	    	android:layout_width="match_parent"
+	    	android:orientation="horizontal"
+	    	android:weightSum="1.0">
+	    	
+	    	<RelativeLayout 
+	      	    android:id="@+id/headerShopContainer"  
+		        android:layout_height="wrap_content"
+	    	    android:layout_gravity="top|left"
+	        	android:layout_width="0dp"
+	      		android:layout_weight="0.18">
+	      		
+	    		<ImageView
+	        		android:layout_width="match_parent"
+	        		android:layout_height="match_parent"
+		        	android:scaleType="fitStart"
+	    	    	android:src="@drawable/title_left_corner" />
+	    		
+	    		<LinearLayout 
+	        		android:id="@+id/shopButtonLinearContainer"
+	        		android:layout_centerInParent="true"
+	    			android:layout_height="match_parent" 
+			    	android:layout_width="match_parent"
+	    			android:orientation="vertical"
+	    			android:weightSum="1.0">
+	    			
+	    		    <RelativeLayout
+	    		        android:id="@+id/shopButtonSpacer" 
+	 	    			android:layout_width="match_parent"
+	 	    			android:layout_weight="0.10"
+	 	    			android:layout_height="0dp" >
+	 				</RelativeLayout>
+	    			
+	    		    <RelativeLayout 
+	      	    		android:id="@+id/shopButtonRelativeContainer"
+		        		android:layout_height="0dp"
+	    	    		android:layout_gravity="top|left"
+	        			android:layout_width="wrap_content"
+	      				android:layout_weight="0.5">
+		    			
+		    			<ImageButton
+							style="@style/customImageButtonStyle"	
+		    	    		android:id="@+id/shopButton"
+		    	    		android:src="@drawable/title_shop_button" />
+		    			
+	    			</RelativeLayout>
+	    		</LinearLayout>
+	   		</RelativeLayout>
+	   		
+	    	<RelativeLayout 
+	       		android:id="@+id/headerSpacer" 
+		        android:layout_width="0dp"
+		        android:layout_weight="0.6"
+	            android:layout_height="match_parent">
+			</RelativeLayout>
+	   		
+	   		<RelativeLayout 
+	      	    android:id="@+id/headerControls"  
+		        android:layout_height="wrap_content"
+	    	    android:layout_gravity="center"
+	        	android:layout_width="0dp"
+	      		android:layout_weight="0.2">
+	    		
+	   		    <ImageButton
+	   		        style="@style/customImageButtonStyle"
+				    android:id="@+id/title_sound_button" 
+	    	    	android:layout_gravity="right"
+	    	    	android:layout_centerInParent="true"
+	    	    	android:src="@drawable/title_sound_off" 
+					android:paddingRight="45dp"
+	    	    	android:paddingLeft="0dip"
+	    	    	android:layout_alignParentRight="true" />
+	   		    
+	    		<ImageButton
+	    		    style="@style/customImageButtonStyle"
+	    		    android:id="@+id/title_info_button" 
+	    	    	android:layout_gravity="right"
+	    	    	android:layout_centerInParent="true"
+	    	    	android:src="@drawable/title_info_button"
+	    	    	android:paddingRight="10dip"
+	    	    	android:paddingLeft="0dip"
+	    	    	android:layout_alignParentRight="true" />
+				
+	   		</RelativeLayout>    		
+	    </LinearLayout>
+    </LinearLayout>
+	    
+    
+    <!-- ............... LOGO ............... -->
+    <LinearLayout 
+        android:id="@+id/logoLinearContainer"
+    	android:layout_height="match_parent" 
+    	android:layout_width="match_parent"
+    	android:orientation="vertical"
+    	android:weightSum="1.0">
+   		
+	    <RelativeLayout 
+	    	android:id="@+id/logoRelativecontainer" 
+	        android:layout_width="wrap_content" 
+	        android:layout_height="0dp"
+	        android:layout_weight="0.8">
+			
+	    	<ImageView
+	    	    android:layout_width="match_parent"
+	    	    android:layout_height="wrap_content"
+	    	    android:adjustViewBounds="true"
+	    	    android:scaleType="fitCenter"
+	    	    android:src="@drawable/title_logo" />
+	  	</RelativeLayout>
+  	</LinearLayout>
+  	
+    
+    <!-- ............... FOOTER ............... -->
+    <LinearLayout 
+        android:id="@+id/footerVerticalContainer"
+	 	android:layout_height="match_parent" 
+	    android:layout_width="match_parent"
+	    android:orientation="vertical"
+	    android:weightSum="1.0">
+	 	
+	 	<RelativeLayout 
+	     	android:id="@+id/footerSpacer" 
+		    android:layout_width="match_parent"
+		    android:layout_weight="0.6"
+	        android:layout_height="0dp">
+		</RelativeLayout>
+	 	
+	 	<RelativeLayout
+	 	    android:id="@+id/footerHorizontalContainer"
+	    	android:layout_height="0dp" 
+	    	android:layout_width="match_parent"
+	    	android:layout_weight="0.4">
+	    	    
+	 	        <ImageView
+			 	    android:layout_width="match_parent"
+			 	    android:layout_height="match_parent"
+			 	    android:layout_alignParentLeft="true"
+			 	    android:layout_alignParentBottom="true"
+			 	    android:adjustViewBounds="true"
+			 	    android:scaleType="fitEnd"
+			 	    android:src="@drawable/title_bar"/>
+	 	        
+	 	        <LinearLayout
+			 	    android:id="@+id/footerHorizontalSplittingContainer"
+			    	android:layout_height="match_parent" 
+			    	android:layout_width="match_parent"
+			    	android:orientation="horizontal"
+			    	android:weightSum="1.0">
+	    		    
+	 	            <RelativeLayout 
+			       		android:id="@+id/characterFrameSpacer" 
+				        android:layout_width="0dp"
+				        android:layout_weight="0.25"
+			            android:layout_height="match_parent"/>
+				 	
+	 	            <LinearLayout 
+			       		android:id="@+id/characterFrameContainer" 
+				        android:layout_width="0dp"
+			            android:layout_height="match_parent"
+				        android:layout_weight="0.10"
+				        android:orientation="vertical"
+				        android:weightSum="1.0">
+	    		    
+	 	              	<RelativeLayout 
+				       		android:id="@+id/characterFrameContainerSpacer" 
+					        android:layout_width="match_parent"
+				            android:layout_height="0px"
+				            android:layout_weight="0.23"/>  
+	    		    	
+	 	              	<FrameLayout 
+	 	              	    android:layout_width="wrap_content"
+			 	    		android:layout_height="0px"
+			 	    		android:layout_weight="0.55">
+	 	              	    
+		 	              	<ImageView 
+		 	              	    android:id="@+id/characterFrameImageView"
+		 	              	    android:layout_height="match_parent"
+		 	              	    android:layout_width="match_parent"
+		 	              	    android:src="@drawable/standard_character_pic"
+		 	              	    android:visibility="invisible"/>
+		 	                
+		 	                <Button 
+				 	    		android:id="@+id/characterFrame"
+		 	                    android:layout_height="match_parent"
+		 	                    android:layout_width="match_parent"
+					 	    	android:background="@drawable/title_character_frame"
+					 	    	android:text="@string/credentials_headline"
+					 	    	android:textSize="12sp"
+					 	    	android:textColor="@color/white"/> 
+					 	    	
+	 	              	    <TextView 
+	 	              	        android:id="@+id/characterFrameTextview"
+	 	              	        style="@style/customTextViewStyle" 
+	 	              	        android:layout_width="match_parent"
+	 	              	        android:textSize="8sp"/>
+	 	              	    
+	 	              	</FrameLayout>
+				 	</LinearLayout>
+		 	
+			 	    <RelativeLayout 
+			       		android:id="@+id/accountmanagerButtonContainer" 
+				        android:layout_width="0dp"
+				        android:layout_weight="0.075"
+			            android:layout_height="wrap_content"
+			            android:layout_gravity="center">
+				 	
+			 	        <LinearLayout
+			 	    		android:id="@+id/footerVerticalAccountmanagerContainer"
+			    			android:layout_height="match_parent" 
+			    			android:layout_width="match_parent"
+			    			android:orientation="vertical"
+			    			android:weightSum="1.0">
+			    			
+			 	            <RelativeLayout 
+			       				android:id="@+id/accountmanagerButtonVerticalSpacer" 
+				        		android:layout_width="match_parent"
+					 	    	android:layout_height="0dp"
+					 	    	android:layout_weight="0.25" />
+			 	            
+			 	            <RelativeLayout 
+			       				android:id="@+id/accountmanagerButtonVerticalContainer" 
+				        		android:layout_width="match_parent"
+					 	    	android:layout_height="0dp"
+					 	    	android:layout_weight="0.50"
+			            		android:layout_gravity="center" >
+			    					
+			 	        		<ImageButton
+			 	        		    style="@style/customImageButtonStyle"
+					 	    		android:id="@+id/accountmanagerButton"
+						 	    	android:scaleType="fitStart"
+						 	    	android:layout_centerInParent="true"
+						 	    	android:src="@drawable/title_change_button"/>
+				 	   		</RelativeLayout>
+				 	 	</LinearLayout>    
+			 	    </RelativeLayout>
+	 	    
+		 	        <LinearLayout
+		 	    		android:id="@+id/footerVerticalChooseworldContainer"
+		    			android:layout_height="match_parent" 
+		    			android:layout_width="0dp"
+		    			android:orientation="vertical"
+		    			android:layout_weight="0.07"
+		    			android:weightSum="1.0">
+		    			
+		 	            <RelativeLayout 
+		       				android:id="@+id/chooseworldButtonVerticalSpacer" 
+			        		android:layout_width="match_parent"
+				 	    	android:layout_height="0dp"
+				 	    	android:layout_weight="0.08" />
+		 	            
+		 	            <RelativeLayout 
+		       				android:id="@+id/chooseworldButtonVerticalContainer" 
+			        		android:layout_width="match_parent"
+				 	    	android:layout_height="0dp"
+				 	    	android:layout_weight="0.75"
+		            		android:layout_gravity="top" >
+		 	        		
+		 	        		<ImageButton
+		 	        		    style="@style/customImageButtonStyle"
+				 	    		android:id="@+id/chooseworldButton"
+					 	    	android:scaleType="fitStart"
+					 	    	android:layout_centerInParent="true"
+					 	    	android:src="@drawable/title_changegame_button"/>
+		 	        		
+			 	   		</RelativeLayout>
+			 	   	</LinearLayout> 
+			 	   	
+			 		<LinearLayout 
+			       		android:id="@+id/loginButtonContainer" 
+				        android:layout_width="0dp"
+				        android:layout_weight="0.38"
+			            android:layout_height="match_parent"
+			            android:orientation="horizontal"
+			            android:weightSum="1.0">
+			 	            
+						<RelativeLayout 
+				       		android:id="@+id/loginButtonHorizontalSpacer" 
+					        android:layout_width="0dp"
+					        android:layout_weight="0.15"
+				            android:layout_height="wrap_content"/>
+			 	            
+		 	            <LinearLayout 
+				       		android:id="@+id/loginButtonVerticalContainer" 
+					        android:layout_width="wrap_content"
+				            android:layout_height="match_parent"
+					        android:layout_weight="0.75"
+				            android:orientation="vertical"
+				            android:weightSum="1.0">  
+				            
+				            <RelativeLayout 
+					       		android:id="@+id/loginButtonVerticalSpacer" 
+						        android:layout_width="match_parent"
+					            android:layout_height="0dp"
+					            android:layout_weight="0.70"/>
+				            	 		    	    
+		 		    	    <TextView
+		 		    	        android:id="@+id/title_version_text"
+		 		    	        style="@style/customTextViewStyle"
+		 		    	        android:text="Version 1.23#49"
+		 		    	        android:textSize="12sp"
+		 		    	        android:textColor="@color/title_version_text"
+		 		    	        android:layout_gravity="right"
+		 		    	        android:layout_weight="0.03"/>
+		 		    	    			 	            
+			 		        <ImageButton
+						  	    style="@style/customImageButtonStyle"
+						  	    android:id="@+id/loginButton"
+					  		    android:layout_width="match_parent"
+						  	    android:adjustViewBounds="true"
+					  		    android:layout_weight="0.27"/>
+				 		        
+				 		</LinearLayout>
+			 		</LinearLayout>
+			 		
+			 		<RelativeLayout 
+			       		android:id="@+id/facebookButtonContainer" 
+				        android:layout_width="0dp"
+				        android:layout_weight="0.13"
+			            android:layout_height="wrap_content"
+			            android:layout_gravity="center">
+				  		
+				  		<LinearLayout 
+		        			android:id="@+id/facebookLinearContainer"
+		    				android:layout_height="match_parent" 
+		    				android:layout_width="match_parent"
+		    				android:orientation="vertical"
+		    				android:weightSum="1.0">
+			    		    
+				  		    <RelativeLayout 
+			     				android:id="@+id/facebookSpacer" 
+				    			android:layout_width="match_parent"
+				    			android:layout_weight="0.66"
+			        			android:layout_height="0dp">
+							</RelativeLayout>
+				 		    
+				 		    <RelativeLayout 
+			       				android:id="@+id/facebookButtonVerticalContainer" 
+				        		android:layout_width="wrap_content"
+				        		android:layout_weight="0.35"
+			            		android:layout_height="0dp"
+			            		android:layout_gravity="center">
+				 		    		
+				 		    		<ImageButton
+					 	    			style="@style/customImageButtonStyle"
+					 	    			android:id="@+id/facebookButton"
+					 	    			android:src="@drawable/title_facebook_button"/>
+				 		    </RelativeLayout>
+				 		</LinearLayout>
+			 		</RelativeLayout>
+	 	            
+	 		</LinearLayout>
+		</RelativeLayout> 	    	
+	</LinearLayout>
 </FrameLayout>

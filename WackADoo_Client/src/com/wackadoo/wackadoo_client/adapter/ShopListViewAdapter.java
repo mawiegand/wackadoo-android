@@ -75,6 +75,7 @@ public class ShopListViewAdapter extends ArrayAdapter<ShopRowItem> implements On
     		return true;
     	} else if (action == MotionEvent.ACTION_UP) {
     		v.setBackgroundColor(context.getResources().getColor(R.color.white));
+    		v.performLongClick();
     		return false;
     	} 
     	return false;

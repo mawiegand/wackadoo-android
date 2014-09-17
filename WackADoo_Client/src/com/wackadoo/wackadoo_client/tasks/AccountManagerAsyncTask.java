@@ -46,8 +46,7 @@ public class AccountManagerAsyncTask extends AsyncTask<String, Integer, Boolean>
 	@Override
 	protected Boolean doInBackground(String... params) {
 		Activity parent = (Activity) listener;
-		
-		String urlForRequest;
+		String urlForRequest = parent.getString(R.string.createAccountURL);
 		
 		if(type.equals("mail")) {
 			urlForRequest = parent.getString(R.string.changeEmailURL);
@@ -55,7 +54,8 @@ public class AccountManagerAsyncTask extends AsyncTask<String, Integer, Boolean>
 			urlForRequest = parent.getString(R.string.changePasswordURL);
 		}
 		String baseURL = parent.getString(R.string.baseURL);
-		String completeURL = baseURL + String.format(urlForRequest, Locale.getDefault().getCountry().toLowerCase());
+		String completeURL = baseURL + String.format(urlForRequest, Locale.getDefault().getCountry().toLowerCase(), userCredentials.getIdentifier());
+		Log.d(TAG, "completeURL: " + completeURL);
 		
 		HttpPost request = new HttpPost(completeURL);
 		StringBuilder sb = new StringBuilder();

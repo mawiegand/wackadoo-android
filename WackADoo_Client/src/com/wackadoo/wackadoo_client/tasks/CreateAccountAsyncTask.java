@@ -33,7 +33,7 @@ public class CreateAccountAsyncTask extends AsyncTask<String, Integer, Boolean> 
 	
     private CreateAccountCallbackInterface listener;
     private ProgressDialog progressDialog;
-    private String identifier, cliendId, username;
+    private JSONObject jsonResponse;
     
     public CreateAccountAsyncTask(CreateAccountCallbackInterface callback, ProgressDialog progressDialog) {
     	this.listener = callback;
@@ -81,11 +81,8 @@ public class CreateAccountAsyncTask extends AsyncTask<String, Integer, Boolean> 
 		        sb.append(line);
 		    }
 		    
-		    JSONObject jsonResponse = new JSONObject(sb.toString());
+		    jsonResponse = new JSONObject(sb.toString());
 		    Log.d(TAG, "Create Account Response:" + jsonResponse);
-		    identifier = jsonResponse.getString("identifier");
-		    cliendId = jsonResponse.getString("id");
-		    username = jsonResponse.getString("nickname");
 		    return true;
 			
 		} catch (Exception e) {
@@ -103,7 +100,15 @@ public class CreateAccountAsyncTask extends AsyncTask<String, Integer, Boolean> 
 		}
 		
 		if(result) {
-			listener.onRegistrationCompleted(identifier, cliendId, username);
+			try {
+				String identifier = jsonResponse.getString("identifier");
+				String cliendId = jsonResponse.getString("id");
+				String username = jsonResponse.getString("nickname");
+				listener.onRegistrationCompleted(identifier, cliendId, username);
+				
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
 			
 		} else {
 		}

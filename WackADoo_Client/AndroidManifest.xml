@@ -9,6 +9,7 @@
         android:minSdkVersion="14"
         android:targetSdkVersion="19"/>
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="com.android.vending.BILLING" />
 
     <application
         android:largeHeap="true"
@@ -29,7 +30,7 @@
 			android:screenOrientation="landscape">
         </activity>
         <activity
-            android:name="com.wackadoo.wackadoo_client.activites.LoginScreenActivity"
+            android:name="com.wackadoo.wackadoo_client.activites.MainActivity"
             android:screenOrientation="landscape"
             android:hardwareAccelerated="true">
         </activity>

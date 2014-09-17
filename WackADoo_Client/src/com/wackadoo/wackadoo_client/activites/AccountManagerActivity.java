@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -25,6 +26,8 @@ import com.wackadoo.wackadoo_client.tasks.GameLoginAsyncTask;
 
 public class AccountManagerActivity extends Activity implements AccountManagerCallbackInterface{
 	
+	private static final String TAG = AccountManagerActivity.class.getSimpleName();
+
 	private UserCredentials userCredentials;
 	private TextView usernameTextView, provideEmailTextView, characterLockedTextView, makeCharacterPortableTextView, emailTextView, emailInformationTextView, backBtn;
 	private Button signOutButton, setEmailButton, passwordButton;
@@ -38,7 +41,7 @@ public class AccountManagerActivity extends Activity implements AccountManagerCa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accountmanager);
 	    
-	    userCredentials = new UserCredentials(this.getApplicationContext());
+	    userCredentials = new UserCredentials(getApplicationContext());
 //	    checkUserIsLoggedIn();
 	    
         usernameTextView = (TextView) findViewById(R.id.usernameText);
@@ -105,7 +108,7 @@ public class AccountManagerActivity extends Activity implements AccountManagerCa
 		this.setUpSignOutButton();
 	}
 	
-	private void setButtonVisibility (boolean setPasswordButtonVisible, boolean emailButtonVisible) {
+	private void setButtonVisibility(boolean setPasswordButtonVisible, boolean emailButtonVisible) {
 		if(!passwordButtonVisible) {
 			passwordButton.setText(getResources().getString(R.string.account_change_password));
 			RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)passwordButton.getLayoutParams();
@@ -243,8 +246,10 @@ public class AccountManagerActivity extends Activity implements AccountManagerCa
 	}
 
 	private void loadCredentialsToUI() {
+
     	String username = userCredentials.getUsername();
     	String email = userCredentials.getEmail();
+    	Log.d(TAG, "----------> loadCredentialsToUI: " + userCredentials.getIdentifier());
     	if(!username.isEmpty()) {
     		usernameTextView.setText(username);
     	}
@@ -258,7 +263,10 @@ public class AccountManagerActivity extends Activity implements AccountManagerCa
     	builder.setTitle(text);
 
     	final EditText input = new EditText(this);
-    	input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+    	if(callback.equals(AlertCallback.Password)) {
+	    	input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+		}
+    	
     	builder.setView(input);
 
     	builder.setPositiveButton(getResources().getString(R.string.alert_ok_button), new DialogInterface.OnClickListener() { 
@@ -282,6 +290,7 @@ public class AccountManagerActivity extends Activity implements AccountManagerCa
     }
     
     private void enteredNewEmail(String email) {
+		Log.d(TAG, "identifier vor aufruf task: " + userCredentials.getIdentifier());
 		if(UtilityHelper.isValidMail(email)){
 			new AccountManagerAsyncTask(this, progressDialog, userCredentials, "mail", email).execute();
 		} else {
@@ -318,7 +327,7 @@ public class AccountManagerActivity extends Activity implements AccountManagerCa
 				userCredentials.setPassword(newValue);
 			}
 		}
-		
+
 	}
 	
 //	private void checkUserIsLoggedIn() {

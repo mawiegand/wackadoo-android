@@ -23,6 +23,7 @@ import android.util.Log;
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.interfaces.CurrentGamesCallbackInterface;
 import com.wackadoo.wackadoo_client.model.GameInformation;
+import com.wackadoo.wackadoo_client.model.UserCredentials;
 
 public class GetCurrentGamesAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	
@@ -41,7 +42,7 @@ public class GetCurrentGamesAsyncTask extends AsyncTask<String, Integer, Boolean
 	    HttpResponse response = null;
 	    
 	    List <NameValuePair> nameValuePairs = new ArrayList <NameValuePair> (7);
-	    
+
 	    try {
 			UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nameValuePairs);
 		    entity.setContentType("application/x-www-form-urlencoded;charset=UTF-8");
