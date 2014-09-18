@@ -249,7 +249,6 @@ public class AccountManagerActivity extends Activity implements AccountManagerCa
 
     	String username = userCredentials.getUsername();
     	String email = userCredentials.getEmail();
-    	Log.d(TAG, "----------> loadCredentialsToUI: " + userCredentials.getIdentifier());
     	if(!username.isEmpty()) {
     		usernameTextView.setText(username);
     	}
@@ -299,7 +298,7 @@ public class AccountManagerActivity extends Activity implements AccountManagerCa
 	}
 	
 	private void enteredNewPassword(String password) {
-		if(password.length() > 6){
+		if(password.length() > 5){
 			new AccountManagerAsyncTask(this, progressDialog, userCredentials, "password", password).execute();
 		} else {
 			Toast.makeText(getApplicationContext(), getResources().getString(R.string.credentials_password_too_short), Toast.LENGTH_SHORT).show();
@@ -315,18 +314,29 @@ public class AccountManagerActivity extends Activity implements AccountManagerCa
 
 	@Override
 	public void accountManagerCallback(String type, Boolean result, String newValue) {
+		Toast toast = Toast.makeText(this, null, Toast.LENGTH_SHORT);
+		
 		if(result) {
 			if(type.equals("mail")) {
 				emailButtonVisible = false;
 				setButtonVisibility(passwordButtonVisible, emailButtonVisible);
 		    	userCredentials.setEmail(newValue);
+		    	toast.setText(getResources().getString(R.string.alert_email_change_success));
 				
 			} else {
 				passwordButtonVisible = false;
 				setButtonVisibility(passwordButtonVisible, emailButtonVisible);
 				userCredentials.setPassword(newValue);
+				toast.setText(getResources().getString(R.string.alert_change_password_success));
+			}
+		} else {
+			if(type.equals("mail")) {
+				toast.setText(getResources().getString(R.string.alert_email_change_error));
+			} else {
+				toast.setText(getResources().getString(R.string.alert_change_password_error));
 			}
 		}
+		toast.show();
 
 	}
 	

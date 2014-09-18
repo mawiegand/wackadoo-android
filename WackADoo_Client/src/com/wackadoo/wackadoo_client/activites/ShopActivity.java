@@ -476,7 +476,7 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 		progressDialog.show();
 		
 		// establish connection to play store
-		String base64PublicKey = getResources().getString(R.string.playPublicKey); 	
+		String base64PublicKey = getResources().getString(R.string.playstorePublicKey); 	
 		billingHelper = new IabHelper(this, base64PublicKey);
 		
 		// TODO: remove before publishing
@@ -532,7 +532,6 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 			}
 			Log.d(TAG, "**** skudDetails: " + skuDetails.toString());
 			ArrayList<String> productList = skuDetails.getStringArrayList("DETAILS_LIST");
-			Log.d(TAG, "productList: " + productList.toString());
 	
 			ArrayList<ShopRowItem> rowItems = jsonProductToShopRowItem(productList);
 			openCreditsFragment(rowItems);

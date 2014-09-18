@@ -92,7 +92,7 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
 			
 			HttpResponse response = null;
 			
-			Log.d(TAG, "Login Request");
+			Log.d(TAG, "Login Request for " + username + " and pw " + password);
 			response = httpClient.execute(request); 
 
 			InputStream in = response.getEntity().getContent();

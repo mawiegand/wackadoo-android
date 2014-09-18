@@ -241,10 +241,12 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 				userCredentials.setPassword(this.passwordEditText.getText().toString());
 				progressDialog.show();
 				new GameLoginAsyncTask(this, getApplicationContext(), userCredentials, progressDialog).execute();
-			} else {
+			} 
+			else {
 				Toast.makeText(getApplicationContext(), getResources().getString(R.string.credentials_password_too_short), Toast.LENGTH_SHORT).show();
 			}
-		} else {
+		} 
+		else {
 			Toast.makeText(getApplicationContext(), getResources().getString(R.string.credentials_email_not_valid), Toast.LENGTH_SHORT).show();
 		}
 	}
@@ -259,7 +261,7 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 			}
 		}};
 	 
-	    @Override
+	@Override
     public void onResume() {
         super.onResume();
 //	        uiHelper.onResume();
@@ -294,7 +296,6 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 		userCredentials.setIdentifier(identifier);
 		userCredentials.setClientID(clientID);
 		userCredentials.setUsername(nickname);
-		Log.d(TAG, "----------> vor finish(): " + userCredentials.getIdentifier());
 		finish();
 	}
 	
