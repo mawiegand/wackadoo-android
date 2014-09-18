@@ -29,7 +29,7 @@ public class AutoPing {
 	public void startAutoPing() {
 		@SuppressWarnings("rawtypes")
 		final Map trackingParameter = new HashMap();
-		trackingParameter.put("session_id", sessionToken());
+		trackingParameter.put("session_token", sessionToken());
 
 		TimerTask pingEvent = new TimerTask() {
 
@@ -58,7 +58,8 @@ public class AutoPing {
 				builder.append("-");
 			}
 			
-			builder.append(Double.valueOf(Math.floor(16*Math.random())).toString(16).toUpperCase());
+			String hex = Integer.toHexString((int)Math.floor(16*Math.random()));
+			builder.append(hex.toUpperCase());
 		}
 		
 		return builder.toString();
