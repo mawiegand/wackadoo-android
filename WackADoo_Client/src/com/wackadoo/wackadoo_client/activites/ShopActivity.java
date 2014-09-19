@@ -3,6 +3,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -49,7 +50,7 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 	private UserCredentials userCredentials;
 	private ProgressDialog progressDialog;	
 	private IabHelper billingHelper;
-
+	private ArrayList<String> stringProductList;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -505,8 +506,14 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 	
 	// fragment calls which product was clicked
 	public void creditsFragmentCallback(int clickedPackage) {
-//		SkuDetails product = get(clickedPackage);
-		billingHelper.launchPurchaseFlow(this, "android.test.purchased", 1337, this);
+		try {
+			JSONObject jsonItem = new JSONObject(stringProductList.get(clickedPackage));
+//			billingHelper.launchPurchaseFlow(this, "android.test.purchased", 1337, this);
+			billingHelper.launchPurchaseFlow(this, jsonItem.getString("productId"), 1337, this); // TODO: fixing
+			
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@Override
@@ -531,22 +538,20 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 				progressDialog.dismiss();
 			}
 			Log.d(TAG, "**** skudDetails: " + skuDetails.toString());
-			ArrayList<String> productList = skuDetails.getStringArrayList("DETAILS_LIST");
-	
-			ArrayList<ShopRowItem> rowItems = jsonProductToShopRowItem(productList);
+			stringProductList = skuDetails.getStringArrayList("DETAILS_LIST");
+			ArrayList<ShopRowItem> rowItems = produceRowItemList();
 			openCreditsFragment(rowItems);
 		}
 	}
 
 	// returns list of ShopRowItems for given list of json products
-	private ArrayList<ShopRowItem> jsonProductToShopRowItem(ArrayList<String> stringList) {
+	private ArrayList<ShopRowItem> produceRowItemList() {
 		ArrayList<ShopRowItem> rowItemList = new ArrayList<ShopRowItem>();
-		
 		try {
-			// TODO: remove testitems
-//			for(String stringProduct : stringList) {
-			for(int i=0; i<4; i++) {
-				String title = (i+5) + " 5D Platinum Credits für " + i + "€";
+			for(String stringProduct : stringProductList) {
+				JSONObject jsonObject = new JSONObject(stringProduct);
+				String title = jsonObject.getString("title");
+				title = title.replace("(Wackadoo)", "/ " + jsonObject.getString("price"));
 				ShopRowItem item = new ShopRowItem(R.drawable.platinum_small, title, 0);
 				rowItemList.add(item);
 			}

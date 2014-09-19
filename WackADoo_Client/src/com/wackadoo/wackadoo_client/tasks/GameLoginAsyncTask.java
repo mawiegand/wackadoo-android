@@ -23,7 +23,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.google.gson.JsonArray;
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.interfaces.GameLoginCallbackInterface;
 import com.wackadoo.wackadoo_client.model.DeviceInformation;
@@ -73,6 +72,8 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
 		nameValuePairs.add(new BasicNameValuePair("password", password));
 		nameValuePairs.add(new BasicNameValuePair("grant_type", "password"));
 		nameValuePairs.add(new BasicNameValuePair("scope", ""));
+		
+		// tracking data
 		nameValuePairs.add(new BasicNameValuePair("operating_system", deviceInformation.getOs()));
 		nameValuePairs.add(new BasicNameValuePair("app_token", deviceInformation.getUniqueTrackingToken()));
 		nameValuePairs.add(new BasicNameValuePair("hardware_string", deviceInformation.getHardware()));
