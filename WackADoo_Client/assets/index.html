@@ -4,10 +4,11 @@
 			var accessToken = LoginHandler.getAccessToken();
 			var userId = LoginHandler.getUserId();
 			var expiration = LoginHandler.getExpiration();
+			var hostname = LoginHandler.getHostname();
 			var countryCode = LoginHandler.getCountryCode();
-			
+
 			window.name = "{\"accessToken\":\"" + accessToken + "\",\"expiration\":\"" + expiration + "\",\"locale\":\"" + countryCode + "\",\"playerInvitation\":null,\"allianceInvitation\":null,\"client_id\":\"WACKADOOHTML5-ROUND5\"}";
-			window.open('https://gs05.wack-a-doo.com/client?t=" + userId + "');
+			window.open(hostname + "/client?t=" + userId);
 		</script>
 	</head>
 	

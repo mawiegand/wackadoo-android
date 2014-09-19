@@ -1,21 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">aaaa</string>
-    <string name="hello_world">Hello world!</string>
+    <!-- General -->
+    <string name="app_name">Wack-A-Doo</string>
     <string name="action_settings">Settings</string>
     <string name="app_id">308180782571605</string>
     <string name="done">Done</string>
     <string name="back">Back</string>
-
-    <!-- LoginScreen -->
     <string name="login_failed_toast">Unable to login</string> 
     <string name="login_success_toast">Login successful</string>
     <string name="login_necessary">First log in!</string>
     <string name="login_invalid_grant">Email and/or Password wrong!</string>
     <string name="server_communication">Connecting to server</string>
     <string name="please_wait">Please wait&#8230;</string>
-    
     
     <!-- WebView -->
     <string name="dialog_return_startscreen_text">Do you want to return to den Start Screen?</string>
@@ -27,6 +24,13 @@
     <string name="selectgame_item_days_today">Starts today!</string>
     <string name="selectgame_item_days_till_start">to start in %d days</string>
     <string name="selectgame_item_days_finished">Game already finished</string>
+    <string name="selectgame_game_full">Game is full</string>
+    <string name="selectgame_signup_disabled">You can\'t sign up at the moment!</string>
+    <string name="selectgame_signin_disabled">You can\'t sign in at the moment!</string>
+    <string name="selectgame_game_not_startet">The game has not startet yet</string>
+    <string name="selectgame_game_finished">The game is already over</string>
+    <string name="selectgame_game_login">Log in in world </string>
+    <string name="selectgame_create_account">Create new account in world </string>
     
     <!-- AccountManager -->
     <string name="account_change_password">Change Password</string>
@@ -48,6 +52,9 @@
     <string name="account_userName_unknown_fallbackText">Unknown User</string>
     <string name="account_really_sign_out">Really Sign Out?</string>
     <string name="account_character_lost_when_signout">The present user will be lost in case you sign out now. To be able to access this user again, make it portable.</string>
+    <string name="account_character_restore_success">Restored access to your account %s. If this is not the account you wanted to restore, please contact support.</string>
+    <string name="account_character_restore_failed">Restore Failed</string>
+    <string name="account_character_restore_failure_message">There was no account that could be restored. Please contact support.</string>
     
     <!-- CredentialScreen -->
     <string name="invalid_credential_toast">Enter valid Credentials</string>
@@ -60,18 +67,24 @@
     <string name="credentials_new_account">Create New Account</string>
     <string name="credentials_lost_account">Lost access to your account?</string>
     <string name="credentials_restore_account">Restore A Non-Portable Account</string>
+    <string name="credentials_email_not_valid">Email is not valid</string>
+    <string name="credentials_password_too_short">The password must consist of at least 6 characters</string>
+    <string name="credentials_lost_access_mail_subject">Lost access to your Wack-A-Doo account</string>
+    <string name="credentials_lost_access_mail" >I\'ve lost access to my account [PLEASE INSERT YOUR ACCOUNT NAME HERE].\nCould you please help?\n\nVendor Token:\nDevice Token: \nApp Version: \n(the above information will help us to find your account)</string>
     
     <!-- Shop -->
-    <string name="listPlatinumAccountText" formatted="false">%d days for %d Credits</string>
-    <string name="subheadingPlatinumAccountText">Platinum Account</string>
-    <string name="listPlatinumCreditsText" formatted="false">Platinum Credits</string>
-    <string name="subheadingPlatinumCreditsText">Platinum-Credits</string>
-    <string name="listGoldText" formatted="false">%d Goldfrogs for %d Credits</string>
-    <string name="subheadingGoldText">Get Golden Frogs</string>
-    <string name="listBonusText" formatted="false">+%d%% %d h for %d </string>
-    <string name="subheadingBonusText">Production Boost</string>
-    <string name="shopHeadlineText">Buy Credits and purchase Comfortfunctions and Accellerators</string>
-	<string name="currentFrogText">Current Golden Frog Amount: %d</string>
+    <string name="list_platinum_account_text" formatted="false">%d days for %d Credits</string>
+    <string name="subheading_platinum_account_text">Platinum Account</string>
+    <string name="list_platinum_credits_text" formatted="false">Platinum Credits</string>
+    <string name="fragment_platinum_credits_heading" formatted="false">You have %d Credits. Buy more to help your tribe prosper.</string>
+    <string name="fragment_platinum_credits_footer" formatted="false">Purchases will be credited to the user \'%s\'.</string>
+    <string name="subheading_platinum_credits_text">Platinum-Credits</string>
+    <string name="list_gold_text" formatted="false">%d Goldfrogs for %d Credits</string>
+    <string name="subheading_gold_text">Get Golden Frogs</string>
+    <string name="list_bonus_text" formatted="false">+%d%% %d h for %d </string>
+    <string name="subheading_bonus_text">Production Boost</string>
+    <string name="shop_headline_text">Buy Credits and purchase Comfortfunctions and Accellerators</string>
+	<string name="current_frog_text">Current Golden Frog Amount: %d</string>
     
     <!-- Shop Info -->
     <string name="shopinfo_topbar_heading">Info Store</string>

@@ -77,9 +77,17 @@ public class GetCurrentGamesAsyncTask extends AsyncTask<String, Integer, Boolean
 		        sb.append(line);
 		    }
 		    
-	 	    Log.d("JSON games", sb.toString());
+		    Log.d("JSON games", sb.toString());
+		    
+		    //Get the game information objects from the string with gson
 	 	    Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
 	 	    games = new ArrayList<GameInformation>(Arrays.asList(gson.fromJson(sb.toString(), GameInformation[].class)));
+	 	    JSONArray jsonArray = new JSONArray(sb.toString());
+	 	    
+	 	    //Get hostname
+	 	    for (int i = 0; i < jsonArray.length(); i++) {		
+	 	    	games.get(i).setServer("https://"+jsonArray.getJSONObject(i).getJSONObject("random_selected_servers").getJSONObject("game").getString("hostname"));
+	 	    }
 			
 	    } catch (Exception e) {
     		Log.e("SocketException", e + "");

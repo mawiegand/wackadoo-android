@@ -23,7 +23,7 @@ import android.util.Log;
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.interfaces.ShopOffersCallbackInterface;
 
-public class GetShopOffersAsyncTask extends AsyncTask<String, Integer, Double> {
+public class GetShopOffersAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	
     private ShopOffersCallbackInterface listener;
     private Context context;
@@ -36,67 +36,70 @@ public class GetShopOffersAsyncTask extends AsyncTask<String, Integer, Double> {
     }
 	
 	@Override
-	protected Double doInBackground(String... params) {
+	protected Boolean doInBackground(String... params) {
+		HttpPost request = new HttpPost(context.getString(R.string.baseURL) + offerType);
+		StringBuilder sb=new StringBuilder();
+		
+		/*    String username, password;
+		    if(this.userCredentials.getEmail().length() > 0 && this.userCredentials.getPassword().length() > 0) {
+		    	username = this.userCredentials.getEmail();
+		    	password = this.userCredentials.getPassword();
+		    } else {
+		    	username = this.userCredentials.getIdentifier();
+		    	password = "egjzdsgt";
+		    }
+		 */
+		List < NameValuePair > nameValuePairs = new ArrayList < NameValuePair > (7);
+		/*nameValuePairs.add(new BasicNameValuePair("client_id", "WACKADOO-IOS"));
+			nameValuePairs.add(new BasicNameValuePair("client_password", "5d"));
+			nameValuePairs.add(new BasicNameValuePair("username", username));
+			nameValuePairs.add(new BasicNameValuePair("password", password));
+			nameValuePairs.add(new BasicNameValuePair("grant_type", "password"));
+			nameValuePairs.add(new BasicNameValuePair("scope", ""));*/
+		
 		try {
-			postDataToServer();
+			
+			UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nameValuePairs);
+		    entity.setContentType("application/x-www-form-urlencoded;charset=UTF-8");
+		    
+		    request.getParams().setParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, Boolean.FALSE);
+		    request.setHeader("Accept", "application/json");
+		    request.setEntity(entity);  
+		    HttpResponse response = null;
+		    DefaultHttpClient httpClient = new DefaultHttpClient();
+		    HttpConnectionParams.setSoTimeout(httpClient.getParams(), 10*1000); 
+		    HttpConnectionParams.setConnectionTimeout(httpClient.getParams(),10*1000); 
+	    	
+		    try {
+	             response = httpClient.execute(request); 
+	    	}
+	    	catch (SocketException se) {
+	    		Log.e("SocketException", se+"");
+	    		throw se;
+	    	}
+		
+		    InputStream in = response.getEntity().getContent();
+		    BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+		    
+		    String line = null;
+		    while((line = reader.readLine()) != null){
+		        sb.append(line);
+		    }
+		    
+	 	    JSONObject jsonObj = new JSONObject(sb.toString());
+	    	List<String> offers = new ArrayList<String>();
+	    	this.listener.getShopOffersCallback(offers, this.offerType);
+
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
 	
-	public  void postDataToServer() throws Throwable
-    {
-
-		HttpPost request = new HttpPost(context.getString(R.string.baseURL) + offerType);
-	    StringBuilder sb=new StringBuilder();
-	
-	/*    String username, password;
-	    if(this.userCredentials.getEmail().length() > 0 && this.userCredentials.getPassword().length() > 0) {
-	    	username = this.userCredentials.getEmail();
-	    	password = this.userCredentials.getPassword();
-	    } else {
-	    	username = this.userCredentials.getIdentifier();
-	    	password = "egjzdsgt";
-	    }
-	    */
-	    List < NameValuePair > nameValuePairs = new ArrayList < NameValuePair > (7);
-		/*nameValuePairs.add(new BasicNameValuePair("client_id", "WACKADOO-IOS"));
-		nameValuePairs.add(new BasicNameValuePair("client_password", "5d"));
-		nameValuePairs.add(new BasicNameValuePair("username", username));
-		nameValuePairs.add(new BasicNameValuePair("password", password));
-		nameValuePairs.add(new BasicNameValuePair("grant_type", "password"));
-		nameValuePairs.add(new BasicNameValuePair("scope", ""));*/
+	@Override
+	protected void onPostExecute(Boolean result) {
+		// TODO Auto-generated method stub
+		super.onPostExecute(result);
+	}
 		
-		UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nameValuePairs);
-	    entity.setContentType("application/x-www-form-urlencoded;charset=UTF-8");
-	    
-	    request.getParams().setParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, Boolean.FALSE);
-	    request.setHeader("Accept", "application/json");
-	    request.setEntity(entity);  
-	    HttpResponse response = null;
-	    DefaultHttpClient httpClient = new DefaultHttpClient();
-	    HttpConnectionParams.setSoTimeout(httpClient.getParams(), 10*1000); 
-	    HttpConnectionParams.setConnectionTimeout(httpClient.getParams(),10*1000); 
-    	
-	    try {
-             response = httpClient.execute(request); 
-    	}
-    	catch (SocketException se) {
-    		Log.e("SocketException", se+"");
-    		throw se;
-    	}
-	
-	    InputStream in = response.getEntity().getContent();
-	    BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-	    
-	    String line = null;
-	    while((line = reader.readLine()) != null){
-	        sb.append(line);
-	    }
-	    
- 	    JSONObject jsonObj = new JSONObject(sb.toString());
-    	List<String> offers = new ArrayList<String>();
-    	this.listener.getShopOffersCallback(offers, this.offerType);
-    }
 }

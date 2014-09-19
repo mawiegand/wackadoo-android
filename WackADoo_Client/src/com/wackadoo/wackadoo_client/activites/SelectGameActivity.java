@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -23,6 +24,7 @@ import com.wackadoo.wackadoo_client.helper.UtilityHelper;
 import com.wackadoo.wackadoo_client.interfaces.CurrentGamesCallbackInterface;
 import com.wackadoo.wackadoo_client.model.GameInformation;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
+import com.wackadoo.wackadoo_client.tasks.GetCharacterAsyncTask;
 import com.wackadoo.wackadoo_client.tasks.GetCurrentGamesAsyncTask;
 
 public class SelectGameActivity extends Activity implements CurrentGamesCallbackInterface {
@@ -31,6 +33,7 @@ public class SelectGameActivity extends Activity implements CurrentGamesCallback
 	private ArrayList<GameInformation> games;
 	private TextView doneBtn;
 	private UserCredentials userCredentials;
+	protected GameInformation selectedGame;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +54,9 @@ public class SelectGameActivity extends Activity implements CurrentGamesCallback
 			    scrollview.fullScroll(ScrollView.FOCUS_UP);
 			  }
 		});
+		
+		// fetch current games from server
+		new GetCurrentGamesAsyncTask(this, getApplicationContext(), userCredentials).execute();
 	}
 	
 	private void setUpButtons() {
@@ -89,9 +95,6 @@ public class SelectGameActivity extends Activity implements CurrentGamesCallback
 	private void setUpListView() {
 		listView = (ListView) findViewById(R.id.listGames);
 
-		// fetch current games from server
-		new GetCurrentGamesAsyncTask(this, getApplicationContext(), userCredentials).execute();
-		
 		listView.setOnItemLongClickListener(new OnItemLongClickListener() {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -102,31 +105,35 @@ public class SelectGameActivity extends Activity implements CurrentGamesCallback
 				
 				// game is full
 				if(clickedGame.getMaxPlayers() == clickedGame.getPresentPlayers()){
-					toast.setText("Das Spiel ist bereits voll!");
+					toast.setText(getResources().getString(R.string.selectgame_game_full));
 				
 				// already joined
 				} else if(clickedGame.isJoined() && clickedGame.isSigninEnabled()) {
-					toast.setText("Einloggen in Welt " + clickedGame.getName());
+					toast.setText(getResources().getString(R.string.selectgame_game_login) + clickedGame.getName());
 					
 				// signup is disabled 	
 				} else if(!clickedGame.isJoined() && !clickedGame.isSignupEnabled()) {
-					toast.setText("Du kannst derzeit nicht in dieser Welt starten!");
+					toast.setText(getResources().getString(R.string.selectgame_signup_disabled));
 					
 				// signin is disabled 	
 				} else if(clickedGame.isJoined() && !clickedGame.isSigninEnabled()) {
-					toast.setText("Du kannst dich derzeit nicht einloggen!");
+					toast.setText(getResources().getString(R.string.selectgame_signin_disabled));
 				
 				// game not started yet	
 				} else if(clickedGame.getStartedAt().after(c.getTime())) {
-					toast.setText("Das Spiel hat noch nicht begonnen!");
+					toast.setText(getResources().getString(R.string.selectgame_game_not_startet));
 				
 				// game already finished
 				} else if(clickedGame.getEndedAt().before(c.getTime())) {
-					toast.setText("Das Spiel ist bereits vorbei!");
+					toast.setText(getResources().getString(R.string.selectgame_game_finished));
 					
 				// join world	
 				} else {
-					toast.setText("Erstelle neuen Account in Welt " + clickedGame.getName()); 
+					toast.setText(getResources().getString(R.string.selectgame_create_account) + clickedGame.getName()); 
+					selectedGame = clickedGame;
+					userCredentials.setGameId(clickedGame.getId());
+					userCredentials.setHostname(clickedGame.getServer());
+					finish();
 				}
 				toast.show();
 				return true;
@@ -137,6 +144,7 @@ public class SelectGameActivity extends Activity implements CurrentGamesCallback
 	@Override
 	public void getCurrentGamesCallback(ArrayList<GameInformation> games) {
 		this.games = games;
+		new GetCharacterAsyncTask(this, getApplicationContext(), userCredentials, games.get(0).getServer()).execute();
 		GamesListViewAdapter adapter = new GamesListViewAdapter(getApplicationContext(), R.layout.table_item_game, games);
 		listView.setAdapter(adapter);
 		UtilityHelper.setListViewHeightBasedOnChildren(listView);

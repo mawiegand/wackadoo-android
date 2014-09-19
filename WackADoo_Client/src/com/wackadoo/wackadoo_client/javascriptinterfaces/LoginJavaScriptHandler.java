@@ -10,14 +10,15 @@ import android.widget.Toast;
 public class LoginJavaScriptHandler {
 
 		private Context context;
-    	private String accessToken, expiration, userId, country;
+    	private String accessToken, expiration, userId, hostname, country;
     	private String[] serverSupportedLanguageCodes = {"en","de"};
     	
-   		public LoginJavaScriptHandler (Context context, String accessToken, String expiration, String userId) {
+   		public LoginJavaScriptHandler (Context context, String accessToken, String expiration, String userId, String hostname) {
         	this.context = context;
    			this.accessToken = accessToken;
         	this.expiration = expiration;
         	this.userId = userId;
+        	this.hostname = hostname;
         	this.country = this.getCountry();
         }
         
@@ -52,6 +53,12 @@ public class LoginJavaScriptHandler {
 	    }
     	
     	@JavascriptInterface
+    	public String getHostname() {
+			return hostname;
+		}
+
+
+		@JavascriptInterface
         public String getCountryCode() {
 	        return this.country;
 	    }

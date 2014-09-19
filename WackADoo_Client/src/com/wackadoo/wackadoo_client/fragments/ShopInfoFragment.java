@@ -57,7 +57,7 @@ public class ShopInfoFragment extends Fragment {
 		shopBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				((ShopActivity) getActivity()).removeShopInfoFragment();
+				((ShopActivity) getActivity()).removeShopFragment();
 			}
 	   	});
    

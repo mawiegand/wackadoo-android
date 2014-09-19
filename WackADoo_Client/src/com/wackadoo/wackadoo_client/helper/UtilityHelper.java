@@ -36,4 +36,10 @@ public class UtilityHelper {
 	    listView.requestLayout();
 	}
 
+	
+	// Checks if String is valid mail adress
+	public static boolean isValidMail(String email) {
+		boolean result = android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+		return result;
+	}
 }

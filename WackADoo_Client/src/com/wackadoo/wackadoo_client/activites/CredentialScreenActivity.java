@@ -2,11 +2,13 @@ package com.wackadoo.wackadoo_client.activites;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -21,7 +23,6 @@ import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
 import com.facebook.widget.LoginButton.UserInfoChangedCallback;
 import com.wackadoo.wackadoo_client.R;
-import com.wackadoo.wackadoo_client.helper.UtilityHelper;
 import com.wackadoo.wackadoo_client.interfaces.CreateAccountCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.GameLoginCallbackInterface;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
@@ -29,6 +30,8 @@ import com.wackadoo.wackadoo_client.tasks.CreateAccountAsyncTask;
 import com.wackadoo.wackadoo_client.tasks.GameLoginAsyncTask;
 
 public class CredentialScreenActivity extends Activity implements CreateAccountCallbackInterface, GameLoginCallbackInterface{
+	
+	private static final String TAG = CredentialScreenActivity.class.getSimpleName();
 	
 	private UserCredentials userCredentials;
 	private Button signInButton, createAccountButton, restoreAccountButton;
@@ -43,7 +46,7 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_credentialscreen);   
 		
-		this.userCredentials = new UserCredentials(this.getApplicationContext());
+		this.userCredentials = new UserCredentials(getApplicationContext());
 		
 //		uiHelper = new UiLifecycleHelper(this, statusCallback);
 //      uiHelper.onCreate(savedInstanceState);
@@ -188,7 +191,41 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 	}
 	
 	protected void restoreAccount() {
-		// TODO Implement restoring
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		// TODO: restore account
+		String title, message;
+		boolean success = false;
+		
+		if(success) {
+			title = "WackyUser1337";
+			message = String.format(getResources().getString(R.string.account_character_restore_success), "WackyUser1337");
+
+		} else {
+			title = getResources().getString(R.string.account_character_restore_failed);
+			message = getResources().getString(R.string.account_character_restore_failure_message);
+		}
+		
+    	builder.setTitle(title)
+    		   .setMessage(message)
+    		   .setPositiveButton(getResources().getString(R.string.alert_ok_button), new DialogInterface.OnClickListener() { 
+		    	    @Override
+		    	    public void onClick(DialogInterface dialog, int which) { }
+		    	})
+	    	   .setNegativeButton(getResources().getString(R.string.infoscreen_support_btn), new DialogInterface.OnClickListener() {
+		    	    @Override
+		    	    public void onClick(DialogInterface dialog, int which) {
+		    	        dialog.cancel();
+		    	        
+		    	        Intent intent = new Intent(Intent.ACTION_SENDTO); 
+		    	        intent.setType("text/plain");
+		    	        intent.setData(Uri.parse("mailto:support@5dlab.com")); 
+		    	        intent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.credentials_lost_access_mail_subject));
+		    	        intent.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.credentials_lost_access_mail));
+		    	        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // this will make such that when user returns to your app, your app is displayed, instead of the email app.
+		    	        startActivity(intent);
+		    	    }
+		    	})
+    		   .show();
 	}
 	
 	protected void triggerCreateAccount() {
@@ -198,14 +235,17 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 	}
 
 	private void triggerLogin() {
-		if(userNameEditText.getText().toString().length() > 0 && this.passwordEditText.getText().toString().length() > 0) {
-			userCredentials.setEmail(this.userNameEditText.getText().toString());
-			userCredentials.setPassword(this.passwordEditText.getText().toString());
-			progressDialog.show();
-			new GameLoginAsyncTask(this, getApplicationContext(), userCredentials, progressDialog).execute();
-			
+		if(userNameEditText.getText().length() > 0){
+			if(passwordEditText.getText().length() > 5) {
+				userCredentials.setEmail(this.userNameEditText.getText().toString());
+				userCredentials.setPassword(this.passwordEditText.getText().toString());
+				progressDialog.show();
+				new GameLoginAsyncTask(this, getApplicationContext(), userCredentials, progressDialog).execute();
+			} else {
+				Toast.makeText(getApplicationContext(), getResources().getString(R.string.credentials_password_too_short), Toast.LENGTH_SHORT).show();
+			}
 		} else {
-			Toast.makeText(getApplicationContext(), getResources().getString(R.string.invalid_credential_toast), Toast.LENGTH_LONG).show();
+			Toast.makeText(getApplicationContext(), getResources().getString(R.string.credentials_email_not_valid), Toast.LENGTH_SHORT).show();
 		}
 	}
 	
@@ -246,7 +286,7 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
     @Override
     public void onSaveInstanceState(Bundle savedState) {
         super.onSaveInstanceState(savedState);
-        uiHelper.onSaveInstanceState(savedState);
+//        uiHelper.onSaveInstanceState(savedState);
     }
 
 	@Override
@@ -254,12 +294,14 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 		userCredentials.setIdentifier(identifier);
 		userCredentials.setClientID(clientID);
 		userCredentials.setUsername(nickname);
+		Log.d(TAG, "----------> vor finish(): " + userCredentials.getIdentifier());
 		finish();
 	}
 	
 	@Override
-	public void loginCallback(String accessToken, String expiration) {
+	public void loginCallback(String accessToken, String expiration, String userIdentifier) {
 		userCredentials.generateNewAccessToken(accessToken, expiration);
+		userCredentials.setClientID(userIdentifier);
 		finish();
 	}
 	

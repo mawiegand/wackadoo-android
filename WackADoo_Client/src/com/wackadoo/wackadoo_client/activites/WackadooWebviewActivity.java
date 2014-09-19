@@ -73,7 +73,7 @@ public class WackadooWebviewActivity extends Activity {
 	        webSettings.setUseWideViewPort(true);
 	        
 	        Bundle b = getIntent().getExtras();
-	        final LoginJavaScriptHandler loginHandler = new LoginJavaScriptHandler(this, b.getString("accessToken"), b.getString("expiration"), b.getString("userId"));
+	        final LoginJavaScriptHandler loginHandler = new LoginJavaScriptHandler(this, b.getString("accessToken"), b.getString("expiration"), b.getString("userId"), b.getString("hostname"));
 	        webView.addJavascriptInterface(loginHandler, "LoginHandler");
 	        
 	        webView.loadUrl("file:///android_asset/index.html");

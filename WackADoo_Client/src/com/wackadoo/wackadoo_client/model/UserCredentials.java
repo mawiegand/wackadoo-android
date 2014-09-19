@@ -2,16 +2,22 @@ package com.wackadoo.wackadoo_client.model;
 
 import java.util.Date;
 
+import com.wackadoo.wackadoo_client.activites.CredentialScreenActivity;
+
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 public class UserCredentials {
 	
+	private static final String TAG = UserCredentials.class.getSimpleName();
+
 	private Context context;
-	private String username, password, gcPlayerId, fbPlayerId, fbAccessToken, clientID, email;
+	private int gameId;
+	private String username, password, gcPlayerId, fbPlayerId, fbAccessToken, clientID, email, hostname;
 	private AccessToken accessToken;
 	private ClientCredentials clientCredentials;
-	private boolean generatedPassword=true;
+	private boolean generatedPassword = true;
 	
 	public UserCredentials(Context context) {
 		this.context = context;
@@ -68,7 +74,7 @@ public class UserCredentials {
 	}
 	
 	private void loadCredentials() {
-		SharedPreferences myPrefs = context.getSharedPreferences("myPrefs", 0);
+		SharedPreferences myPrefs = context.getSharedPreferences("wad_prefs", 0);
 		accessToken.setIdentifier(myPrefs.getString("identifier", ""));
 		accessToken.setExpireCode(myPrefs.getString("expire_code", ""));
 		accessToken.setToken(myPrefs.getString("accesstoken", ""));
@@ -78,9 +84,11 @@ public class UserCredentials {
 		email = myPrefs.getString("email", "");
 		password = myPrefs.getString("password", "");
 		generatedPassword = myPrefs.getBoolean("generatedPassword", true);
+		hostname = myPrefs.getString("hostname", "");
+		gameId = myPrefs.getInt("gameID", 0);
 	}
 	private void persistCredentials() {
-		SharedPreferences myPrefs = context.getSharedPreferences("myPrefs", 0);
+		SharedPreferences myPrefs = context.getSharedPreferences("wad_prefs", 0);
 		SharedPreferences.Editor e = myPrefs.edit();
 		e.putString("identifier", accessToken.getIdentifier());
 		e.putLong("expire_date", accessToken.getCreatedAt().getTime());
@@ -91,6 +99,8 @@ public class UserCredentials {
 		e.putBoolean("generatedPassword", generatedPassword);
 		e.putString("accesstoken", accessToken.getToken());
 		e.putString("expire_code", accessToken.getExpireCode());
+		e.putString("hostname", hostname);
+		e.putInt("gameId", gameId);
 		e.commit();
 	}
 
@@ -102,6 +112,24 @@ public class UserCredentials {
 		persistCredentials();
 	}
 	
+	public String getHostname() {
+		return hostname;
+	}
+
+	public void setHostname(String hostname) {
+		this.hostname = hostname;
+		persistCredentials();
+	}
+
+	public int getGameId() {
+		return gameId;
+	}
+
+	public void setGameId(int gameId) {
+		this.gameId = gameId;
+		persistCredentials();
+	}
+
 	public void generateNewAccessToken(String accessToken, String expiration) {
 		this.accessToken = new AccessToken();
 		this.accessToken.setToken(accessToken);
@@ -115,11 +143,13 @@ public class UserCredentials {
 	}
 
 	public void clearAllCredentials() {
-		SharedPreferences myPrefs = context.getSharedPreferences("myPrefs", 0);
+		SharedPreferences myPrefs = context.getSharedPreferences("wad_prefs", 0);
 		SharedPreferences.Editor e = myPrefs.edit();
 		e.clear();
 		e.commit();
 	}
+
+
 
 	
 

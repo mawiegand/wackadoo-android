@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    android:background="@color/white">
+        
+    <!-- ............... BACKGROUND ............... -->
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/table_background"
+        android:scaleType="centerCrop"
+        android:alpha="0.7" />
+	
+	<com.wackadoo.wackadoo_client.helper.BounceScrollView 
+	    android:layout_width="match_parent" 
+	    android:layout_height="match_parent"
+	    android:layout_marginTop="35dp" >
+	    
+		<RelativeLayout 
+		    android:id="@+id/scrollViewContainer"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:orientation="vertical"
+		    android:layout_marginLeft="@dimen/standard_margin"
+		    android:layout_marginRight="@dimen/standard_margin">
+		    
+			<LinearLayout 
+		        android:id="@+id/headlineContainer"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:orientation="horizontal"
+		        android:weightSum="1.0">
+		    
+		    	<TextView 
+			        android:id="@+id/creditsFragmentHeaderText"
+		    	    style="@style/customTextViewStyle"
+			        android:layout_width="0dp"
+			        android:layout_weight="0.70"
+			        android:textSize="@dimen/shopHeadlineFontsize"
+			       	android:gravity="center_vertical|right"
+			       	android:layout_gravity="center_vertical"/>
+			    
+			    <ImageView 
+			        android:id="@+id/creditsFragmentHeaderIcon"
+			        android:layout_height="wrap_content"
+			        android:layout_width="0dp"
+			        android:layout_weight="0.30"
+			        android:scaleType="fitCenter"
+			        android:src="@drawable/head_girl_colored_small"
+			        android:adjustViewBounds="true"
+			        android:layout_gravity="center_vertical"/>
+		    </LinearLayout>
+    		
+			<ListView
+	            android:id="@+id/listPlatinumCredits"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_below="@id/headlineContainer"
+	            android:layout_marginTop="40dp"
+	            android:layout_centerHorizontal="true"/>
+			
+		    <TextView 
+		        android:id="@+id/creditsFragmentFooterText"
+	    	    style="@style/customTextViewStyle"
+	    	    android:textSize="@dimen/shopStandardListFontsize"
+	    	    android:layout_marginTop="30dp"
+	    	    android:layout_centerHorizontal="true"
+	    	    android:layout_marginBottom="@dimen/standard_margin"
+		        android:layout_below="@+id/listPlatinumCredits"/>
+		    
+	    </RelativeLayout>
+	</com.wackadoo.wackadoo_client.helper.BounceScrollView>
+	
+	<RelativeLayout
+ 		android:id="@+id/shopCreditsFragmentTopbar"
+ 	    android:layout_width="match_parent"
+ 	    android:layout_height="wrap_content"
+ 	    android:background="@color/topbar_background">
+ 	    
+ 	    <TextView 
+ 	        android:id="@+id/shopCreditsFragmentsTopbarText"
+ 	        style="@style/customTextViewStyle"
+ 	        android:layout_centerInParent="true"
+ 	        android:text="@string/shopInfoHeadingText_credits" 
+ 	        android:textSize="@dimen/topBarFontsize"
+ 	        android:textStyle="bold"
+ 	        android:padding="5dp"/>
+ 	    
+ 	    <TextView 
+ 	        android:id="@+id/shopCreditsFragmentTopbarShop"
+ 	        style="@style/customTextViewStyle"
+ 	        android:layout_alignParentLeft="true"
+ 	        android:layout_marginLeft="@dimen/standard_margin"
+ 	        android:text="Shop" 
+ 	        android:textSize="@dimen/topBarFontsize"
+ 	        android:textColor="@color/textbox_orange"
+ 	        android:textStyle="bold"
+ 	        android:padding="5dp"/>
+ 	    
+ 	</RelativeLayout>
+</FrameLayout>

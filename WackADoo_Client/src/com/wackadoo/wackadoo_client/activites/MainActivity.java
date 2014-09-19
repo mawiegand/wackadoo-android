@@ -1,14 +1,18 @@
 package com.wackadoo.wackadoo_client.activites;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.GetChars;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
@@ -17,20 +21,25 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fivedlab.sample.sample_java.Sample;
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.analytics.AutoPing;
 import com.wackadoo.wackadoo_client.interfaces.CreateAccountCallbackInterface;
+import com.wackadoo.wackadoo_client.interfaces.CurrentGamesCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.GameLoginCallbackInterface;
+import com.wackadoo.wackadoo_client.model.GameInformation;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
 import com.wackadoo.wackadoo_client.tasks.GameLoginAsyncTask;
+import com.wackadoo.wackadoo_client.tasks.GetCharacterAsyncTask;
+import com.wackadoo.wackadoo_client.tasks.GetCurrentGamesAsyncTask;
 
-public class LoginScreenActivity extends Activity implements
-		CreateAccountCallbackInterface, GameLoginCallbackInterface {
+public class MainActivity extends Activity implements
+		CreateAccountCallbackInterface, GameLoginCallbackInterface, CurrentGamesCallbackInterface {
 
-	private static final String TAG = LoginScreenActivity.class.getSimpleName();
+	private static final String TAG = MainActivity.class.getSimpleName();
 	
 	private ImageButton playBtn, accountmanagerBtn, selectGameBtn, 
 			facebookBtn, shopBtn, soundBtn, infoBtn;
@@ -45,7 +54,7 @@ public class LoginScreenActivity extends Activity implements
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_loginscreen);
+        setContentView(R.layout.activity_main);
         
 	    playBtn = (ImageButton) findViewById(R.id.loginButton);
 	    accountmanagerBtn = (ImageButton) findViewById(R.id.accountmanagerButton);
@@ -67,9 +76,18 @@ public class LoginScreenActivity extends Activity implements
 	    // set up standard server communication dialog
 	    setUpDialog();
 	    
+	    // put version number in textview
+		try {
+			String versionName = "Version " + getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+			((TextView) findViewById(R.id.title_version_text)).setText(versionName);
+		} 
+		catch (NameNotFoundException e) {
+			e.printStackTrace(); 
+		} 
+	    
 	    setUpButtons();
 	    setUpPlayButtonAnimation();
-	    triggerLogin();	
+
 
 		// Start tracking
 		Sample.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.ZZZZZ"));
@@ -78,6 +96,8 @@ public class LoginScreenActivity extends Activity implements
 		AutoPing.getInstance().startAutoPing();
 
 	}
+
+	
 
 	private void setUpPlayButtonAnimation() {
 		// start animation of glance
@@ -116,6 +136,7 @@ public class LoginScreenActivity extends Activity implements
 		super.onResume();
 		this.userCredentials = new UserCredentials(getApplicationContext());
 		triggerLogin();
+	    triggerGetGames();
 	}
 	 
 	@Override
@@ -207,10 +228,8 @@ public class LoginScreenActivity extends Activity implements
 		shopBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(LoginScreenActivity.this,
-						ShopActivity.class);
+				Intent intent = new Intent(MainActivity.this, ShopActivity.class);
 				startActivity(intent);
-				shopBtn.setEnabled(false);
 			}
 		});
 	}
@@ -254,7 +273,7 @@ public class LoginScreenActivity extends Activity implements
 		infoBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(LoginScreenActivity.this,
+				Intent intent = new Intent(MainActivity.this,
 						InfoScreenActivity.class);
 				startActivity(intent);
 			}
@@ -286,7 +305,7 @@ public class LoginScreenActivity extends Activity implements
 		accountmanagerBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(LoginScreenActivity.this,
+				Intent intent = new Intent(MainActivity.this,
 						AccountManagerActivity.class);
 				startActivity(intent);
 			}
@@ -334,7 +353,7 @@ public class LoginScreenActivity extends Activity implements
 		selectGameBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(LoginScreenActivity.this,
+				Intent intent = new Intent(MainActivity.this,
 						SelectGameActivity.class);
 				startActivity(intent);
 			}
@@ -365,16 +384,20 @@ public class LoginScreenActivity extends Activity implements
 			public void onClick(View v) {
 				Intent intent = null;
 				if(loggedIn) {
-					intent = new Intent(LoginScreenActivity.this, AccountManagerActivity.class);
+					intent = new Intent(MainActivity.this, AccountManagerActivity.class);
 				} else {
-					intent = new Intent(LoginScreenActivity.this, CredentialScreenActivity.class);
+					intent = new Intent(MainActivity.this, CredentialScreenActivity.class);
 				}
 				startActivity(intent);
 			}
 		});
 
 	}
-
+	
+	private void triggerGetGames() {
+		new GetCurrentGamesAsyncTask(this, getApplicationContext(), userCredentials).execute();		
+	}
+	
 	private void triggerFacebook() {
 		// TODO Login using Facebook
 		Toast toast = Toast.makeText(this,
@@ -396,9 +419,14 @@ public class LoginScreenActivity extends Activity implements
 			} else {
 				loggedIn = true;
 			}
+		} else if (email.contains("generic") && email.contains("@5dlab.com") ) {
+			progressDialog.show();
+			new GameLoginAsyncTask(this, getApplicationContext(), this.userCredentials, progressDialog).execute();
+			
 		} else {
 			loggedIn = false;
 		}
+		
 		updateUi();
 	}
 
@@ -417,34 +445,67 @@ public class LoginScreenActivity extends Activity implements
 	}
 
 	private void startGame(String accessToken, String expiration, String userId) {
-		Intent intent = new Intent(LoginScreenActivity.this,
+		Intent intent = new Intent(MainActivity.this,
 				WackadooWebviewActivity.class);
 		Bundle bundle = new Bundle();
 		bundle.putString("accessToken", accessToken);
 		bundle.putString("expiration", expiration);
 		bundle.putString("userId", userId);
+		bundle.putString("hostname", userCredentials.getHostname());
 		intent.putExtras(bundle);
 		startActivity(intent);
 	}
+	
+
+
 
 	@Override
-	public void onRegistrationCompleted(String identifier, String clientID,
-			String nickname) {
+	public void onRegistrationCompleted(String identifier, String clientID,	String nickname) {
 		userCredentials.setIdentifier(identifier);
 		userCredentials.setClientID(clientID);
 		userCredentials.setUsername(nickname);
 		triggerLogin();
+		triggerGetGames();
 	}
 
 	@Override
-	public void loginCallback(String accessToken, String expiration) {
+	public void loginCallback(String accessToken, String expiration, String identifier) {
 		userCredentials.generateNewAccessToken(accessToken, expiration);
+		userCredentials.setIdentifier(identifier);
+		
+		triggerGetGames();
+		
 		Toast.makeText(getApplicationContext(), getResources().getString(R.string.login_success_toast), Toast.LENGTH_LONG).show();
 		
+		// TODO: loggedIn if GetGames failed?
 		loggedIn = true;
 		updateUi();
 	}
 	
+	@Override
+	public void getCurrentGamesCallback(ArrayList<GameInformation> games) {
+		if (userCredentials.getHostname() == "" || !isGameOnline(games, userCredentials.getGameId())) {
+			for (int i = 0; i < games.size(); i++) {
+				if (games.get(i).isDefaultGame()) {
+					userCredentials.setHostname(games.get(i).getServer());
+					userCredentials.setGameId(games.get(i).getId());
+					new GetCharacterAsyncTask(this, getApplicationContext(), userCredentials, games.get(i).getServer()).execute();
+				}
+			}
+		}		
+	}
+	
+	private boolean isGameOnline(ArrayList<GameInformation> games, int gameId) {
+		boolean gameOnline = false;
+		for (int i = 0; i < games.size(); i++) {
+			if (games.get(i).getId() == gameId) {
+				gameOnline = true;
+				break;
+			}
+		}
+		return gameOnline;
+	}
+
 	@Override
 	public void loginCallbackError(String error) {}
 	
@@ -456,7 +517,7 @@ public class LoginScreenActivity extends Activity implements
 			((RelativeLayout) findViewById(R.id.headerShopContainer)).setVisibility(View.VISIBLE);
 			characterFrame.setText("");	
 			((ImageView) findViewById(R.id.characterFrameImageView)).setVisibility(View.VISIBLE);
-			
+			((TextView) findViewById(R.id.characterFrameTextview)).setText(userCredentials.getUsername());
 			
 		} else {
 			accountmanagerBtn.setVisibility(View.INVISIBLE);
@@ -464,6 +525,7 @@ public class LoginScreenActivity extends Activity implements
 			((RelativeLayout) findViewById(R.id.headerShopContainer)).setVisibility(View.INVISIBLE);
 			characterFrame.setText(getResources().getString(R.string.credentials_headline));
 			((ImageView) findViewById(R.id.characterFrameImageView)).setVisibility(View.INVISIBLE);
+			((TextView) findViewById(R.id.characterFrameTextview)).setText("");
 		}
 	}
 
@@ -473,4 +535,6 @@ public class LoginScreenActivity extends Activity implements
 		progressDialog.setTitle(getResources().getString(R.string.server_communication));
 		progressDialog.setMessage(getResources().getString(R.string.please_wait));
 	}
+
+	
 }

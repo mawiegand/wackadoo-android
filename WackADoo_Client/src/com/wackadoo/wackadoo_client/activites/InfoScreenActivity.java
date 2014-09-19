@@ -18,7 +18,7 @@ public class InfoScreenActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_infoscreen);
+		setContentView(R.layout.activity_mainscreen);
 		
 		setUpButtons();
 	}
