@@ -21,19 +21,20 @@ import android.widget.Toast;
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.adapter.GamesListViewAdapter;
 import com.wackadoo.wackadoo_client.helper.UtilityHelper;
+import com.wackadoo.wackadoo_client.interfaces.CharacterCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.CurrentGamesCallbackInterface;
+import com.wackadoo.wackadoo_client.model.CharacterInformation;
 import com.wackadoo.wackadoo_client.model.GameInformation;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
 import com.wackadoo.wackadoo_client.tasks.GetCharacterAsyncTask;
 import com.wackadoo.wackadoo_client.tasks.GetCurrentGamesAsyncTask;
 
-public class SelectGameActivity extends Activity implements CurrentGamesCallbackInterface {
+public class SelectGameActivity extends Activity implements CurrentGamesCallbackInterface, CharacterCallbackInterface {
 	
 	private ListView listView;
 	private ArrayList<GameInformation> games;
 	private TextView doneBtn;
 	private UserCredentials userCredentials;
-	protected GameInformation selectedGame;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -106,10 +107,6 @@ public class SelectGameActivity extends Activity implements CurrentGamesCallback
 				// game is full
 				if(clickedGame.getMaxPlayers() == clickedGame.getPresentPlayers()){
 					toast.setText(getResources().getString(R.string.selectgame_game_full));
-				
-				// already joined
-				} else if(clickedGame.isJoined() && clickedGame.isSigninEnabled()) {
-					toast.setText(getResources().getString(R.string.selectgame_game_login) + clickedGame.getName());
 					
 				// signup is disabled 	
 				} else if(!clickedGame.isJoined() && !clickedGame.isSignupEnabled()) {
@@ -129,8 +126,9 @@ public class SelectGameActivity extends Activity implements CurrentGamesCallback
 					
 				// join world	
 				} else {
-					toast.setText(getResources().getString(R.string.selectgame_create_account) + clickedGame.getName()); 
-					selectedGame = clickedGame;
+					if (clickedGame.isJoined()) toast.setText(getResources().getString(R.string.selectgame_game_login) + clickedGame.getName());
+					else toast.setText(getResources().getString(R.string.selectgame_create_account) + clickedGame.getName()); 
+					
 					userCredentials.setGameId(clickedGame.getId());
 					userCredentials.setHostname(clickedGame.getServer());
 					finish();
@@ -144,64 +142,14 @@ public class SelectGameActivity extends Activity implements CurrentGamesCallback
 	@Override
 	public void getCurrentGamesCallback(ArrayList<GameInformation> games) {
 		this.games = games;
-		new GetCharacterAsyncTask(this, getApplicationContext(), userCredentials, games.get(0).getServer()).execute();
+		for (int i = 0; i < games.size(); i++) if (games.get(i).isJoined()) new GetCharacterAsyncTask(this, userCredentials, games.get(i), false).execute();
 		GamesListViewAdapter adapter = new GamesListViewAdapter(getApplicationContext(), R.layout.table_item_game, games);
 		listView.setAdapter(adapter);
 		UtilityHelper.setListViewHeightBasedOnChildren(listView);
 	}
-	
-	// TODO: remove method to generate test items
-	private void generateTestItems() {
-		for(int i=0; i<10; i++) {
-			GameInformation newGame = new GameInformation();
-			newGame.setuId(i);
-			newGame.setPresentPlayers(i+11);
-			newGame.setMaxPlayers((i+5)*10);
-			newGame.setName("Welt " + (i+1));
-			newGame.setScope("Testwelt | Insider");
-			Calendar c = Calendar.getInstance();
-			c.set(Calendar.YEAR, 2013);
-			newGame.setStartedAt(c.getTime());
-			c.add(Calendar.YEAR, 13);
-			newGame.setEndedAt(c.getTime());
-			newGame.setJoined(false);
-			newGame.setSigninEnabled(true);
-			newGame.setSignupEnabled(true);
-			games.add(newGame);
-		}
+
+	@Override
+	public void getCharacterCallback(GameInformation game) {
 		
-		// test: full game
-		games.get(4).setName("Game full");
-		games.get(4).setPresentPlayers(games.get(4).getMaxPlayers());
-		
-		// test: game already joined
-		games.get(5).setName("Already joined");
-		games.get(5).setJoined(true);
-		Calendar c = Calendar.getInstance(); 
-		c.set(Calendar.MONTH, c.get(Calendar.MONTH)-4);
-		games.get(5).setStartedAt(c.getTime());
-		
-		// test: game not joined, but also signup disabled
-		games.get(6).setName("Sigup disabled");
-		games.get(6).setSignupEnabled(false);
-		
-		// test: game joined, but signin is disabled
-		games.get(7).setName("Signin disabled");
-		games.get(7).setJoined(true);
-		games.get(7).setSigninEnabled(false);
-		
-		// test: game is not open yet
-		games.get(8).setName("Game not open yet");
-		c = Calendar.getInstance(); 
-		c.set(Calendar.MONTH, c.get(Calendar.MONTH)+2);
-		games.get(8).setStartedAt(c.getTime());
-		
-		// test: game is already finished
-		games.get(9).setName("Game finished");
-		c = Calendar.getInstance(); 
-		c.set(Calendar.MONTH, c.get(Calendar.MONTH)-4);
-		games.get(9).setEndedAt(c.getTime());
-		
-		getCurrentGamesCallback(games);
 	}
 }

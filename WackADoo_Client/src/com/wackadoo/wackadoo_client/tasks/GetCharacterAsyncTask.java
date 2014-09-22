@@ -27,20 +27,25 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.wackadoo.wackadoo_client.R;
+import com.wackadoo.wackadoo_client.interfaces.CharacterCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.CurrentGamesCallbackInterface;
+import com.wackadoo.wackadoo_client.model.CharacterInformation;
 import com.wackadoo.wackadoo_client.model.GameInformation;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
 
-public class GetCurrentGamesAsyncTask extends AsyncTask<String, Integer, Boolean> {
+//Character is null if no character is found and createNew = false or if server timed out
+public class GetCharacterAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	
-    private CurrentGamesCallbackInterface listener;
-    private Context context;
-    private ArrayList<GameInformation> games;
+    private CharacterCallbackInterface listener;
 	private String accessToken;
+	private CharacterInformation character;
+	private boolean createNew;
+	private GameInformation game;
     
-    public GetCurrentGamesAsyncTask(CurrentGamesCallbackInterface callback, Context context, UserCredentials userCredentials) {
+    public GetCharacterAsyncTask(CharacterCallbackInterface callback, UserCredentials userCredentials, GameInformation game, boolean createNew) {
     	this.listener = callback;
-    	this.context = context;
+    	this.game = game;
+    	this.createNew = createNew;
     	this.accessToken = userCredentials.getAccessToken().getToken();
     }
 	
@@ -48,15 +53,13 @@ public class GetCurrentGamesAsyncTask extends AsyncTask<String, Integer, Boolean
 	protected Boolean doInBackground(String... params) {
 		
 		Activity parent = (Activity) this.listener;
-		String urlForRequest = parent.getString(R.string.gamesURL);
-		String baseURL = parent.getString(R.string.baseURL);
-		String completeURL = baseURL + String.format(urlForRequest, Locale.getDefault().getCountry().toLowerCase());
+		String urlForRequest = String.format(parent.getString(R.string.characterURL), Locale.getDefault().getCountry().toLowerCase());
+		if (createNew) urlForRequest += "create_if_new=true";
+		String completeURL = game.getServer() + "/"+ urlForRequest;
 		HttpGet request = new HttpGet(completeURL);
 		
 	    StringBuilder sb=new StringBuilder();
 	    HttpResponse response = null;
-	    
-	    games = new ArrayList<GameInformation>();
 	    
 	    
 	    try {
@@ -77,18 +80,13 @@ public class GetCurrentGamesAsyncTask extends AsyncTask<String, Integer, Boolean
 		        sb.append(line);
 		    }
 		    
-		    Log.d("JSON games", sb.toString());
-		    
-		    //Get the game information objects from the string with gson
+		    Log.d("Server Response", response.getStatusLine().toString());
+		    Log.d("JSON character", sb.toString());
+		  		    
+		    //Get the character information object from the string with gson
 	 	    Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
-	 	    games = new ArrayList<GameInformation>(Arrays.asList(gson.fromJson(sb.toString(), GameInformation[].class)));
-	 	    JSONArray jsonArray = new JSONArray(sb.toString());
+	 	    character = gson.fromJson(sb.toString(), CharacterInformation.class);
 	 	    
-	 	    //Get hostname from game server for requesting the character
-	 	    for (int i = 0; i < jsonArray.length(); i++) {		
-	 	    	games.get(i).setServer("https://"+jsonArray.getJSONObject(i).getJSONObject("random_selected_servers").getJSONObject("game").getString("hostname"));
-	 	    }
-			
 	    } catch (Exception e) {
     		Log.e("SocketException", e + "");
     	}
@@ -97,7 +95,9 @@ public class GetCurrentGamesAsyncTask extends AsyncTask<String, Integer, Boolean
 	
 	@Override
 	protected void onPostExecute(Boolean result) {
-		listener.getCurrentGamesCallback(games);
+		//Character is null if no character is found and createNew = false or if server timed out
+		game.setCharacter(character);
+		listener.getCharacterCallback(game);
 	}
 	
 }

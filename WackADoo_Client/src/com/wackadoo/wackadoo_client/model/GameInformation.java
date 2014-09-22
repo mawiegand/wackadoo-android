@@ -6,6 +6,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class GameInformation {
 	
+	private CharacterInformation character;
 	private int id, presentPlayers, maxPlayers;
 	private String name, scope, server;
 	private Date startedAt, endedAt, availableSince;
@@ -104,5 +105,11 @@ public class GameInformation {
 	}
 	public void setDefaultGame(boolean defaultGame) {
 		this.defaultGame = defaultGame;
+	}
+	public CharacterInformation getCharacter() {
+		return character;
+	}
+	public void setCharacter(CharacterInformation character) {
+		this.character = character;
 	}
 }

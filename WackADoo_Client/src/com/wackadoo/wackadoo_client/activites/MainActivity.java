@@ -27,9 +27,11 @@ import android.widget.Toast;
 import com.fivedlab.sample.sample_java.Sample;
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.analytics.AutoPing;
+import com.wackadoo.wackadoo_client.interfaces.CharacterCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.CreateAccountCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.CurrentGamesCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.GameLoginCallbackInterface;
+import com.wackadoo.wackadoo_client.model.CharacterInformation;
 import com.wackadoo.wackadoo_client.model.GameInformation;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
 import com.wackadoo.wackadoo_client.tasks.GameLoginAsyncTask;
@@ -37,7 +39,7 @@ import com.wackadoo.wackadoo_client.tasks.GetCharacterAsyncTask;
 import com.wackadoo.wackadoo_client.tasks.GetCurrentGamesAsyncTask;
 
 public class MainActivity extends Activity implements
-		CreateAccountCallbackInterface, GameLoginCallbackInterface, CurrentGamesCallbackInterface {
+		CreateAccountCallbackInterface, GameLoginCallbackInterface, CurrentGamesCallbackInterface, CharacterCallbackInterface {
 
 	private static final String TAG = MainActivity.class.getSimpleName();
 	
@@ -489,10 +491,16 @@ public class MainActivity extends Activity implements
 				if (games.get(i).isDefaultGame()) {
 					userCredentials.setHostname(games.get(i).getServer());
 					userCredentials.setGameId(games.get(i).getId());
-					new GetCharacterAsyncTask(this, getApplicationContext(), userCredentials, games.get(i).getServer()).execute();
+					new GetCharacterAsyncTask(this, userCredentials, games.get(i), false).execute();
 				}
 			}
 		}		
+	}	
+	
+	@Override
+	public void getCharacterCallback(GameInformation game) {
+		Log.d("Character Information", game.getCharacter().toString());
+		
 	}
 	
 	private boolean isGameOnline(ArrayList<GameInformation> games, int gameId) {
@@ -535,6 +543,10 @@ public class MainActivity extends Activity implements
 		progressDialog.setTitle(getResources().getString(R.string.server_communication));
 		progressDialog.setMessage(getResources().getString(R.string.please_wait));
 	}
+
+
+
+
 
 	
 }
