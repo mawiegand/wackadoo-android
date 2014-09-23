@@ -10,11 +10,16 @@ import java.util.Locale;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.AbstractHttpMessage;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.protocol.HTTP;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -46,44 +51,45 @@ public class AccountManagerAsyncTask extends AsyncTask<String, Integer, Boolean>
 	@Override
 	protected Boolean doInBackground(String... params) {
 		Activity parent = (Activity) listener;
-		String urlForRequest = parent.getString(R.string.createAccountURL);
+		String urlForRequest;
+		String completeURL;
+		AbstractHttpMessage request;
+		List <NameValuePair> nameValuePairs = new ArrayList <NameValuePair> ();
 		
 		if(type.equals("mail")) {
-			urlForRequest = parent.getString(R.string.changeEmailURL);
+			urlForRequest = parent.getString(R.string.changeEmailURL) + userCredentials.getClientID();
+			completeURL = parent.getString(R.string.baseURL) + String.format(urlForRequest, Locale.getDefault().getCountry().toLowerCase());
+			request = new HttpPut(completeURL);
+			nameValuePairs.add(new BasicNameValuePair("identity[email]", value)); //characterNewMail	
 		} else {
 			urlForRequest = parent.getString(R.string.changePasswordURL);
+			completeURL = userCredentials.getHostname() + String.format(urlForRequest, Locale.getDefault().getCountry().toLowerCase());
+			request = new HttpPost(completeURL);
+			Log.d(TAG, "***** change password from '" + userCredentials.getPassword() + "' to '" + value + "'");
+			nameValuePairs.add(new BasicNameValuePair("character[password]", value));	
 		}
-		String baseURL = parent.getString(R.string.baseURL);
-		String completeURL = baseURL + String.format(urlForRequest, Locale.getDefault().getCountry().toLowerCase(), userCredentials.getIdentifier());
 		Log.d(TAG, "completeURL: " + completeURL);
 		
-		HttpPost request = new HttpPost(completeURL);
 		StringBuilder sb = new StringBuilder();
-		
-		List <NameValuePair> nameValuePairs = new ArrayList <NameValuePair> (6);
-		if(type.equals("mail")) {
-			nameValuePairs.add(new BasicNameValuePair("characterNewMail", value));
-		} else {
-			nameValuePairs.add(new BasicNameValuePair("characterNewPassword", value));
-		}
-		nameValuePairs.add(new BasicNameValuePair("grant_type", "bearer"));
-		nameValuePairs.add(new BasicNameValuePair("access_token", userCredentials.getAccessToken().getToken()));
+
 
 		try {
 			UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nameValuePairs);
 		    entity.setContentType("application/x-www-form-urlencoded;charset=UTF-8");
 		    
 		    request.getParams().setParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, Boolean.FALSE);
+		    request.setHeader("Authorization", "Bearer " + userCredentials.getAccessToken().getToken());
 		    request.setHeader("Accept", "application/json");
-		    request.setEntity(entity);  
+		    ((HttpEntityEnclosingRequestBase) request).setEntity(entity);  
+		    
+		    Log.d("Server Email Request", request.getAllHeaders().toString());
 		    
 		    HttpResponse response = null;
 		    DefaultHttpClient httpClient = new DefaultHttpClient();
 		    HttpConnectionParams.setSoTimeout(httpClient.getParams(), 10*1000); 
 		    HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 10*1000); 
 
-		    Log.d(TAG, "Account Manager Request Type: " + type);
-		    response = httpClient.execute(request); 
+		    response = httpClient.execute((HttpUriRequest) request); 
 		
 		    InputStream in = response.getEntity().getContent();
 		    BufferedReader reader = new BufferedReader(new InputStreamReader(in));
@@ -92,15 +98,10 @@ public class AccountManagerAsyncTask extends AsyncTask<String, Integer, Boolean>
 		        sb.append(line);
 		    }
 		    
-		    Log.d(TAG, "Account Manager Response: " + sb);
+		    
 		    JSONObject jsonResponse = new JSONObject(sb.toString());
 		    Log.d(TAG, "Account Manager Response: " + jsonResponse);
-		    
-		    if(jsonResponse.has("result")){
-		    	if(jsonResponse.getBoolean("result")) {
-		    		return true;
-		    	}
-		    }
+		    return true;
 			
 		} catch (Exception e) {
 			e.printStackTrace();

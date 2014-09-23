@@ -71,6 +71,9 @@ import com.wackadoo.wackadoo_client.interfaces.CreditsFragmentCallbackInterface;
  *
  */
 public class IabHelper {
+	
+	private static final String TAG = IabHelper.class.getSimpleName();
+	
     // Is debug logging enabled?
     boolean mDebugLog = false;
     String mDebugTag = "IabHelper";

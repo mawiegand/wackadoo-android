@@ -69,8 +69,8 @@
 	      				android:layout_weight="0.5">
 		    			
 		    			<ImageButton
-		    	    		android:id="@+id/shopButton"
 							style="@style/customImageButtonStyle"	
+		    	    		android:id="@+id/shopButton"
 		    	    		android:src="@drawable/title_shop_button" />
 		    			
 	    			</RelativeLayout>
@@ -195,7 +195,7 @@
 				       		android:id="@+id/characterFrameContainerSpacer" 
 					        android:layout_width="match_parent"
 				            android:layout_height="0px"
-				            android:layout_weight="0.23"/>  
+				            android:layout_weight="0.29"/>  
 	    		    	
 	 	              	<FrameLayout 
 	 	              	    android:layout_width="wrap_content"
@@ -245,7 +245,7 @@
 			       				android:id="@+id/accountmanagerButtonVerticalSpacer" 
 				        		android:layout_width="match_parent"
 					 	    	android:layout_height="0dp"
-					 	    	android:layout_weight="0.25" />
+					 	    	android:layout_weight="0.35" />
 			 	            
 			 	            <RelativeLayout 
 			       				android:id="@+id/accountmanagerButtonVerticalContainer" 
@@ -276,7 +276,7 @@
 		       				android:id="@+id/chooseworldButtonVerticalSpacer" 
 			        		android:layout_width="match_parent"
 				 	    	android:layout_height="0dp"
-				 	    	android:layout_weight="0.08" />
+				 	    	android:layout_weight="0.17" />
 		 	            
 		 	            <RelativeLayout 
 		       				android:id="@+id/chooseworldButtonVerticalContainer" 
@@ -359,14 +359,14 @@
 				  		    <RelativeLayout 
 			     				android:id="@+id/facebookSpacer" 
 				    			android:layout_width="match_parent"
-				    			android:layout_weight="0.66"
+				    			android:layout_weight="0.68"
 			        			android:layout_height="0dp">
 							</RelativeLayout>
 				 		    
 				 		    <RelativeLayout 
 			       				android:id="@+id/facebookButtonVerticalContainer" 
 				        		android:layout_width="wrap_content"
-				        		android:layout_weight="0.35"
+				        		android:layout_weight="0.32"
 			            		android:layout_height="0dp"
 			            		android:layout_gravity="center">
 				 		    		

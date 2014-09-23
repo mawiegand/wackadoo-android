@@ -97,6 +97,7 @@ public class GetCurrentGamesAsyncTask extends AsyncTask<String, Integer, Boolean
 	
 	@Override
 	protected void onPostExecute(Boolean result) {
+		super.onPostExecute(result);
 		listener.getCurrentGamesCallback(games);
 	}
 	

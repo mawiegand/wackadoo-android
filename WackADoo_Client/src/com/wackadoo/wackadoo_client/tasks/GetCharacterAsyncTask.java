@@ -56,6 +56,7 @@ public class GetCharacterAsyncTask extends AsyncTask<String, Integer, Boolean> {
 		String urlForRequest = String.format(parent.getString(R.string.characterURL), Locale.getDefault().getCountry().toLowerCase());
 		if (createNew) urlForRequest += "create_if_new=true";
 		String completeURL = game.getServer() + "/"+ urlForRequest;
+		Log.d("Server Request", completeURL);
 		HttpGet request = new HttpGet(completeURL);
 		
 	    StringBuilder sb=new StringBuilder();

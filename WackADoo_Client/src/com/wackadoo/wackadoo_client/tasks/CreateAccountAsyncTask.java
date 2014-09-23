@@ -71,7 +71,7 @@ public class CreateAccountAsyncTask extends AsyncTask<String, Integer, Boolean> 
 		    HttpConnectionParams.setSoTimeout(httpClient.getParams(), 10*1000); 
 		    HttpConnectionParams.setConnectionTimeout(httpClient.getParams(),10*1000); 
 
-		    Log.d(TAG, "Create Account Request:" + request);
+		    Log.d(TAG, "Create Account Request");
 		    response = httpClient.execute(request); 
 		
 		    InputStream in = response.getEntity().getContent();
@@ -113,5 +113,4 @@ public class CreateAccountAsyncTask extends AsyncTask<String, Integer, Boolean> 
 		} else {
 		}
 	}
-
 }

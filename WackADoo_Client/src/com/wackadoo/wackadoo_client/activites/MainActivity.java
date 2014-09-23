@@ -491,7 +491,7 @@ public class MainActivity extends Activity implements
 				if (games.get(i).isDefaultGame()) {
 					userCredentials.setHostname(games.get(i).getServer());
 					userCredentials.setGameId(games.get(i).getId());
-					new GetCharacterAsyncTask(this, userCredentials, games.get(i), false).execute();
+					new GetCharacterAsyncTask(this, userCredentials, games.get(i), true).execute();
 				}
 			}
 		}		
@@ -499,7 +499,6 @@ public class MainActivity extends Activity implements
 	
 	@Override
 	public void getCharacterCallback(GameInformation game) {
-		Log.d("Character Information", game.getCharacter().toString());
 		
 	}
 	

@@ -35,7 +35,11 @@
     <!-- AccountManager -->
     <string name="account_change_password">Passwort ändern</string>
     <string name="alert_change_password">Passwort ändern</string>
+    <string name="alert_change_password_success">Passwort erfolgreich geändert</string>
+    <string name="alert_change_password_error">Deine Passwort wurde vom Server NICHT akzeptiert. Bitte versuche es noch mal oder kontaktiere den Support.</string>
     <string name="alert_email_change">E-Mail ändern</string>
+    <string name="alert_email_change_success">E-Mail erfolgreich geändert</string>
+    <string name="alert_email_change_error">Deine E-Mail wurde vom Server NICHT akzeptiert. Bitte versuche es noch mal oder kontaktiere den Support.</string>
     <string name="alert_ok_button">OK</string>
     <string name="alert_cancel_button">Abbrechen</string>
     <string name="alert_quit">Sind Sie sicher?</string>
@@ -87,18 +91,22 @@
 
     <!-- Shop Info -->
    	<string name="shopinfo_topbar_heading">Info Store</string>
-    <string name="shopInfoText_credits">Get some credits to improve your game experience</string>
+    <string name="shopInfoText_credits">Hol\' dir ein paar Credits um den Spielspaß zu verbessern.</string>
     <string name="shopInfoHeadingText_credits">Platinum Credits</string>
-    <string name="shopInfoDescText_credits">Bla bla</string>
-    <string name="shopInfoText_gold">Come on, get some Golden Frogs and give me an army!</string>
+    <string name="shopInfoDescText_credits">Mit 5D Platinum Credits kannst du den Platinum Account freischalten oder einen Produktionsbonus erhalten.\n\nDu kannst Platinum Credits gegen goldene Frösche eintauschen.\n\n
+           									Mit goldenen Fröschen kannst du den Bau von Gebäuden abschließen, das Rekrutieren von Einheiten beschleunigen oder du handelst sie mit dem reisenden Händler.</string>
+    <string name="shopInfoText_gold">Na los, hol\' dir ein paar goldene Frösche und gib mir eine Armee!</string>
     <string name="shopInfoHeadingText_gold">Golden Frogs</string>
-    <string name="shopInfoDescText_gold">Bla bla</string>
-    <string name="shopInfoText_account">What you are waiting for? With a Platinum Account, we will be able to expand our power even more.</string>
+    <string name="shopInfoDescText_gold">Du kannst Platinum Credits gegen goldene Frösche eintauschen um den Bau von Gebäuden abzuschließen, das Rekrutieren von Einheiten zu beschleunigen oder um sie mit dem reisenden Händler zu handeln.\n\n15 goldene Frösche kosten nur 8 Platinum Credits.\n\n
+        								 50 goldene Frösche kosten nur 24 Platinum Credits.\n\n120 goldene Frösche kosten nur 47 Platinum Credits.</string>
+    <string name="shopInfoText_account">Auf was wartest du? Mit einem Platinum Account werden wir unsere Macht noch weiter vergrößeren können.</string>
     <string name="shopInfoHeadingText_account">Platinum Account</string>
-    <string name="shopInfoDescText_account">Bla bla</string>
-    <string name="shopInfoText_bonus">More Resources? Everyone needs more resources!</string>
+    <string name="shopInfoDescText_account">Bau Warteschlange: Mit einem Platinum Account erweitert sich deine Bau Warteschlange um drei Plätze. Die Liste wird auch weiter abgearbeitet, wenn du nicht eingeloggt bist - falls du genügend Ressourcen hast, um den Auftrag abzuschließen.\n\n
+    									Training Warteschlange: Deine Training Warteschlange wird um drei Plätze erweitert, wenn du einen Platinum Account hast. Das bedeutet, dass du die Möglichkeit hast, weitere Aufträge an derselben Trainingsstätte zu akzeptieren, nachdem der erste beendet ist.\n\n
+    									Schlacht Benachrichtigung per E-Mail: Mit einem aktivierten Platinum Account wirst du umgehend per E-Mail über Attacken auf deine Kolonien, Festungen oder Armeen informiert - auch wenn du nicht aktiv im Spiel bist. So kannst du also, auch wenn du nicht spielst, direkt reagieren. Du kannst weitere Armeen zur Unterstützung senden oder deine Allianz um Hilfe bitten.</string>
+    <string name="shopInfoText_bonus">Mehr Ressourcen? Jeder braucht mehr Ressourcen!</string>
     <string name="shopInfoHeadingText_bonus">Production Bonus</string>
-    <string name="shopInfoDescText_bonus">Bla bla</string>
+    <string name="shopInfoDescText_bonus" formatted="false">Der Produktionsbonus gilt für deine gesamte Produktion der ausgewählten Ressource.\n\n15% globaler Bonus für die Produktion von Fell.\n\n15% globaler Bonus für die Produktion von Stein.\n\n15% globaler Bonus für die Produktion von Holz.</string>
     
     <!-- Info Screen -->
     <string name="infoscreen_support_btn">Support</string>
