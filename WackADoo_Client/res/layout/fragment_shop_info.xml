@@ -11,11 +11,11 @@
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/title_bg"
+        android:src="@drawable/table_background"
         android:scaleType="centerCrop"
         android:alpha="0.7" />
 	
-	<ScrollView 
+	<com.wackadoo.wackadoo_client.helper.BounceScrollView 
 	    android:layout_width="match_parent" 
 	    android:layout_height="match_parent"
 	    android:layout_marginTop="35dp" >
@@ -42,7 +42,8 @@
 			        android:layout_weight="0.85"
 			        android:text="@string/shop_headline_text"
 			       	android:gravity="center_vertical|right"
-			       	android:layout_gravity="center_vertical"/>
+			       	android:layout_gravity="center_vertical"
+			        android:textSize="@dimen/topBarFontsize"/>
 			    
 			    <LinearLayout 
 			        android:id="@+id/headerIconContainer"
@@ -73,16 +74,18 @@
 		        android:id="@+id/shopInfoHeadingText"
 	    	    style="@style/customTextViewStyle"
 		        android:layout_below="@+id/headlineContainer"
-		        android:layout_marginTop="30dp"
+		        android:textSize="@dimen/topBarFontsize"
+		        android:layout_marginTop="20dp"
 		        android:textStyle="bold"/>
 	    
 		    <TextView 
 		        android:id="@+id/shopInfoDescText"
 	    	    style="@style/customTextViewStyle"
-		        android:layout_below="@+id/shopInfoHeadingText"/>
+		        android:layout_below="@+id/shopInfoHeadingText"
+		        android:layout_marginTop="10dp"/>
 		    
 	    </RelativeLayout>
-	</ScrollView>
+	</com.wackadoo.wackadoo_client.helper.BounceScrollView>
 	
 	<RelativeLayout
 	 		android:id="@+id/shopInfoTopbar"

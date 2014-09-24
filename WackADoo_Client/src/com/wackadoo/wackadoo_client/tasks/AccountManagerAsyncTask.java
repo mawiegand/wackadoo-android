@@ -15,6 +15,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -22,6 +23,7 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.google.gson.JsonObject;
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.interfaces.AccountManagerCallbackInterface;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
@@ -46,34 +48,39 @@ public class AccountManagerAsyncTask extends AsyncTask<String, Integer, Boolean>
 	@Override
 	protected Boolean doInBackground(String... params) {
 		Activity parent = (Activity) listener;
-		String urlForRequest = parent.getString(R.string.createAccountURL);
+		String urlForRequest;
 		
 		if(type.equals("mail")) {
 			urlForRequest = parent.getString(R.string.changeEmailURL);
 		} else {
 			urlForRequest = parent.getString(R.string.changePasswordURL);
 		}
-		String baseURL = parent.getString(R.string.baseURL);
-		String completeURL = baseURL + String.format(urlForRequest, Locale.getDefault().getCountry().toLowerCase(), userCredentials.getIdentifier());
+//		String baseURL = parent.getString(R.string.baseURL);
+		String baseURL = "https://gs06.wack-a-doo.de";
+		String completeURL = baseURL + String.format(urlForRequest, Locale.getDefault().getCountry().toLowerCase());
 		Log.d(TAG, "completeURL: " + completeURL);
 		
 		HttpPost request = new HttpPost(completeURL);
 		StringBuilder sb = new StringBuilder();
 		
-		List <NameValuePair> nameValuePairs = new ArrayList <NameValuePair> (6);
+		List <NameValuePair> nameValuePairs = new ArrayList <NameValuePair> (1);
 		if(type.equals("mail")) {
-			nameValuePairs.add(new BasicNameValuePair("characterNewMail", value));
+			nameValuePairs.add(new BasicNameValuePair("email", value)); //characterNewMail
+			nameValuePairs.add(new BasicNameValuePair("password", userCredentials.getPassword()));
+			
 		} else {
-			nameValuePairs.add(new BasicNameValuePair("characterNewPassword", value));
+			Log.d(TAG, "***** change password from '" + userCredentials.getPassword() + "' to '" + value + "'");
+			nameValuePairs.add(new BasicNameValuePair("character[password]", value));		
 		}
-		nameValuePairs.add(new BasicNameValuePair("grant_type", "bearer"));
-		nameValuePairs.add(new BasicNameValuePair("access_token", userCredentials.getAccessToken().getToken()));
+//		nameValuePairs.add(new BasicNameValuePair("token_type", "bearer"));
+//		nameValuePairs.add(new BasicNameValuePair("access_token", userCredentials.getAccessToken().getToken()));
 
 		try {
 			UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nameValuePairs);
 		    entity.setContentType("application/x-www-form-urlencoded;charset=UTF-8");
 		    
 		    request.getParams().setParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, Boolean.FALSE);
+		    request.setHeader("Authorization", "Bearer " + userCredentials.getAccessToken().getToken());
 		    request.setHeader("Accept", "application/json");
 		    request.setEntity(entity);  
 		    
@@ -82,7 +89,6 @@ public class AccountManagerAsyncTask extends AsyncTask<String, Integer, Boolean>
 		    HttpConnectionParams.setSoTimeout(httpClient.getParams(), 10*1000); 
 		    HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 10*1000); 
 
-		    Log.d(TAG, "Account Manager Request Type: " + type);
 		    response = httpClient.execute(request); 
 		
 		    InputStream in = response.getEntity().getContent();
@@ -92,15 +98,9 @@ public class AccountManagerAsyncTask extends AsyncTask<String, Integer, Boolean>
 		        sb.append(line);
 		    }
 		    
-		    Log.d(TAG, "Account Manager Response: " + sb);
 		    JSONObject jsonResponse = new JSONObject(sb.toString());
 		    Log.d(TAG, "Account Manager Response: " + jsonResponse);
-		    
-		    if(jsonResponse.has("result")){
-		    	if(jsonResponse.getBoolean("result")) {
-		    		return true;
-		    	}
-		    }
+		    return true;
 			
 		} catch (Exception e) {
 			e.printStackTrace();
