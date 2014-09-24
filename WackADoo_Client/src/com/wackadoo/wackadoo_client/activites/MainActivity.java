@@ -416,14 +416,14 @@ public class MainActivity extends Activity implements
 		if(identifier.length() > 0 || accessToken.length() > 0 || email.length() > 0){
 			if(userCredentials.getAccessToken().isExpired()) {
 				progressDialog.show();
-				new GameLoginAsyncTask(this, getApplicationContext(), this.userCredentials, progressDialog).execute();
+				new GameLoginAsyncTask(this, getApplicationContext(), this.userCredentials, false, progressDialog).execute();
 			
 			} else {
 				loggedIn = true;
 			}
 		} else if (email.contains("generic") && email.contains("@5dlab.com") ) {
 			progressDialog.show();
-			new GameLoginAsyncTask(this, getApplicationContext(), this.userCredentials, progressDialog).execute();
+			new GameLoginAsyncTask(this, getApplicationContext(), this.userCredentials, false, progressDialog).execute();
 			
 		} else {
 			loggedIn = false;
@@ -442,7 +442,7 @@ public class MainActivity extends Activity implements
 		
 		} else {
 			progressDialog.show();
-			new GameLoginAsyncTask(this, getApplicationContext(), userCredentials, progressDialog).execute();
+			new GameLoginAsyncTask(this, getApplicationContext(), userCredentials, false, progressDialog).execute();
 		}
 	}
 
@@ -471,7 +471,7 @@ public class MainActivity extends Activity implements
 	}
 
 	@Override
-	public void loginCallback(String accessToken, String expiration, String identifier) {
+	public void loginCallback(String accessToken, String expiration, String identifier, boolean restoreAccount) {
 		userCredentials.generateNewAccessToken(accessToken, expiration);
 		userCredentials.setIdentifier(identifier);
 		
@@ -514,7 +514,7 @@ public class MainActivity extends Activity implements
 	}
 
 	@Override
-	public void loginCallbackError(String error) {}
+	public void loginCallbackError(String error, boolean restoreAccount) {}
 	
 	// update views in UI depending on user logged in or not
 	private void updateUi() {

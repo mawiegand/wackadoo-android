@@ -184,22 +184,18 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 		restoreAccountButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				restoreAccount();
+				triggerRestoreAccount();
 			}
-
 		});
 	}
 	
-	protected void restoreAccount() {
+	protected void restoreAccount(boolean success) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		// TODO: restore account
 		String title, message;
-		boolean success = false;
 		
 		if(success) {
 			title = "WackyUser1337";
 			message = String.format(getResources().getString(R.string.account_character_restore_success), "WackyUser1337");
-
 		} else {
 			title = getResources().getString(R.string.account_character_restore_failed);
 			message = getResources().getString(R.string.account_character_restore_failure_message);
@@ -209,7 +205,7 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
     		   .setMessage(message)
     		   .setPositiveButton(getResources().getString(R.string.alert_ok_button), new DialogInterface.OnClickListener() { 
 		    	    @Override
-		    	    public void onClick(DialogInterface dialog, int which) { }
+		    	    public void onClick(DialogInterface dialog, int which) { finish(); }
 		    	})
 	    	   .setNegativeButton(getResources().getString(R.string.infoscreen_support_btn), new DialogInterface.OnClickListener() {
 		    	    @Override
@@ -223,9 +219,14 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 		    	        intent.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.credentials_lost_access_mail));
 		    	        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // this will make such that when user returns to your app, your app is displayed, instead of the email app.
 		    	        startActivity(intent);
+		    	        finish();
 		    	    }
 		    	})
     		   .show();
+	}
+	
+	private void triggerRestoreAccount() {
+		new GameLoginAsyncTask(this, getApplicationContext(), userCredentials, true, progressDialog).execute();
 	}
 	
 	protected void triggerCreateAccount() {
@@ -240,7 +241,7 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 				userCredentials.setEmail(this.userNameEditText.getText().toString());
 				userCredentials.setPassword(this.passwordEditText.getText().toString());
 				progressDialog.show();
-				new GameLoginAsyncTask(this, getApplicationContext(), userCredentials, progressDialog).execute();
+				new GameLoginAsyncTask(this, getApplicationContext(), userCredentials, false, progressDialog).execute();
 			} 
 			else {
 				Toast.makeText(getApplicationContext(), getResources().getString(R.string.credentials_password_too_short), Toast.LENGTH_SHORT).show();
@@ -300,22 +301,27 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 	}
 	
 	@Override
-	public void loginCallback(String accessToken, String expiration, String userIdentifier) {
+	public void loginCallback(String accessToken, String expiration, String userIdentifier, boolean restoreAccount) {
 		userCredentials.generateNewAccessToken(accessToken, expiration);
 		userCredentials.setClientID(userIdentifier);
-		finish();
+		
+		if (restoreAccount) restoreAccount(true);
+		else finish();
 	}
 	
 	@Override
-	public void loginCallbackError(String error) {
-		if(error.equals("invalid_grant")) {
-			Toast.makeText(getApplicationContext(), getResources().getString(R.string.login_invalid_grant), Toast.LENGTH_LONG)
-			.show();
+	public void loginCallbackError(String error, boolean restoreAccount) {
+		if (restoreAccount) restoreAccount(false);
+		else {
+			if(error.equals("invalid_grant")) {
+				Toast.makeText(getApplicationContext(), getResources().getString(R.string.login_invalid_grant), Toast.LENGTH_LONG)
+				.show();
 			
-		} else {
-			Toast.makeText(getApplicationContext(), getResources().getString(R.string.login_failed_toast), Toast.LENGTH_LONG)
-			.show();
-		}
+			} else {
+				Toast.makeText(getApplicationContext(), getResources().getString(R.string.login_failed_toast), Toast.LENGTH_LONG)
+				.show();
+			}
+		}		
 	}
 
 	// Set up the standard server communiation dialog

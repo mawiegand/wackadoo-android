@@ -5,24 +5,17 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Locale;
-
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpConnectionParams;
 import org.json.JSONArray;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -34,13 +27,11 @@ import com.wackadoo.wackadoo_client.model.UserCredentials;
 public class GetCurrentGamesAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	
     private CurrentGamesCallbackInterface listener;
-    private Context context;
     private ArrayList<GameInformation> games;
 	private String accessToken;
     
     public GetCurrentGamesAsyncTask(CurrentGamesCallbackInterface callback, Context context, UserCredentials userCredentials) {
     	this.listener = callback;
-    	this.context = context;
     	this.accessToken = userCredentials.getAccessToken().getToken();
     }
 	
@@ -50,7 +41,7 @@ public class GetCurrentGamesAsyncTask extends AsyncTask<String, Integer, Boolean
 		Activity parent = (Activity) this.listener;
 		String urlForRequest = parent.getString(R.string.gamesURL);
 		String baseURL = parent.getString(R.string.baseURL);
-		String completeURL = baseURL + String.format(urlForRequest, Locale.getDefault().getCountry().toLowerCase());
+		String completeURL = baseURL + String.format(urlForRequest, Locale.getDefault().getCountry().toLowerCase(Locale.getDefault()));
 		HttpGet request = new HttpGet(completeURL);
 		
 	    StringBuilder sb=new StringBuilder();
@@ -58,15 +49,16 @@ public class GetCurrentGamesAsyncTask extends AsyncTask<String, Integer, Boolean
 	    
 	    games = new ArrayList<GameInformation>();
 	    
-	    
-	    try {
-		    request.getParams().setParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, Boolean.FALSE);
-		    request.setHeader("Authorization", "Bearer " + accessToken);
-		    request.setHeader("Accept", "application/json");
+	    request.getParams().setParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, Boolean.FALSE);
+		request.setHeader("Authorization", "Bearer " + accessToken);
+		request.setHeader("Accept", "application/json");
 		    
-		    DefaultHttpClient httpClient = new DefaultHttpClient();
-		    HttpConnectionParams.setSoTimeout(httpClient.getParams(), 10*1000); 
-		    HttpConnectionParams.setConnectionTimeout(httpClient.getParams(),10*1000); 
+		DefaultHttpClient httpClient = new DefaultHttpClient();
+		HttpConnectionParams.setSoTimeout(httpClient.getParams(), 10*1000); 
+		HttpConnectionParams.setConnectionTimeout(httpClient.getParams(),10*1000); 
+		
+	    try {
+		    
 	    	response = httpClient.execute(request); 
     	
 		    InputStream in = response.getEntity().getContent();

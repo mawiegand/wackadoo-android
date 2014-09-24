@@ -39,6 +39,7 @@ public class AccountManagerAsyncTask extends AsyncTask<String, Integer, Boolean>
     private ProgressDialog progressDialog;
     private String value, type;
     private UserCredentials userCredentials;
+    private JSONObject jsonResponse;
     
     public AccountManagerAsyncTask(AccountManagerCallbackInterface callback, ProgressDialog progressDialog, UserCredentials userCredentials, String type, String value) {
     	this.listener = callback;
@@ -82,8 +83,6 @@ public class AccountManagerAsyncTask extends AsyncTask<String, Integer, Boolean>
 		    request.setHeader("Accept", "application/json");
 		    ((HttpEntityEnclosingRequestBase) request).setEntity(entity);  
 		    
-		    Log.d("Server Email Request", request.getAllHeaders().toString());
-		    
 		    HttpResponse response = null;
 		    DefaultHttpClient httpClient = new DefaultHttpClient();
 		    HttpConnectionParams.setSoTimeout(httpClient.getParams(), 10*1000); 
@@ -99,7 +98,7 @@ public class AccountManagerAsyncTask extends AsyncTask<String, Integer, Boolean>
 		    }
 		    
 		    
-		    JSONObject jsonResponse = new JSONObject(sb.toString());
+		    jsonResponse = new JSONObject(sb.toString());
 		    Log.d(TAG, "Account Manager Response: " + jsonResponse);
 		    return true;
 			
@@ -111,10 +110,8 @@ public class AccountManagerAsyncTask extends AsyncTask<String, Integer, Boolean>
 	
 	@Override
 	protected void onPostExecute(Boolean result) {
-		super.onPostExecute(result);
-		
-		if(result) {
-			listener.accountManagerCallback("passwort", true, value);
-		}
+		super.onPostExecute(result);		
+		result = !jsonResponse.has("error_description");
+		listener.accountManagerCallback(type, result, value);
 	}
 }
