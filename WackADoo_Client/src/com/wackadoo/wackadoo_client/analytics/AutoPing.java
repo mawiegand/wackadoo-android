@@ -54,7 +54,7 @@ public class AutoPing {
 		
 		for (int i = 0; i < 32; i++)
 		{
-			if (i % 4 == 0) {
+			if (i > 0 && i % 4 == 0) {
 				builder.append("-");
 			}
 			
