@@ -24,6 +24,13 @@
     <string name="selectgame_item_days_today">Starts today!</string>
     <string name="selectgame_item_days_till_start">to start in %d days</string>
     <string name="selectgame_item_days_finished">Game already finished</string>
+    <string name="selectgame_game_full">Game is full</string>
+    <string name="selectgame_signup_disabled">You can\'t sign up at the moment!</string>
+    <string name="selectgame_signin_disabled">You can\'t sign in at the moment!</string>
+    <string name="selectgame_game_not_startet">The game has not startet yet</string>
+    <string name="selectgame_game_finished">The game is already over</string>
+    <string name="selectgame_game_login">Log in in world </string>
+    <string name="selectgame_create_account">Create new account in world </string>
     
     <!-- AccountManager -->
     <string name="account_change_password">Change Password</string>
@@ -108,7 +115,7 @@
     <string name="infoscreen_wiki_btn">Open Wiki Manual</string>
     <string name="infoscreen_copyright_btn">Copyright Notice</string>
     <string name="infoscreen_supported">Supported by</string>
-   	<string name="infoscreen_contributors">Contributors: Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata </string>
+   	<string name="infoscreen_contributors">Contributors: Anand, Jan-Niklas Bartholomäus, Max Buck, Christian Seidel, Matteo Bottin, David Canela, Patrick Fox, Maggie Jaglo, Jan Hendrik Kegel, Sascha Lange, Stefan Mattern, Thomas Mohr, Arno Möller, Christiane Lange, Hai Pham, Pikomi, Hajo Runne, Julian Schmid, Susan Tackenberg, Christian Wansart, Jupp Wegner, Marcel Wiegand </string>
    	<string name="infoscreen_copyright">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata </string>
     
 </resources>

@@ -1,7 +1,13 @@
 package com.wackadoo.wackadoo_client.helper;
 
+import java.net.InetAddress;
+
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.util.Log;
 import android.view.View;
 import android.view.View.MeasureSpec;
 import android.view.ViewGroup;
@@ -41,5 +47,27 @@ public class UtilityHelper {
 	public static boolean isValidMail(String email) {
 		boolean result = android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
 		return result;
+	}
+
+	// Checks if the device is connected to the internet
+	public static boolean isOnline(Activity activity) {
+	    ConnectivityManager cm =
+	        (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
+	    NetworkInfo netInfo = cm.getActiveNetworkInfo();
+	    if (netInfo != null && netInfo.isConnected()) {
+	        return true;
+	    }
+	    return false;
+	}
+	
+	public static boolean isHostAvailable(String hostname, Activity activity) {
+		try {
+			InetAddress.getAllByName(hostname);
+			return true;
+		} catch(Exception e) {
+			Log.d("Server", "Host "+hostname+" is not available");
+			e.printStackTrace();
+			return false;
+		}		
 	}
 }

@@ -9,8 +9,15 @@
     <!-- Login -->
     <string name="loginURL">/identity_provider/%s/oauth2/access_token</string>
     
+    
+    <!-- Games -->
+    <string name="gamesURL">/identity_provider/%s/game/game_instances</string>
+    
+    <!-- Character -->
+    <string name="characterURL">game_server/fundamental/characters/self?</string>
+    
     <!-- Change Email -->
-    <string name="changeEmailURL">/identity_provider/%1$s/identities/%2$s</string>
+    <string name="changeEmailURL">/identity_provider/%s/identities/</string>
     <!-- Change Password -->
     <string name="changePasswordURL">/game_server/%s/action/fundamental/change_character_password_actions</string>
     <!--  https://gs06.wack-a-doo.de/game_server/action/fundamental/change_character_password_actions -->

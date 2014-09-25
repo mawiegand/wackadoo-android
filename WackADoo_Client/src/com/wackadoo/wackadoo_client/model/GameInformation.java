@@ -2,18 +2,26 @@ package com.wackadoo.wackadoo_client.model;
 
 import java.util.Date;
 
+import com.google.gson.annotations.SerializedName;
+
 public class GameInformation {
 	
-	private int uId, presentPlayers, maxPlayers;
-	private String name, scope;
+	private CharacterInformation character;
+	private int id, presentPlayers, maxPlayers;
+	private String name, scope, server;
 	private Date startedAt, endedAt, availableSince;
-	private boolean signupEnabled, signinEnabled, joined;
+	private boolean signupEnabled, signinEnabled;
+	@SerializedName("has_player_joined?") 
+	private boolean joined;
+	@SerializedName("default_game?") 
+	private boolean defaultGame;
 	
-	public int getuId() {
-		return uId;
+	
+	public int getId() {
+		return id;
 	}
-	public void setuId(int uId) {
-		this.uId = uId;
+	public void setuId(int id) {
+		this.id = id;
 	}
 	
 	public int getPresentPlayers() {
@@ -84,5 +92,24 @@ public class GameInformation {
 	}
 	public void setJoined(boolean joined) {
 		this.joined = joined;
+	}
+	
+	public String getServer() {
+		return server;
+	}
+	public void setServer(String server) {
+		this.server = server;
+	}
+	public boolean isDefaultGame() {
+		return defaultGame;
+	}
+	public void setDefaultGame(boolean defaultGame) {
+		this.defaultGame = defaultGame;
+	}
+	public CharacterInformation getCharacter() {
+		return character;
+	}
+	public void setCharacter(CharacterInformation character) {
+		this.character = character;
 	}
 }

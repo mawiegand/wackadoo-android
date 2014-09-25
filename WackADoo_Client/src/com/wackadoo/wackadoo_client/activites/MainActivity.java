@@ -1,6 +1,7 @@
 package com.wackadoo.wackadoo_client.activites;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -10,6 +11,8 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.GetChars;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
@@ -24,13 +27,20 @@ import android.widget.Toast;
 import com.fivedlab.sample.sample_java.Sample;
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.analytics.AutoPing;
+import com.wackadoo.wackadoo_client.helper.UtilityHelper;
+import com.wackadoo.wackadoo_client.interfaces.CharacterCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.CreateAccountCallbackInterface;
+import com.wackadoo.wackadoo_client.interfaces.CurrentGamesCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.GameLoginCallbackInterface;
+import com.wackadoo.wackadoo_client.model.CharacterInformation;
+import com.wackadoo.wackadoo_client.model.GameInformation;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
 import com.wackadoo.wackadoo_client.tasks.GameLoginAsyncTask;
+import com.wackadoo.wackadoo_client.tasks.GetCharacterAsyncTask;
+import com.wackadoo.wackadoo_client.tasks.GetCurrentGamesAsyncTask;
 
 public class MainActivity extends Activity implements
-		CreateAccountCallbackInterface, GameLoginCallbackInterface {
+		CreateAccountCallbackInterface, GameLoginCallbackInterface, CurrentGamesCallbackInterface, CharacterCallbackInterface {
 
 	private static final String TAG = MainActivity.class.getSimpleName();
 	
@@ -80,7 +90,7 @@ public class MainActivity extends Activity implements
 	    
 	    setUpButtons();
 	    setUpPlayButtonAnimation();
-	    triggerLogin();	
+
 
 		// Start tracking
 		Sample.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.ZZZZZ"));
@@ -89,6 +99,8 @@ public class MainActivity extends Activity implements
 		AutoPing.getInstance().startAutoPing();
 
 	}
+
+	
 
 	private void setUpPlayButtonAnimation() {
 		// start animation of glance
@@ -126,7 +138,13 @@ public class MainActivity extends Activity implements
 	protected void onResume() {
 		super.onResume();
 		this.userCredentials = new UserCredentials(getApplicationContext());
-		triggerLogin();
+		if (!UtilityHelper.isOnline(this)) {
+			Toast.makeText(getApplicationContext(), getResources().getString(R.string.no_connection), Toast.LENGTH_LONG).show();
+		}
+		else {
+			triggerLogin();
+			triggerGetGames();
+		}				
 	}
 	 
 	@Override
@@ -383,7 +401,11 @@ public class MainActivity extends Activity implements
 		});
 
 	}
-
+	
+	private void triggerGetGames() {
+		new GetCurrentGamesAsyncTask(this, getApplicationContext(), userCredentials).execute();		
+	}
+	
 	private void triggerFacebook() {
 		// TODO Login using Facebook
 		Toast toast = Toast.makeText(this,
@@ -400,18 +422,19 @@ public class MainActivity extends Activity implements
 		if(identifier.length() > 0 || accessToken.length() > 0 || email.length() > 0){
 			if(userCredentials.getAccessToken().isExpired()) {
 				progressDialog.show();
-				new GameLoginAsyncTask(this, getApplicationContext(), this.userCredentials, progressDialog).execute();
+				new GameLoginAsyncTask(this, getApplicationContext(), this.userCredentials, false, progressDialog).execute();
 			
 			} else {
 				loggedIn = true;
 			}
 		} else if (email.contains("generic") && email.contains("@5dlab.com") ) {
 			progressDialog.show();
-			new GameLoginAsyncTask(this, getApplicationContext(), this.userCredentials, progressDialog).execute();
+			new GameLoginAsyncTask(this, getApplicationContext(), this.userCredentials, false, progressDialog).execute();
 			
 		} else {
 			loggedIn = false;
 		}
+		
 		updateUi();
 	}
 
@@ -419,13 +442,13 @@ public class MainActivity extends Activity implements
 		String accessToken = this.userCredentials.getAccessToken().getToken();
 		String tokenExpiration = this.userCredentials.getAccessToken()
 				.getExpireCode();
-		String userId = this.userCredentials.getClientID();
+		String userId = this.userCredentials.getIdentifier();
 		if(accessToken != null && tokenExpiration != null && !this.userCredentials.getAccessToken().isExpired()) {
 			startGame(accessToken, tokenExpiration, userId);
 		
 		} else {
 			progressDialog.show();
-			new GameLoginAsyncTask(this, getApplicationContext(), userCredentials, progressDialog).execute();
+			new GameLoginAsyncTask(this, getApplicationContext(), userCredentials, false, progressDialog).execute();
 		}
 	}
 
@@ -436,9 +459,13 @@ public class MainActivity extends Activity implements
 		bundle.putString("accessToken", accessToken);
 		bundle.putString("expiration", expiration);
 		bundle.putString("userId", userId);
+		bundle.putString("hostname", userCredentials.getHostname());
 		intent.putExtras(bundle);
 		startActivity(intent);
 	}
+	
+
+
 
 	@Override
 	public void onRegistrationCompleted(String identifier, String clientID,	String nickname) {
@@ -446,20 +473,56 @@ public class MainActivity extends Activity implements
 		userCredentials.setClientID(clientID);
 		userCredentials.setUsername(nickname);
 		triggerLogin();
+		triggerGetGames();
 	}
 
 	@Override
-	public void loginCallback(String accessToken, String expiration, String identifier) {
+	public void loginCallback(boolean result, String accessToken, String expiration, String identifier, boolean restoreAccount) {
 		userCredentials.generateNewAccessToken(accessToken, expiration);
 		userCredentials.setIdentifier(identifier);
-		Toast.makeText(getApplicationContext(), getResources().getString(R.string.login_success_toast), Toast.LENGTH_LONG).show();
 		
+		triggerGetGames();
+		
+		if (result) Toast.makeText(getApplicationContext(), getResources().getString(R.string.login_success_toast), Toast.LENGTH_LONG).show();
+		else Toast.makeText(getApplicationContext(), getResources().getString(R.string.login_failed_toast), Toast.LENGTH_LONG).show();
+		
+		// TODO: loggedIn if GetGames failed?
 		loggedIn = true;
 		updateUi();
 	}
 	
 	@Override
-	public void loginCallbackError(String error) {}
+	public void getCurrentGamesCallback(ArrayList<GameInformation> games) {
+		if (userCredentials.getHostname() == "" || !isGameOnline(games, userCredentials.getGameId())) {
+			for (int i = 0; i < games.size(); i++) {
+				if (games.get(i).isDefaultGame()) {
+					userCredentials.setHostname(games.get(i).getServer());
+					userCredentials.setGameId(games.get(i).getId());
+					new GetCharacterAsyncTask(this, userCredentials, games.get(i), true).execute();
+				}
+			}
+		}		
+	}	
+	
+	@Override
+	public void getCharacterCallback(GameInformation game, boolean createNew) {
+		userCredentials.setUsername(game.getCharacter().getName());
+		updateUi();
+	}
+	
+	private boolean isGameOnline(ArrayList<GameInformation> games, int gameId) {
+		boolean gameOnline = false;
+		for (int i = 0; i < games.size(); i++) {
+			if (games.get(i).getId() == gameId) {
+				gameOnline = true;
+				break;
+			}
+		}
+		return gameOnline;
+	}
+
+	@Override
+	public void loginCallbackError(String error, boolean restoreAccount) {}
 	
 	// update views in UI depending on user logged in or not
 	private void updateUi() {
@@ -487,4 +550,10 @@ public class MainActivity extends Activity implements
 		progressDialog.setTitle(getResources().getString(R.string.server_communication));
 		progressDialog.setMessage(getResources().getString(R.string.please_wait));
 	}
+
+
+
+
+
+	
 }

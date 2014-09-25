@@ -37,11 +37,13 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	private UserCredentials userCredentials;
 	private JSONObject jsonResponse;
 	private ProgressDialog progressDialog;
+	private boolean restoreAccount;
     
-    public GameLoginAsyncTask(GameLoginCallbackInterface callback, Context context, UserCredentials userCredentials, ProgressDialog progressDialog) {
+    public GameLoginAsyncTask(GameLoginCallbackInterface callback, Context context, UserCredentials userCredentials, boolean restoreAccount, ProgressDialog progressDialog) {
     	this.listener = callback;
     	this.context = context;
     	this.userCredentials = userCredentials;
+    	this.restoreAccount = restoreAccount;
     	this.progressDialog = progressDialog;
     }
     
@@ -57,18 +59,20 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	    StringBuilder sb = new StringBuilder();
 	
 	    String username, password;
-	    if(userCredentials.getEmail().length() > 0 && userCredentials.getPassword().length() > 0) {
-	    	username = userCredentials.getEmail();
-	    	password = userCredentials.getPassword();
+	    if(userCredentials.getEmail().length() > 0) {
+	    	username = userCredentials.getEmail();	    	
 	    } else {
-	    	username = userCredentials.getIdentifier();
-	    	password = "egjzdsgt";
+	    	if (userCredentials.getUsername().length() > 0) username = userCredentials.getUsername();
+	    	else username = userCredentials.getIdentifier();	    	
 	    }
+	    if(userCredentials.getPassword().length() > 0) password = userCredentials.getPassword();
+	    else password = "egjzdsgt";
 	    
 	    List <NameValuePair> nameValuePairs = new ArrayList <NameValuePair> (7);
 		nameValuePairs.add(new BasicNameValuePair("client_id", "WACKADOO-IOS"));
 		nameValuePairs.add(new BasicNameValuePair("client_password", "5d"));
-		nameValuePairs.add(new BasicNameValuePair("username", username));
+		if (!restoreAccount) nameValuePairs.add(new BasicNameValuePair("username", username));
+		else nameValuePairs.add(new BasicNameValuePair("restore_with_device_token", "true"));
 		nameValuePairs.add(new BasicNameValuePair("password", password));
 		nameValuePairs.add(new BasicNameValuePair("grant_type", "password"));
 		nameValuePairs.add(new BasicNameValuePair("scope", ""));
@@ -79,12 +83,15 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
 		nameValuePairs.add(new BasicNameValuePair("hardware_string", deviceInformation.getHardware()));
 		nameValuePairs.add(new BasicNameValuePair("hardware_token", deviceInformation.getBundleBuild()));
 		nameValuePairs.add(new BasicNameValuePair("version", deviceInformation.getBundleVersion()));
+		nameValuePairs.add(new BasicNameValuePair("[device_information][device_token]", deviceInformation.getUniqueTrackingToken()));
+		nameValuePairs.add(new BasicNameValuePair("vendor_token", deviceInformation.getUniqueTrackingToken()));
 
 		try {
 			UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nameValuePairs);
 			entity.setContentType("application/x-www-form-urlencoded;charset=UTF-8");
 			
 			request.getParams().setParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, Boolean.FALSE);
+			//if (restoreAccount) request.getParams().setParameter("restore_with_device_token", "true");
 			request.setHeader("Accept", "application/json");
 			request.setEntity(entity);  
 			DefaultHttpClient httpClient = new DefaultHttpClient();
@@ -125,13 +132,13 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
 		try {
 			if(result) {
 				if(jsonResponse.has("error")) {
-					listener.loginCallbackError(jsonResponse.getString("error"));
+					listener.loginCallbackError(jsonResponse.getString("error"), restoreAccount);
 				
 				} else {
 					String accessToken = jsonResponse.getString("access_token");
 					String expiresIn = jsonResponse.getString("expires_in");
 					String identifier = jsonResponse.getString("user_identifer");
-					listener.loginCallback(accessToken, expiresIn, identifier);
+					listener.loginCallback(result.booleanValue(), accessToken, expiresIn, identifier, restoreAccount);
 				}
 			}
 		} catch (Exception e) {

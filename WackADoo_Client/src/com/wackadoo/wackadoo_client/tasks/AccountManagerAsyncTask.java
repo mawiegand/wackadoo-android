@@ -10,12 +10,15 @@ import java.util.Locale;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.AbstractHttpMessage;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -23,7 +26,6 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.google.gson.JsonObject;
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.interfaces.AccountManagerCallbackInterface;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
@@ -36,6 +38,7 @@ public class AccountManagerAsyncTask extends AsyncTask<String, Integer, Boolean>
     private ProgressDialog progressDialog;
     private String value, type;
     private UserCredentials userCredentials;
+    private JSONObject jsonResponse;
     
     public AccountManagerAsyncTask(AccountManagerCallbackInterface callback, ProgressDialog progressDialog, UserCredentials userCredentials, String type, String value) {
     	this.listener = callback;
@@ -49,31 +52,29 @@ public class AccountManagerAsyncTask extends AsyncTask<String, Integer, Boolean>
 	protected Boolean doInBackground(String... params) {
 		Activity parent = (Activity) listener;
 		String urlForRequest;
+
+		String completeURL;
+		AbstractHttpMessage request;
+		List <NameValuePair> nameValuePairs = new ArrayList <NameValuePair>();
 		
+		// change email
 		if(type.equals("mail")) {
-			urlForRequest = parent.getString(R.string.changeEmailURL);
+			urlForRequest = parent.getString(R.string.changeEmailURL) + userCredentials.getClientID();
+			completeURL = parent.getString(R.string.baseURL) + String.format(urlForRequest, Locale.getDefault().getCountry().toLowerCase());
+			request = new HttpPut(completeURL);
+			nameValuePairs.add(new BasicNameValuePair("identity[email]", value)); //characterNewMail	
+			
+		// change password
 		} else {
 			urlForRequest = parent.getString(R.string.changePasswordURL);
-		}
-//		String baseURL = parent.getString(R.string.baseURL);
-		String baseURL = "https://gs06.wack-a-doo.de";
-		String completeURL = baseURL + String.format(urlForRequest, Locale.getDefault().getCountry().toLowerCase());
-		Log.d(TAG, "completeURL: " + completeURL);
-		
-		HttpPost request = new HttpPost(completeURL);
-		StringBuilder sb = new StringBuilder();
-		
-		List <NameValuePair> nameValuePairs = new ArrayList <NameValuePair> (1);
-		if(type.equals("mail")) {
-			nameValuePairs.add(new BasicNameValuePair("email", value)); //characterNewMail
-			nameValuePairs.add(new BasicNameValuePair("password", userCredentials.getPassword()));
-			
-		} else {
+			completeURL = userCredentials.getHostname() + String.format(urlForRequest, Locale.getDefault().getCountry().toLowerCase());
+			request = new HttpPost(completeURL);
 			Log.d(TAG, "***** change password from '" + userCredentials.getPassword() + "' to '" + value + "'");
-			nameValuePairs.add(new BasicNameValuePair("character[password]", value));		
+			nameValuePairs.add(new BasicNameValuePair("character[password]", value));	
 		}
-//		nameValuePairs.add(new BasicNameValuePair("token_type", "bearer"));
-//		nameValuePairs.add(new BasicNameValuePair("access_token", userCredentials.getAccessToken().getToken()));
+
+		Log.d(TAG, "completeURL: " + completeURL);
+		StringBuilder sb = new StringBuilder();
 
 		try {
 			UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nameValuePairs);
@@ -82,14 +83,14 @@ public class AccountManagerAsyncTask extends AsyncTask<String, Integer, Boolean>
 		    request.getParams().setParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, Boolean.FALSE);
 		    request.setHeader("Authorization", "Bearer " + userCredentials.getAccessToken().getToken());
 		    request.setHeader("Accept", "application/json");
-		    request.setEntity(entity);  
+		    ((HttpEntityEnclosingRequestBase) request).setEntity(entity);  
 		    
 		    HttpResponse response = null;
 		    DefaultHttpClient httpClient = new DefaultHttpClient();
 		    HttpConnectionParams.setSoTimeout(httpClient.getParams(), 10*1000); 
 		    HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 10*1000); 
 
-		    response = httpClient.execute(request); 
+		    response = httpClient.execute((HttpUriRequest) request); 
 		
 		    InputStream in = response.getEntity().getContent();
 		    BufferedReader reader = new BufferedReader(new InputStreamReader(in));
@@ -97,8 +98,8 @@ public class AccountManagerAsyncTask extends AsyncTask<String, Integer, Boolean>
 		    while((line = reader.readLine()) != null){
 		        sb.append(line);
 		    }
-		    
-		    JSONObject jsonResponse = new JSONObject(sb.toString());
+		    		    
+		    jsonResponse = new JSONObject(sb.toString());
 		    Log.d(TAG, "Account Manager Response: " + jsonResponse);
 		    return true;
 			
@@ -110,10 +111,8 @@ public class AccountManagerAsyncTask extends AsyncTask<String, Integer, Boolean>
 	
 	@Override
 	protected void onPostExecute(Boolean result) {
-		super.onPostExecute(result);
-		
-		if(result) {
-			listener.accountManagerCallback("passwort", true, value);
-		}
+		super.onPostExecute(result);		
+		result = !jsonResponse.has("error_description") && result;
+		listener.accountManagerCallback(type, result, value);
 	}
 }

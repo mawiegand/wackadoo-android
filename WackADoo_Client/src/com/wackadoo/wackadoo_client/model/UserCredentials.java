@@ -13,7 +13,8 @@ public class UserCredentials {
 	private static final String TAG = UserCredentials.class.getSimpleName();
 
 	private Context context;
-	private String username, password, gcPlayerId, fbPlayerId, fbAccessToken, clientID, email;
+	private int gameId;
+	private String username, password, gcPlayerId, fbPlayerId, fbAccessToken, clientID, email, hostname;
 	private AccessToken accessToken;
 	private ClientCredentials clientCredentials;
 	private boolean generatedPassword = true;
@@ -83,6 +84,8 @@ public class UserCredentials {
 		email = myPrefs.getString("email", "");
 		password = myPrefs.getString("password", "");
 		generatedPassword = myPrefs.getBoolean("generatedPassword", true);
+		hostname = myPrefs.getString("hostname", "");
+		gameId = myPrefs.getInt("gameID", 0);
 	}
 	private void persistCredentials() {
 		SharedPreferences myPrefs = context.getSharedPreferences("wad_prefs", 0);
@@ -96,6 +99,8 @@ public class UserCredentials {
 		e.putBoolean("generatedPassword", generatedPassword);
 		e.putString("accesstoken", accessToken.getToken());
 		e.putString("expire_code", accessToken.getExpireCode());
+		e.putString("hostname", hostname);
+		e.putInt("gameId", gameId);
 		e.commit();
 	}
 
@@ -107,6 +112,24 @@ public class UserCredentials {
 		persistCredentials();
 	}
 	
+	public String getHostname() {
+		return hostname;
+	}
+
+	public void setHostname(String hostname) {
+		this.hostname = hostname;
+		persistCredentials();
+	}
+
+	public int getGameId() {
+		return gameId;
+	}
+
+	public void setGameId(int gameId) {
+		this.gameId = gameId;
+		persistCredentials();
+	}
+
 	public void generateNewAccessToken(String accessToken, String expiration) {
 		this.accessToken = new AccessToken();
 		this.accessToken.setToken(accessToken);
@@ -125,6 +148,8 @@ public class UserCredentials {
 		e.clear();
 		e.commit();
 	}
+
+
 
 	
 

@@ -13,6 +13,7 @@
     <string name="login_invalid_grant">E-Mail und/oder Passwort falsch!</string>
     <string name="server_communication">Verbinde zum Server</string>
     <string name="please_wait">Bitte warten&#8230;</string>
+    <string name="no_connection">Es besteht keine Internetverbindung</string>
     
     <!-- WebView -->
     <string name="dialog_return_startscreen_text">Willst du zum Startbildschirm zurückkehren?</string>
@@ -24,6 +25,13 @@
     <string name="selectgame_item_days_today">Startet heute!</string>
     <string name="selectgame_item_days_till_start">startet in %d Tagen</string>
     <string name="selectgame_item_days_finished">Spiel bereits beendet</string>
+    <string name="selectgame_game_full">Spiel ist voll</string>
+    <string name="selectgame_signup_disabled">Du kannst dich derzeit nicht anmelden!</string>
+    <string name="selectgame_signin_disabled">Du kannst dich derzeit nicht einloggen!</string>
+    <string name="selectgame_game_not_startet">Das Spiel hat noch nicht begonnen</string>
+    <string name="selectgame_game_finished">Spiel bereits beendet</string>
+    <string name="selectgame_game_login">Einloggen in Welt </string>
+    <string name="selectgame_create_account">Erstelle neuen Account in Welt </string>
      
     <!-- AccountManager -->
     <string name="account_change_password">Passwort ändern</string>
@@ -107,7 +115,7 @@
     <string name="infoscreen_wiki_btn">Wiki öffnen</string>
     <string name="infoscreen_copyright_btn">Copyright Hinweis</string>
     <string name="infoscreen_supported">Unterstützt von</string>
-   	<string name="infoscreen_copyright">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata </string>
-   	<string name="infoscreen_contributors">Contributors: Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd.</string>
+   	<string name="infoscreen_contributors">Beitragende: Anand, Jan-Niklas Bartholomäus, Max Buck, Christian Seidel, Matteo Bottin, David Canela, Patrick Fox, Maggie Jaglo, Jan Hendrik Kegel, Sascha Lange, Stefan Mattern, Thomas Mohr, Arno Möller, Christiane Lange, Hai Pham, Pikomi, Hajo Runne, Julian Schmid, Susan Tackenberg, Christian Wansart, Jupp Wegner, Marcel Wiegand </string>
+   	<string name="infoscreen_copyright">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd.</string>
    	
 </resources>
