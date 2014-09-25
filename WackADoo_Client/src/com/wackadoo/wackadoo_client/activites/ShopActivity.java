@@ -20,14 +20,13 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.AdapterView.OnItemLongClickListener;
 
 import com.android.vending.billing.IabHelper;
 import com.android.vending.billing.IabHelper.OnConsumeFinishedListener;
 import com.android.vending.billing.IabHelper.OnIabPurchaseFinishedListener;
 import com.android.vending.billing.IabResult;
 import com.android.vending.billing.Purchase;
-import com.android.vending.billing.SkuDetails;
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.adapter.ShopListViewAdapter;
 import com.wackadoo.wackadoo_client.adapter.ShopRowItem;
@@ -263,6 +262,7 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 		});
 	}
 	
+	// handles click on info button for category
 	private void openShopInfoFragment(String category) {
 		fragment = null;
 		
@@ -287,6 +287,7 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
         	.commit();
 	}
 	
+	// handles click on credit category --> Google Play
 	private void openCreditsFragment(ArrayList<ShopRowItem> rowItemsList) {
 		fragment = new ShopCreditsFragment(this, userCredentials, rowItemsList);
 		
@@ -314,90 +315,61 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 		new GetShopOffersAsyncTask(this, getApplicationContext(), getString(R.string.bonusOffersServerPath)).execute();
 		
 		//TODO:Remove!!!
-		this.getShopOffersCallback(new ArrayList<String>(), "/game_server/shop/bonus_offers");
+		getShopOffersCallback(new ArrayList<String>(), "/game_server/shop/bonus_offers");
 	}
 	
 	private void insertRowItemsInList(ArrayList<ShopRowItem> items, ListView list) {
 		ShopListViewAdapter adapter = new ShopListViewAdapter(this, R.layout.table_item_shop, items);
 		list.setAdapter(adapter);
-//		this.updateListContainers();
 		UtilityHelper.setListViewHeightBasedOnChildren(list);
 	}
 
-//	private void updateListContainers() {
-//		RelativeLayout listView = (RelativeLayout) findViewById(R.id.listViewContainer);
-//		RelativeLayout scroll = (RelativeLayout) findViewById(R.id.scrollViewContainer);
-//		listView.invalidate();
-//		listView.requestLayout();
-//		scroll.invalidate();
-//		scroll.requestLayout();
-//	}
-	
-	@Override
-	protected void onResume() {
-		super.onResume();
-		////TODO: Remove if not needed
-		};
-
+	// handle clicks on platinum account list
 	private void setUpListPlatinumAccount() {
-		listPlatinumAccount.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-		      @Override
-		      public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
-		    	  buyPlatinumAccount(parent.getItemAtPosition(position));
-		      }
+		listPlatinumAccount.setOnItemLongClickListener(new OnItemLongClickListener() {
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+				AlertDialog.Builder builder = new AlertDialog.Builder(ShopActivity.this);
+		    	builder.setMessage("Weiterleitung zum Platinum Account Item " +  (position+1))
+		  		       .setPositiveButton("Ok", null)
+		  			   .show();
+		  		// TODO buy platinum account
+		    	return true;
+			}
 		});
 	}
 	
+	// handle clicks on gold list
 	private void setUpListGold() {
-		listPlatinumAccount.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-		      @Override
-		      public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
-		    	  buyGold(parent.getItemAtPosition(position));
-		      }
+		listGold.setOnItemLongClickListener(new OnItemLongClickListener() {
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+				AlertDialog.Builder builder = new AlertDialog.Builder(ShopActivity.this);
+		    	builder.setMessage("Weiterleitung zum Gold Item " + (position+1))
+		  		       .setPositiveButton("Ok", null)
+		  			   .show();
+		  		// TODO buy gold
+		    	return true;
+			}
 		});
 	}
 	
+	// handle clicks on bonus list
 	private void setUpListBonus() {
-		listPlatinumAccount.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-		      @Override
-		      public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
-		    	  buyBonus(parent.getItemAtPosition(position));
-		      }
+		listBonus.setOnItemLongClickListener(new OnItemLongClickListener() {
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+				AlertDialog.Builder builder = new AlertDialog.Builder(ShopActivity.this);
+		    	builder.setMessage("Weiterleitung zum Bonus Item " + (position+1))
+		  		       .setPositiveButton("Ok", null)
+		  			   .show();
+		  		// TODO buy bonus
+		    	return true;
+			}
 		});
-	}
-	
-	private void buyBonus(Object itemAtPosition) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage("Nicht genug Credits!")
-			   .setPositiveButton("Ok", null)
-			   .show();
-		// TODO: buy bonus 
-	}
-	
-	private void buyPlatinumAccount(Object itemAtPosition) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage("Weiterleitung zum Platinum Account Kauf")
-			   .setPositiveButton("Ok", null)
-			   .show();
-		// TODO buy platinum method
-	}
-	
-	private void buyPlatinumCredits(Object itemAtPosition) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage("Weiterleitung zum Platinum Credits Kauf")
-			   .setPositiveButton("Ok", null)
-			   .show();
-		// TODO buy credits
-	}
-	
-	private void buyGold(Object itemAtPosition) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage("Weiterleitung zum Gold Kauf")
-			   .setPositiveButton("Ok", null)
-			   .show();
-		// TODO buy gold
 	}
 
+	// callback interface for GetShopOffersAsyncTask
 	@Override
 	public void getShopOffersCallback(List<String> offers, String offerType) {
 		
@@ -453,6 +425,7 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 		}
 	}	
 	
+	// generates list of ShopRowItem for given list of Strings
 	public ArrayList<ShopRowItem> generateRowItemsWithValues(List<String> offers, int leftImage, int rightImage) {
 		ArrayList<ShopRowItem> valuesToAdd = new ArrayList<ShopRowItem>();
 		
@@ -464,14 +437,14 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 		return valuesToAdd;
 	}
 
-	// Set up the standard server communiation dialog
+	// set up the standard server communiation dialog
 	private void setUpDialog() {
 		progressDialog = new ProgressDialog(this);
 		progressDialog.setTitle(getResources().getString(R.string.server_communication));
 		progressDialog.setMessage(getResources().getString(R.string.please_wait));
 	}
 
-	// set up google play store billing
+	// play store: set up store billing
 	private void setUpBilling(){
 		setUpDialog();
 		progressDialog.show();
@@ -504,7 +477,7 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
         });
 	}
 	
-	// fragment calls which product was clicked
+	// callback interface for credits fragment -> which product was clicked
 	public void creditsFragmentCallback(int clickedPackage) {
 		try {
 			JSONObject jsonItem = new JSONObject(stringProductList.get(clickedPackage));
@@ -516,18 +489,14 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 		}
 	}
 	
+	// play store: handle result of play store fragment
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		billingHelper.handleActivityResult(requestCode, resultCode, data);
-		
-    	// error = already owned -> consume item and buy again
-//        String purchaseData = data.getStringExtra("INAPP_PURCHASE_DATA");
-//        String dataSignature = data.getStringExtra("INAPP_DATA_SIGNATURE");
-//		Purchase purchase = new Purchase("android.text.purchased", purchaseData, dataSignature);
-		
 	}
 	
+	// play store: callback interface for billingHelper.getProductsAsyncInternal
 	@Override
 	public void getProductsCallback(Bundle skuDetails){
 		int response = skuDetails.getInt("RESPONSE_CODE");
@@ -544,7 +513,7 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 		}
 	}
 
-	// returns list of ShopRowItems for given list of json products
+	// play store: returns list of ShopRowItems for given list of json products
 	private ArrayList<ShopRowItem> produceRowItemList() {
 		ArrayList<ShopRowItem> rowItemList = new ArrayList<ShopRowItem>();
 		try {
@@ -562,6 +531,7 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 		return rowItemList;
 	}
 	
+	// play store: callback interface for finished purchase 
 	@Override
 	public void onIabPurchaseFinished(IabResult result, Purchase info) {
 		if(result.getResponse() == 7) {
@@ -574,6 +544,7 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 		}
 	}
 
+	// play store: callback interface for finshed consumption
 	@Override
 	public void onConsumeFinished(Purchase purchase, IabResult result) {
 		Log.d(TAG, "Consume Finished: " + result.getResponse());

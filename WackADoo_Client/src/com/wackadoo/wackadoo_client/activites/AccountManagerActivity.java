@@ -22,7 +22,6 @@ import com.wackadoo.wackadoo_client.helper.UtilityHelper;
 import com.wackadoo.wackadoo_client.interfaces.AccountManagerCallbackInterface;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
 import com.wackadoo.wackadoo_client.tasks.AccountManagerAsyncTask;
-import com.wackadoo.wackadoo_client.tasks.GameLoginAsyncTask;
 
 public class AccountManagerActivity extends Activity implements AccountManagerCallbackInterface{
 	
@@ -92,20 +91,20 @@ public class AccountManagerActivity extends Activity implements AccountManagerCa
 	}
     
 	private void addButtonListeners() {
-		if(this.userCredentials.isPasswordGenerated()) {
-			this.setUpPasswordButton();
-			this.passwordButtonVisible = true;
+		if(userCredentials.isPasswordGenerated()) {
+			setUpPasswordButton();
+			passwordButtonVisible = true;
 		} else {
-			this.passwordButtonVisible = false;
+			passwordButtonVisible = false;
 		}
-		if(this.userCredentials.getEmail().length() <= 0) {
-			this.setUpEmailButton();
-			this.emailButtonVisible = true;
+		if(userCredentials.getEmail().length() <= 0) {
+			setUpEmailButton();
+			emailButtonVisible = true;
 		} else {
-			this.emailButtonVisible = false;
+			emailButtonVisible = false;
 		}
-		this.setButtonVisibility(passwordButtonVisible, emailButtonVisible);
-		this.setUpSignOutButton();
+		setButtonVisibility(passwordButtonVisible, emailButtonVisible);
+		setUpSignOutButton();
 	}
 	
 	private void setButtonVisibility(boolean setPasswordButtonVisible, boolean emailButtonVisible) {
@@ -131,8 +130,7 @@ public class AccountManagerActivity extends Activity implements AccountManagerCa
 	}
 
 	private void setUpPasswordButton() {
-		this.passwordButton.setOnTouchListener(new View.OnTouchListener() {
-			
+		passwordButton.setOnTouchListener(new View.OnTouchListener() {
 			@SuppressLint("NewApi")
 			@Override
 			   public boolean onTouch(View v, MotionEvent event) {
@@ -143,50 +141,36 @@ public class AccountManagerActivity extends Activity implements AccountManagerCa
 		    				
 			    		case MotionEvent.ACTION_UP: 
 		    				passwordButton.setTextColor(getResources().getColor(R.color.textbox_orange));
+		    				showInputAlertDialogWithText(getResources().getString(R.string.alert_change_password), AlertCallback.Password);
 		    				break;
 				   }
-				   return false;
+				   return true;
 				}
 		   });
-		this.passwordButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				startChangePassword();
-			}
-
-		});
 	}
 
 	private void setUpEmailButton() {
-		this.setEmailButton.setOnTouchListener(new View.OnTouchListener() {
-			
+		setEmailButton.setOnTouchListener(new View.OnTouchListener() {
 			@SuppressLint("NewApi")
 			@Override
 			   public boolean onTouch(View v, MotionEvent event) {
-				   switch ( event.getAction() ) {
+				   switch (event.getAction()) {
 			    		case MotionEvent.ACTION_DOWN: 
 		    				setEmailButton.setTextColor(getResources().getColor(R.color.textbox_orange_active));
 		    				break;
 		    				
 			    		case MotionEvent.ACTION_UP: 
 			    			setEmailButton.setTextColor(getResources().getColor(R.color.textbox_orange));
+			    			showInputAlertDialogWithText(getResources().getString(R.string.alert_email_change), AlertCallback.Email);
 		    				break;
 				   }
-				   return false;
+				   return true;
 				}
 		   });
-		this.setEmailButton.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				startSetEmail();
-			}
-
-		});		
 	}
 
 	private void setUpSignOutButton() {
-		this.signOutButton.setOnTouchListener(new View.OnTouchListener() {
+		signOutButton.setOnTouchListener(new View.OnTouchListener() {
 			@SuppressLint("NewApi")
 			@Override
 			   public boolean onTouch(View v, MotionEvent event) {
@@ -197,28 +181,14 @@ public class AccountManagerActivity extends Activity implements AccountManagerCa
 
 			    		case MotionEvent.ACTION_UP: 
 			    			signOutButton.setTextColor(getResources().getColor(R.color.textbox_orange));
+			    			triggerSignOut();
 			    			break;
 				   }
-				   return false;
+				   return true;
 				}
 		   });
-		this.signOutButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				triggerSignOut();
-			}
-
-		});		
 	}
 
-	private void startChangePassword() {
-		this.showInputAlertDialogWithText(getResources().getString(R.string.alert_change_password), AlertCallback.Password);
-	}
-
-	private void startSetEmail() {
-		this.showInputAlertDialogWithText(getResources().getString(R.string.alert_email_change), AlertCallback.Email);
-	}
-	
 	private void triggerSignOut() {
 		DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
     	    @Override	
@@ -246,7 +216,6 @@ public class AccountManagerActivity extends Activity implements AccountManagerCa
 	}
 
 	private void loadCredentialsToUI() {
-
     	String username = userCredentials.getUsername();
     	String email = userCredentials.getEmail();
     	if(!username.isEmpty()) {
@@ -257,6 +226,7 @@ public class AccountManagerActivity extends Activity implements AccountManagerCa
     	}
 	}
 
+	// show dialog to change mail/password
     private void showInputAlertDialogWithText(String text, final AlertCallback callback) {
     	AlertDialog.Builder builder = new AlertDialog.Builder(this);
     	builder.setTitle(text);
@@ -267,7 +237,6 @@ public class AccountManagerActivity extends Activity implements AccountManagerCa
 		}
     	
     	builder.setView(input);
-
     	builder.setPositiveButton(getResources().getString(R.string.alert_ok_button), new DialogInterface.OnClickListener() { 
     	    @Override
     	    public void onClick(DialogInterface dialog, int which) {
@@ -284,10 +253,10 @@ public class AccountManagerActivity extends Activity implements AccountManagerCa
     	        dialog.cancel();
     	    }
     	});
-
     	builder.show();
     }
     
+    // check mail before changing it
     private void enteredNewEmail(String email) {
 		Log.d(TAG, "identifier vor aufruf task: " + userCredentials.getIdentifier());
 		if(UtilityHelper.isValidMail(email)){
@@ -297,6 +266,7 @@ public class AccountManagerActivity extends Activity implements AccountManagerCa
 		}
 	}
 	
+    // check password before changing it
 	private void enteredNewPassword(String password) {
 		if(password.length() > 5){
 			new AccountManagerAsyncTask(this, progressDialog, userCredentials, "password", password).execute();
@@ -305,6 +275,7 @@ public class AccountManagerActivity extends Activity implements AccountManagerCa
 		}
 	}
 	
+	// delete user credentials when signing out
 	private void signOut() {
 		userCredentials.clearAllCredentials();
 		userCredentials = new UserCredentials(getApplicationContext());
@@ -312,6 +283,7 @@ public class AccountManagerActivity extends Activity implements AccountManagerCa
 //		checkUserIsLoggedIn();
 	}
 
+	// callback interface for AccountManagerAsyncTask
 	@Override
 	public void accountManagerCallback(String type, Boolean result, String newValue) {
 		Toast toast = Toast.makeText(this, null, Toast.LENGTH_SHORT);

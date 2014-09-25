@@ -4,14 +4,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.ScrollView;
@@ -23,7 +21,6 @@ import com.wackadoo.wackadoo_client.adapter.GamesListViewAdapter;
 import com.wackadoo.wackadoo_client.helper.UtilityHelper;
 import com.wackadoo.wackadoo_client.interfaces.CharacterCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.CurrentGamesCallbackInterface;
-import com.wackadoo.wackadoo_client.model.CharacterInformation;
 import com.wackadoo.wackadoo_client.model.GameInformation;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
 import com.wackadoo.wackadoo_client.tasks.GetCharacterAsyncTask;
@@ -126,14 +123,13 @@ public class SelectGameActivity extends Activity implements CurrentGamesCallback
 					
 				// join world	
 				} else {
-					
 					userCredentials.setGameId(clickedGame.getId());
 					userCredentials.setHostname(clickedGame.getServer());
 					if (clickedGame.isJoined()) {
 						toast.setText(getResources().getString(R.string.selectgame_game_login) + clickedGame.getName());
 						finish();
-					}
-					else {
+					
+					} else {
 						toast.setText(getResources().getString(R.string.selectgame_create_account) + clickedGame.getName()); 
 						new GetCharacterAsyncTask(SelectGameActivity.this, userCredentials, clickedGame, true).execute();
 					}					
@@ -145,6 +141,7 @@ public class SelectGameActivity extends Activity implements CurrentGamesCallback
 		});
 	}
 
+	// callback interface for GetCurrentGamesAsyncTask
 	@Override
 	public void getCurrentGamesCallback(ArrayList<GameInformation> games) {
 		this.games = games;
@@ -154,6 +151,7 @@ public class SelectGameActivity extends Activity implements CurrentGamesCallback
 		UtilityHelper.setListViewHeightBasedOnChildren(listView);
 	}
 
+	// callback interface for GetCharacterAsyncTask
 	@Override
 	public void getCharacterCallback(GameInformation game, boolean createNew) {
 		if (createNew) {

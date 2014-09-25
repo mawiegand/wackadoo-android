@@ -73,7 +73,7 @@ public class MainActivity extends Activity implements
 	    // sound is off by default
 	    soundOn = false;
 	    
-	    // user logged outby default
+	    // user logged out by default
 	    loggedIn = false;
 
 	    // set up standard server communication dialog
@@ -91,8 +91,7 @@ public class MainActivity extends Activity implements
 	    setUpButtons();
 	    setUpPlayButtonAnimation();
 
-
-		// Start tracking
+		// start tracking
 		Sample.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.ZZZZZ"));
 		Sample.setServerSide(false);
 		Sample.setAppToken("wad-rt82-fhjk-18");
@@ -100,8 +99,7 @@ public class MainActivity extends Activity implements
 
 	}
 
-	
-
+	// start animation of play button
 	private void setUpPlayButtonAnimation() {
 		// start animation of glance
 		playBtn.setImageResource(R.anim.animationlist_loginbutton);
@@ -408,10 +406,8 @@ public class MainActivity extends Activity implements
 	
 	private void triggerFacebook() {
 		// TODO Login using Facebook
-		Toast toast = Toast.makeText(this,
-				"Facebook Login derzeit nicht möglich", Toast.LENGTH_SHORT);
+		Toast toast = Toast.makeText(this, "Facebook Login derzeit nicht möglich", Toast.LENGTH_SHORT);
 		toast.show();
-
 	}
 
 	private void triggerLogin() {
@@ -440,8 +436,7 @@ public class MainActivity extends Activity implements
 
 	private void triggerPlayGame() {
 		String accessToken = this.userCredentials.getAccessToken().getToken();
-		String tokenExpiration = this.userCredentials.getAccessToken()
-				.getExpireCode();
+		String tokenExpiration = this.userCredentials.getAccessToken().getExpireCode();
 		String userId = this.userCredentials.getIdentifier();
 		if(accessToken != null && tokenExpiration != null && !this.userCredentials.getAccessToken().isExpired()) {
 			startGame(accessToken, tokenExpiration, userId);
@@ -453,8 +448,7 @@ public class MainActivity extends Activity implements
 	}
 
 	private void startGame(String accessToken, String expiration, String userId) {
-		Intent intent = new Intent(MainActivity.this,
-				WackadooWebviewActivity.class);
+		Intent intent = new Intent(MainActivity.this, WackadooWebviewActivity.class);
 		Bundle bundle = new Bundle();
 		bundle.putString("accessToken", accessToken);
 		bundle.putString("expiration", expiration);
@@ -463,9 +457,6 @@ public class MainActivity extends Activity implements
 		intent.putExtras(bundle);
 		startActivity(intent);
 	}
-	
-
-
 
 	@Override
 	public void onRegistrationCompleted(String identifier, String clientID,	String nickname) {
@@ -476,6 +467,7 @@ public class MainActivity extends Activity implements
 		triggerGetGames();
 	}
 
+	// callback interface for GameLoginAsyncTask
 	@Override
 	public void loginCallback(boolean result, String accessToken, String expiration, String identifier, boolean restoreAccount) {
 		userCredentials.generateNewAccessToken(accessToken, expiration);
@@ -491,6 +483,7 @@ public class MainActivity extends Activity implements
 		updateUi();
 	}
 	
+	// callback interface for GetCurrentGamesAsyncTask
 	@Override
 	public void getCurrentGamesCallback(ArrayList<GameInformation> games) {
 		if (userCredentials.getHostname() == "" || !isGameOnline(games, userCredentials.getGameId())) {
@@ -504,6 +497,7 @@ public class MainActivity extends Activity implements
 		}		
 	}	
 	
+	// callback interface for GetCharacterAsyncTask
 	@Override
 	public void getCharacterCallback(GameInformation game, boolean createNew) {
 		userCredentials.setUsername(game.getCharacter().getName());
@@ -521,6 +515,8 @@ public class MainActivity extends Activity implements
 		return gameOnline;
 	}
 
+	// callback interface for error in GameLoginAsyncTask
+	// callback interface for error in GameLoginAsyncTask
 	@Override
 	public void loginCallbackError(String error, boolean restoreAccount) {}
 	
@@ -544,7 +540,7 @@ public class MainActivity extends Activity implements
 		}
 	}
 
-	// Set up the standard server communiation dialog
+	// set up the standard server communiation dialog
 	private void setUpDialog() {
 		progressDialog = new ProgressDialog(this);
 		progressDialog.setTitle(getResources().getString(R.string.server_communication));

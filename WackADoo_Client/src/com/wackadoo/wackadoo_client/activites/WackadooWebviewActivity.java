@@ -10,11 +10,6 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.WebChromeClient;
@@ -51,6 +46,7 @@ public class WackadooWebviewActivity extends Activity {
     	    metrics.widthPixels /= metrics.density;
 	        width = metrics.widthPixels;
 	        
+	        // test: rescale window after page is loaded
 	        webView.setWebViewClient(new WebViewClient() {
 	        	@Override
 	        	public void onPageFinished(WebView view, String url) {

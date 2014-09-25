@@ -9,6 +9,7 @@ import com.wackadoo.wackadoo_client.R;
 
 public class SplashActivity extends Activity {
 	
+	// timer for splash screen in ms
 	private static int SPLASH_TIMER = 500;
 	
 	@Override
