@@ -125,7 +125,7 @@
 		            android:id="@+id/infoscreen_contributors_spacer"
 		            android:layout_width="match_parent"
 		            android:layout_height="0dp"
-		            android:layout_weight="0.10"/>
+		            android:layout_weight="0.03"/>
 	            
                 <TextView 
                     android:id="@+id/infoscreen_contributors_text"
@@ -133,7 +133,7 @@
                     android:textSize="10sp"
                     android:layout_height="0dp"
                     android:layout_width="match_parent"
-                    android:layout_weight="0.20"
+                    android:layout_weight="0.27"
                     android:text="@string/infoscreen_contributors"/>
                 
 	            <LinearLayout 

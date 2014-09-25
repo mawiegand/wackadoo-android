@@ -54,7 +54,7 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 		signInButton = (Button) findViewById(R.id.signInButton);
 		passwordEditText = (EditText) findViewById(R.id.passwordField);
 		userNameEditText = (EditText) findViewById(R.id.usernameField);
-//		this.loginBtn = (LoginButton) findViewById(R.id.facebookButton);
+//		loginBtn = (LoginButton) findViewById(R.id.facebookButton);
 		createAccountButton = (Button) findViewById(R.id.createAccountButton);
 		restoreAccountButton = (Button) findViewById(R.id.recoverAccountButton);
 		backBtn = (TextView) findViewById(R.id.credentialscreenTopbarBack);
