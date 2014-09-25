@@ -59,13 +59,14 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	    StringBuilder sb = new StringBuilder();
 	
 	    String username, password;
-	    if(userCredentials.getEmail().length() > 0 && userCredentials.getPassword().length() > 0 && !restoreAccount) {
-	    	username = userCredentials.getEmail();
-	    	password = userCredentials.getPassword();
+	    if(userCredentials.getEmail().length() > 0) {
+	    	username = userCredentials.getEmail();	    	
 	    } else {
-	    	username = userCredentials.getIdentifier();
-	    	password = "egjzdsgt";
+	    	if (userCredentials.getUsername().length() > 0) username = userCredentials.getUsername();
+	    	else username = userCredentials.getIdentifier();	    	
 	    }
+	    if(userCredentials.getPassword().length() > 0) password = userCredentials.getPassword();
+	    else password = "egjzdsgt";
 	    
 	    List <NameValuePair> nameValuePairs = new ArrayList <NameValuePair> (7);
 		nameValuePairs.add(new BasicNameValuePair("client_id", "WACKADOO-IOS"));
@@ -137,7 +138,7 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
 					String accessToken = jsonResponse.getString("access_token");
 					String expiresIn = jsonResponse.getString("expires_in");
 					String identifier = jsonResponse.getString("user_identifer");
-					listener.loginCallback(accessToken, expiresIn, identifier, restoreAccount);
+					listener.loginCallback(result.booleanValue(), accessToken, expiresIn, identifier, restoreAccount);
 				}
 			}
 		} catch (Exception e) {

@@ -27,6 +27,7 @@ import android.widget.Toast;
 import com.fivedlab.sample.sample_java.Sample;
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.analytics.AutoPing;
+import com.wackadoo.wackadoo_client.helper.UtilityHelper;
 import com.wackadoo.wackadoo_client.interfaces.CharacterCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.CreateAccountCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.CurrentGamesCallbackInterface;
@@ -137,8 +138,13 @@ public class MainActivity extends Activity implements
 	protected void onResume() {
 		super.onResume();
 		this.userCredentials = new UserCredentials(getApplicationContext());
-		triggerLogin();
-	    triggerGetGames();
+		if (!UtilityHelper.isOnline(this)) {
+			Toast.makeText(getApplicationContext(), getResources().getString(R.string.no_connection), Toast.LENGTH_LONG).show();
+		}
+		else {
+			triggerLogin();
+			triggerGetGames();
+		}				
 	}
 	 
 	@Override
@@ -471,13 +477,14 @@ public class MainActivity extends Activity implements
 	}
 
 	@Override
-	public void loginCallback(String accessToken, String expiration, String identifier, boolean restoreAccount) {
+	public void loginCallback(boolean result, String accessToken, String expiration, String identifier, boolean restoreAccount) {
 		userCredentials.generateNewAccessToken(accessToken, expiration);
 		userCredentials.setIdentifier(identifier);
 		
 		triggerGetGames();
 		
-		Toast.makeText(getApplicationContext(), getResources().getString(R.string.login_success_toast), Toast.LENGTH_LONG).show();
+		if (result) Toast.makeText(getApplicationContext(), getResources().getString(R.string.login_success_toast), Toast.LENGTH_LONG).show();
+		else Toast.makeText(getApplicationContext(), getResources().getString(R.string.login_failed_toast), Toast.LENGTH_LONG).show();
 		
 		// TODO: loggedIn if GetGames failed?
 		loggedIn = true;
@@ -498,8 +505,9 @@ public class MainActivity extends Activity implements
 	}	
 	
 	@Override
-	public void getCharacterCallback(GameInformation game) {
-		
+	public void getCharacterCallback(GameInformation game, boolean createNew) {
+		userCredentials.setUsername(game.getCharacter().getName());
+		updateUi();
 	}
 	
 	private boolean isGameOnline(ArrayList<GameInformation> games, int gameId) {

@@ -23,6 +23,7 @@ import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
 import com.facebook.widget.LoginButton.UserInfoChangedCallback;
 import com.wackadoo.wackadoo_client.R;
+import com.wackadoo.wackadoo_client.helper.UtilityHelper;
 import com.wackadoo.wackadoo_client.interfaces.CreateAccountCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.GameLoginCallbackInterface;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
@@ -238,7 +239,8 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 	private void triggerLogin() {
 		if(userNameEditText.getText().length() > 0){
 			if(passwordEditText.getText().length() > 5) {
-				userCredentials.setEmail(this.userNameEditText.getText().toString());
+				if (UtilityHelper.isValidMail(userNameEditText.getText().toString())) userCredentials.setEmail(this.userNameEditText.getText().toString());
+				else userCredentials.setUsername(this.userNameEditText.getText().toString());
 				userCredentials.setPassword(this.passwordEditText.getText().toString());
 				progressDialog.show();
 				new GameLoginAsyncTask(this, getApplicationContext(), userCredentials, false, progressDialog).execute();
@@ -301,7 +303,7 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 	}
 	
 	@Override
-	public void loginCallback(String accessToken, String expiration, String userIdentifier, boolean restoreAccount) {
+	public void loginCallback(boolean result, String accessToken, String expiration, String userIdentifier, boolean restoreAccount) {
 		userCredentials.generateNewAccessToken(accessToken, expiration);
 		userCredentials.setClientID(userIdentifier);
 		

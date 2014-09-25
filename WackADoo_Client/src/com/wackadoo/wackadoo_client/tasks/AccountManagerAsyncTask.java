@@ -26,6 +26,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.interfaces.AccountManagerCallbackInterface;
@@ -111,7 +112,7 @@ public class AccountManagerAsyncTask extends AsyncTask<String, Integer, Boolean>
 	@Override
 	protected void onPostExecute(Boolean result) {
 		super.onPostExecute(result);		
-		result = !jsonResponse.has("error_description");
+		result = !jsonResponse.has("error_description") && result;
 		listener.accountManagerCallback(type, result, value);
 	}
 }

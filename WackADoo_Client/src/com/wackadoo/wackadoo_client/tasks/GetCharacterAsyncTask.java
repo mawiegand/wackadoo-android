@@ -86,8 +86,9 @@ public class GetCharacterAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	@Override
 	protected void onPostExecute(Boolean result) {
 		//Character is null if no character is found and createNew = false or if server timed out
+		game.setJoined(character != null);
 		game.setCharacter(character);
-		listener.getCharacterCallback(game);
+		listener.getCharacterCallback(game, createNew);
 	}
 	
 }

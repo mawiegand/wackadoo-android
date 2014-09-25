@@ -13,6 +13,7 @@
     <string name="login_invalid_grant">E-Mail und/oder Passwort falsch!</string>
     <string name="server_communication">Verbinde zum Server</string>
     <string name="please_wait">Bitte warten&#8230;</string>
+    <string name="no_connection">Es besteht keine Internetverbindung</string>
     
     <!-- WebView -->
     <string name="dialog_return_startscreen_text">Willst du zum Startbildschirm zurückkehren?</string>

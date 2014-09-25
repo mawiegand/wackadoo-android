@@ -126,12 +126,18 @@ public class SelectGameActivity extends Activity implements CurrentGamesCallback
 					
 				// join world	
 				} else {
-					if (clickedGame.isJoined()) toast.setText(getResources().getString(R.string.selectgame_game_login) + clickedGame.getName());
-					else toast.setText(getResources().getString(R.string.selectgame_create_account) + clickedGame.getName()); 
 					
 					userCredentials.setGameId(clickedGame.getId());
 					userCredentials.setHostname(clickedGame.getServer());
-					finish();
+					if (clickedGame.isJoined()) {
+						toast.setText(getResources().getString(R.string.selectgame_game_login) + clickedGame.getName());
+						finish();
+					}
+					else {
+						toast.setText(getResources().getString(R.string.selectgame_create_account) + clickedGame.getName()); 
+						new GetCharacterAsyncTask(SelectGameActivity.this, userCredentials, clickedGame, true).execute();
+					}					
+					
 				}
 				toast.show();
 				return true;
@@ -142,14 +148,17 @@ public class SelectGameActivity extends Activity implements CurrentGamesCallback
 	@Override
 	public void getCurrentGamesCallback(ArrayList<GameInformation> games) {
 		this.games = games;
-		for (int i = 0; i < games.size(); i++) if (games.get(i).isJoined()) new GetCharacterAsyncTask(this, userCredentials, games.get(i), false).execute();
+		for (int i = 0; i < games.size(); i++) new GetCharacterAsyncTask(this, userCredentials, games.get(i), false).execute();
 		GamesListViewAdapter adapter = new GamesListViewAdapter(getApplicationContext(), R.layout.table_item_game, games);
 		listView.setAdapter(adapter);
 		UtilityHelper.setListViewHeightBasedOnChildren(listView);
 	}
 
 	@Override
-	public void getCharacterCallback(GameInformation game) {
-		
+	public void getCharacterCallback(GameInformation game, boolean createNew) {
+		if (createNew) {
+			userCredentials.setUsername(game.getCharacter().getName());
+			finish();
+		}
 	}
 }
