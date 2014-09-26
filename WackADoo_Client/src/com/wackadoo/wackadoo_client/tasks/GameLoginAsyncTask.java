@@ -38,10 +38,13 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	private JSONObject jsonResponse;
 	private ProgressDialog progressDialog;
 	private boolean restoreAccount;
+
+	private boolean refresh;
     
-    public GameLoginAsyncTask(GameLoginCallbackInterface callback, Context context, UserCredentials userCredentials, boolean restoreAccount, ProgressDialog progressDialog) {
+    public GameLoginAsyncTask(GameLoginCallbackInterface callback, Context context, UserCredentials userCredentials, boolean restoreAccount, boolean refresh, ProgressDialog progressDialog) {
     	this.listener = callback;
     	this.context = context;
+    	this.refresh = refresh;
     	this.userCredentials = userCredentials;
     	this.restoreAccount = restoreAccount;
     	this.progressDialog = progressDialog;
@@ -132,13 +135,13 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
 		try {
 			if(result) {
 				if(jsonResponse.has("error")) {
-					listener.loginCallbackError(jsonResponse.getString("error"), restoreAccount);
+					listener.loginCallbackError(jsonResponse.getString("error"), restoreAccount, refresh);
 				
 				} else {
 					String accessToken = jsonResponse.getString("access_token");
 					String expiresIn = jsonResponse.getString("expires_in");
 					String identifier = jsonResponse.getString("user_identifer");
-					listener.loginCallback(result.booleanValue(), accessToken, expiresIn, identifier, restoreAccount);
+					listener.loginCallback(result.booleanValue(), accessToken, expiresIn, identifier, restoreAccount, refresh);
 				}
 			}
 		} catch (Exception e) {

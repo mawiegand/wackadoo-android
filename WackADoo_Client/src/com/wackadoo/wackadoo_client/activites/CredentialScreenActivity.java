@@ -227,7 +227,7 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 	}
 	
 	private void triggerRestoreAccount() {
-		new GameLoginAsyncTask(this, getApplicationContext(), userCredentials, true, progressDialog).execute();
+		new GameLoginAsyncTask(this, getApplicationContext(), userCredentials, true, false, progressDialog).execute();
 	}
 	
 	protected void triggerCreateAccount() {
@@ -243,7 +243,7 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 				else userCredentials.setUsername(this.userNameEditText.getText().toString());
 				userCredentials.setPassword(this.passwordEditText.getText().toString());
 				progressDialog.show();
-				new GameLoginAsyncTask(this, getApplicationContext(), userCredentials, false, progressDialog).execute();
+				new GameLoginAsyncTask(this, getApplicationContext(), userCredentials, false, false, progressDialog).execute();
 			} 
 			else {
 				Toast.makeText(getApplicationContext(), getResources().getString(R.string.credentials_password_too_short), Toast.LENGTH_SHORT).show();
@@ -303,7 +303,7 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 	}
 	
 	@Override
-	public void loginCallback(boolean result, String accessToken, String expiration, String userIdentifier, boolean restoreAccount) {
+	public void loginCallback(boolean result, String accessToken, String expiration, String userIdentifier, boolean restoreAccount, boolean refresh) {
 		userCredentials.generateNewAccessToken(accessToken, expiration);
 		userCredentials.setClientID(userIdentifier);
 		
@@ -312,7 +312,7 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 	}
 	
 	@Override
-	public void loginCallbackError(String error, boolean restoreAccount) {
+	public void loginCallbackError(String error, boolean restoreAccount, boolean refresh) {
 		if (restoreAccount) restoreAccount(false);
 		else {
 			if(error.equals("invalid_grant")) {

@@ -40,7 +40,7 @@ import com.wackadoo.wackadoo_client.tasks.GetCharacterAsyncTask;
 import com.wackadoo.wackadoo_client.tasks.GetCurrentGamesAsyncTask;
 
 public class MainActivity extends Activity implements
-		CreateAccountCallbackInterface, GameLoginCallbackInterface, CurrentGamesCallbackInterface, CharacterCallbackInterface {
+		CreateAccountCallbackInterface, GameLoginCallbackInterface, CurrentGamesCallbackInterface, CharacterCallbackInterface, Runnable {
 
 	private static final String TAG = MainActivity.class.getSimpleName();
 	
@@ -97,7 +97,8 @@ public class MainActivity extends Activity implements
 		Sample.setServerSide(false);
 		Sample.setAppToken("wad-rt82-fhjk-18");
 		AutoPing.getInstance().startAutoPing();
-
+		tokenHandler = new Handler();
+		tokenHandler.post(this);
 	}
 
 	
@@ -122,6 +123,8 @@ public class MainActivity extends Activity implements
 			customHandler.postDelayed(this, 6000);
 		}
 	};
+
+	private Handler tokenHandler;
 
 	private void setUpButtons() {
 		setUpPlayBtn();
@@ -422,14 +425,14 @@ public class MainActivity extends Activity implements
 		if(identifier.length() > 0 || accessToken.length() > 0 || email.length() > 0){
 			if(userCredentials.getAccessToken().isExpired()) {
 				progressDialog.show();
-				new GameLoginAsyncTask(this, getApplicationContext(), this.userCredentials, false, progressDialog).execute();
+				new GameLoginAsyncTask(this, getApplicationContext(), this.userCredentials, false, false, progressDialog).execute();
 			
 			} else {
 				loggedIn = true;
 			}
 		} else if (email.contains("generic") && email.contains("@5dlab.com") ) {
 			progressDialog.show();
-			new GameLoginAsyncTask(this, getApplicationContext(), this.userCredentials, false, progressDialog).execute();
+			new GameLoginAsyncTask(this, getApplicationContext(), this.userCredentials, false, false, progressDialog).execute();
 			
 		} else {
 			loggedIn = false;
@@ -448,7 +451,7 @@ public class MainActivity extends Activity implements
 		
 		} else {
 			progressDialog.show();
-			new GameLoginAsyncTask(this, getApplicationContext(), userCredentials, false, progressDialog).execute();
+			new GameLoginAsyncTask(this, getApplicationContext(), userCredentials, false, false, progressDialog).execute();
 		}
 	}
 
@@ -459,7 +462,8 @@ public class MainActivity extends Activity implements
 		bundle.putString("accessToken", accessToken);
 		bundle.putString("expiration", expiration);
 		bundle.putString("userId", userId);
-		bundle.putString("hostname", userCredentials.getHostname());
+		bundle.putString("hostname", "https://gs05.wack-a-doo.de");
+		//bundle.putString("hostname", userCredentials.getHostname());
 		intent.putExtras(bundle);
 		startActivity(intent);
 	}
@@ -477,9 +481,11 @@ public class MainActivity extends Activity implements
 	}
 
 	@Override
-	public void loginCallback(boolean result, String accessToken, String expiration, String identifier, boolean restoreAccount) {
+	public void loginCallback(boolean result, String accessToken, String expiration, String identifier, boolean restoreAccount, boolean refresh) {
 		userCredentials.generateNewAccessToken(accessToken, expiration);
 		userCredentials.setIdentifier(identifier);
+		
+		if (refresh) return;
 		
 		triggerGetGames();
 		
@@ -522,7 +528,7 @@ public class MainActivity extends Activity implements
 	}
 
 	@Override
-	public void loginCallbackError(String error, boolean restoreAccount) {}
+	public void loginCallbackError(String error, boolean restoreAccount, boolean refresh) {}
 	
 	// update views in UI depending on user logged in or not
 	private void updateUi() {
@@ -549,6 +555,17 @@ public class MainActivity extends Activity implements
 		progressDialog = new ProgressDialog(this);
 		progressDialog.setTitle(getResources().getString(R.string.server_communication));
 		progressDialog.setMessage(getResources().getString(R.string.please_wait));
+	}
+
+
+
+	
+	@Override
+	public void run() {
+		if (userCredentials.getAccessToken().isExpired() && (userCredentials.getUsername().length() > 0 || userCredentials.getEmail().length() > 0)) 
+			new GameLoginAsyncTask(this, getApplicationContext(), this.userCredentials, false, true, progressDialog).execute();
+		Log.d(TAG, "Token refresh handler");
+		tokenHandler.postDelayed(this, 10000);		
 	}
 
 

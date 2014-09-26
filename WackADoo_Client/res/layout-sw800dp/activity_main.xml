@@ -1,8 +1,8 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:background="@color/white"
     tools:context="com.wackadoo.wackadoo_client.activites.MainActivity"
     tools:ignore="MergeRootFrame" >
@@ -69,8 +69,8 @@
 	      				android:layout_weight="0.5">
 		    			
 		    			<ImageButton
-		    	    		android:id="@+id/shopButton"
 							style="@style/customImageButtonStyle"	
+		    	    		android:id="@+id/shopButton"
 		    	    		android:src="@drawable/title_shop_button" />
 		    			
 	    			</RelativeLayout>
@@ -177,11 +177,11 @@
 			    	android:orientation="horizontal"
 			    	android:weightSum="1.0">
 	    		    
-	 	            <RelativeLayout 
-			       		android:id="@+id/characterFrameSpacer" 
-				        android:layout_width="0dp"
-				        android:layout_weight="0.25"
-			            android:layout_height="match_parent"/>
+	 	            <RelativeLayout
+	 	                android:id="@+id/characterFrameSpacer"
+	 	                android:layout_width="0dp"
+	 	                android:layout_height="match_parent"
+	 	                android:layout_weight="0.25" />
 				 	
 	 	            <LinearLayout 
 			       		android:id="@+id/characterFrameContainer" 
@@ -195,7 +195,7 @@
 	 	              	    android:id="@+id/characterFrameContainerSpacer"
 	 	              	    android:layout_width="match_parent"
 	 	              	    android:layout_height="0px"
-	 	              	    android:layout_weight="0.18" />
+	 	              	    android:layout_weight="0.31" />
 	    		    	
 	 	              	<FrameLayout 
 	 	              	    android:layout_width="wrap_content"
@@ -209,14 +209,14 @@
 		 	              	    android:src="@drawable/standard_character_pic"
 		 	              	    android:visibility="invisible"/>
 		 	                
-		 	                <Button 
-				 	    		android:id="@+id/characterFrame"
-		 	                    android:layout_height="match_parent"
-		 	                    android:layout_width="match_parent"
-					 	    	android:background="@drawable/title_character_frame"
-					 	    	android:text="@string/credentials_headline"
-					 	    	android:textSize="12sp"
-					 	    	android:textColor="@color/white"/> 
+		 	                <Button
+		 	                    android:id="@+id/characterFrame"
+		 	                    android:layout_width="124dp"
+		 	                    android:layout_height="153dp"
+		 	                    android:background="@drawable/title_character_frame"
+		 	                    android:text="@string/credentials_headline"
+		 	                    android:textColor="@color/white"
+		 	                    android:textSize="12sp" />
 					 	    	
 	 	              	    <TextView 
 	 	              	        android:id="@+id/characterFrameTextview"
@@ -245,7 +245,7 @@
 			 	                android:id="@+id/accountmanagerButtonVerticalSpacer"
 			 	                android:layout_width="match_parent"
 			 	                android:layout_height="0dp"
-			 	                android:layout_weight="0.20" />
+			 	                android:layout_weight="0.35" />
 			 	            
 			 	            <RelativeLayout 
 			       				android:id="@+id/accountmanagerButtonVerticalContainer" 
@@ -255,11 +255,13 @@
 			            		android:layout_gravity="center" >
 			    					
 			 	        		<ImageButton
+			 	        		    android:id="@+id/accountmanagerButton"
 			 	        		    style="@style/customImageButtonStyle"
-					 	    		android:id="@+id/accountmanagerButton"
-						 	    	android:scaleType="fitStart"
-						 	    	android:layout_centerInParent="true"
-						 	    	android:src="@drawable/title_change_button"/>
+			 	        		    android:layout_alignParentTop="true"
+			 	        		    android:layout_centerHorizontal="true"
+			 	        		    android:scaleType="fitStart"
+			 	        		    android:src="@drawable/title_change_button" />
+
 				 	   		</RelativeLayout>
 				 	 	</LinearLayout>    
 			 	    </RelativeLayout>
@@ -272,11 +274,11 @@
 		    			android:layout_weight="0.07"
 		    			android:weightSum="1.0">
 		    			
-		 	            <RelativeLayout 
-		       				android:id="@+id/chooseworldButtonVerticalSpacer" 
-			        		android:layout_width="match_parent"
-				 	    	android:layout_height="0dp"
-				 	    	android:layout_weight="0.08" />
+		 	            <RelativeLayout
+		 	                android:id="@+id/chooseworldButtonVerticalSpacer"
+		 	                android:layout_width="match_parent"
+		 	                android:layout_height="0dp"
+		 	                android:layout_weight="0.36" />
 		 	            
 		 	            <RelativeLayout 
 		       				android:id="@+id/chooseworldButtonVerticalContainer" 
@@ -284,13 +286,14 @@
 				 	    	android:layout_height="0dp"
 				 	    	android:layout_weight="0.75"
 		            		android:layout_gravity="top" >
-		 	        		
+
 		 	        		<ImageButton
+		 	        		    android:id="@+id/chooseworldButton"
 		 	        		    style="@style/customImageButtonStyle"
-				 	    		android:id="@+id/chooseworldButton"
-					 	    	android:scaleType="fitStart"
-					 	    	android:layout_centerInParent="true"
-					 	    	android:src="@drawable/title_changegame_button"/>
+		 	        		    android:layout_alignParentLeft="true"
+		 	        		    android:layout_alignParentTop="true"
+		 	        		    android:scaleType="fitStart"
+		 	        		    android:src="@drawable/title_changegame_button" />
 		 	        		
 			 	   		</RelativeLayout>
 			 	   	</LinearLayout> 
@@ -356,24 +359,27 @@
 		    				android:orientation="vertical"
 		    				android:weightSum="1.0">
 			    		    
-				  		    <RelativeLayout 
-			     				android:id="@+id/facebookSpacer" 
-				    			android:layout_width="match_parent"
-				    			android:layout_weight="0.66"
-			        			android:layout_height="0dp">
+				  		    <RelativeLayout
+				  		        android:id="@+id/facebookSpacer"
+				  		        android:layout_width="match_parent"
+				  		        android:layout_height="0dp"
+				  		        android:layout_weight="0.67" >
+
 							</RelativeLayout>
 				 		    
 				 		    <RelativeLayout 
 			       				android:id="@+id/facebookButtonVerticalContainer" 
 				        		android:layout_width="wrap_content"
-				        		android:layout_weight="0.35"
+				        		android:layout_weight="0.32"
 			            		android:layout_height="0dp"
 			            		android:layout_gravity="center">
 				 		    		
 				 		    		<ImageButton
-					 	    			style="@style/customImageButtonStyle"
-					 	    			android:id="@+id/facebookButton"
-					 	    			android:src="@drawable/title_facebook_button"/>
+				 		    		    android:id="@+id/facebookButton"
+				 		    		    style="@style/customImageButtonStyle"
+				 		    		    android:layout_alignParentTop="true"
+				 		    		    android:src="@drawable/title_facebook_button" />
+
 				 		    </RelativeLayout>
 				 		</LinearLayout>
 			 		</RelativeLayout>
