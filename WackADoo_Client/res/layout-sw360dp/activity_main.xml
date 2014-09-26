@@ -195,7 +195,7 @@
 	 	              	    android:id="@+id/characterFrameContainerSpacer"
 	 	              	    android:layout_width="match_parent"
 	 	              	    android:layout_height="0px"
-	 	              	    android:layout_weight="0.22" />
+	 	              	    android:layout_weight="0.23" />
 	    		    	
 	 	              	<FrameLayout 
 	 	              	    android:layout_width="wrap_content"
@@ -209,14 +209,14 @@
 		 	              	    android:src="@drawable/standard_character_pic"
 		 	              	    android:visibility="invisible"/>
 		 	                
-		 	                <Button 
-				 	    		android:id="@+id/characterFrame"
-		 	                    android:layout_height="match_parent"
+		 	                <Button
+		 	                    android:id="@+id/characterFrame"
 		 	                    android:layout_width="match_parent"
-					 	    	android:background="@drawable/title_character_frame"
-					 	    	android:text="@string/credentials_headline"
-					 	    	android:textSize="12sp"
-					 	    	android:textColor="@color/white"/> 
+		 	                    android:layout_height="wrap_content"
+		 	                    android:background="@drawable/title_character_frame"
+		 	                    android:text="@string/credentials_headline"
+		 	                    android:textColor="@color/white"
+		 	                    android:textSize="12sp" />
 					 	    	
 	 	              	    <TextView 
 	 	              	        android:id="@+id/characterFrameTextview"
@@ -245,7 +245,7 @@
 			 	                android:id="@+id/accountmanagerButtonVerticalSpacer"
 			 	                android:layout_width="match_parent"
 			 	                android:layout_height="0dp"
-			 	                android:layout_weight="0.24" />
+			 	                android:layout_weight="0.26" />
 			 	            
 			 	            <RelativeLayout 
 			       				android:id="@+id/accountmanagerButtonVerticalContainer" 
@@ -276,7 +276,7 @@
 		 	                android:id="@+id/chooseworldButtonVerticalSpacer"
 		 	                android:layout_width="match_parent"
 		 	                android:layout_height="0dp"
-		 	                android:layout_weight="0.22" />
+		 	                android:layout_weight="0.20" />
 		 	            
 		 	            <RelativeLayout 
 		       				android:id="@+id/chooseworldButtonVerticalContainer" 
