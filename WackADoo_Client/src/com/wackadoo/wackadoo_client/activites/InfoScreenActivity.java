@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.widget.TextView;
 
 import com.wackadoo.wackadoo_client.R;
@@ -20,22 +21,57 @@ public class InfoScreenActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_infoscreen);
 		
-		setUpButtons();
+		supportBtn = (TextView) findViewById(R.id.infoscreen_supportbtn);
+		websiteBtn = (TextView) findViewById(R.id.infoscreen_websitebtn);
+		wikiBtn = (TextView) findViewById(R.id.infoscreen_wikibtn);
+		copyrightBtn = (TextView) findViewById(R.id.infoscreen_copyright_btn);
+		
+		setUpBackBtn();
+		setUpLinkBtns();
 	}
 	
-	private void setUpButtons() {
-		setUpBackBtn();
-		setUpSupportBtn();
-		setUpWebsiteBtn();
-		setUpWikiBtn();
-		setUpCopyrightBtn();
-		
+	private void setUpLinkBtns() {
+		OnTouchListener touchListener = new OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent e) {
+				int action = e.getActionMasked();
+				if(action == MotionEvent.ACTION_DOWN) {
+					((TextView) v).setTextColor(getResources().getColor(R.color.textbox_orange_active));
+				
+				} else if (action == MotionEvent.ACTION_CANCEL) {
+					((TextView) v).setTextColor(getResources().getColor(R.color.textbox_orange));
+					
+				} else if(action == MotionEvent.ACTION_UP){
+					((TextView) v).setTextColor(getResources().getColor(R.color.textbox_orange));
+					
+					switch(v.getId()) {
+						case R.id.infoscreen_supportbtn:
+							break;
+							
+						case R.id.infoscreen_websitebtn:
+							showWebsite();
+							break;
+							
+						case R.id.infoscreen_wikibtn:
+							showWiki();
+							break;
+							
+						case R.id.infoscreen_copyright_btn:
+							showCopyrightDialog();
+							break;
+					}
+				}
+				return true;
+			}
+		};
+		supportBtn.setOnTouchListener(touchListener);
+		websiteBtn.setOnTouchListener(touchListener);
+		wikiBtn.setOnTouchListener(touchListener);
+		copyrightBtn.setOnTouchListener(touchListener);
 	}
 	
 	private void setUpBackBtn() {
 		backBtn = (TextView) findViewById(R.id.infoscreenTopbarBack);
-		
-		backBtn.setEnabled(true);
 		backBtn.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent e) {
@@ -46,130 +82,12 @@ public class InfoScreenActivity extends Activity {
 
 		    		case MotionEvent.ACTION_UP: 
 		    			backBtn.setTextColor(getResources().getColor(R.color.textbox_orange));
+		    			finish();
 		    			break;
 			    }
-				return false;
+				return true;
 			}
 		});
-		   
-		backBtn.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				finish();
-			}
-	   	});
-			
-	}
-
-	private void setUpCopyrightBtn() {
-		copyrightBtn = (TextView) findViewById(R.id.infoscreen_copyright_btn);
-		
-		copyrightBtn.setEnabled(true);
-		copyrightBtn.setOnTouchListener(new View.OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent e) {
-				switch (e.getAction()) {
-		    		case MotionEvent.ACTION_DOWN: 
-		    			copyrightBtn.setTextColor(getResources().getColor(R.color.textbox_orange_active));
-		    			break;
-
-		    		case MotionEvent.ACTION_UP: 
-		    			copyrightBtn.setTextColor(getResources().getColor(R.color.textbox_orange));
-		    			break;
-			    }
-				return false;
-			}
-		});
-		   
-		copyrightBtn.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				showCopyrightDialog();
-			}
-	   	});
-	}
-
-	private void setUpSupportBtn() {
-		supportBtn = (TextView) findViewById(R.id.infoscreen_supportbtn);
-		
-		supportBtn.setEnabled(true);
-		supportBtn.setOnTouchListener(new View.OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent e) {
-				switch (e.getAction()) {
-		    		case MotionEvent.ACTION_DOWN: 
-		    			supportBtn.setTextColor(getResources().getColor(R.color.textbox_orange_active));
-		    			break;
-
-		    		case MotionEvent.ACTION_UP: 
-		    			supportBtn.setTextColor(getResources().getColor(R.color.textbox_orange));
-		    			break;
-			    }
-				return false;
-			}
-		});
-		   
-		supportBtn.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-			}
-	   	});
-	}
-
-	private void setUpWebsiteBtn() {
-		websiteBtn = (TextView) findViewById(R.id.infoscreen_websitebtn);
-		
-		websiteBtn.setEnabled(true);
-		websiteBtn.setOnTouchListener(new View.OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent e) {
-				switch (e.getAction()) {
-		    		case MotionEvent.ACTION_DOWN: 
-		    			websiteBtn.setTextColor(getResources().getColor(R.color.textbox_orange_active));
-		    			break;
-
-		    		case MotionEvent.ACTION_UP: 
-		    			websiteBtn.setTextColor(getResources().getColor(R.color.textbox_orange));
-		    			break;
-			    }
-				return false;
-			}
-		});
-		   
-		websiteBtn.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				showWebsite();
-			}
-	   	});
-	}
-
-	private void setUpWikiBtn() {
-		wikiBtn = (TextView) findViewById(R.id.infoscreen_wikibtn);
-		
-		wikiBtn.setEnabled(true);
-		wikiBtn.setOnTouchListener(new View.OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent e) {
-				switch (e.getAction()) {
-		    		case MotionEvent.ACTION_DOWN: 
-		    			wikiBtn.setTextColor(getResources().getColor(R.color.textbox_orange_active));
-		    			break;
-
-		    		case MotionEvent.ACTION_UP: 
-		    			wikiBtn.setTextColor(getResources().getColor(R.color.textbox_orange));
-		    			break;
-			    }
-				return false;
-			}
-		});
-		   
-		wikiBtn.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				showWiki();
-			}
-	   	});
 	}
 
     private void showCopyrightDialog() {

@@ -56,7 +56,7 @@ public class ShopListViewAdapter extends ArrayAdapter<ShopRowItem> implements On
         if(rowItem.getIconImageId() != 0){
         	holder.imageView.setImageResource(rowItem.getIconImageId());
         } else {
-        	holder.imageView.setVisibility(View.GONE);;
+        	holder.imageView.setVisibility(View.GONE);
         }
          
         convertView.setOnTouchListener(this);

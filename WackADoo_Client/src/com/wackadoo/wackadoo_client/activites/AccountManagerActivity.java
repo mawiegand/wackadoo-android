@@ -61,7 +61,6 @@ public class AccountManagerActivity extends Activity implements AccountManagerCa
     }
 	
     private void setUpBackBtn() {
-		backBtn.setEnabled(true);
 		backBtn.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent e) {
@@ -76,16 +75,10 @@ public class AccountManagerActivity extends Activity implements AccountManagerCa
 					
 				case MotionEvent.ACTION_UP: 
 					backBtn.setTextColor(getResources().getColor(R.color.textbox_orange));
+					AccountManagerActivity.this.finish();
 					break;
 				}
-				return false;
-			}
-		});
-		
-		backBtn.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				finish();
+				return true;
 			}
 		});
 	}

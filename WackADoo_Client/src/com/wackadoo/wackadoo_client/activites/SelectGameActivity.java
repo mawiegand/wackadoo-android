@@ -42,7 +42,7 @@ public class SelectGameActivity extends Activity implements CurrentGamesCallback
 		
 		games = new ArrayList<GameInformation>();
 		
-		setUpButtons();
+		setUpDoneBtn();
 		setUpListView();
 	
 		// TODO: find a nicer solution for this hack. problem: scrollview is not scrolled to top on start of activity
@@ -57,13 +57,8 @@ public class SelectGameActivity extends Activity implements CurrentGamesCallback
 		new GetCurrentGamesAsyncTask(this, getApplicationContext(), userCredentials).execute();
 	}
 	
-	private void setUpButtons() {
-		setUpDoneBtn();
-	}
-	
 	private void setUpDoneBtn() {
 		doneBtn = (TextView) findViewById(R.id.selectgamesTopbarDone);
-		
 		doneBtn.setOnTouchListener(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
@@ -76,16 +71,10 @@ public class SelectGameActivity extends Activity implements CurrentGamesCallback
 						
 					case MotionEvent.ACTION_UP:
 						doneBtn.setTextColor(getResources().getColor(R.color.textbox_orange));
+						finish();
 						break;
 				}
-				return false;
-			}
-		});
-		
-		doneBtn.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				finish();
+				return true;
 			}
 		});
 	}

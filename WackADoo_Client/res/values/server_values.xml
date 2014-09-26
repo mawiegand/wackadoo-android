@@ -23,9 +23,9 @@
     <!--  https://gs06.wack-a-doo.de/game_server/action/fundamental/change_character_password_actions -->
     
     <!-- Shop -->
+    <string name="goldFrogsServerPath">/game_server/shop/resource_offers</string>
+    <string name="platinumAccountServerPath">/game_server/shop/platinum_offers</string>
     <string name="bonusOffersServerPath">/game_server/shop/bonus_offers</string>
-    <string name="platinumCreditsServerPath">/game_server/shop/bonus_offers</string>
-    <string name="goldFrogsServerPath">/game_server/shop/bonus_offers</string>
-    <string name="platinumAccountServerPath">/game_server/shop/bonus_offers</string>
+    <string name="platinumCreditsServerPath">/game_server/shop/special_offers</string>
     <!-- https://secure.bytro.com/index.php?eID=api&key=wackadooShop&action=processPayment -->
 </resources>

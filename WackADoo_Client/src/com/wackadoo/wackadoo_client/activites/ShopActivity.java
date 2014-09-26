@@ -1,6 +1,8 @@
- package com.wackadoo.wackadoo_client.activites;
+package com.wackadoo.wackadoo_client.activites;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.json.JSONException;
@@ -15,12 +17,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemLongClickListener;
 
 import com.android.vending.billing.IabHelper;
 import com.android.vending.billing.IabHelper.OnConsumeFinishedListener;
@@ -44,7 +48,8 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 	
 	private TextView doneBtn;
 	private ImageButton platinumCreditsInfoBtn, goldInfoBtn, platinumAccountInfoBtn, bonusInfoBtn;
-	private ListView listPlatinumAccount, listPlatinumCredits, listGold, listBonus;
+	private ListView listViewPlatinumAccount, listViewGold, listViewBonus;
+	private List<ShopRowItem> listGold, listAccount, listBonus;
 	private Fragment fragment;
 	private UserCredentials userCredentials;
 	private ProgressDialog progressDialog;	
@@ -64,10 +69,9 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
         platinumAccountInfoBtn = (ImageButton) findViewById(R.id.platinumAccountInfoBtn);
         bonusInfoBtn = (ImageButton) findViewById(R.id.bonusInfoBtn);
         
-        listPlatinumAccount = (ListView) findViewById(R.id.listPlatinumAccount);
-        listPlatinumCredits = (ListView) findViewById(R.id.listPlatinumCredits);
-        listGold = (ListView) findViewById(R.id.listGold);
-        listBonus = (ListView) findViewById(R.id.listBonus);
+        listViewPlatinumAccount = (ListView) findViewById(R.id.listPlatinumAccount);
+        listViewGold = (ListView) findViewById(R.id.listGold);
+        listViewBonus = (ListView) findViewById(R.id.listBonus);
 
         setUpBtns();
         loadShopOffersFromServer(); 
@@ -83,160 +87,66 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 	
 	public void setUpBtns() {
 		setUpDoneBtn();
-		setUpPlatinumCreditsInfoBtn();
-		setUpGoldInfoBtn();
-		setUpPlatinumAccountInfoBtn();
-		setUpBonusInfoBtn();
 		setUpCreditsBtn();
+		setUpInfoBtns();
 	}
 	
 	private void setUpDoneBtn() {
-		doneBtn.setEnabled(true);
 		doneBtn.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent e) {
-				   switch (e.getAction()) {
-			    		case MotionEvent.ACTION_DOWN: 
-			    			doneBtn.setTextColor(getResources().getColor(R.color.textbox_orange_active));
-			    			break;
-	
-			    		case MotionEvent.ACTION_UP: 
-			    			doneBtn.setTextColor(getResources().getColor(R.color.textbox_orange));
-			    			break;
-				   }
-				   return false;
-				}
-		});
-		   
-		doneBtn.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				finish();
-			}
-	   	});
-   
-	}
-	
-	private void setUpPlatinumCreditsInfoBtn() {
-		platinumCreditsInfoBtn.setEnabled(true);
-		platinumCreditsInfoBtn.setOnTouchListener(new View.OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent e) {
-				   switch (e.getAction()) {
-			    		case MotionEvent.ACTION_DOWN: 
-			    			platinumCreditsInfoBtn.setImageResource(R.drawable.title_info_button_active);
-			    			break;
-			    			
-			    		case MotionEvent.ACTION_CANCEL: 
-			    			platinumCreditsInfoBtn.setImageResource(R.drawable.title_info_button);
-			    			break;
-	
-			    		case MotionEvent.ACTION_UP: 
-			    			platinumCreditsInfoBtn.setImageResource(R.drawable.title_info_button);
-			    			break;
-				   }
-				   return false;
-				}
-		});
-		   
-		platinumCreditsInfoBtn.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				openShopInfoFragment("platinumCredits");
-			}
-	   	});
-   
-	}
-	
-	private void setUpGoldInfoBtn() {
-		goldInfoBtn.setEnabled(true);
-		goldInfoBtn.setOnTouchListener(new View.OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent e) {
 				switch (e.getAction()) {
-				case MotionEvent.ACTION_DOWN: 
-					goldInfoBtn.setImageResource(R.drawable.title_info_button_active);
-					break;
-					
-				case MotionEvent.ACTION_CANCEL: 
-					goldInfoBtn.setImageResource(R.drawable.title_info_button);
-					break;
-					
-				case MotionEvent.ACTION_UP: 
-					goldInfoBtn.setImageResource(R.drawable.title_info_button);
-					break;
+		    		case MotionEvent.ACTION_DOWN: 
+		    			doneBtn.setTextColor(getResources().getColor(R.color.textbox_orange_active));
+		    			break;
+	
+		    		case MotionEvent.ACTION_UP: 
+		    			doneBtn.setTextColor(getResources().getColor(R.color.textbox_orange));
+		    			ShopActivity.this.finish();
+		    			break;
 				}
-				return false;
-			}
-		});
-		
-		goldInfoBtn.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				openShopInfoFragment("gold");
-			}
-		});
-		
-	}
-		
-	private void setUpPlatinumAccountInfoBtn() {
-		platinumAccountInfoBtn.setEnabled(true);
-		platinumAccountInfoBtn.setOnTouchListener(new View.OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent e) {
-				switch (e.getAction()) {
-				case MotionEvent.ACTION_DOWN: 
-					platinumAccountInfoBtn.setImageResource(R.drawable.title_info_button_active);
-					break;
-					
-				case MotionEvent.ACTION_CANCEL: 
-					platinumAccountInfoBtn.setImageResource(R.drawable.title_info_button);
-					break;
-					
-				case MotionEvent.ACTION_UP: 
-					platinumAccountInfoBtn.setImageResource(R.drawable.title_info_button);
-					break;
-				}
-				return false;
-			}
-		});
-		
-		platinumAccountInfoBtn.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				openShopInfoFragment("platinumAccount");
+				return true;
 			}
 		});
 	}
 	
-	private void setUpBonusInfoBtn() {
-		bonusInfoBtn.setEnabled(true);
-		bonusInfoBtn.setOnTouchListener(new View.OnTouchListener() {
+	// touch listener for info buttons
+	private void setUpInfoBtns() {
+		OnTouchListener touchListener = new OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent e) {
-				switch (e.getAction()) {
-				case MotionEvent.ACTION_DOWN: 
-					bonusInfoBtn.setImageResource(R.drawable.title_info_button_active);
-					break;
+				int action = e.getActionMasked(); 
+				
+				if(action == MotionEvent.ACTION_DOWN) {
+					((ImageView) v).setImageResource(R.drawable.title_info_button_active);
 					
-				case MotionEvent.ACTION_CANCEL: 
-					bonusInfoBtn.setImageResource(R.drawable.title_info_button);
-					break;
+				} else if(action == MotionEvent.ACTION_CANCEL) {
+					((ImageView) v).setImageResource(R.drawable.title_info_button);
 					
-				case MotionEvent.ACTION_UP: 
-					bonusInfoBtn.setImageResource(R.drawable.title_info_button);
-					break;
+				} else if((action == MotionEvent.ACTION_UP)) {
+					((ImageView) v).setImageResource(R.drawable.title_info_button);
+					switch(v.getId()) {
+		    			case R.id.platinumCreditsInfoBtn:
+		    				openShopInfoFragment("platinumCredits");
+		    				break;
+		    			case R.id.goldInfoBtn:
+		    				openShopInfoFragment("gold");
+		    				break;
+		    			case R.id.platinumAccountInfoBtn:
+		    				openShopInfoFragment("platinumAccount");
+		    				break;
+		    			case R.id.bonusInfoBtn:
+		    				openShopInfoFragment("bonus");
+		    				break;
+					}
 				}
-				return false;
+				return true;
 			}
-		});
-		
-		bonusInfoBtn.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				openShopInfoFragment("bonus");
-			}
-		});
+		};
+		platinumCreditsInfoBtn.setOnTouchListener(touchListener);
+		goldInfoBtn.setOnTouchListener(touchListener);
+		platinumAccountInfoBtn.setOnTouchListener(touchListener);
+		bonusInfoBtn.setOnTouchListener(touchListener);
 	}
 	
 	private void setUpCreditsBtn() {
@@ -257,7 +167,7 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 		    		setUpBilling();
 		    		return false;
 		    	} 
-		    	return false;
+		    	return true;
 		    }
 		});
 	}
@@ -309,28 +219,30 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 	}
 	
 	private void loadShopOffersFromServer() {
-		new GetShopOffersAsyncTask(this, getApplicationContext(), getString(R.string.platinumCreditsServerPath)).execute();
-		new GetShopOffersAsyncTask(this, getApplicationContext(), getString(R.string.goldFrogsServerPath)).execute();
-		new GetShopOffersAsyncTask(this, getApplicationContext(), getString(R.string.platinumAccountServerPath)).execute();
-		new GetShopOffersAsyncTask(this, getApplicationContext(), getString(R.string.bonusOffersServerPath)).execute();
-		
-		//TODO:Remove!!!
-		getShopOffersCallback(new ArrayList<String>(), "/game_server/shop/bonus_offers");
+		setUpDialog();
+		progressDialog.show();
+		String token = userCredentials.getAccessToken().getToken();
+		new GetShopOffersAsyncTask(this, getApplicationContext(), token, 1).execute();		// get golden frog offers
+		new GetShopOffersAsyncTask(this, getApplicationContext(), token, 2).execute();		// get platinum account offers
+		new GetShopOffersAsyncTask(this, getApplicationContext(), token, 3).execute();		// get bonus offers
 	}
 	
-	private void insertRowItemsInList(ArrayList<ShopRowItem> items, ListView list) {
+	private void insertRowItemsInList(List<ShopRowItem> items, ListView list) {
 		ShopListViewAdapter adapter = new ShopListViewAdapter(this, R.layout.table_item_shop, items);
 		list.setAdapter(adapter);
 		UtilityHelper.setListViewHeightBasedOnChildren(list);
 	}
 
 	// handle clicks on platinum account list
-	private void setUpListPlatinumAccount() {
-		listPlatinumAccount.setOnItemLongClickListener(new OnItemLongClickListener() {
+	private void setUpListPlatinumAccount(List<ShopRowItem> offers) {
+		listAccount = offers;
+		insertRowItemsInList(listAccount, listViewPlatinumAccount);
+		
+		listViewPlatinumAccount.setOnItemLongClickListener(new OnItemLongClickListener() {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(ShopActivity.this);
-		    	builder.setMessage("Weiterleitung zum Platinum Account Item " +  (position+1))
+		    	builder.setMessage("Weiterleitung zum Platinum Account Item " +  listAccount.get(position).getId())
 		  		       .setPositiveButton("Ok", null)
 		  			   .show();
 		  		// TODO buy platinum account
@@ -340,12 +252,14 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 	}
 	
 	// handle clicks on gold list
-	private void setUpListGold() {
-		listGold.setOnItemLongClickListener(new OnItemLongClickListener() {
+	private void setUpListGold(List<ShopRowItem> offers) {
+		listGold = offers;
+		insertRowItemsInList(listGold, listViewGold);
+		listViewGold.setOnItemLongClickListener(new OnItemLongClickListener() {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(ShopActivity.this);
-		    	builder.setMessage("Weiterleitung zum Gold Item " + (position+1))
+		    	builder.setMessage("Kauf von " + listGold.get(position).getId())
 		  		       .setPositiveButton("Ok", null)
 		  			   .show();
 		  		// TODO buy gold
@@ -355,88 +269,35 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 	}
 	
 	// handle clicks on bonus list
-	private void setUpListBonus() {
-		listBonus.setOnItemLongClickListener(new OnItemLongClickListener() {
+	private void setUpListBonus(List<ShopRowItem> offers) {
+		listBonus = offers;
+		insertRowItemsInList(listBonus, listViewBonus);
+		listViewBonus.setOnItemLongClickListener(new OnItemLongClickListener() {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(ShopActivity.this);
-		    	builder.setMessage("Weiterleitung zum Bonus Item " + (position+1))
+		    	builder.setMessage("Weiterleitung zum Bonus Item " + listBonus.get(position).getId())
 		  		       .setPositiveButton("Ok", null)
 		  			   .show();
 		  		// TODO buy bonus
 		    	return true;
 			}
 		});
+		if (progressDialog.isShowing()) {
+			progressDialog.dismiss();
+		}
 	}
 
 	// callback interface for GetShopOffersAsyncTask
 	@Override
-	public void getShopOffersCallback(List<String> offers, String offerType) {
-		
-		///TODO: Fill with content from server -> Remove manual added content, Add right URL to server_values.xml
-		ArrayList<String> valuesToAdd;
-		
-//		if(offerType.compareTo(getString(R.string.platinumCreditsServerPath)) == 0) {
-//			// Adding values to platinumCredits
-//			valuesToAdd = new ArrayList<String>();
-//			for(int i = 1; i>0; i--)
-//			{
-//				valuesToAdd.add(getString(R.string.list_platinum_credits_text));
-//			}
-//			ArrayList<ShopRowItem> generatedItems = this.generateRowItemsWithValues(valuesToAdd, R.drawable.platinum_small, 0);
-//			insertRowItemsInList(generatedItems, listPlatinumCredits);
-//	        setUpListPlatinumCredits();
-//		}
-
-		if(offerType.compareTo(getString(R.string.goldFrogsServerPath)) == 0) {
-			// Adding values to listGold
-			valuesToAdd = new ArrayList<String>();
-			for(int i = 3; i>0; i--)
-			{
-				valuesToAdd.add(String.format(getString(R.string.list_gold_text),15,8));
-			}
-			ArrayList<ShopRowItem> generatedItems = this.generateRowItemsWithValues(valuesToAdd, R.drawable.goldkroete_128px, 0);
-			insertRowItemsInList(generatedItems, listGold);
-	        setUpListGold();
-		}
-		
-		if(offerType.compareTo(getString(R.string.platinumAccountServerPath)) == 0) {
-			// Adding values to platinum account
-			valuesToAdd = new ArrayList<String>();
-			for(int i = 1; i>0; i--)
-			{
-				valuesToAdd.add(String.format(getString(R.string.list_platinum_account_text),7,10));
-			}
-			ArrayList<ShopRowItem> generatedItems = this.generateRowItemsWithValues(valuesToAdd, 0, 0);
-			insertRowItemsInList(generatedItems, listPlatinumAccount);
-			setUpListPlatinumAccount();
-		}
-		
-		if(offerType.compareTo(getString(R.string.bonusOffersServerPath)) == 0) {
-			// Adding values to listBonus
-			valuesToAdd = new ArrayList<String>();
-			for(int i = 9; i>0; i--)
-			{
-				valuesToAdd.add(String.format(getString(R.string.list_bonus_text),5,48,1));
-			}
-			ArrayList<ShopRowItem> generatedItems = this.generateRowItemsWithValues(valuesToAdd, R.drawable.resource_stone, R.drawable.goldkroete_128px);
-			insertRowItemsInList(generatedItems, listBonus);
-			setUpListBonus();
+	public void getShopOffersCallback(List<ShopRowItem> offers, int offerType) {
+		switch(offerType) {
+			case 1: setUpListGold(offers); break;
+			case 2:	setUpListPlatinumAccount(offers); break;
+			case 3: setUpListBonus(offers); break;
 		}
 	}	
 	
-	// generates list of ShopRowItem for given list of Strings
-	public ArrayList<ShopRowItem> generateRowItemsWithValues(List<String> offers, int leftImage, int rightImage) {
-		ArrayList<ShopRowItem> valuesToAdd = new ArrayList<ShopRowItem>();
-		
-		for(String current : offers) {
-			ShopRowItem itemToAdd = new ShopRowItem(leftImage, current, rightImage);
-			valuesToAdd.add(itemToAdd);
-		}
-		
-		return valuesToAdd;
-	}
-
 	// set up the standard server communiation dialog
 	private void setUpDialog() {
 		progressDialog = new ProgressDialog(this);
@@ -502,20 +363,44 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 		int response = skuDetails.getInt("RESPONSE_CODE");
 		
 		if(response == 0) {
-			Log.d(TAG, "-----> PRODUKTE ERFOLGREICH VOM SERVER GEHOLT!");
 			if(progressDialog.isShowing()) {
 				progressDialog.dismiss();
 			}
-			Log.d(TAG, "**** skudDetails: " + skuDetails.toString());
+			Log.d(TAG, "skuDetails: " + skuDetails.toString());
 			stringProductList = skuDetails.getStringArrayList("DETAILS_LIST");
 			ArrayList<ShopRowItem> rowItems = produceRowItemList();
 			openCreditsFragment(rowItems);
 		}
 	}
 
-	// play store: returns list of ShopRowItems for given list of json products
+	// play store: returns list of ShopRowItems for given list of json products (sorted by price)
 	private ArrayList<ShopRowItem> produceRowItemList() {
 		ArrayList<ShopRowItem> rowItemList = new ArrayList<ShopRowItem>();
+		
+		// sort by price, cheapest item first
+		Comparator<String> comparator = new Comparator<String>() {
+			@Override
+			public int compare(String itemA, String itemB) {
+				try {
+					// compare and sort by price in micro-format
+					int priceA = Integer.valueOf(new JSONObject(itemA).getString("price_amount_micros"));
+					int priceB = Integer.valueOf(new JSONObject(itemB).getString("price_amount_micros"));
+				
+					if(priceA > priceB) {
+						return 1;
+					} else if (priceA < priceB) {
+						return -1;
+					} 
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				return 0;
+			}
+		};
+		Collections.sort(stringProductList, comparator);
+		
+		// create list of ShopRowItem out of Strings
 		try {
 			for(String stringProduct : stringProductList) {
 				JSONObject jsonObject = new JSONObject(stringProduct);

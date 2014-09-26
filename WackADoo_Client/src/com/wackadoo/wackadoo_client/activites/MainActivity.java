@@ -152,7 +152,6 @@ public class MainActivity extends Activity implements
 	}
 	
 	private void setUpFacebookBtn() {
-		facebookBtn.setEnabled(true);
 		facebookBtn.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent e) {
@@ -163,23 +162,15 @@ public class MainActivity extends Activity implements
 
 				case MotionEvent.ACTION_UP:
 					facebookBtn.setImageResource(R.drawable.title_facebook_button);
+					triggerFacebook();
 					break;
 				}
 				return false;
 			}
 		});
-
-		facebookBtn.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				// facebookButton.setEnabled(false);
-				triggerFacebook();
-			}
-		});
 	}
 
 	private void setUpPlayBtn() {
-		playBtn.setEnabled(true);
 		playBtn.setOnTouchListener(new View.OnTouchListener() {
 			@SuppressLint("NewApi")
 			@Override
@@ -191,29 +182,21 @@ public class MainActivity extends Activity implements
 					break;
 
 				case MotionEvent.ACTION_UP:
-					// playBtn.setImageResource(R.drawable.title_play_button);
 					setUpPlayButtonAnimation();
+					if(loggedIn) {
+						triggerPlayGame();
+					} else {
+						Toast.makeText(getApplicationContext(), getResources().getString(R.string.login_necessary), Toast.LENGTH_SHORT)
+							 .show();
+					}
 					break;
 				}
-				return false;
-			}
-		});
-
-		playBtn.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if(loggedIn) {
-					triggerPlayGame();
-				} else {
-					Toast.makeText(getApplicationContext(), getResources().getString(R.string.login_necessary), Toast.LENGTH_SHORT)
-						 .show();
-				}
+				return true;
 			}
 		});
 	}
 
 	private void setUpShopBtn() {
-		shopBtn.setEnabled(true);
 		shopBtn.setOnTouchListener(new View.OnTouchListener() {
 			@SuppressLint("NewApi")
 			@Override
@@ -225,23 +208,16 @@ public class MainActivity extends Activity implements
 
 				case MotionEvent.ACTION_UP:
 					shopBtn.setImageResource(R.drawable.title_shop_button);
+					Intent intent = new Intent(MainActivity.this, ShopActivity.class);
+					startActivity(intent);
 					break;
 				}
-				return false;
-			}
-		});
-
-		shopBtn.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(MainActivity.this, ShopActivity.class);
-				startActivity(intent);
+				return true;
 			}
 		});
 	}
 
 	private void setUpSoundBtn() {
-		soundBtn.setEnabled(true);
 		soundBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -258,7 +234,6 @@ public class MainActivity extends Activity implements
 	}
 
 	private void setUpInfoBtn() {
-		infoBtn.setEnabled(true);
 		infoBtn.setOnTouchListener(new View.OnTouchListener() {
 			@SuppressLint("NewApi")
 			@Override
@@ -270,57 +245,39 @@ public class MainActivity extends Activity implements
 
 				case MotionEvent.ACTION_UP:
 					infoBtn.setImageResource(R.drawable.title_info_button);
+					Intent intent = new Intent(MainActivity.this, InfoScreenActivity.class);
+					startActivity(intent);
 					break;
 				}
-				return false;
-			}
-		});
-
-		infoBtn.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(MainActivity.this,
-						InfoScreenActivity.class);
-				startActivity(intent);
+				return true;
 			}
 		});
 	}
 
 	private void setUpAccountmanagerBtn() {
 		accountmanagerBtn.setVisibility(View.VISIBLE);
-		accountmanagerBtn.setEnabled(true);
 		accountmanagerBtn.setOnTouchListener(new View.OnTouchListener() {
 			@SuppressLint("NewApi")
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:
-					accountmanagerBtn
-							.setImageResource(R.drawable.title_change_button_active);
+					accountmanagerBtn.setImageResource(R.drawable.title_change_button_active);
 					break;
 
 				case MotionEvent.ACTION_UP:
-					accountmanagerBtn
-							.setImageResource(R.drawable.title_change_button);
+					accountmanagerBtn.setImageResource(R.drawable.title_change_button);
+					Intent intent = new Intent(MainActivity.this, AccountManagerActivity.class);
+					startActivity(intent);
 					break;
 				}
-				return false;
-			}
-		});
-
-		accountmanagerBtn.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(MainActivity.this,
-						AccountManagerActivity.class);
-				startActivity(intent);
+				return true;
 			}
 		});
 	}
 	
 	private void setUpSelectgameBtn() {
 		selectGameBtn.setVisibility(View.VISIBLE);
-		selectGameBtn.setEnabled(true);
 		
 		// TODO: is last world accessible?
 		lastWorldAccessible = true;
@@ -351,23 +308,16 @@ public class MainActivity extends Activity implements
 						} else {
 							selectGameBtn.setImageResource(R.drawable.title_changegame_warn_button);
 						}
+						Intent intent = new Intent(MainActivity.this, SelectGameActivity.class);
+						startActivity(intent);
 						break;
 				}
-				return false;
-			}
-		});
-		selectGameBtn.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(MainActivity.this,
-						SelectGameActivity.class);
-				startActivity(intent);
+				return true;
 			}
 		});
 	}
 
 	private void setUpCharacterFrame() {
-		characterFrame.setEnabled(true);
 		characterFrame.setOnTouchListener(new View.OnTouchListener() {
 			@SuppressLint("NewApi")
 			@Override
@@ -379,25 +329,18 @@ public class MainActivity extends Activity implements
 					
 				case MotionEvent.ACTION_UP: 
 					characterFrame.setBackgroundResource(R.drawable.title_character_frame);
+					Intent intent = null;
+					if(loggedIn) {
+						intent = new Intent(MainActivity.this, AccountManagerActivity.class);
+					} else {
+						intent = new Intent(MainActivity.this, CredentialScreenActivity.class);
+					}
+					startActivity(intent);
 					break;
 				}
 				return false;
 			}
 		});
-
-		characterFrame.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = null;
-				if(loggedIn) {
-					intent = new Intent(MainActivity.this, AccountManagerActivity.class);
-				} else {
-					intent = new Intent(MainActivity.this, CredentialScreenActivity.class);
-				}
-				startActivity(intent);
-			}
-		});
-
 	}
 	
 	private void triggerGetGames() {

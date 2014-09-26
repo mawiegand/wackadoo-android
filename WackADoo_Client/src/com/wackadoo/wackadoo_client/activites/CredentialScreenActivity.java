@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -34,7 +35,7 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 	private static final String TAG = CredentialScreenActivity.class.getSimpleName();
 	
 	private UserCredentials userCredentials;
-	private Button signInButton, createAccountButton, restoreAccountButton;
+	private Button signInBtn, createAccountBtn, restoreAccountBtn;
 	private EditText userNameEditText, passwordEditText;
 	private LoginButton loginBtn;
 	private UiLifecycleHelper uiHelper;
@@ -51,12 +52,12 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 		uiHelper = new UiLifecycleHelper(this, statusCallback);
 		uiHelper.onCreate(savedInstanceState);
 
-		signInButton = (Button) findViewById(R.id.signInButton);
+		signInBtn = (Button) findViewById(R.id.signInButton);
 		passwordEditText = (EditText) findViewById(R.id.passwordField);
 		userNameEditText = (EditText) findViewById(R.id.usernameField);
 		loginBtn = (LoginButton) findViewById(R.id.facebookButton);
-		createAccountButton = (Button) findViewById(R.id.createAccountButton);
-		restoreAccountButton = (Button) findViewById(R.id.recoverAccountButton);
+		createAccountBtn = (Button) findViewById(R.id.createAccountButton);
+		restoreAccountBtn = (Button) findViewById(R.id.recoverAccountButton);
 		backBtn = (TextView) findViewById(R.id.credentialscreenTopbarBack);
 		
 		// set up standard server communication dialog
@@ -83,13 +84,48 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
     }
     
 	private void setUpButtonListener() {
-		setUpSignInButton();
 		setUpFacebookButton();
-		setUpCreateAccountButton();
-		setUpRestoreAccountButton();
+		setUpBtns();
 		setUpBackBtn();
 	}
 
+	private void setUpBtns() {
+		OnTouchListener touchListener = new OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				int action = event.getActionMasked();
+				
+				if(action == MotionEvent.ACTION_DOWN) {
+					((TextView) v).setTextColor(getResources().getColor(R.color.textbox_orange_active));
+				
+				} else if(action == MotionEvent.ACTION_CANCEL) {
+					((TextView) v).setTextColor(getResources().getColor(R.color.textbox_orange));
+					
+				} else if(action == MotionEvent.ACTION_UP) {
+					((TextView) v).setTextColor(getResources().getColor(R.color.textbox_orange));
+					
+					switch(v.getId()) {
+						case R.id.signInButton:
+							triggerLogin();
+							break;
+						
+						case R.id.createAccountButton:
+							triggerCreateAccount();
+							break;
+							
+						case R.id.recoverAccountButton:
+							triggerRestoreAccount();
+							break;
+					}
+				}
+				return true;
+			}
+		};
+		signInBtn.setOnTouchListener(touchListener);
+		createAccountBtn.setOnTouchListener(touchListener);
+		restoreAccountBtn.setOnTouchListener(touchListener);
+	}
+	
 	private void setUpBackBtn() {
 		backBtn.setOnTouchListener(new View.OnTouchListener() {
 			@SuppressLint("NewApi")
@@ -102,19 +138,12 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 		    			
 		    		case MotionEvent.ACTION_UP: 
 		    			backBtn.setTextColor(getResources().getColor(R.color.textbox_orange));
-					break;
+		    			finish();
+		    			break;
 				}
-			return false;
+				return true;
 			}
 		});
-		backBtn.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				finish();
-			}
-
-		});
-	
 	}
 	
 	private void setUpFacebookButton() {
@@ -128,82 +157,6 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
         });
 	}
 
-	private void setUpSignInButton() {
-		signInButton.setOnTouchListener(new View.OnTouchListener() {
-			@SuppressLint("NewApi")
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				switch (event.getAction()) {
-		    		case MotionEvent.ACTION_DOWN: 
-	    				signInButton.setTextColor(getResources().getColor(R.color.textbox_orange_active));
-	    				break;
-	    				
-		    		case MotionEvent.ACTION_UP: 
-		    			signInButton.setTextColor(getResources().getColor(R.color.textbox_orange));
-	    				break;
-				}
-				return false;
-			}
-		});
-		signInButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				triggerLogin();
-			}
-
-		});
-	}
-	
-	private void setUpCreateAccountButton() {
-		createAccountButton.setOnTouchListener(new View.OnTouchListener() {
-			@SuppressLint("NewApi")
-			@Override
-		    public boolean onTouch(View v, MotionEvent event) {
-				switch (event.getAction()) {
-		    		case MotionEvent.ACTION_DOWN: 
-	    				createAccountButton.setTextColor(getResources().getColor(R.color.textbox_orange_active));
-	    				break;
-	    				
-		    		case MotionEvent.ACTION_UP: 
-		    			createAccountButton.setTextColor(getResources().getColor(R.color.textbox_orange));
-						break;
-				}
-				return false;
-			}
-		});
-		createAccountButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				triggerCreateAccount();
-			}
-		});
-	}
-	
-	private void setUpRestoreAccountButton() {
-		restoreAccountButton.setOnTouchListener(new View.OnTouchListener() {
-			@SuppressLint("NewApi")
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				switch (event.getAction()) {
-		    		case MotionEvent.ACTION_DOWN: 
-	    				restoreAccountButton.setTextColor(getResources().getColor(R.color.textbox_orange_active));
-	    				break;
-		    				
-		    		case MotionEvent.ACTION_UP: 
-		    			restoreAccountButton.setTextColor(getResources().getColor(R.color.textbox_orange));
-	    				break;
-			   }
-			   return false;
-			}
-		});
-		restoreAccountButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				triggerRestoreAccount();
-			}
-		});
-	}
-	
 	protected void restoreAccount(boolean success) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		String title, message;

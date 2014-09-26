@@ -36,8 +36,6 @@ public class ShopInfoFragment extends Fragment {
 	
 	public void setUpShopBtn(View view) {
 		shopBtn = (TextView) view.findViewById(R.id.shopinfoTopbarShop);
-		
-		shopBtn.setEnabled(true);
 		shopBtn.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent e) {
@@ -48,19 +46,12 @@ public class ShopInfoFragment extends Fragment {
 
 		    		case MotionEvent.ACTION_UP: 
 		    			shopBtn.setTextColor(getResources().getColor(R.color.textbox_orange));
+		    			((ShopActivity) getActivity()).removeShopFragment();
 		    			break;
 			    }
-				return false;
+				return true;
 			}
 		});
-		   
-		shopBtn.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				((ShopActivity) getActivity()).removeShopFragment();
-			}
-	   	});
-   
 	}
 	
 	// get strings from ressources
