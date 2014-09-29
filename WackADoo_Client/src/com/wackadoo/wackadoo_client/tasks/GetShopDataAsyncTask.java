@@ -28,35 +28,37 @@ import android.util.Log;
 import com.google.gson.JsonObject;
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.adapter.ShopRowItem;
-import com.wackadoo.wackadoo_client.interfaces.ShopOffersCallbackInterface;
+import com.wackadoo.wackadoo_client.interfaces.ShopDataCallbackInterface;
+import com.wackadoo.wackadoo_client.model.UserCredentials;
 
-public class GetShopOffersAsyncTask extends AsyncTask<String, Integer, Boolean> {
+public class GetShopDataAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	
-	private static final String TAG = GetShopOffersAsyncTask.class.getSimpleName();
+	private static final String TAG = GetShopDataAsyncTask.class.getSimpleName();
 	
-    private ShopOffersCallbackInterface listener;
     private Context context;
-    private String accessToken;
-    private int offerType;
-    private String offerURL;
-    private JSONArray jsonArray;
+    private UserCredentials userCredentials;
+    private int offerType, data;
+    private String offerURL, shopCharacterId;
+    private List<ShopRowItem> rowItemList;
     
-    public GetShopOffersAsyncTask(ShopOffersCallbackInterface callback, Context context, String accessToken, int offerType) {
-    	this.listener = callback;
+    public GetShopDataAsyncTask(Context context, UserCredentials userCredentials, int offerType) {
     	this.context = context;
-    	this.accessToken = accessToken;
+    	this.userCredentials = userCredentials;
     	this.offerType = offerType;
     	
     	// get url for offerType
     	switch(offerType) {
-	    	case 1:
+	    	case 1:			
 	    		offerURL = context.getString(R.string.goldFrogsServerPath);
 	    		break;
-	    	case 2:
+	    	case 2:			
 	    		offerURL = context.getString(R.string.platinumAccountServerPath);
 	    		break;
-	    	case 3: 
+	    	case 3: 		
 	    		offerURL = context.getString(R.string.bonusOffersServerPath);
+	    		break;
+	    	case 4: 	 	
+	    		offerURL = context.getString(R.string.characterShopInfoPath) + userCredentials.getIdentifier();		
 	    		break;
     	}
     }
@@ -64,14 +66,14 @@ public class GetShopOffersAsyncTask extends AsyncTask<String, Integer, Boolean> 
 	@Override
 	protected Boolean doInBackground(String... params) {
 		// TODO: correct url?
-		String baseURL = context.getString(R.string.baseURL);
-		baseURL = "https://gs06.wack-a-doo.de";
+		String baseURL = context.getString(R.string.baseGameServerURL);
 		HttpGet request = new HttpGet(baseURL + offerURL);
+		Log.d(TAG, "complete URL: " + request.getURI());
 		StringBuilder sb = new StringBuilder();
 		
 		try {
 		    request.getParams().setParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, Boolean.FALSE);
-		    request.setHeader("Authorization", "Bearer " + accessToken);
+		    request.setHeader("Authorization", "Bearer " + userCredentials.getAccessToken().getToken());
 		    request.setHeader("Accept", "application/json");
 		    
 		    HttpResponse response = null;
@@ -96,7 +98,17 @@ public class GetShopOffersAsyncTask extends AsyncTask<String, Integer, Boolean> 
 		    }
 		    
 		    Log.d(TAG, "response: " + sb);
-	 	    jsonArray = new JSONArray(sb.toString());
+		    
+		    // product asynctask
+ 			if(offerType < 4) {
+ 				rowItemList = produceRowItemList(new JSONArray(sb.toString()));
+
+ 			// character data asynctask
+ 			} else {
+ 				JSONObject jsonResponse = new JSONObject(sb.toString());
+ 				data = jsonResponse.getInt("credit_amount");
+ 				shopCharacterId = jsonResponse.getString("character_id");
+ 			}
 	    	return true;
 	    	
 		} catch (Throwable e) {
@@ -109,18 +121,14 @@ public class GetShopOffersAsyncTask extends AsyncTask<String, Integer, Boolean> 
 	protected void onPostExecute(Boolean result) {
 		super.onPostExecute(result);
 		
-//		if(progressDialog.isShowing()) {
-//			progressDialog.dismiss();
-//		}
-		
 		if(result) {
-			listener.getShopOffersCallback(produceRowItemList(), offerType);
+			((ShopDataCallbackInterface) context).getShopDataCallback(rowItemList, data, shopCharacterId, offerType);
 		}
 	}
 	
 	// returns list of offers for given array of json products (sorted by price)
-	private List<ShopRowItem> produceRowItemList() {
-		List<ShopRowItem> rowItemList = new ArrayList<ShopRowItem>();
+	private List<ShopRowItem> produceRowItemList(JSONArray jsonArray) {
+		rowItemList = new ArrayList<ShopRowItem>();
 		
 		// sort by price, cheapest item first
 		/*Comparator<String> comparator = new Comparator<String>() {

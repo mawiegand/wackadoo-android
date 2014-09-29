@@ -2,7 +2,10 @@
 <resources>
     
     <string name="playstorePublicKey">MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAiCkHBa4e6dXarsF+jHJRxY6VYnwFaq4ITesm1WK8sp8Lrr+XNMxaxCGWInQO8ZPmwfgR/wK+w5J9KqQN/X7RsTyGWoAtGfFn9duFI65UsAU5hkybaCFc2Sw2H3e735scEPDLE3ZNK/0zFTBM2MZVJp759oOqm+4rKsS0U3sTmJAUBA7bSyK3Xux6KSnR0E7QloR3qs7tYG5icCnU9jYaNj0G9T+KYX9Ck4Gn7ko76n5ziz25tN0kI2WMW5b4O90JCS1AiouVr15bYKTQyNGAkYfkkItSnZMfN5WHYZXZfOOpKoT4Y/UyTff7QvT6hJ05PAgDOgRE9RXdS5o0Z8IQPQIDAQAB</string>
+    <string name="app_id">308180782571605</string>
+    
     <string name="baseURL">https://wack-a-doo.de</string>
+    <string name="baseGameServerURL">https://gs06.wack-a-doo.de</string>
     
     <!-- Create Account -->
     <string name="createAccountURL">/identity_provider/%s/identities</string>
@@ -23,9 +26,11 @@
     <!--  https://gs06.wack-a-doo.de/game_server/action/fundamental/change_character_password_actions -->
     
     <!-- Shop -->
+    <string name="buyShopItemPath">/game_server/shop/transactions</string>
     <string name="goldFrogsServerPath">/game_server/shop/resource_offers</string>
     <string name="platinumAccountServerPath">/game_server/shop/platinum_offers</string>
     <string name="bonusOffersServerPath">/game_server/shop/bonus_offers</string>
     <string name="platinumCreditsServerPath">/game_server/shop/special_offers</string>
+    <string name="characterShopInfoPath">/game_server/shop/accounts/</string>
     <!-- https://secure.bytro.com/index.php?eID=api&key=wackadooShop&action=processPayment -->
 </resources>

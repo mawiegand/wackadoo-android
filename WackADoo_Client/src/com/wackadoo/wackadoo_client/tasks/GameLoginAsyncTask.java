@@ -32,7 +32,6 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	
 	private static final String TAG = GameLoginAsyncTask.class.getSimpleName();
 	
-    private GameLoginCallbackInterface listener;
     private Context context;
 	private UserCredentials userCredentials;
 	private JSONObject jsonResponse;
@@ -41,8 +40,7 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
 
 	private boolean refresh;
     
-    public GameLoginAsyncTask(GameLoginCallbackInterface callback, Context context, UserCredentials userCredentials, boolean restoreAccount, boolean refresh, ProgressDialog progressDialog) {
-    	this.listener = callback;
+    public GameLoginAsyncTask(Context context, UserCredentials userCredentials, boolean restoreAccount, boolean refresh, ProgressDialog progressDialog) {
     	this.context = context;
     	this.refresh = refresh;
     	this.userCredentials = userCredentials;
@@ -53,10 +51,9 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
     @Override
 	protected Boolean doInBackground(String... params) {
 	    DeviceInformation deviceInformation = new DeviceInformation(context);
-	    Activity parent = (Activity) this.listener;
 	    
-		String urlForRequest = parent.getString(R.string.loginURL);
-		String baseURL = parent.getString(R.string.baseURL);
+		String urlForRequest = context.getString(R.string.loginURL);
+		String baseURL = context.getString(R.string.baseURL);
 		String completeURL = baseURL + String.format(urlForRequest, Locale.getDefault().getCountry().toLowerCase());
 	    HttpPost request = new HttpPost(completeURL);
 	    StringBuilder sb = new StringBuilder();
@@ -135,13 +132,13 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
 		try {
 			if(result) {
 				if(jsonResponse.has("error")) {
-					listener.loginCallbackError(jsonResponse.getString("error"), restoreAccount, refresh);
+					((GameLoginCallbackInterface) context).loginCallbackError(jsonResponse.getString("error"), restoreAccount, refresh);
 				
 				} else {
 					String accessToken = jsonResponse.getString("access_token");
 					String expiresIn = jsonResponse.getString("expires_in");
 					String identifier = jsonResponse.getString("user_identifer");
-					listener.loginCallback(result.booleanValue(), accessToken, expiresIn, identifier, restoreAccount, refresh);
+					((GameLoginCallbackInterface) context).loginCallback(result.booleanValue(), accessToken, expiresIn, identifier, restoreAccount, refresh);
 				}
 			}
 		} catch (Exception e) {

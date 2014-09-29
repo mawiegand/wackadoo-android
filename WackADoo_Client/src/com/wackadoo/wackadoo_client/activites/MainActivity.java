@@ -364,14 +364,14 @@ public class MainActivity extends Activity implements
 		if(identifier.length() > 0 || accessToken.length() > 0 || email.length() > 0){
 			if(userCredentials.getAccessToken().isExpired()) {
 				progressDialog.show();
-				new GameLoginAsyncTask(this, getApplicationContext(), this.userCredentials, false, false, progressDialog).execute();
+				new GameLoginAsyncTask(this, userCredentials, false, false, progressDialog).execute();
 			
 			} else {
 				loggedIn = true;
 			}
 		} else if (email.contains("generic") && email.contains("@5dlab.com") ) {
 			progressDialog.show();
-			new GameLoginAsyncTask(this, getApplicationContext(), this.userCredentials, false, false, progressDialog).execute();
+			new GameLoginAsyncTask(this, userCredentials, false, false, progressDialog).execute();
 			
 		} else {
 			loggedIn = false;
@@ -389,7 +389,7 @@ public class MainActivity extends Activity implements
 		
 		} else {
 			progressDialog.show();
-			new GameLoginAsyncTask(this, getApplicationContext(), userCredentials, false, false, progressDialog).execute();
+			new GameLoginAsyncTask(this, userCredentials, false, false, progressDialog).execute();
 		}
 	}
 
@@ -496,20 +496,12 @@ public class MainActivity extends Activity implements
 		progressDialog.setMessage(getResources().getString(R.string.please_wait));
 	}
 
-
-
-	
 	@Override
 	public void run() {
 		if (userCredentials.getAccessToken().isExpired() && (userCredentials.getUsername().length() > 0 || userCredentials.getEmail().length() > 0)) 
-			new GameLoginAsyncTask(this, getApplicationContext(), this.userCredentials, false, true, progressDialog).execute();
+			new GameLoginAsyncTask(this, userCredentials, false, true, progressDialog).execute();
 		Log.d(TAG, "Token refresh handler");
 		tokenHandler.postDelayed(this, 10000);		
 	}
-
-
-
-
-
 	
 }

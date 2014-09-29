@@ -116,13 +116,6 @@
 						    android:scaleType="fitCenter" />
 						
 					</RelativeLayout>
-			        
-				    <!-- <ListView
-		                android:id="@+id/listPlatinumCredits"
-		                android:layout_width="match_parent"
-		                android:layout_height="wrap_content"
-		                android:layout_below="@id/subheadingPlatinumCredits"
-		                android:layout_centerHorizontal="true"/>-->
 		
 			        <TextView 
 			            android:id="@+id/subheadingGold"
@@ -147,7 +140,6 @@
 			        <TextView 
 			            android:id="@+id/currentFrogText"
 			            style="@style/shopSubHeadingStyle"
-			            android:text="@string/current_frog_text"
 			            android:textAllCaps="false"
 			            android:textSize="14sp"
 		                android:layout_below="@id/listGold"

@@ -40,8 +40,8 @@ public class AccountManagerAsyncTask extends AsyncTask<String, Integer, Boolean>
     private UserCredentials userCredentials;
     private JSONObject jsonResponse;
     
-    public AccountManagerAsyncTask(AccountManagerCallbackInterface callback, ProgressDialog progressDialog, UserCredentials userCredentials, String type, String value) {
-    	this.listener = callback;
+    public AccountManagerAsyncTask(AccountManagerCallbackInterface listener, ProgressDialog progressDialog, UserCredentials userCredentials, String type, String value) {
+    	this.listener = listener;
     	this.progressDialog = progressDialog;
     	this.userCredentials = userCredentials;
     	this.value = value;
@@ -51,9 +51,7 @@ public class AccountManagerAsyncTask extends AsyncTask<String, Integer, Boolean>
 	@Override
 	protected Boolean doInBackground(String... params) {
 		Activity parent = (Activity) listener;
-		String urlForRequest;
-
-		String completeURL;
+		String urlForRequest, completeURL;
 		AbstractHttpMessage request;
 		List <NameValuePair> nameValuePairs = new ArrayList <NameValuePair>();
 		

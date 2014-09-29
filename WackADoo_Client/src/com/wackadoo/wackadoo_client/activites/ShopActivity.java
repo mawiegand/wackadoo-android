@@ -25,24 +25,31 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.vending.billing.IabHelper;
 import com.android.vending.billing.IabHelper.OnConsumeFinishedListener;
+import com.android.vending.billing.IabHelper.OnConsumeMultiFinishedListener;
 import com.android.vending.billing.IabHelper.OnIabPurchaseFinishedListener;
+import com.android.vending.billing.IabHelper.QueryInventoryFinishedListener;
 import com.android.vending.billing.IabResult;
+import com.android.vending.billing.Inventory;
 import com.android.vending.billing.Purchase;
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.adapter.ShopListViewAdapter;
 import com.wackadoo.wackadoo_client.adapter.ShopRowItem;
 import com.wackadoo.wackadoo_client.fragments.ShopCreditsFragment;
 import com.wackadoo.wackadoo_client.fragments.ShopInfoFragment;
+import com.wackadoo.wackadoo_client.helper.CustomIabHelper;
 import com.wackadoo.wackadoo_client.helper.UtilityHelper;
+import com.wackadoo.wackadoo_client.interfaces.BuyShopOfferCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.CreditsFragmentCallbackInterface;
-import com.wackadoo.wackadoo_client.interfaces.ShopOffersCallbackInterface;
+import com.wackadoo.wackadoo_client.interfaces.ShopDataCallbackInterface;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
-import com.wackadoo.wackadoo_client.tasks.GetShopOffersAsyncTask;
+import com.wackadoo.wackadoo_client.tasks.BuyShopOfferAsyncTask;
+import com.wackadoo.wackadoo_client.tasks.GetShopDataAsyncTask;
 
-public class ShopActivity extends Activity implements ShopOffersCallbackInterface, CreditsFragmentCallbackInterface, OnIabPurchaseFinishedListener, OnConsumeFinishedListener {
+public class ShopActivity extends Activity implements ShopDataCallbackInterface, CreditsFragmentCallbackInterface, BuyShopOfferCallbackInterface {
 	
 	private static final String TAG = ShopActivity.class.getSimpleName();
 	
@@ -53,8 +60,9 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 	private Fragment fragment;
 	private UserCredentials userCredentials;
 	private ProgressDialog progressDialog;	
-	private IabHelper billingHelper;
+	private CustomIabHelper billingHelper;
 	private ArrayList<String> stringProductList;
+	private String shopCharacterId;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -75,12 +83,6 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 
         setUpBtns();
         loadShopOffersFromServer(); 
-	}
-	
-	@Override
-	protected void onPause() {
-		super.onPause();
-		removeShopFragment();
 	}
 	
 	@Override
@@ -224,13 +226,14 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 			.commit();
 	}
 	
+	// load shop offers from bytro server
 	private void loadShopOffersFromServer() {
 		setUpDialog();
 		progressDialog.show();
-		String token = userCredentials.getAccessToken().getToken();
-		new GetShopOffersAsyncTask(this, getApplicationContext(), token, 1).execute();		// get golden frog offers
-		new GetShopOffersAsyncTask(this, getApplicationContext(), token, 2).execute();		// get platinum account offers
-		new GetShopOffersAsyncTask(this, getApplicationContext(), token, 3).execute();		// get bonus offers
+		new GetShopDataAsyncTask(this, userCredentials, 1).execute();		// get golden frog offers
+		new GetShopDataAsyncTask(this, userCredentials, 2).execute();		// get platinum account offers
+		new GetShopDataAsyncTask(this, userCredentials, 3).execute();		// get bonus offers
+		new GetShopDataAsyncTask(this, userCredentials, 4).execute();		// get character shop data
 	}
 	
 	private void insertRowItemsInList(List<ShopRowItem> items, ListView list) {
@@ -264,12 +267,14 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 		listViewGold.setOnItemLongClickListener(new OnItemLongClickListener() {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-				AlertDialog.Builder builder = new AlertDialog.Builder(ShopActivity.this);
-		    	builder.setMessage("Kauf von " + listGold.get(position).getId())
-		  		       .setPositiveButton("Ok", null)
-		  			   .show();
-		  		// TODO buy gold
-		    	return true;
+				int offerId = listGold.get(position).getId();
+				String offerType = "resource_offers";
+				
+				setUpDialog();
+				progressDialog.show();
+				new BuyShopOfferAsyncTask(ShopActivity.this, userCredentials.getAccessToken().getToken(), offerId, shopCharacterId, offerType).execute();
+		    	
+				return true;
 			}
 		});
 	}
@@ -294,15 +299,39 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 		}
 	}
 
-	// callback interface for GetShopOffersAsyncTask
+	// callback interface for GetShopDataAsyncTask
 	@Override
-	public void getShopOffersCallback(List<ShopRowItem> offers, int offerType) {
+	public void getShopDataCallback(List<ShopRowItem> offers, int data, String customerId, int offerType) {
 		switch(offerType) {
 			case 1: setUpListGold(offers); break;
 			case 2:	setUpListPlatinumAccount(offers); break;
 			case 3: setUpListBonus(offers); break;
+			case 4: 
+				String frogAmount = String.format(getString(R.string.current_frog_text), data);
+				((TextView) findViewById(R.id.currentFrogText)).setText(frogAmount);
+				shopCharacterId = customerId;
+				
+				break;
 		}
 	}	
+	
+	// callback interface for BuyShopOfferAsyncTask
+	@Override
+	public void buyShopOfferCallback(boolean result, String message) {
+		if(progressDialog.isShowing()) {
+			progressDialog.dismiss();
+		}
+		
+		if(result) {
+			Toast.makeText(this, "GEKLAPPT!", Toast.LENGTH_LONG)
+			.show();
+			
+		} else {
+			Toast.makeText(this, getString(R.string.buy_item_fail), Toast.LENGTH_LONG)
+				 .show();
+		}
+		
+	}
 	
 	// set up the standard server communiation dialog
 	private void setUpDialog() {
@@ -311,45 +340,24 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 		progressDialog.setMessage(getResources().getString(R.string.please_wait));
 	}
 
-	// play store: first set up store billing
+	// play store: set up in app billing
 	private void setUpBilling(){
 		setUpDialog();
 		progressDialog.show();
 		
 		// establish connection to play store
 		String base64PublicKey = getResources().getString(R.string.playstorePublicKey); 	
-		billingHelper = new IabHelper(this, base64PublicKey);
+		billingHelper = new CustomIabHelper(this, base64PublicKey);
 		
-		// TODO: remove before publishing
-		billingHelper.enableDebugLogging(true);
-	
-		Log.d(TAG, "Starting setup.");
-		billingHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
-	        public void onIabSetupFinished(IabResult result) {
-	            if (!result.isSuccess()) {
-	            	Log.d(TAG, "-----> Error: " + result.getMessage());
-	                return;
-	            }
-	
-	            if (billingHelper == null) {
-	            	Log.d(TAG, "-----> Error: billingHelper is null");
-	            	return;
-	            }
-	            // IAB is fully set up 
-	            Log.d(TAG, "-----> Setup successful");
-	            
-	            // get platinum credit packages from play store
-	            billingHelper.getProductsAsyncInternal(ShopActivity.this);
-	        }
-        });
+		billingHelper.enableDebugLogging(true);		// TODO: remove before publishing
+		billingHelper.startUp();
 	}
 	
-	// callback interface for credits fragment -> which product was clicked
+	// callback interface for credits fragment -> which item was clicked
 	public void creditsFragmentCallback(int clickedPackage) {
 		try {
 			JSONObject jsonItem = new JSONObject(stringProductList.get(clickedPackage));
-//			billingHelper.launchPurchaseFlow(this, "android.test.purchased", 1337, this);
-			billingHelper.launchPurchaseFlow(this, jsonItem.getString("productId"), 1337, this); // TODO: fixing
+			billingHelper.launchPurchaseFlow(ShopActivity.this, jsonItem.getString("productId"), 1337); 
 			
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -367,6 +375,7 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 	@Override
 	public void getProductsCallback(Bundle skuDetails){
 		int response = skuDetails.getInt("RESPONSE_CODE");
+		Log.d(TAG, "---> response: " + response);
 		
 		if(response == 0) {
 			if(progressDialog.isShowing()) {
@@ -420,25 +429,6 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 			e.printStackTrace();
 		}
 		return rowItemList;
-	}
-	
-	// play store: callback interface for finished purchase 
-	@Override
-	public void onIabPurchaseFinished(IabResult result, Purchase info) {
-		if(result.getResponse() == 7) {
-    		Log.d(TAG, "Unable to buy item, Error Code 7 ---> Consume and Buy again");
-    		billingHelper.consumeAsync(info, this);
-
-		} else if(result.getResponse() == 0) {
-			Log.d(TAG, "Item successfully bought ---> Consume");
-			billingHelper.consumeAsync(info, this);
-		}
-	}
-
-	// play store: callback interface for finshed consumption
-	@Override
-	public void onConsumeFinished(Purchase purchase, IabResult result) {
-		Log.d(TAG, "Consume Finished: " + result.getResponse());
 	}
 
 }

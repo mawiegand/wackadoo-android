@@ -37,7 +37,6 @@ public class GetCurrentGamesAsyncTask extends AsyncTask<String, Integer, Boolean
 	
 	@Override
 	protected Boolean doInBackground(String... params) {
-		
 		Activity parent = (Activity) this.listener;
 		String urlForRequest = parent.getString(R.string.gamesURL);
 		String baseURL = parent.getString(R.string.baseURL);

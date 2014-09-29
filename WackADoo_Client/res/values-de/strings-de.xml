@@ -89,6 +89,7 @@
     <string name="subheading_bonus_text">Produktions Boost</string>
     <string name="shop_headline_text">Erwirb Credits und tausche sie gegen Komfortfunktionen und Beschleunigungen</string>
     <string name="current_frog_text">Derzeitiger Vorrat an Gold Fröschen: %d</string>
+    <string name="buy_item_fail">Fehler bei Kommunikation mit Server. Bitte probiere es später noch ein mal.</string>
 
     <!-- Shop Info -->
    	<string name="shopinfo_topbar_heading">Info Store</string>

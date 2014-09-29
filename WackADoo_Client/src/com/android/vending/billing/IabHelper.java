@@ -15,11 +15,6 @@
 
 package com.android.vending.billing;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONException;
-
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.ComponentName;
@@ -34,8 +29,12 @@ import android.os.RemoteException;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.wackadoo.wackadoo_client.activites.ShopActivity;
-import com.wackadoo.wackadoo_client.interfaces.CreditsFragmentCallbackInterface;
+import com.android.vending.billing.IInAppBillingService;
+
+import org.json.JSONException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -54,7 +53,7 @@ import com.wackadoo.wackadoo_client.interfaces.CreditsFragmentCallbackInterface;
  * items and subscriptions. See {@link #queryInventory}, {@link #queryInventoryAsync}
  * and related methods.
  *
- * When you are done with this object, don't forget to call {@link #dispose}
+ * When you are done with this object, don't forget to call {@link #dispos se}
  * to ensure proper cleanup. This object holds a binding to the in-app billing
  * service, which will leak unless you dispose of it correctly. If you created
  * the object on an Activity's onCreate method, then the recommended
@@ -71,9 +70,6 @@ import com.wackadoo.wackadoo_client.interfaces.CreditsFragmentCallbackInterface;
  *
  */
 public class IabHelper {
-	
-	private static final String TAG = IabHelper.class.getSimpleName();
-	
     // Is debug logging enabled?
     boolean mDebugLog = false;
     String mDebugTag = "IabHelper";
@@ -99,7 +95,7 @@ public class IabHelper {
     Context mContext;
 
     // Connection to the service
-    IInAppBillingService mService;
+    public IInAppBillingService mService;
     ServiceConnection mServiceConn;
 
     // The request code used to launch purchase flow
@@ -302,7 +298,7 @@ public class IabHelper {
         mPurchaseListener = null;
     }
 
-    private void checkNotDisposed() {
+    protected void checkNotDisposed() {
         if (mDisposed) throw new IllegalStateException("IabHelper was disposed of, so it cannot be used.");
     }
 
@@ -311,6 +307,7 @@ public class IabHelper {
         checkNotDisposed();
         return mSubscriptionsSupported;
     }
+
 
     /**
      * Callback that notifies when a purchase is finished.
@@ -389,11 +386,11 @@ public class IabHelper {
             Bundle buyIntentBundle = mService.getBuyIntent(3, mContext.getPackageName(), sku, itemType, extraData);
             int response = getResponseCodeFromBundle(buyIntentBundle);
             if (response != BILLING_RESPONSE_RESULT_OK) {
-        		logError("Unable to buy item, Error response: " + getResponseDesc(response));
-        		flagEndAsync();
-        		result = new IabResult(response, "Unable to buy item");
-        		if (listener != null) listener.onIabPurchaseFinished(result, null);
-        		return;
+                logError("Unable to buy item, Error response: " + getResponseDesc(response));
+                flagEndAsync();
+                result = new IabResult(response, "Unable to buy item");
+                if (listener != null) listener.onIabPurchaseFinished(result, null);
+                return;
             }
 
             PendingIntent pendingIntent = buyIntentBundle.getParcelable(RESPONSE_BUY_INTENT);
@@ -520,12 +517,10 @@ public class IabHelper {
         }
         return true;
     }
-    
 
     public Inventory queryInventory(boolean querySkuDetails, List<String> moreSkus) throws IabException {
         return queryInventory(querySkuDetails, moreSkus, null);
     }
-    
 
     /**
      * Queries the inventory. This will query all owned items from the server, as well as
@@ -582,7 +577,6 @@ public class IabHelper {
             throw new IabException(IABHELPER_BAD_RESPONSE, "Error parsing JSON response while refreshing inventory.", e);
         }
     }
-    
 
     /**
      * Listener that notifies when an inventory query operation completes.
@@ -596,7 +590,6 @@ public class IabHelper {
          */
         public void onQueryInventoryFinished(IabResult result, Inventory inv);
     }
-    
 
 
     /**
@@ -641,17 +634,14 @@ public class IabHelper {
             }
         })).start();
     }
-    
 
     public void queryInventoryAsync(QueryInventoryFinishedListener listener) {
         queryInventoryAsync(true, null, listener);
     }
-    
 
     public void queryInventoryAsync(boolean querySkuDetails, QueryInventoryFinishedListener listener) {
         queryInventoryAsync(querySkuDetails, null, listener);
     }
-    
 
 
     /**
@@ -695,7 +685,6 @@ public class IabHelper {
             throw new IabException(IABHELPER_REMOTE_EXCEPTION, "Remote exception while consuming. PurchaseInfo: " + itemInfo, e);
         }
     }
-    
 
     /**
      * Callback that notifies when a consumption operation finishes.
@@ -709,7 +698,6 @@ public class IabHelper {
          */
         public void onConsumeFinished(Purchase purchase, IabResult result);
     }
-    
 
     /**
      * Callback that notifies when a multi-item consumption operation finishes.
@@ -724,7 +712,6 @@ public class IabHelper {
          */
         public void onConsumeMultiFinished(List<Purchase> purchases, List<IabResult> results);
     }
-    
 
     /**
      * Asynchronous wrapper to item consumption. Works like {@link #consume}, but
@@ -741,7 +728,6 @@ public class IabHelper {
         purchases.add(purchase);
         consumeAsyncInternal(purchases, listener, null);
     }
-    
 
     /**
      * Same as {@link consumeAsync}, but for multiple items at once.
@@ -753,7 +739,6 @@ public class IabHelper {
         checkSetupDone("consume");
         consumeAsyncInternal(purchases, null, listener);
     }
-    
 
     /**
      * Returns a human-readable description for the given response code.
@@ -788,17 +773,15 @@ public class IabHelper {
         else
             return iab_msgs[code];
     }
-    
 
 
     // Checks that setup was done; if not, throws an exception.
-    void checkSetupDone(String operation) {
+    protected void checkSetupDone(String operation) {
         if (!mSetupDone) {
             logError("Illegal state for operation (" + operation + "): IAB helper is not set up.");
             throw new IllegalStateException("IAB helper is not set up. Can't perform operation: " + operation);
         }
     }
-    
 
     // Workaround to bug where sometimes response codes come as Long instead of Integer
     int getResponseCodeFromBundle(Bundle b) {
@@ -815,7 +798,6 @@ public class IabHelper {
             throw new RuntimeException("Unexpected type for bundle response code: " + o.getClass().getName());
         }
     }
-    
 
     // Workaround to bug where sometimes response codes come as Long instead of Integer
     int getResponseCodeFromIntent(Intent i) {
@@ -832,9 +814,8 @@ public class IabHelper {
             throw new RuntimeException("Unexpected type for intent response code: " + o.getClass().getName());
         }
     }
-    
 
-    void flagStartAsync(String operation) {
+    protected void flagStartAsync(String operation) {
         if (mAsyncInProgress) throw new IllegalStateException("Can't start async operation (" +
                 operation + ") because another async operation(" + mAsyncOperation + ") is in progress.");
         mAsyncOperation = operation;
@@ -842,12 +823,11 @@ public class IabHelper {
         logDebug("Starting async operation: " + operation);
     }
 
-    void flagEndAsync() {
+    public void flagEndAsync() {
         logDebug("Ending async operation: " + mAsyncOperation);
         mAsyncOperation = "";
         mAsyncInProgress = false;
     }
-    
 
 
     int queryPurchases(Inventory inv, String itemType) throws JSONException, RemoteException {
@@ -912,7 +892,6 @@ public class IabHelper {
 
         return verificationFailed ? IABHELPER_VERIFICATION_FAILED : BILLING_RESPONSE_RESULT_OK;
     }
-    
 
     int querySkuDetails(String itemType, Inventory inv, List<String> moreSkus)
                                 throws RemoteException, JSONException {
@@ -959,7 +938,6 @@ public class IabHelper {
         }
         return BILLING_RESPONSE_RESULT_OK;
     }
-    
 
 
     void consumeAsyncInternal(final List<Purchase> purchases,
@@ -998,63 +976,16 @@ public class IabHelper {
             }
         })).start();
     }
-    
 
     void logDebug(String msg) {
         if (mDebugLog) Log.d(mDebugTag, msg);
     }
-    
 
     void logError(String msg) {
         Log.e(mDebugTag, "In-app billing error: " + msg);
     }
-    
 
     void logWarn(String msg) {
         Log.w(mDebugTag, "In-app billing warning: " + msg);
     }
-
-    
-    
-    //********************************************//
-    //**************** customized ****************//
-    //********************************************//
-
-    // get platinum credit products from play store
-    public void getProductsAsyncInternal(final CreditsFragmentCallbackInterface callback) {
-    	final Handler handler = new Handler();
-        checkNotDisposed();
-        checkSetupDone("getProducts");
-        flagStartAsync("getProducts");
-        (new Thread(new Runnable() {
-            public void run() {
-        		Bundle querySkus = new Bundle();
-        		querySkus.putStringArrayList("ITEM_ID_LIST", setUpSkuList());
-        		try {
-					Bundle skuDetails = mService.getSkuDetails(3, mContext.getPackageName(), "inapp", querySkus);
-					flagEndAsync();
-					callback.getProductsCallback(skuDetails);
-					
-				} catch (RemoteException e) {
-					e.printStackTrace();
-				}
-            }
-        })).start();
-    }
-    
-    // stores all available items on google play store
-    private ArrayList<String> setUpSkuList() {
-    	ArrayList<String> skuList = new ArrayList<String>();
-    	
-    	skuList.add("platinum_credits_13");			// product id of 13 credits product
-    	skuList.add("platinum_credits_30");			// product id of 30 credits product
-    	skuList.add("platinum_credits_100");		// product id of 100 credits product
-    	skuList.add("platinum_credits_250");		// product id of 250 credits product
-    	skuList.add("platinum_credits_600");		// product id of 600 credits product
-    	skuList.add("platinum_credits_1600");		// product id of 1600 credits product
-    	skuList.add("platinum_credits_4000");		// product id of 4000 credits product
-    	
-    	return skuList;
-    }
-    
 }

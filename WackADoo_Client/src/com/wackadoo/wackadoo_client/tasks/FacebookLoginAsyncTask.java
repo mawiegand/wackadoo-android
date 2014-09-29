@@ -9,11 +9,9 @@ import com.wackadoo.wackadoo_client.interfaces.FacebookLoginCallbackInterface;
 
 public class FacebookLoginAsyncTask extends AsyncTask<String, Integer, Double>{
 
-	private FacebookLoginCallbackInterface listener;
 	private Context context;
 	    
-	public FacebookLoginAsyncTask(FacebookLoginCallbackInterface callback, Context context) {
-		this.listener = callback;
+	public FacebookLoginAsyncTask(Context context) {
 	    this.context = context;
 	}
 		
@@ -34,7 +32,7 @@ public class FacebookLoginAsyncTask extends AsyncTask<String, Integer, Double>{
 			String appId = context.getResources().getString(R.string.app_id);
 			loginSession = new Session.Builder(context).setApplicationId(appId).build();
 		}
-		this.listener.onFacebookRegistrationCompleted(loginSession);
+		((FacebookLoginCallbackInterface) context).onFacebookRegistrationCompleted(loginSession);
 	}
 	
 }

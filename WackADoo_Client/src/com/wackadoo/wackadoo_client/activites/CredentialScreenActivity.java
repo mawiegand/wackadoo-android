@@ -195,7 +195,7 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 	}
 	
 	private void triggerRestoreAccount() {
-		new GameLoginAsyncTask(this, getApplicationContext(), userCredentials, true, false, progressDialog).execute();
+		new GameLoginAsyncTask(this, userCredentials, true, false, progressDialog).execute();
 	}
 	
 	protected void triggerCreateAccount() {
@@ -216,7 +216,7 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 				userCredentials.setPassword(this.passwordEditText.getText().toString());
 				progressDialog.show();
 
-				new GameLoginAsyncTask(this, getApplicationContext(), userCredentials, false, false, progressDialog).execute();
+				new GameLoginAsyncTask(this, userCredentials, false, false, progressDialog).execute();
 			} 
 			else {
 				Toast.makeText(getApplicationContext(), getResources().getString(R.string.credentials_password_too_short), Toast.LENGTH_SHORT).show();
