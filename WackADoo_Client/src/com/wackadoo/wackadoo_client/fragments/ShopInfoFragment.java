@@ -18,6 +18,10 @@ public class ShopInfoFragment extends Fragment {
 	private String type;
 	private int ressourceArray[];
 
+	public ShopInfoFragment() {
+		
+	}
+	
 	public ShopInfoFragment(String type) {
 		this.type = type;
 		ressourceArray = new int[4];

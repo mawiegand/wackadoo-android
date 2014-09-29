@@ -78,6 +78,12 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 	}
 	
 	@Override
+	protected void onPause() {
+		super.onPause();
+		removeShopFragment();
+	}
+	
+	@Override
 	public void onDestroy() {
 	    super.onDestroy();
 	    if(billingHelper != null) {
@@ -305,7 +311,7 @@ public class ShopActivity extends Activity implements ShopOffersCallbackInterfac
 		progressDialog.setMessage(getResources().getString(R.string.please_wait));
 	}
 
-	// play store: set up store billing
+	// play store: first set up store billing
 	private void setUpBilling(){
 		setUpDialog();
 		progressDialog.show();
