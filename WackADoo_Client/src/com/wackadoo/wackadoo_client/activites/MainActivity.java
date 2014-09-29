@@ -462,7 +462,7 @@ public class MainActivity extends Activity implements
 		bundle.putString("accessToken", accessToken);
 		bundle.putString("expiration", expiration);
 		bundle.putString("userId", userId);
-		bundle.putString("hostname", "https://gs06.wack-a-doo.de");
+		bundle.putString("hostname", "https://gs05.wack-a-doo.com");
 		//bundle.putString("hostname", userCredentials.getHostname());
 		intent.putExtras(bundle);
 		startActivity(intent);
