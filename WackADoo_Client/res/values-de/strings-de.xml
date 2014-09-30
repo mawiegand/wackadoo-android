@@ -4,7 +4,6 @@
     <!-- General -->
     <string name="app_name">Wack-A-Doo</string>
     <string name="action_settings">Settings</string>
-    <string name="app_id">308180782571605</string>
     <string name="done">Fertig</string>
     <string name="back">Zurück</string>
     <string name="login_failed_toast">Login nicht möglich</string> 

@@ -221,6 +221,7 @@ public class GetShopDataAsyncTask extends AsyncTask<String, Integer, Boolean> {
 			case 0:	return R.drawable.resource_stone;
 			case 1: return R.drawable.resource_wood;
 			case 2: return R.drawable.resource_fur;
+			case 3: return R.drawable.goldkroete_big;
 			default: return 0;
 		}
 	}

@@ -38,9 +38,9 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 	private Button signInBtn, createAccountBtn, restoreAccountBtn;
 	private EditText userNameEditText, passwordEditText;
 	private LoginButton loginBtn;
-	private UiLifecycleHelper uiHelper;
 	private TextView backBtn;
 	private ProgressDialog progressDialog;
+	private UiLifecycleHelper uiHelper;			// facebook
 	 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -235,8 +235,9 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 			} else if (state.isClosed()) {
 				
 			}
-		}};
-	 
+		}
+	};
+	
     // facebook: handles result for login 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

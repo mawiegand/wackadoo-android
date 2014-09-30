@@ -29,7 +29,7 @@ public class FacebookLoginAsyncTask extends AsyncTask<String, Integer, Double>{
 	{
 		Session loginSession = Session.getActiveSession();
 		if(loginSession == null || loginSession.getState().isClosed()) {
-			String appId = context.getResources().getString(R.string.app_id);
+			String appId = context.getResources().getString(R.string.facebookAppId);
 			loginSession = new Session.Builder(context).setApplicationId(appId).build();
 		}
 		((FacebookLoginCallbackInterface) context).onFacebookRegistrationCompleted(loginSession);

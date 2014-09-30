@@ -24,6 +24,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.Session;
+import com.facebook.SessionState;
+import com.facebook.UiLifecycleHelper;
 import com.fivedlab.sample.sample_java.Sample;
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.analytics.AutoPing;
@@ -52,6 +55,8 @@ public class MainActivity extends Activity implements
 	private UserCredentials userCredentials;
 	private Handler customHandler;
 	private ProgressDialog progressDialog;
+	private Handler tokenHandler;
+	private UiLifecycleHelper uiHelper;			// facebook
 	
 	@SuppressLint("NewApi")
 	@Override
@@ -69,6 +74,9 @@ public class MainActivity extends Activity implements
 	    characterFrame = (Button) findViewById(R.id.characterFrame);
 	    
 	    userCredentials = new UserCredentials(this.getApplicationContext());
+	    
+	    uiHelper = new UiLifecycleHelper(this, statusCallback);
+		uiHelper.onCreate(savedInstanceState);
 	    
 	    // sound is off by default
 	    soundOn = false;
@@ -99,7 +107,33 @@ public class MainActivity extends Activity implements
 		tokenHandler = new Handler();
 		tokenHandler.post(this);
 	}
-
+	@Override
+    public void onResume() {
+        super.onResume();
+	    
+	    userCredentials = new UserCredentials(getApplicationContext());
+		if (!UtilityHelper.isOnline(this)) {
+			Toast.makeText(getApplicationContext(), getResources().getString(R.string.no_connection), Toast.LENGTH_LONG).show();
+		}
+		else {
+			triggerLogin();
+			triggerGetGames();
+		}
+		
+		uiHelper.onResume();		// facebook
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+	    uiHelper.onPause();
+    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+	    uiHelper.onDestroy();					// facebook
+	    AutoPing.getInstance().stopAutoPing();	// tracking
+    }
+	
 	// start animation of play button
 	private void setUpPlayButtonAnimation() {
 		// start animation of glance
@@ -122,8 +156,6 @@ public class MainActivity extends Activity implements
 		}
 	};
 
-	private Handler tokenHandler;
-
 	private void setUpButtons() {
 		setUpPlayBtn();
 	   	setUpShopBtn();
@@ -135,25 +167,6 @@ public class MainActivity extends Activity implements
 	   	setUpCharacterFrame();
 	}
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-		this.userCredentials = new UserCredentials(getApplicationContext());
-		if (!UtilityHelper.isOnline(this)) {
-			Toast.makeText(getApplicationContext(), getResources().getString(R.string.no_connection), Toast.LENGTH_LONG).show();
-		}
-		else {
-			triggerLogin();
-			triggerGetGames();
-		}				
-	}
-	 
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		AutoPing.getInstance().stopAutoPing();
-	}
-	
 	private void setUpFacebookBtn() {
 		facebookBtn.setOnTouchListener(new View.OnTouchListener() {
 			@Override
@@ -356,6 +369,36 @@ public class MainActivity extends Activity implements
 		toast.show();
 	}
 
+	// facebook: callback interface object to handle current status
+	private Session.StatusCallback statusCallback = new Session.StatusCallback() {
+		@Override
+		public void call(Session session, SessionState state, Exception exception) {
+			if (state.isOpened()) {
+				///TODO: Facebook Login
+				Toast.makeText(MainActivity.this, "EINGELOGGT!", Toast.LENGTH_SHORT)
+					 .show();
+				
+			} else if (state.isClosed()) {
+				Toast.makeText(MainActivity.this, "NICHT EINGELOGGT!", Toast.LENGTH_SHORT)
+				.show();
+			}
+		}
+	};
+
+    // facebook: handles result for login 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        uiHelper.onActivityResult(requestCode, resultCode, data);
+    }
+    
+    // facebook: login handling
+    @Override
+    public void onSaveInstanceState(Bundle savedState) {
+        super.onSaveInstanceState(savedState);
+        uiHelper.onSaveInstanceState(savedState);
+    }
+	
 	private void triggerLogin() {
 		String identifier = userCredentials.getIdentifier();		
 		String accessToken = userCredentials.getAccessToken().getToken();

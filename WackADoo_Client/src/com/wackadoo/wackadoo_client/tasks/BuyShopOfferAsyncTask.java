@@ -65,7 +65,6 @@ public class BuyShopOfferAsyncTask extends AsyncTask<String, Integer, Boolean> {
 		    request.setHeader("Accept", "application/json");
 		    request.setEntity(entity); 
 		    
-		    
 		    HttpResponse response = null;
 		    DefaultHttpClient httpClient = new DefaultHttpClient();
 		    HttpConnectionParams.setSoTimeout(httpClient.getParams(), 10*1000); 
