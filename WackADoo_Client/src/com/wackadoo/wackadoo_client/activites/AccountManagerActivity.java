@@ -251,7 +251,6 @@ public class AccountManagerActivity extends Activity implements AccountManagerCa
     
     // check mail before changing it
     private void enteredNewEmail(String email) {
-		Log.d(TAG, "identifier vor aufruf task: " + userCredentials.getIdentifier());
 		if(UtilityHelper.isValidMail(email)){
 			new AccountManagerAsyncTask(this, progressDialog, userCredentials, "mail", email).execute();
 		} else {

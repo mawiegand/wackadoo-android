@@ -97,7 +97,7 @@ public class ShopCreditsFragment extends Fragment {
 
 	// add products and clicklistener to listview
 	private void setUpListView(ListView listView) {
-		ShopListViewAdapter adapter = new ShopListViewAdapter(context, R.drawable.platinum_small, rowItemList);
+		ShopListViewAdapter adapter = new ShopListViewAdapter(context, R.drawable.platinum_big, rowItemList);
 		listView.setAdapter(adapter);
 		UtilityHelper.setListViewHeightBasedOnChildren(listView);
 		

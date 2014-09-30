@@ -5,33 +5,27 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.SocketException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
+import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpConnectionParams;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import org.apache.http.util.EntityUtils;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.google.gson.JsonObject;
 import com.wackadoo.wackadoo_client.R;
-import com.wackadoo.wackadoo_client.adapter.ShopRowItem;
 import com.wackadoo.wackadoo_client.interfaces.BuyShopOfferCallbackInterface;
-import com.wackadoo.wackadoo_client.interfaces.ShopDataCallbackInterface;
-import com.wackadoo.wackadoo_client.model.UserCredentials;
 
 public class BuyShopOfferAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	
@@ -71,10 +65,11 @@ public class BuyShopOfferAsyncTask extends AsyncTask<String, Integer, Boolean> {
 		    request.setHeader("Accept", "application/json");
 		    request.setEntity(entity); 
 		    
+		    
 		    HttpResponse response = null;
 		    DefaultHttpClient httpClient = new DefaultHttpClient();
 		    HttpConnectionParams.setSoTimeout(httpClient.getParams(), 10*1000); 
-		    HttpConnectionParams.setConnectionTimeout(httpClient.getParams(),10*1000); 
+		    HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 10*1000); 
 	    	
 		    try {
 		    	response = httpClient.execute(request); 
@@ -84,15 +79,15 @@ public class BuyShopOfferAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	    		throw se;
 	    	}
 		    
-		    InputStream in = response.getEntity().getContent();
-		    BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+		    String responseLine = response.getStatusLine().toString();
+		    Log.d(TAG, "response line: " + responseLine);
 		    
-		    String line = null;
-		    while((line = reader.readLine()) != null){
-		        sb.append(line);
+		    if(responseLine.contains("200 OK")) {
+		    	return true;
+		    } else if(responseLine.contains("403 Forbidden")) {
+		    	// not enough credits
+		    	return false;
 		    }
-		    Log.d(TAG, "response: " + sb.toString());
-		    return true;
 	    	
 		} catch (Throwable e) {
 			e.printStackTrace();

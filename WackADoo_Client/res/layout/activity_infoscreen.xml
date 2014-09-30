@@ -186,7 +186,7 @@
 		                    android:layout_weight="0.35"
 		                    android:layout_width="wrap_content"
 		                    android:scaleType="fitCenter"
-		                    android:src="@drawable/mfg_ff_12pt_4c"/>
+		                    android:src="@drawable/filmfoerderung_logo"/>
 	                    
 	                    <RelativeLayout 
 				            android:id="@+id/infoscreen_mfg_bottom_spacer"

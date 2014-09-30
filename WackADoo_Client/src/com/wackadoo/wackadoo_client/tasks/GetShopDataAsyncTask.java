@@ -163,7 +163,7 @@ public class GetShopDataAsyncTask extends AsyncTask<String, Integer, Boolean> {
 						int id = jsonObject.getInt("id");
 						String title = context.getString(R.string.list_gold_text);
 						title = String.format(title, jsonObject.getInt("amount"), jsonObject.getInt("price"));
-						ShopRowItem item = new ShopRowItem(id, R.drawable.goldkroete_128px, title, 0);
+						ShopRowItem item = new ShopRowItem(id, R.drawable.goldkroete_big, title, 0);
 						rowItemList.add(item);
 					}
 					break;
@@ -209,9 +209,9 @@ public class GetShopDataAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	// get id for currency drawable
 	private int getCurrencyImage(int id) {
 		if(id == 1) {
-			return R.drawable.goldkroete_128px;
+			return R.drawable.goldkroete_big;
 		} else {
-			return R.drawable.platinum_small;
+			return R.drawable.platinum_big;
 		}
 	}
 	

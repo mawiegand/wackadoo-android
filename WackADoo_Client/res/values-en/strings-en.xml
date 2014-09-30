@@ -89,6 +89,7 @@
     <string name="subheading_bonus_text">Production Boost</string>
     <string name="shop_headline_text">Buy Credits and purchase Comfortfunctions and Accellerators</string>
 	<string name="current_frog_text">Current Golden Frog Amount: %d</string>
+	<string name="current_credit_text">Current Platinum Credit Amount: %d</string>
 	<string name="buy_item_fail">Not able to communicate with server. Please try again later.</string>
     
     <!-- Shop Info -->

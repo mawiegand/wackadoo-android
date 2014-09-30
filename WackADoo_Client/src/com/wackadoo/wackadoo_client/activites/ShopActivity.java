@@ -250,12 +250,11 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 		listViewPlatinumAccount.setOnItemLongClickListener(new OnItemLongClickListener() {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-				AlertDialog.Builder builder = new AlertDialog.Builder(ShopActivity.this);
-		    	builder.setMessage("Weiterleitung zum Platinum Account Item " +  listAccount.get(position).getId())
-		  		       .setPositiveButton("Ok", null)
-		  			   .show();
-		  		// TODO buy platinum account
-		    	return true;
+				int offerId = listAccount.get(position).getId();
+				setUpDialog();
+				progressDialog.show();
+				new BuyShopOfferAsyncTask(ShopActivity.this, userCredentials.getAccessToken().getToken(), offerId, shopCharacterId, "platinum").execute();
+				return true;
 			}
 		});
 	}
@@ -268,12 +267,9 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 				int offerId = listGold.get(position).getId();
-				String offerType = "resource_offers";
-				
 				setUpDialog();
 				progressDialog.show();
-				new BuyShopOfferAsyncTask(ShopActivity.this, userCredentials.getAccessToken().getToken(), offerId, shopCharacterId, offerType).execute();
-		    	
+				new BuyShopOfferAsyncTask(ShopActivity.this, userCredentials.getAccessToken().getToken(), offerId, shopCharacterId, "resource").execute();
 				return true;
 			}
 		});
@@ -286,12 +282,11 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 		listViewBonus.setOnItemLongClickListener(new OnItemLongClickListener() {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-				AlertDialog.Builder builder = new AlertDialog.Builder(ShopActivity.this);
-		    	builder.setMessage("Weiterleitung zum Bonus Item " + listBonus.get(position).getId())
-		  		       .setPositiveButton("Ok", null)
-		  			   .show();
-		  		// TODO buy bonus
-		    	return true;
+				int offerId = listBonus.get(position).getId();
+				setUpDialog();
+				progressDialog.show();
+				new BuyShopOfferAsyncTask(ShopActivity.this, userCredentials.getAccessToken().getToken(), offerId, shopCharacterId, "bonus").execute();
+				return true;
 			}
 		});
 		if (progressDialog.isShowing()) {
@@ -307,8 +302,10 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 			case 2:	setUpListPlatinumAccount(offers); break;
 			case 3: setUpListBonus(offers); break;
 			case 4: 
-				String frogAmount = String.format(getString(R.string.current_frog_text), data);
-				((TextView) findViewById(R.id.currentFrogText)).setText(frogAmount);
+				String textAmount = String.format(getString(R.string.current_frog_text), data);
+				((TextView) findViewById(R.id.currentFrogText)).setText(textAmount);			// TODO: correct value?
+				textAmount = String.format(getString(R.string.current_credit_text), data);
+				((TextView) findViewById(R.id.shopCreditsAmountText)).setText(textAmount);
 				shopCharacterId = customerId;
 				
 				break;
@@ -340,6 +337,7 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 		progressDialog.setMessage(getResources().getString(R.string.please_wait));
 	}
 
+	
 	// play store: set up in app billing
 	private void setUpBilling(){
 		setUpDialog();
@@ -388,7 +386,8 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 		}
 	}
 
-	// play store: returns list of ShopRowItems for given list of json products (sorted by price)
+	
+	// play store: returns list of platinum credits ShopRowItems for given list of json products (sorted by price)
 	private ArrayList<ShopRowItem> produceRowItemList() {
 		ArrayList<ShopRowItem> rowItemList = new ArrayList<ShopRowItem>();
 		
@@ -421,7 +420,7 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 				JSONObject jsonObject = new JSONObject(stringProduct);
 				String title = jsonObject.getString("title");
 				title = title.replace("(Wackadoo)", "/ " + jsonObject.getString("price"));
-				ShopRowItem item = new ShopRowItem(R.drawable.platinum_small, title, 0);
+				ShopRowItem item = new ShopRowItem(R.drawable.platinum_big, title, 0);
 				rowItemList.add(item);
 			}
 			

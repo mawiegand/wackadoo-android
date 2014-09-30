@@ -90,16 +90,23 @@ public class AccountManagerAsyncTask extends AsyncTask<String, Integer, Boolean>
 
 		    response = httpClient.execute((HttpUriRequest) request); 
 		
-		    InputStream in = response.getEntity().getContent();
-		    BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-		    String line = null;
-		    while((line = reader.readLine()) != null){
-		        sb.append(line);
+		    String responseLine = response.getStatusLine().toString();
+		    Log.d(TAG, "response line: " + responseLine);
+		    
+		    if(responseLine.contains("200 OK")) {
+		    	InputStream in = response.getEntity().getContent();
+		    	BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+		    	String line = null;
+		    	while((line = reader.readLine()) != null){
+		    		sb.append(line);
+		    	}
+		    	jsonResponse = new JSONObject(sb.toString());
+		    	Log.d(TAG, "Account Manager Response: " + jsonResponse);
+		    	return true;
+		    
+		    } else if(responseLine.contains("403 Forbidden")) {
+		    	return false;
 		    }
-		    		    
-		    jsonResponse = new JSONObject(sb.toString());
-		    Log.d(TAG, "Account Manager Response: " + jsonResponse);
-		    return true;
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -109,8 +116,10 @@ public class AccountManagerAsyncTask extends AsyncTask<String, Integer, Boolean>
 	
 	@Override
 	protected void onPostExecute(Boolean result) {
-		super.onPostExecute(result);		
-		result = !jsonResponse.has("error_description") && result;
+		super.onPostExecute(result);
+		if(result) {
+			result = !jsonResponse.has("error_description") && result;
+		}
 		listener.accountManagerCallback(type, result, value);
 	}
 }

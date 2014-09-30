@@ -17,7 +17,7 @@
     <string name="gamesURL">/identity_provider/%s/game/game_instances</string>
     
     <!-- Character -->
-    <string name="characterURL">game_server/fundamental/characters/self?</string>
+    <string name="characterURL">/game_server/fundamental/characters/self?</string>
     
     <!-- Change Email -->
     <string name="changeEmailURL">/identity_provider/%s/identities/</string>

@@ -91,7 +91,7 @@
 					        android:paddingLeft="10dp"
 					        android:paddingRight="0dp"
 					        android:scaleType="fitCenter"
-					        android:src="@drawable/platinum_small" />
+					        android:src="@drawable/platinum_big" />
 						
 						<TextView
 						    android:id="@+id/shopCreditsText"
@@ -104,24 +104,22 @@
 						    android:layout_centerVertical="true"
 						    android:text="@string/list_platinum_credits_text"
 						    android:gravity="center"/>
-						
-						<TextView
-					        android:id="@+id/shopCreditsAmountText"
-					        android:layout_width="40dp"
-					        android:layout_height="40dp"
-					        android:paddingLeft="10dp"
-					        android:paddingRight="10dp"
-						    android:layout_alignParentRight="true"
-						    android:layout_centerVertical="true"
-						    android:scaleType="fitCenter" />
-						
 					</RelativeLayout>
+					
+					<TextView
+				        android:id="@+id/shopCreditsAmountText"
+				        style="@style/shopSubHeadingStyle"
+		                android:layout_below="@id/shopCreditsButton"
+		                android:layout_marginTop="5dp"
+		                android:textAllCaps="false"
+			            android:textSize="14sp"
+					    android:scaleType="fitCenter" />
 		
 			        <TextView 
 			            android:id="@+id/subheadingGold"
 			            style="@style/shopSubHeadingStyle"
 			            android:text="@string/subheading_gold_text"
-		                android:layout_below="@id/shopCreditsButton"/>
+		                android:layout_below="@id/shopCreditsAmountText"/>
 			        
 			        <ImageButton
 				        android:id="@+id/goldInfoBtn"
