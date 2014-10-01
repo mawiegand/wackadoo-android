@@ -35,13 +35,13 @@ public class InfoScreenActivity extends Activity {
 			@Override
 			public boolean onTouch(View v, MotionEvent e) {
 				int action = e.getActionMasked();
-				if(action == MotionEvent.ACTION_DOWN) {
+				if (action == MotionEvent.ACTION_DOWN) {
 					((TextView) v).setTextColor(getResources().getColor(R.color.textbox_orange_active));
 				
 				} else if (action == MotionEvent.ACTION_CANCEL) {
 					((TextView) v).setTextColor(getResources().getColor(R.color.textbox_orange));
 					
-				} else if(action == MotionEvent.ACTION_UP){
+				} else if (action == MotionEvent.ACTION_UP){
 					((TextView) v).setTextColor(getResources().getColor(R.color.textbox_orange));
 					
 					switch(v.getId()) {

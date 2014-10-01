@@ -5,9 +5,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -17,6 +17,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.LoginActivity;
+import com.facebook.Session;
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.helper.UtilityHelper;
 import com.wackadoo.wackadoo_client.interfaces.AccountManagerCallbackInterface;
@@ -84,13 +86,14 @@ public class AccountManagerActivity extends Activity implements AccountManagerCa
 	}
     
 	private void addButtonListeners() {
-		if(userCredentials.isPasswordGenerated()) {
+		if (userCredentials.isPasswordGenerated()) {
 			setUpPasswordButton();
 			passwordButtonVisible = true;
 		} else {
 			passwordButtonVisible = false;
 		}
-		if(userCredentials.getEmail().length() <= 0) {
+//		if (userCredentials.getEmail().length() <= 0) {
+		if (userCredentials.isEmailGenerated()) {
 			setUpEmailButton();
 			emailButtonVisible = true;
 		} else {
@@ -101,7 +104,7 @@ public class AccountManagerActivity extends Activity implements AccountManagerCa
 	}
 	
 	private void setButtonVisibility(boolean setPasswordButtonVisible, boolean emailButtonVisible) {
-		if(!passwordButtonVisible) {
+		if (!passwordButtonVisible) {
 			passwordButton.setText(getResources().getString(R.string.account_change_password));
 			RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)passwordButton.getLayoutParams();
 			params.addRule(RelativeLayout.BELOW, R.id.emailInformationText);
@@ -111,7 +114,7 @@ public class AccountManagerActivity extends Activity implements AccountManagerCa
 			characterLockedTextView.setVisibility(View.GONE);
 			makeCharacterPortableTextView.setVisibility(View.GONE);
 		}
-		if(!emailButtonVisible) {
+		if (!emailButtonVisible) {
 			setEmailButton.setEnabled(false);
 			setEmailButton.setVisibility(View.GONE);
 			provideEmailTextView.setVisibility(View.GONE);
@@ -198,7 +201,7 @@ public class AccountManagerActivity extends Activity implements AccountManagerCa
     		   .setNegativeButton(getResources().getString(R.string.alert_cancel_button), dialogClickListener);
     		 
     	// user without mail wants to log out
-    	if(userCredentials.getPassword().equals("")) {
+    	if (userCredentials.getPassword().equals("")) {
     		builder.setTitle(getResources().getString(R.string.account_really_sign_out))
     			   .setMessage(getResources().getString(R.string.account_character_lost_when_signout));
     	} else {
@@ -211,10 +214,10 @@ public class AccountManagerActivity extends Activity implements AccountManagerCa
 	private void loadCredentialsToUI() {
     	String username = userCredentials.getUsername();
     	String email = userCredentials.getEmail();
-    	if(!username.isEmpty()) {
+    	if (!username.isEmpty()) {
     		usernameTextView.setText(username);
     	}
-    	if(!email.isEmpty()) {
+    	if (!email.isEmpty()) {
     		emailTextView.setText(email);
     	}
 	}
@@ -225,7 +228,7 @@ public class AccountManagerActivity extends Activity implements AccountManagerCa
     	builder.setTitle(text);
 
     	final EditText input = new EditText(this);
-    	if(callback.equals(AlertCallback.Password)) {
+    	if (callback.equals(AlertCallback.Password)) {
 	    	input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
 		}
     	
@@ -251,7 +254,7 @@ public class AccountManagerActivity extends Activity implements AccountManagerCa
     
     // check mail before changing it
     private void enteredNewEmail(String email) {
-		if(UtilityHelper.isValidMail(email)){
+		if (UtilityHelper.isValidMail(email)){
 			new AccountManagerAsyncTask(this, progressDialog, userCredentials, "mail", email).execute();
 		} else {
 			Toast.makeText(getApplicationContext(), getResources().getString(R.string.credentials_email_not_valid), Toast.LENGTH_SHORT).show();
@@ -260,7 +263,7 @@ public class AccountManagerActivity extends Activity implements AccountManagerCa
 	
     // check password before changing it
 	private void enteredNewPassword(String password) {
-		if(password.length() > 5){
+		if (password.length() > 5){
 			new AccountManagerAsyncTask(this, progressDialog, userCredentials, "password", password).execute();
 		} else {
 			Toast.makeText(getApplicationContext(), getResources().getString(R.string.credentials_password_too_short), Toast.LENGTH_SHORT).show();
@@ -271,17 +274,16 @@ public class AccountManagerActivity extends Activity implements AccountManagerCa
 	private void signOut() {
 		userCredentials.clearAllCredentials();
 		userCredentials = new UserCredentials(getApplicationContext());
-		finish();
-//		checkUserIsLoggedIn();
+		checkUserIsLoggedIn();
 	}
 
 	// callback interface for AccountManagerAsyncTask
 	@Override
-	public void accountManagerCallback(String type, Boolean result, String newValue) {
+	public void accountManagerCallback(String type, Integer result, String newValue) {
 		Toast toast = Toast.makeText(this, null, Toast.LENGTH_SHORT);
 		
-		if(result) {
-			if(type.equals("mail")) {
+		if (result == 200) {
+			if (type.equals("mail")) {
 				emailButtonVisible = false;
 				setButtonVisibility(passwordButtonVisible, emailButtonVisible);
 		    	userCredentials.setEmail(newValue);
@@ -293,27 +295,37 @@ public class AccountManagerActivity extends Activity implements AccountManagerCa
 				userCredentials.setPassword(newValue);
 				toast.setText(getResources().getString(R.string.alert_change_password_success));
 			}
-		} else {
-			if(type.equals("mail")) {
+			
+		} else if (result == 500) {
+			if (type.equals("mail")) {
 				toast.setText(getResources().getString(R.string.alert_email_change_error));
 			} else {
 				toast.setText(getResources().getString(R.string.alert_change_password_error));
 			}
+		
+		} else if (result == 403) {
+			toast.setText(getResources().getString(R.string.alert_email_change_error_403));
+		
+		} else if (result == 409) {
+			toast.setText(getResources().getString(R.string.alert_email_change_error_409));
 		}
 		toast.show();
-
 	}
 	
-//	private void checkUserIsLoggedIn() {
-//		String identifier = this.userCredentials.getIdentifier();
-//		String email = this.userCredentials.getEmail();
-//		
-//		////TODO: Might check facebook login 
-//		if((identifier.length() <= 0) && (email.length() <= 0)) {
-//			Intent intent = new Intent(AccountManagerActivity.this, CredentialScreenActivity.class);
-//			startActivity(intent);
-//			finish();
-//		}
-//	}
+	private void checkUserIsLoggedIn() {
+		String identifier = this.userCredentials.getIdentifier();
+		String email = this.userCredentials.getEmail();
+	
+		// closes facebook session and clears cache
+		Session session = Session.getActiveSession();
+		session.closeAndClearTokenInformation();		
+
+		// if credentials been deleted, go back to login screen
+	    if ((identifier.length() <= 0) && (email.length() <= 0)) {
+			Intent intent = new Intent(AccountManagerActivity.this, CredentialScreenActivity.class);
+			startActivity(intent);
+			finish();
+		}
+	}
 	
 }

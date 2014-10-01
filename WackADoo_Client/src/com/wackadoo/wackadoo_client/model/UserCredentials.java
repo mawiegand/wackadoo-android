@@ -10,13 +10,12 @@ import android.util.Log;
 
 public class UserCredentials {
 	
-	private static final String TAG = UserCredentials.class.getSimpleName();
-
 	private Context context;
 	private int gameId;
-	private String username, password, gcPlayerId, fbPlayerId, fbAccessToken, clientID, email, hostname;
+	private String username, password, gcPlayerId, fbPlayerId, fbAccessToken, characterId, email, hostname;
 	private AccessToken accessToken;
 	private ClientCredentials clientCredentials;
+	private boolean generatedEmail = true;
 	private boolean generatedPassword = true;
 	
 	public UserCredentials(Context context) {
@@ -39,6 +38,7 @@ public class UserCredentials {
 	}
 	public void setEmail(String email) {
 		this.email = email;
+		generatedEmail = false;
 		persistCredentials();
 	}
 	
@@ -79,7 +79,7 @@ public class UserCredentials {
 		accessToken.setExpireCode(myPrefs.getString("expire_code", ""));
 		accessToken.setToken(myPrefs.getString("accesstoken", ""));
 		accessToken.restoreExpireDate(new Date(myPrefs.getLong("expire_date", 0)));
-		clientID = myPrefs.getString("client_id", "");
+		characterId = myPrefs.getString("character_id", "");
 		username = myPrefs.getString("username", "");
 		email = myPrefs.getString("email", "");
 		password = myPrefs.getString("password", "");
@@ -92,7 +92,7 @@ public class UserCredentials {
 		SharedPreferences.Editor e = myPrefs.edit();
 		e.putString("identifier", accessToken.getIdentifier());
 		e.putLong("expire_date", accessToken.getCreatedAt().getTime());
-		e.putString("client_id", clientID);
+		e.putString("character_id", characterId);
 		e.putString("username", username);
 		e.putString("email", email);
 		e.putString("password", password);
@@ -104,11 +104,11 @@ public class UserCredentials {
 		e.commit();
 	}
 
-	public String getClientID() {
-		return clientID;
+	public String getCharacterId() {
+		return characterId;
 	}
-	public void setClientID(String clientID) {
-		this.clientID = clientID;
+	public void setCharacterId(String characterId) {
+		this.characterId = characterId;
 		persistCredentials();
 	}
 	
@@ -138,8 +138,11 @@ public class UserCredentials {
 		persistCredentials();
 	}
 	
+	public boolean isEmailGenerated() {
+		return generatedEmail;
+	}
 	public boolean isPasswordGenerated() {
-		return this.generatedPassword;
+		return generatedPassword;
 	}
 
 	public void clearAllCredentials() {

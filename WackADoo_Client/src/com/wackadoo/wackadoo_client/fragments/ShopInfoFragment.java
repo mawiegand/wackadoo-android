@@ -60,7 +60,7 @@ public class ShopInfoFragment extends Fragment {
 	
 	// get strings from ressources
 	private void setUpRessources() {
-		if(type.equals("platinumCredits")) {
+		if (type.equals("platinumCredits")) {
 			ressourceArray[0] = R.string.shopInfoText_credits;
 			ressourceArray[1] = R.string.shopInfoHeadingText_credits;
 			ressourceArray[2] = R.string.shopInfoDescText_credits;

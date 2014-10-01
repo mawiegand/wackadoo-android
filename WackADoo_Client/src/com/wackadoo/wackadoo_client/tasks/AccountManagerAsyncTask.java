@@ -30,7 +30,7 @@ import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.interfaces.AccountManagerCallbackInterface;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
 
-public class AccountManagerAsyncTask extends AsyncTask<String, Integer, Boolean>{
+public class AccountManagerAsyncTask extends AsyncTask<String, Integer, Integer>{
 
 	private final static String TAG = AccountManagerAsyncTask.class.getSimpleName();
 	
@@ -49,15 +49,15 @@ public class AccountManagerAsyncTask extends AsyncTask<String, Integer, Boolean>
     }
 	
 	@Override
-	protected Boolean doInBackground(String... params) {
+	protected Integer doInBackground(String... params) {
 		Activity parent = (Activity) listener;
 		String urlForRequest, completeURL;
 		AbstractHttpMessage request;
 		List <NameValuePair> nameValuePairs = new ArrayList <NameValuePair>();
 		
 		// change email
-		if(type.equals("mail")) {
-			urlForRequest = parent.getString(R.string.changeEmailURL) + userCredentials.getClientID();
+		if (type.equals("mail")) {
+			urlForRequest = parent.getString(R.string.changeEmailURL) + userCredentials.getCharacterId();
 			completeURL = parent.getString(R.string.baseURL) + String.format(urlForRequest, Locale.getDefault().getCountry().toLowerCase());
 			request = new HttpPut(completeURL);
 			nameValuePairs.add(new BasicNameValuePair("identity[email]", value)); //characterNewMail	
@@ -93,7 +93,7 @@ public class AccountManagerAsyncTask extends AsyncTask<String, Integer, Boolean>
 		    String responseLine = response.getStatusLine().toString();
 		    Log.d(TAG, "response line: " + responseLine);
 		    
-		    if(responseLine.contains("200 OK")) {
+		    if (responseLine.contains("200 OK")) {
 		    	InputStream in = response.getEntity().getContent();
 		    	BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 		    	String line = null;
@@ -102,23 +102,25 @@ public class AccountManagerAsyncTask extends AsyncTask<String, Integer, Boolean>
 		    	}
 		    	jsonResponse = new JSONObject(sb.toString());
 		    	Log.d(TAG, "Account Manager Response: " + jsonResponse);
-		    	return true;
+		    	return 200;
 		    
-		    } else if(responseLine.contains("403 Forbidden")) {
-		    	return false;
-		    }
+		    } else if (responseLine.contains("403 Forbidden")) {
+		    	return 403;
+			} else if (responseLine.contains("409 Conflict")) {
+				return 409;
+			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return false;
+		return 500;
 	}
 	
 	@Override
-	protected void onPostExecute(Boolean result) {
+	protected void onPostExecute(Integer result) {
 		super.onPostExecute(result);
-		if(result) {
-			result = !jsonResponse.has("error_description") && result;
+		if (result == 200) {
+			result = !jsonResponse.has("error_description") ? 200 : 500;
 		}
 		listener.accountManagerCallback(type, result, value);
 	}

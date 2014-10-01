@@ -520,7 +520,7 @@ public abstract class PickerFragment<T extends GraphObject> extends Fragment {
 
     void setSelectedGraphObjects(List<String> objectIds) {
         for(String objectId : objectIds) {
-            if(!this.selectionStrategy.isSelected(objectId)) {
+            if (!this.selectionStrategy.isSelected(objectId)) {
                 this.selectionStrategy.toggleSelection(objectId);
             }
         }

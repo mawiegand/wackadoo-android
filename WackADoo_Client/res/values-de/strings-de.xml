@@ -40,6 +40,8 @@
     <string name="alert_email_change">E-Mail ändern</string>
     <string name="alert_email_change_success">E-Mail erfolgreich geändert</string>
     <string name="alert_email_change_error">Deine E-Mail wurde vom Server NICHT akzeptiert. Bitte versuche es noch mal oder kontaktiere den Support.</string>
+    <string name="alert_email_change_error_403">Du darfst deine E-Mail Adresse nicht schon wieder ändern. Bitte kontaktiere den Support falls du denkst, dass es sich um einen Fehler handelt.</string>
+    <string name="alert_email_change_error_409">Die eingegebene E-Mail Adresse ist nicht gültig oder bereits mit einem anderen Account registriert. Bitte kontaktiere den Support falls du denkst, dass es sich um einen Fehler handelt.</string>
     <string name="alert_ok_button">OK</string>
     <string name="alert_cancel_button">Abbrechen</string>
     <string name="alert_quit">Sind Sie sicher?</string>

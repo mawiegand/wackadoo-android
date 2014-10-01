@@ -87,8 +87,8 @@ public class WackadooWebviewActivity extends Activity {
 	    // use device backbutton to go back one page in webview
 	    @Override
 	    public boolean onKeyDown(int keyCode, KeyEvent event) {
-	    	if(event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_BACK) {
-    			if(webView.canGoBack()) {
+	    	if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_BACK) {
+    			if (webView.canGoBack()) {
     				webView.goBack();
     				
     			} else {

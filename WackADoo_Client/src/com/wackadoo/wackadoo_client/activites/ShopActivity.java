@@ -88,7 +88,7 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 	@Override
 	public void onDestroy() {
 	    super.onDestroy();
-	    if(billingHelper != null) {
+	    if (billingHelper != null) {
 	    	billingHelper.dispose();
 	    }
 	}
@@ -125,13 +125,13 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 			public boolean onTouch(View v, MotionEvent e) {
 				int action = e.getActionMasked(); 
 				
-				if(action == MotionEvent.ACTION_DOWN) {
+				if (action == MotionEvent.ACTION_DOWN) {
 					((ImageView) v).setImageResource(R.drawable.title_info_button_active);
 					
-				} else if(action == MotionEvent.ACTION_CANCEL) {
+				} else if (action == MotionEvent.ACTION_CANCEL) {
 					((ImageView) v).setImageResource(R.drawable.title_info_button);
 					
-				} else if((action == MotionEvent.ACTION_UP)) {
+				} else if ((action == MotionEvent.ACTION_UP)) {
 					((ImageView) v).setImageResource(R.drawable.title_info_button);
 					switch(v.getId()) {
 		    			case R.id.platinumCreditsInfoBtn:
@@ -164,7 +164,7 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 			public boolean onTouch(View v, MotionEvent event) {
 		    	int action = event.getActionMasked();
 		    	
-		    	if(action == (MotionEvent.ACTION_DOWN)) {
+		    	if (action == (MotionEvent.ACTION_DOWN)) {
 		    		v.setBackgroundColor(getResources().getColor(R.color.shop_listitem_active));
 		    		return true;
 		    	} else if (action == MotionEvent.ACTION_CANCEL) {
@@ -184,7 +184,7 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 	private void openShopInfoFragment(String category) {
 		fragment = null;
 		
-		if(category.equals("platinumCredits")) {
+		if (category.equals("platinumCredits")) {
 			fragment = new ShopInfoFragment("platinumCredits");
 		
 		} else if (category.equals("gold")) {
@@ -315,11 +315,11 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 	// callback interface for BuyShopOfferAsyncTask
 	@Override
 	public void buyShopOfferCallback(boolean result, String message) {
-		if(progressDialog.isShowing()) {
+		if (progressDialog.isShowing()) {
 			progressDialog.dismiss();
 		}
 		
-		if(result) {
+		if (result) {
 			Toast.makeText(this, "GEKLAPPT!", Toast.LENGTH_LONG)
 			.show();
 			
@@ -336,7 +336,6 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 		progressDialog.setTitle(getResources().getString(R.string.server_communication));
 		progressDialog.setMessage(getResources().getString(R.string.please_wait));
 	}
-
 	
 	// play store: set up in app billing
 	private void setUpBilling(){
@@ -375,8 +374,8 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 		int response = skuDetails.getInt("RESPONSE_CODE");
 		Log.d(TAG, "---> response: " + response);
 		
-		if(response == 0) {
-			if(progressDialog.isShowing()) {
+		if (response == 0) {
+			if (progressDialog.isShowing()) {
 				progressDialog.dismiss();
 			}
 			Log.d(TAG, "skuDetails: " + skuDetails.toString());
@@ -400,7 +399,7 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 					int priceA = Integer.valueOf(new JSONObject(itemA).getString("price_amount_micros"));
 					int priceB = Integer.valueOf(new JSONObject(itemB).getString("price_amount_micros"));
 				
-					if(priceA > priceB) {
+					if (priceA > priceB) {
 						return 1;
 					} else if (priceA < priceB) {
 						return -1;

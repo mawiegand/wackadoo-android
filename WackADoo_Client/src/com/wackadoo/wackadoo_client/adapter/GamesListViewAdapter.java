@@ -80,7 +80,7 @@ public class GamesListViewAdapter extends ArrayAdapter<GameInformation> implemen
     public boolean onTouch(View v, MotionEvent event) {
     	int action = event.getActionMasked();
     	
-    	if(action == (MotionEvent.ACTION_DOWN)) {
+    	if (action == (MotionEvent.ACTION_DOWN)) {
     		v.setBackgroundColor(context.getResources().getColor(R.color.shop_listitem_active));
     		return true;
     		
@@ -102,12 +102,12 @@ public class GamesListViewAdapter extends ArrayAdapter<GameInformation> implemen
     	Calendar today = Calendar.getInstance();
         
     	// if there is an enddate for the game
-        if(game.getEndedAt() != null) {
+        if (game.getEndedAt() != null) {
         	Calendar endDate = Calendar.getInstance();
         	endDate.setTime(game.getEndedAt());
         
         	// if game already finished
-        	if(endDate.before(today)) {
+        	if (endDate.before(today)) {
         		resultString = context.getResources().getString(R.string.selectgame_item_days_finished); 	
         		return resultString;
         	}
@@ -117,12 +117,12 @@ public class GamesListViewAdapter extends ArrayAdapter<GameInformation> implemen
         startDate.setTime(game.getStartedAt());
         
     	// game already started
-    	if(startDate.before(today)) {
+    	if (startDate.before(today)) {
     		int days = Days.daysBetween(new DateTime(startDate.getTime()), new DateTime(today.getTime())).getDays(); 
     		resultString = String.format(context.getResources().getString(R.string.selectgame_item_days), days); 	
     		
     	// game not started yet
-    	} else if(today.before(startDate)){
+    	} else if (today.before(startDate)){
     		int days = (-1) * (Days.daysBetween(new DateTime(startDate.getTime()), new DateTime(today.getTime())).getDays()); 		// results negative days, so -1 to remove minus
     		resultString = String.format(context.getResources().getString(R.string.selectgame_item_days_till_start), days); 	
     		

@@ -48,12 +48,12 @@ public class ShopListViewAdapter extends ArrayAdapter<ShopRowItem> implements On
             holder = (ViewHolder) convertView.getTag();
 
         holder.title.setText(rowItem.getTitle());
-        if(rowItem.getOptionalIconImageId() != 0){
+        if (rowItem.getOptionalIconImageId() != 0){
         	holder.optionalImageView.setImageResource(rowItem.getOptionalIconImageId());
         } else {
         	holder.optionalImageView.setVisibility(View.GONE);
         }
-        if(rowItem.getIconImageId() != 0){
+        if (rowItem.getIconImageId() != 0){
         	holder.imageView.setImageResource(rowItem.getIconImageId());
         } else {
         	holder.imageView.setVisibility(View.GONE);
@@ -67,7 +67,7 @@ public class ShopListViewAdapter extends ArrayAdapter<ShopRowItem> implements On
     public boolean onTouch(View v, MotionEvent event) {
     	int action = event.getActionMasked();
     	
-    	if(action == (MotionEvent.ACTION_DOWN)) {
+    	if (action == (MotionEvent.ACTION_DOWN)) {
     		v.setBackgroundColor(context.getResources().getColor(R.color.shop_listitem_active));
     		return true;
     	} else if (action == MotionEvent.ACTION_CANCEL) {

@@ -96,11 +96,10 @@ public class GetShopDataAsyncTask extends AsyncTask<String, Integer, Boolean> {
 		    while((line = reader.readLine()) != null){
 		        sb.append(line);
 		    }
-		    
 		    Log.d(TAG, "response: " + sb);
 		    
 		    // product asynctask
- 			if(offerType < 4) {
+ 			if (offerType < 4) {
  				rowItemList = produceRowItemList(new JSONArray(sb.toString()));
 
  			// character data asynctask
@@ -121,7 +120,7 @@ public class GetShopDataAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	protected void onPostExecute(Boolean result) {
 		super.onPostExecute(result);
 		
-		if(result) {
+		if (result) {
 			((ShopDataCallbackInterface) context).getShopDataCallback(rowItemList, data, shopCharacterId, offerType);
 		}
 	}
@@ -139,7 +138,7 @@ public class GetShopDataAsyncTask extends AsyncTask<String, Integer, Boolean> {
 					int priceA = Integer.valueOf(new JSONObject(itemA).getString("price_amount_micros"));
 					int priceB = Integer.valueOf(new JSONObject(itemB).getString("price_amount_micros"));
 				
-					if(priceA > priceB) {
+					if (priceA > priceB) {
 						return 1;
 					} else if (priceA < priceB) {
 						return -1;
@@ -208,7 +207,7 @@ public class GetShopDataAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	
 	// get id for currency drawable
 	private int getCurrencyImage(int id) {
-		if(id == 1) {
+		if (id == 1) {
 			return R.drawable.goldkroete_big;
 		} else {
 			return R.drawable.platinum_big;

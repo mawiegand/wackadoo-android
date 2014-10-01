@@ -95,13 +95,13 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 			public boolean onTouch(View v, MotionEvent event) {
 				int action = event.getActionMasked();
 				
-				if(action == MotionEvent.ACTION_DOWN) {
+				if (action == MotionEvent.ACTION_DOWN) {
 					((TextView) v).setTextColor(getResources().getColor(R.color.textbox_orange_active));
 				
-				} else if(action == MotionEvent.ACTION_CANCEL) {
+				} else if (action == MotionEvent.ACTION_CANCEL) {
 					((TextView) v).setTextColor(getResources().getColor(R.color.textbox_orange));
 					
-				} else if(action == MotionEvent.ACTION_UP) {
+				} else if (action == MotionEvent.ACTION_UP) {
 					((TextView) v).setTextColor(getResources().getColor(R.color.textbox_orange));
 					
 					switch(v.getId()) {
@@ -161,7 +161,7 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		String title, message;
 		
-		if(success) {
+		if (success) {
 			// TODO: dynamic character info!
 			title = "WackyUser1337";
 			message = String.format(getResources().getString(R.string.account_character_restore_success), "WackyUser1337");
@@ -205,8 +205,8 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 	}
 
 	private void triggerLogin() {
-		if(userNameEditText.getText().length() > 0) {
-			if(passwordEditText.getText().length() > 5) {
+		if (userNameEditText.getText().length() > 0) {
+			if (passwordEditText.getText().length() > 5) {
 				if (UtilityHelper.isValidMail(userNameEditText.getText().toString())) {
 					userCredentials.setEmail(this.userNameEditText.getText().toString());
 				
@@ -231,10 +231,8 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 		@Override
 		public void call(Session session, SessionState state, Exception exception) {
 			if (state.isOpened()) {
-				///TODO: Facebook Login
-			} else if (state.isClosed()) {
-				
-			}
+				finish();
+			} 
 		}
 	};
 	
@@ -244,20 +242,13 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
         super.onActivityResult(requestCode, resultCode, data);
         uiHelper.onActivityResult(requestCode, resultCode, data);
     }
- 
-    // facebook: login handling
-    @Override
-    public void onSaveInstanceState(Bundle savedState) {
-        super.onSaveInstanceState(savedState);
-        uiHelper.onSaveInstanceState(savedState);
-    }
 
-    // callback interface for registration task
+    // callback interface for CreateAccountAsyncTask
 	@Override
-	public void onRegistrationCompleted(String identifier, String clientID, String nickname) {
+	public void onRegistrationCompleted(String identifier, String nickname, String characterId) {
 		userCredentials.setIdentifier(identifier);
-		userCredentials.setClientID(clientID);
 		userCredentials.setUsername(nickname);
+		userCredentials.setCharacterId(characterId);
 		finish();
 	}
 	
@@ -265,7 +256,7 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 	@Override
 	public void loginCallback(boolean result, String accessToken, String expiration, String userIdentifier, boolean restoreAccount, boolean refresh) {
 		userCredentials.generateNewAccessToken(accessToken, expiration);
-		userCredentials.setClientID(userIdentifier);
+		userCredentials.setIdentifier(userIdentifier);
 		
 		// if async task called to restore locale account, show dialog
 		if (restoreAccount) {
@@ -281,7 +272,7 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 	public void loginCallbackError(String error, boolean restoreAccount, boolean refresh) {
 		if (restoreAccount) restoreAccount(false);
 		else {
-			if(error.equals("invalid_grant")) {
+			if (error.equals("invalid_grant")) {
 				Toast.makeText(getApplicationContext(), getResources().getString(R.string.login_invalid_grant), Toast.LENGTH_LONG)
 				.show();
 			

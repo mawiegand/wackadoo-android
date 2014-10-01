@@ -91,23 +91,23 @@ public class SelectGameActivity extends Activity implements CurrentGamesCallback
 				Calendar c = Calendar.getInstance();		// date today
 				
 				// game is full
-				if(clickedGame.getMaxPlayers() == clickedGame.getPresentPlayers()){
+				if (clickedGame.getMaxPlayers() == clickedGame.getPresentPlayers()){
 					toast.setText(getResources().getString(R.string.selectgame_game_full));
 					
 				// signup is disabled 	
-				} else if(!clickedGame.isJoined() && !clickedGame.isSignupEnabled()) {
+				} else if (!clickedGame.isJoined() && !clickedGame.isSignupEnabled()) {
 					toast.setText(getResources().getString(R.string.selectgame_signup_disabled));
 					
 				// signin is disabled 	
-				} else if(clickedGame.isJoined() && !clickedGame.isSigninEnabled()) {
+				} else if (clickedGame.isJoined() && !clickedGame.isSigninEnabled()) {
 					toast.setText(getResources().getString(R.string.selectgame_signin_disabled));
 				
 				// game not started yet	
-				} else if(clickedGame.getStartedAt().after(c.getTime())) {
+				} else if (clickedGame.getStartedAt().after(c.getTime())) {
 					toast.setText(getResources().getString(R.string.selectgame_game_not_startet));
 				
 				// game already finished
-				} else if(clickedGame.getEndedAt().before(c.getTime())) {
+				} else if (clickedGame.getEndedAt().before(c.getTime())) {
 					toast.setText(getResources().getString(R.string.selectgame_game_finished));
 					
 				// join world	

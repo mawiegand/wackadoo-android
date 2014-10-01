@@ -70,7 +70,7 @@ public class CustomIabHelper extends IabHelper implements QueryInventoryFinished
     
     // handles response with purchased items
     public void onQueryInventoryFinished(IabResult result, Inventory inv) {
-		if(inv != null) {
+		if (inv != null) {
 			// consume already purchased items
         	handleUnconsumedItems(inv, CustomIabHelper.this);
         	
@@ -97,7 +97,7 @@ public class CustomIabHelper extends IabHelper implements QueryInventoryFinished
 	@Override
 	public void onIabPurchaseFinished(IabResult result, Purchase info) {
 		// code 0 = success, code 7 = already purchased
-		if(result.getResponse() == 0 || result.getResponse() == 7) {
+		if (result.getResponse() == 0 || result.getResponse() == 7) {
     		consumeAsync(info, null);
 		}
 	}
