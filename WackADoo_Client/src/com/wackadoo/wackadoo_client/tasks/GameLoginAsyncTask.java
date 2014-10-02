@@ -37,7 +37,6 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	private JSONObject jsonResponse;
 	private ProgressDialog progressDialog;
 	private boolean restoreAccount;
-
 	private boolean refresh;
     
     public GameLoginAsyncTask(Context context, UserCredentials userCredentials, boolean restoreAccount, boolean refresh, ProgressDialog progressDialog) {
@@ -52,8 +51,8 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	protected Boolean doInBackground(String... params) {
 	    DeviceInformation deviceInformation = new DeviceInformation(context);
 	    
-		String urlForRequest = context.getString(R.string.loginURL);
-		String baseURL = context.getString(R.string.baseURL);
+		String urlForRequest = context.getString(R.string.loginPath);
+		String baseURL = context.getString(R.string.basePath);
 		String completeURL = baseURL + String.format(urlForRequest, Locale.getDefault().getCountry().toLowerCase());
 	    HttpPost request = new HttpPost(completeURL);
 	    StringBuilder sb = new StringBuilder();

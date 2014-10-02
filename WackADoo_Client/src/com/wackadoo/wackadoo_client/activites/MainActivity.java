@@ -44,6 +44,7 @@ import com.wackadoo.wackadoo_client.interfaces.CurrentGamesCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.GameLoginCallbackInterface;
 import com.wackadoo.wackadoo_client.model.GameInformation;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
+import com.wackadoo.wackadoo_client.tasks.FacebookAsyncTask;
 import com.wackadoo.wackadoo_client.tasks.GameLoginAsyncTask;
 import com.wackadoo.wackadoo_client.tasks.GetCharacterAsyncTask;
 import com.wackadoo.wackadoo_client.tasks.GetCurrentGamesAsyncTask;
@@ -110,7 +111,6 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		tokenHandler = new Handler();
 		tokenHandler.post(this);
 	}
-
 
 	@Override
 	public void onResume() {
@@ -384,14 +384,14 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	    // try to log in with new permission request
 		} else if (!session.isOpened() && !session.isClosed()) {
 	        Session.OpenRequest openRequest = new Session.OpenRequest(MainActivity.this);
-	        openRequest.setPermissions(Arrays.asList("email"));
+	        openRequest.setPermissions(Arrays.asList("basic_info", "email"));
 	        openRequest.setLoginBehavior(SessionLoginBehavior.SSO_WITH_FALLBACK);
 	        session.openForRead(openRequest);
 	        loggedIn = true;
 	        
 	    // log in
 	    } else {
-	    	Session.openActiveSession(this, true, Arrays.asList("email"), (StatusCallback) this);
+	    	Session.openActiveSession(this, true, Arrays.asList("basic_info", "email"), (StatusCallback) this);
 	    	loggedIn = true;
 	    }
 	}
@@ -439,13 +439,12 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
             public void onCompleted(GraphUser user, Response response) {
                 if (session == Session.getActiveSession()) {
                     if (user != null) {
-                    	if (user.getProperty("email") != null) {
-                    		
-                    	}
-	                    if (progressDialog.isShowing()) {
-	                    	progressDialog.dismiss();
-	                    }
+                    	userCredentials.setFbPlayerId(user.getId());	
+                    	userCredentials.setEmail(user.getProperty("email").toString());
+                    	userCredentials.setFbAccessToken(session.getAccessToken());
                     }
+                    // login to gameserver with facebook account
+                    new FacebookAsyncTask(MainActivity.this, userCredentials, "facebook_id").execute();
                 }
                 if (response.getError() != null) {
                 	Log.d(TAG, "response error: " + response.getError().toString());
@@ -577,7 +576,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 			((RelativeLayout) findViewById(R.id.headerShopContainer)).setVisibility(View.VISIBLE);
 			characterFrame.setText("");	
 			((ImageView) findViewById(R.id.characterFrameImageView)).setVisibility(View.VISIBLE);
-			facebookBtn.setVisibility(View.INVISIBLE);
+//			facebookBtn.setVisibility(View.INVISIBLE);
 			((TextView) findViewById(R.id.characterFrameTextview)).setText(userCredentials.getUsername());
 			
 		} else {
@@ -586,7 +585,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 			((RelativeLayout) findViewById(R.id.headerShopContainer)).setVisibility(View.INVISIBLE);
 			characterFrame.setText(getResources().getString(R.string.credentials_headline));
 			((ImageView) findViewById(R.id.characterFrameImageView)).setVisibility(View.INVISIBLE);
-			facebookBtn.setVisibility(View.VISIBLE);
+//			facebookBtn.setVisibility(View.VISIBLE);
 			((TextView) findViewById(R.id.characterFrameTextview)).setText("");
 		}
 	}
@@ -598,11 +597,12 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		progressDialog.setMessage(getResources().getString(R.string.please_wait));
 	}
 
+	// start automatic token refresh again
 	@Override
 	public void run() {
 		if (userCredentials.getAccessToken().isExpired() && 
 				(userCredentials.getUsername().length() > 0 || userCredentials.getEmail().length() > 0)) {
-			new GameLoginAsyncTask(this, userCredentials, false, true, progressDialog).execute();
+//			new GameLoginAsyncTask(this, userCredentials, false, true, progressDialog).execute();
 		}
 		Log.d(TAG, "Token refresh handler");
 		tokenHandler.postDelayed(this, 10000);		

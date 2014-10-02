@@ -43,8 +43,8 @@ public class CreateAccountAsyncTask extends AsyncTask<String, Integer, Boolean> 
 	@Override
 	protected Boolean doInBackground(String... params) {
 		Activity parent = (Activity) listener;
-		String urlForRequest = parent.getString(R.string.createAccountURL);
-		String baseURL = parent.getString(R.string.baseURL);
+		String urlForRequest = parent.getString(R.string.createAccountPath);
+		String baseURL = parent.getString(R.string.basePath);
 		String completeURL = baseURL + String.format(urlForRequest, Locale.getDefault().getCountry().toLowerCase());
 		
 		HttpPost request = new HttpPost(completeURL);

@@ -2,11 +2,8 @@ package com.wackadoo.wackadoo_client.model;
 
 import java.util.Date;
 
-import com.wackadoo.wackadoo_client.activites.CredentialScreenActivity;
-
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 public class UserCredentials {
 	
@@ -115,7 +112,6 @@ public class UserCredentials {
 	public String getHostname() {
 		return hostname;
 	}
-
 	public void setHostname(String hostname) {
 		this.hostname = hostname;
 		persistCredentials();
@@ -124,10 +120,23 @@ public class UserCredentials {
 	public int getGameId() {
 		return gameId;
 	}
-
 	public void setGameId(int gameId) {
 		this.gameId = gameId;
 		persistCredentials();
+	}
+
+	public String getFbPlayerId() {
+		return fbPlayerId;
+	}
+	public void setFbPlayerId(String fbPlayerId) {
+		this.fbPlayerId = fbPlayerId;
+	}
+	
+	public String getFbAccessToken() {
+		return fbAccessToken;
+	}
+	public void setFbAccessToken(String fbAccessToken) {
+		this.fbAccessToken = fbAccessToken;
 	}
 
 	public void generateNewAccessToken(String accessToken, String expiration) {
@@ -151,10 +160,5 @@ public class UserCredentials {
 		e.clear();
 		e.commit();
 	}
-
-
-
-	
-
 }
 

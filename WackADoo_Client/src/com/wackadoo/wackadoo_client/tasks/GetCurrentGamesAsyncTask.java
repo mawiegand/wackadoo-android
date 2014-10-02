@@ -26,6 +26,8 @@ import com.wackadoo.wackadoo_client.model.UserCredentials;
 
 public class GetCurrentGamesAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	
+	private static final String TAG = GetCurrentGamesAsyncTask.class.getSimpleName();
+	
     private CurrentGamesCallbackInterface listener;
     private ArrayList<GameInformation> games;
 	private String accessToken;
@@ -38,8 +40,8 @@ public class GetCurrentGamesAsyncTask extends AsyncTask<String, Integer, Boolean
 	@Override
 	protected Boolean doInBackground(String... params) {
 		Activity parent = (Activity) this.listener;
-		String urlForRequest = parent.getString(R.string.gamesURL);
-		String baseURL = parent.getString(R.string.baseURL);
+		String urlForRequest = parent.getString(R.string.gamesPath);
+		String baseURL = parent.getString(R.string.basePath);
 		String completeURL = baseURL + String.format(urlForRequest, Locale.getDefault().getCountry().toLowerCase(Locale.getDefault()));
 		HttpGet request = new HttpGet(completeURL);
 		
@@ -65,8 +67,7 @@ public class GetCurrentGamesAsyncTask extends AsyncTask<String, Integer, Boolean
 		    while((line = reader.readLine()) != null) {
 		        sb.append(line);
 		    }
-		    
-		    Log.d("JSON games", sb.toString());
+		    Log.d(TAG, "games response: " + sb.toString());
 		    
 		    // get the game information objects from the string with gson
 	 	    Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();

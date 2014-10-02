@@ -25,6 +25,8 @@ import com.wackadoo.wackadoo_client.model.UserCredentials;
 //Character is null if no character is found and createNew = false or if server timed out
 public class GetCharacterAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	
+	private static final String TAG = GetCharacterAsyncTask.class.getSimpleName();
+	
     private CharacterCallbackInterface listener;
 	private String accessToken;
 	private CharacterInformation character;
@@ -42,15 +44,15 @@ public class GetCharacterAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	protected Boolean doInBackground(String... params) {
 		
 		Activity parent = (Activity) this.listener;
-		String urlForRequest = String.format(parent.getString(R.string.characterURL), Locale.getDefault().getCountry().toLowerCase(Locale.getDefault()));
-		if (createNew) urlForRequest += "create_if_new=true";
-		String completeURL = game.getServer() + "/"+ urlForRequest;
-		Log.d("Server Request", completeURL);
+		String urlForRequest = String.format(parent.getString(R.string.characterPath), Locale.getDefault().getCountry().toLowerCase(Locale.getDefault()));
+		if (createNew) {
+			urlForRequest += "create_if_new=true";
+		}
+		String completeURL = game.getServer() + "/" + urlForRequest;
 		HttpGet request = new HttpGet(completeURL);
 		
 	    StringBuilder sb=new StringBuilder();
 	    HttpResponse response = null;
-	    
 	    
 	    try {
 		    request.getParams().setParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, Boolean.FALSE);
@@ -69,9 +71,7 @@ public class GetCharacterAsyncTask extends AsyncTask<String, Integer, Boolean> {
 		    while((line = reader.readLine()) != null) {
 		        sb.append(line);
 		    }
-		    
-		    Log.d("Server Response", response.getStatusLine().toString());
-		    Log.d("JSON character", sb.toString());
+		    Log.d(TAG, "character response: " + sb.toString());
 		  		    
 		    //Get the character information object from the string with gson
 	 	    Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();

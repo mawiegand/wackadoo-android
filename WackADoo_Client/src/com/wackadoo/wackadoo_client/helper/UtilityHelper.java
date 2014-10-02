@@ -1,8 +1,20 @@
 package com.wackadoo.wackadoo_client.helper;
 
+import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
+import java.util.Locale;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.CoreProtocolPNames;
+import org.apache.http.params.HttpConnectionParams;
+
+import com.wackadoo.wackadoo_client.R;
 
 import android.app.Activity;
 import android.content.Context;
@@ -63,13 +75,13 @@ public class UtilityHelper {
 	    }
 	}
 	
-	// Checks if String is valid mail adress
+	// checks if String is valid mail adress
 	public static boolean isValidMail(String email) {
 		boolean result = android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
 		return result;
 	}
 
-	// Checks if the device is connected to the internet
+	// checks if the device is connected to the internet
 	public static boolean isOnline(Activity activity) {
 	    ConnectivityManager cm =
 	        (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -85,9 +97,47 @@ public class UtilityHelper {
 			InetAddress.getAllByName(hostname);
 			return true;
 		} catch(Exception e) {
-			Log.d("Server", "Host "+hostname+" is not available");
+			Log.d("Server", "Host " + hostname + " is not available");
 			e.printStackTrace();
 			return false;
 		}		
+	}
+	
+	// generates a httpPost object for given type of asynctask
+	public static String generateUrlForTask(Context context, boolean basePath, String type) {
+		String baseUrl = "", urlForRequest = "", completeUrl = ""; 
+		
+		// -----  www  -----
+		if (basePath) {
+			baseUrl = context.getString(R.string.basePath);
+			// FacebookAsyncTask:login
+			if (type.equals("facebook_id")) {
+				urlForRequest = context.getString(R.string.facebookIdPath);
+			}
+		
+		// -----  gs06  -----
+		} else {
+			baseUrl = context.getString(R.string.baseGameServerPath);
+			// FacebookAsyncTask:connect
+			if (type.equals("facebook_connect")) {
+				urlForRequest = context.getString(R.string.facebookConnectPath);
+			}
+		}
+		completeUrl = baseUrl + String.format(urlForRequest, Locale.getDefault().getCountry().toLowerCase());
+		return completeUrl;
+	}
+	
+	// set up the entity for an async task
+	public static UrlEncodedFormEntity setUpEntity(List<NameValuePair> nameValuePairs) throws UnsupportedEncodingException  {
+		UrlEncodedFormEntity entity = null;
+		entity = new UrlEncodedFormEntity(nameValuePairs);
+		entity.setContentType("application/x-www-form-urlencoded;charset=UTF-8");
+		return entity;
+	}
+	
+	// set up the given httpRequest & httpClient for an async task
+	public static void setUpHttpObjects(DefaultHttpClient httpClient) {
+		HttpConnectionParams.setSoTimeout(httpClient.getParams(), 10*1000); 
+		HttpConnectionParams.setConnectionTimeout(httpClient.getParams(),10*1000); 
 	}
 }
