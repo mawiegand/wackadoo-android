@@ -4,9 +4,12 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.SocketException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
@@ -25,6 +28,10 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.adapter.ShopRowItem;
@@ -41,7 +48,7 @@ public class GetShopDataAsyncTask extends AsyncTask<String, Integer, Boolean> {
     private String offerURL, shopCharacterId;
     private List<ShopRowItem> rowItemList;
     
-    public GetShopDataAsyncTask(Context context, UserCredentials userCredentials, int offerType) {
+    public GetShopDataAsyncTask(Context context, UserCredentials userCredentials, int offerType, String shopCharacterId) {
     	this.context = context;
     	this.userCredentials = userCredentials;
     	this.offerType = offerType;
@@ -57,8 +64,14 @@ public class GetShopDataAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	    	case 3: 		
 	    		offerURL = context.getString(R.string.bonusOffersServerPath);
 	    		break;
-	    	case 4: 	 	
+	    	case 4: 		
+	    		offerURL = context.getString(R.string.platinumCreditsServerPath);
+	    		break;
+	    	case 5: 	 	
 	    		offerURL = context.getString(R.string.characterShopInfoPath) + userCredentials.getIdentifier();		
+	    		break;
+	    	case 6: 	 	
+	    		offerURL = String.format(context.getString(R.string.resourceShopInfoPath), shopCharacterId);		
 	    		break;
     	}
     }
@@ -100,14 +113,17 @@ public class GetShopDataAsyncTask extends AsyncTask<String, Integer, Boolean> {
 		    Log.d(TAG, "response: " + sb);
 		    
 		    // product asynctask
- 			if(offerType < 4) {
+ 			if(offerType < 5) {
  				rowItemList = produceRowItemList(new JSONArray(sb.toString()));
 
  			// character data asynctask
- 			} else {
+ 			} else if (offerType == 5) {
  				JSONObject jsonResponse = new JSONObject(sb.toString());
  				data = jsonResponse.getInt("credit_amount");
  				shopCharacterId = jsonResponse.getString("character_id");
+ 			} else {
+ 				JSONObject jsonResponse = new JSONObject(sb.toString());
+ 				data = jsonResponse.getInt("resource_cash_amount");
  			}
 	    	return true;
 	    	
@@ -163,7 +179,7 @@ public class GetShopDataAsyncTask extends AsyncTask<String, Integer, Boolean> {
 						int id = jsonObject.getInt("id");
 						String title = context.getString(R.string.list_gold_text);
 						title = String.format(title, jsonObject.getInt("amount"), jsonObject.getInt("price"));
-						ShopRowItem item = new ShopRowItem(id, R.drawable.goldkroete_big, title, 0);
+						ShopRowItem item = new ShopRowItem(id, R.drawable.goldkroete_big, title, 0, 0, null);
 						rowItemList.add(item);
 					}
 					break;
@@ -177,13 +193,14 @@ public class GetShopDataAsyncTask extends AsyncTask<String, Integer, Boolean> {
 						int price = jsonObject.getInt("price");
 						String title = context.getString(R.string.list_platinum_account_text);
 						title = String.format(title, hours, price);
-						ShopRowItem item = new ShopRowItem(id, 0, title, 0);
+						ShopRowItem item = new ShopRowItem(id, 0, title, 0, 0, null);
 						rowItemList.add(item);
 					}
 					break;
 					
 				// bonus
 				case 3: 
+					Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
 					for(int i=0; i<jsonArray.length(); i++) {
 						JSONObject jsonObject = jsonArray.getJSONObject(i);
 						int id = jsonObject.getInt("id");
@@ -194,10 +211,24 @@ public class GetShopDataAsyncTask extends AsyncTask<String, Integer, Boolean> {
 						int currency = getCurrencyImage(jsonObject.getInt("currency")); 
 						String title = context.getString(R.string.list_bonus_text);
 						title = String.format(title, bonus, hours, price);
-						ShopRowItem item = new ShopRowItem(id, resourceId, title, currency);
+			
+						Date expiresIn = jsonObject.isNull("resource_effect") ? null : gson.fromJson(JSONObject.quote(jsonObject.getJSONObject("resource_effect").getString("finished_at")), Date.class);
+						ShopRowItem item = new ShopRowItem(id, resourceId, title, currency, bonus, expiresIn);
 						rowItemList.add(item);
 					}
 					break;
+					
+				// special
+				case 4: 
+					for(int i=0; i<jsonArray.length(); i++) {
+						JSONObject jsonObject = jsonArray.getJSONObject(i);
+						int id = jsonObject.getInt("id");
+						int price = jsonObject.getInt("price"); 
+						String title = jsonObject.getString("title"); 
+						ShopRowItem item = new ShopRowItem(id, 0, title, 0, 0, null);
+						rowItemList.add(item);
+					}
+					break;	
 			}
 			
 		} catch(Exception e) {

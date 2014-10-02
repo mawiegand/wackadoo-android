@@ -264,7 +264,7 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 	@Override
 	public void loginCallback(boolean result, String accessToken, String expiration, String userIdentifier, boolean restoreAccount, boolean refresh) {
 		userCredentials.generateNewAccessToken(accessToken, expiration);
-		userCredentials.setClientID(userIdentifier);
+		userCredentials.setIdentifier(userIdentifier);
 		
 		// if async task called to restore locale account, show dialog
 		if (restoreAccount) {
