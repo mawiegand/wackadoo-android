@@ -41,7 +41,7 @@ import com.wackadoo.wackadoo_client.adapter.ShopRowItem;
 import com.wackadoo.wackadoo_client.fragments.ShopCreditsFragment;
 import com.wackadoo.wackadoo_client.fragments.ShopInfoFragment;
 import com.wackadoo.wackadoo_client.helper.CustomIabHelper;
-import com.wackadoo.wackadoo_client.helper.UtilityHelper;
+import com.wackadoo.wackadoo_client.helper.StaticHelper;
 import com.wackadoo.wackadoo_client.interfaces.BuyShopOfferCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.CreditsFragmentCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.ShopDataCallbackInterface;
@@ -239,7 +239,7 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 	private void insertRowItemsInList(List<ShopRowItem> items, ListView list) {
 		ShopListViewAdapter adapter = new ShopListViewAdapter(this, R.layout.table_item_shop, items);
 		list.setAdapter(adapter);
-		UtilityHelper.setListViewHeightBasedOnChildren(list);
+		StaticHelper.setListViewHeightBasedOnChildren(list);
 	}
 
 	// handle clicks on platinum account list

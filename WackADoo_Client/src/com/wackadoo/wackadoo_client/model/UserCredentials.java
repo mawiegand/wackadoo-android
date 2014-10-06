@@ -10,6 +10,7 @@ public class UserCredentials {
 	private Context context;
 	private int gameId;
 	private String username, password, gcPlayerId, fbPlayerId, fbAccessToken, characterId, email, hostname;
+	private boolean isFbUser;
 	private AccessToken accessToken;
 	private ClientCredentials clientCredentials;
 	private boolean generatedEmail = true;
@@ -77,9 +78,13 @@ public class UserCredentials {
 		accessToken.setToken(myPrefs.getString("accesstoken", ""));
 		accessToken.restoreExpireDate(new Date(myPrefs.getLong("expire_date", 0)));
 		characterId = myPrefs.getString("character_id", "");
+		fbPlayerId = myPrefs.getString("fb_player_id", "");
+		fbAccessToken = myPrefs.getString("fb_access_token", "");
+		isFbUser = myPrefs.getBoolean("is_fb_user", false);
 		username = myPrefs.getString("username", "");
 		email = myPrefs.getString("email", "");
 		password = myPrefs.getString("password", "");
+		generatedEmail = myPrefs.getBoolean("generatedEmail", true);
 		generatedPassword = myPrefs.getBoolean("generatedPassword", true);
 		hostname = myPrefs.getString("hostname", "");
 		gameId = myPrefs.getInt("gameID", 0);
@@ -90,9 +95,13 @@ public class UserCredentials {
 		e.putString("identifier", accessToken.getIdentifier());
 		e.putLong("expire_date", accessToken.getCreatedAt().getTime());
 		e.putString("character_id", characterId);
+		e.putString("fb_player_id", fbPlayerId);
+		e.putString("fb_access_token", fbAccessToken);
+		e.putBoolean("is_fb_user", isFbUser);
 		e.putString("username", username);
 		e.putString("email", email);
 		e.putString("password", password);
+		e.putBoolean("generatedPassword", generatedEmail);
 		e.putBoolean("generatedPassword", generatedPassword);
 		e.putString("accesstoken", accessToken.getToken());
 		e.putString("expire_code", accessToken.getExpireCode());
@@ -130,6 +139,7 @@ public class UserCredentials {
 	}
 	public void setFbPlayerId(String fbPlayerId) {
 		this.fbPlayerId = fbPlayerId;
+		persistCredentials();
 	}
 	
 	public String getFbAccessToken() {
@@ -137,8 +147,17 @@ public class UserCredentials {
 	}
 	public void setFbAccessToken(String fbAccessToken) {
 		this.fbAccessToken = fbAccessToken;
+		persistCredentials();
 	}
 
+	public boolean isFbUser() {
+		return isFbUser;
+	}
+	public void setFbUser(boolean fbUser) {
+		this.isFbUser = fbUser;
+		persistCredentials();
+	}
+	
 	public void generateNewAccessToken(String accessToken, String expiration) {
 		this.accessToken = new AccessToken();
 		this.accessToken.setToken(accessToken);

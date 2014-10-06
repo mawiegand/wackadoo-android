@@ -222,6 +222,7 @@
 	 	              	        android:id="@+id/characterFrameTextview"
 	 	              	        style="@style/customTextViewStyle" 
 	 	              	        android:layout_width="match_parent"
+	 	              	        android:gravity="center"
 	 	              	        android:textSize="8sp"/>
 	 	              	    
 	 	              	</FrameLayout>

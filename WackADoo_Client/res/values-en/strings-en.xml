@@ -13,6 +13,9 @@
     <string name="server_communication">Connecting to server</string>
     <string name="please_wait">Please wait&#8230;</string>
     
+    <!-- Facebook -->
+    <string name="fb_task_failure">Error while connection to facebook. Please try again or contact the support.</string>
+    
     <!-- WebView -->
     <string name="dialog_return_startscreen_text">Do you want to return to den Start Screen?</string>
     
@@ -52,6 +55,7 @@
     <string name="account_set_email">Set Email</string>
     <string name="account_provide_email">Provide an email to be used in password retrieval, and to recive ingame events.</string>
     <string name="account_character_locked">Your character is presently locked to this particular device!</string>
+    <string name="account_character_connected_fb">Your character is presently connected to your Facebook account.</string>
     <string name="account_character_portable">You have these options to make your character &quot;portable&quot;</string>
     <string name="account_set_password">Set A Password</string>
     <string name="account_userName_unknown_fallbackText">Unknown User</string>

@@ -14,6 +14,9 @@
     <string name="please_wait">Bitte warten&#8230;</string>
     <string name="no_connection">Es besteht keine Internetverbindung</string>
     
+    <!-- Facebook -->
+    <string name="fb_task_failure">Fehler bei Kommunikation mit Facebook. Bitte versuche es erneut oder kontaktiere den Support.</string>
+    
     <!-- WebView -->
     <string name="dialog_return_startscreen_text">Willst du zum Startbildschirm zurückkehren?</string>
     
@@ -53,6 +56,7 @@
     <string name="account_set_email">Email angeben</string>
 	<string name="account_provide_email">Geben Sie eine E-Mail-Adresse an um Passwörter zurückzusetzen und Neuigkeiten aus dem Spiel zu erhalten.</string>
     <string name="account_character_locked">Ihr Charakter ist derzeit auf dieses Gerät beschränkt!</string>
+    <string name="account_character_connected_fb">Dein Charakter ist mit deinem Facebook Account verbunden.</string>
     <string name="account_character_portable">Sie haben folgende Optionen um Ihn tragbar zu machen:</string>
     <string name="account_set_password">Passwort angeben</string>
     <string name="account_userName_unknown_fallbackText">Unbekannter Nutzer</string>

@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.text.InputType;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -20,7 +21,7 @@ import android.widget.Toast;
 import com.facebook.LoginActivity;
 import com.facebook.Session;
 import com.wackadoo.wackadoo_client.R;
-import com.wackadoo.wackadoo_client.helper.UtilityHelper;
+import com.wackadoo.wackadoo_client.helper.StaticHelper;
 import com.wackadoo.wackadoo_client.interfaces.AccountManagerCallbackInterface;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
 import com.wackadoo.wackadoo_client.tasks.AccountManagerAsyncTask;
@@ -43,12 +44,11 @@ public class AccountManagerActivity extends Activity implements AccountManagerCa
         setContentView(R.layout.activity_accountmanager);
 	    
 	    userCredentials = new UserCredentials(getApplicationContext());
-//	    checkUserIsLoggedIn();
 	    
         usernameTextView = (TextView) findViewById(R.id.usernameText);
-        signOutButton = (Button) findViewById(R.id.signOutButton);
         setEmailButton = (Button) findViewById(R.id.setEmailButton);
-        passwordButton = (Button) findViewById(R.id.passwordButton);
+		passwordButton = (Button) findViewById(R.id.passwordButton);
+        signOutButton = (Button) findViewById(R.id.signOutButton);
         provideEmailTextView = (TextView) findViewById(R.id.emailText);
         characterLockedTextView = (TextView) findViewById(R.id.characterLockedText);
         makeCharacterPortableTextView = (TextView) findViewById(R.id.makeCharacterPortableText);
@@ -58,64 +58,32 @@ public class AccountManagerActivity extends Activity implements AccountManagerCa
         emailAccountCheckedImage = (ImageView) findViewById(R.id.emailAccountCheckedImage);
         
 	    loadCredentialsToUI();
-	    addButtonListeners();
-	    setUpBackBtn();
+	    setUpButtons();
+	    setUpUi();
+	    setUpDialog();
     }
 	
-    private void setUpBackBtn() {
-		backBtn.setOnTouchListener(new View.OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent e) {
-				switch (e.getAction()) {
-				case MotionEvent.ACTION_DOWN: 
-					backBtn.setTextColor(getResources().getColor(R.color.textbox_orange_active));
-					break;
-					
-				case MotionEvent.ACTION_CANCEL: 
-					backBtn.setTextColor(getResources().getColor(R.color.textbox_orange));
-					break;
-					
-				case MotionEvent.ACTION_UP: 
-					backBtn.setTextColor(getResources().getColor(R.color.textbox_orange));
-					AccountManagerActivity.this.finish();
-					break;
-				}
-				return true;
-			}
-		});
-	}
-    
-	private void addButtonListeners() {
-		if (userCredentials.isPasswordGenerated()) {
-			setUpPasswordButton();
-			passwordButtonVisible = true;
-		} else {
-			passwordButtonVisible = false;
-		}
-//		if (userCredentials.getEmail().length() <= 0) {
-		if (userCredentials.isEmailGenerated()) {
-			setUpEmailButton();
-			emailButtonVisible = true;
-		} else {
+	// handles which ui elements are shown for the current user
+	private void setUpUi() {
+		emailButtonVisible = true;
+		passwordButtonVisible = true;
+		
+		if (userCredentials.isFbUser()) {
 			emailButtonVisible = false;
-		}
-		setButtonVisibility(passwordButtonVisible, emailButtonVisible);
-		setUpSignOutButton();
-	}
-	
-	private void setButtonVisibility(boolean setPasswordButtonVisible, boolean emailButtonVisible) {
-		if (!passwordButtonVisible) {
-			passwordButton.setText(getResources().getString(R.string.account_change_password));
-			RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)passwordButton.getLayoutParams();
-			params.addRule(RelativeLayout.BELOW, R.id.emailInformationText);
-			passwordButton.setLayoutParams(params); 
-			setUpPasswordButton();
+			passwordButtonVisible = false;
+		} else {
+			if (!userCredentials.isEmailGenerated()) { 
+				emailButtonVisible = false; 
+			} 
 			
-			characterLockedTextView.setVisibility(View.GONE);
-			makeCharacterPortableTextView.setVisibility(View.GONE);
+			if (!userCredentials.isPasswordGenerated()) {
+				passwordButtonVisible = false;
+			}
 		}
+			
+		
+		// if user has own mail, dont show setmail button
 		if (!emailButtonVisible) {
-			setEmailButton.setEnabled(false);
 			setEmailButton.setVisibility(View.GONE);
 			provideEmailTextView.setVisibility(View.GONE);
 			emailTextView.setVisibility(View.VISIBLE);
@@ -123,68 +91,80 @@ public class AccountManagerActivity extends Activity implements AccountManagerCa
 			emailInformationTextView.setVisibility(View.INVISIBLE);
 			emailAccountCheckedImage.setVisibility(View.VISIBLE);
 		}
-	}
-
-	private void setUpPasswordButton() {
-		passwordButton.setOnTouchListener(new View.OnTouchListener() {
-			@SuppressLint("NewApi")
+		
+		// if user has own password, dont show changepassword button
+		if (!passwordButtonVisible) {
+			passwordButton.setText(getResources().getString(R.string.account_change_password));
+			RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)passwordButton.getLayoutParams();
+			params.addRule(RelativeLayout.BELOW, R.id.emailInformationText);
+			passwordButton.setLayoutParams(params); 
+			characterLockedTextView.setVisibility(View.GONE);
+			makeCharacterPortableTextView.setVisibility(View.GONE);
+		}
+		
+		// character connected to facebook
+		if (!emailButtonVisible && !passwordButtonVisible) {
+			emailTextView.setVisibility(View.GONE);
+			characterLockedTextView.setVisibility(View.VISIBLE);
+			characterLockedTextView.setText(R.string.account_character_connected_fb);
+			emailAccountCheckedImage.setVisibility(View.INVISIBLE);
+			passwordButton.setVisibility(View.GONE);
+		}
+    }
+    
+	// sets up touchlistener for buttons
+    private void setUpButtons() {
+    	OnTouchListener touchListener = new OnTouchListener() {
 			@Override
-			   public boolean onTouch(View v, MotionEvent event) {
-				   switch ( event.getAction() ) {
-			    		case MotionEvent.ACTION_DOWN: 
-		    				passwordButton.setTextColor(getResources().getColor(R.color.textbox_orange_active));
-		    				break;
-		    				
-			    		case MotionEvent.ACTION_UP: 
-		    				passwordButton.setTextColor(getResources().getColor(R.color.textbox_orange));
-		    				showInputAlertDialogWithText(getResources().getString(R.string.alert_change_password), AlertCallback.Password);
-		    				break;
-				   }
-				   return true;
+			public boolean onTouch(View v, MotionEvent e) {
+				switch (e.getAction()) {
+					case MotionEvent.ACTION_DOWN: 
+						((TextView) v).setTextColor(getResources().getColor(R.color.textbox_orange_active));
+						break;
+						
+					case MotionEvent.ACTION_CANCEL: 
+						((TextView) v).setTextColor(getResources().getColor(R.color.textbox_orange));
+						break;
+						
+					case MotionEvent.ACTION_UP: 
+						((TextView) v).setTextColor(getResources().getColor(R.color.textbox_orange));
+						
+						switch (v.getId()) {
+							case R.id.accountTopbarBack:
+								finish();
+								break;
+								
+							case R.id.signOutButton:
+								triggerSignOut();
+								break;
+								
+							case R.id.setEmailButton:
+								showInputAlertDialogWithText(getResources().getString(R.string.alert_email_change), AlertCallback.Email);
+								break;
+								
+							case R.id.passwordButton:
+								showInputAlertDialogWithText(getResources().getString(R.string.alert_change_password), AlertCallback.Password);
+								break;
+						}
+						break;
 				}
-		   });
+				return true;
+			}
+		};
+		backBtn.setOnTouchListener(touchListener);
+		signOutButton.setOnTouchListener(touchListener);
+		
+		if (userCredentials.isEmailGenerated()) {
+			setEmailButton.setVisibility(View.VISIBLE);
+			setEmailButton.setOnTouchListener(touchListener);
+		}
+		
+		if (userCredentials.isPasswordGenerated()) { 
+			passwordButton.setVisibility(View.VISIBLE);
+			passwordButton.setOnTouchListener(touchListener);
+		}
 	}
-
-	private void setUpEmailButton() {
-		setEmailButton.setOnTouchListener(new View.OnTouchListener() {
-			@SuppressLint("NewApi")
-			@Override
-			   public boolean onTouch(View v, MotionEvent event) {
-				   switch (event.getAction()) {
-			    		case MotionEvent.ACTION_DOWN: 
-		    				setEmailButton.setTextColor(getResources().getColor(R.color.textbox_orange_active));
-		    				break;
-		    				
-			    		case MotionEvent.ACTION_UP: 
-			    			setEmailButton.setTextColor(getResources().getColor(R.color.textbox_orange));
-			    			showInputAlertDialogWithText(getResources().getString(R.string.alert_email_change), AlertCallback.Email);
-		    				break;
-				   }
-				   return true;
-				}
-		   });
-	}
-
-	private void setUpSignOutButton() {
-		signOutButton.setOnTouchListener(new View.OnTouchListener() {
-			@SuppressLint("NewApi")
-			@Override
-			   public boolean onTouch(View v, MotionEvent event) {
-				   switch (event.getAction()) {
-			    		case MotionEvent.ACTION_DOWN: 
-			    			signOutButton.setTextColor(getResources().getColor(R.color.textbox_orange_active));
-			    			break;
-
-			    		case MotionEvent.ACTION_UP: 
-			    			signOutButton.setTextColor(getResources().getColor(R.color.textbox_orange));
-			    			triggerSignOut();
-			    			break;
-				   }
-				   return true;
-				}
-		   });
-	}
-
+    
 	private void triggerSignOut() {
 		DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
     	    @Override	
@@ -213,12 +193,16 @@ public class AccountManagerActivity extends Activity implements AccountManagerCa
 
 	private void loadCredentialsToUI() {
     	String username = userCredentials.getUsername();
-    	String email = userCredentials.getEmail();
     	if (!username.isEmpty()) {
     		usernameTextView.setText(username);
     	}
-    	if (!email.isEmpty()) {
-    		emailTextView.setText(email);
+    	if (userCredentials.isFbUser()) {
+    		emailTextView.setVisibility(View.GONE);
+    		
+    	} else {
+    		String email = userCredentials.getEmail();
+    		if (!email.isEmpty()) {
+    		}
     	}
 	}
 
@@ -254,7 +238,8 @@ public class AccountManagerActivity extends Activity implements AccountManagerCa
     
     // check mail before changing it
     private void enteredNewEmail(String email) {
-		if (UtilityHelper.isValidMail(email)){
+		if (StaticHelper.isValidMail(email)){
+			progressDialog.show();
 			new AccountManagerAsyncTask(this, progressDialog, userCredentials, "mail", email).execute();
 		} else {
 			Toast.makeText(getApplicationContext(), getResources().getString(R.string.credentials_email_not_valid), Toast.LENGTH_SHORT).show();
@@ -264,6 +249,7 @@ public class AccountManagerActivity extends Activity implements AccountManagerCa
     // check password before changing it
 	private void enteredNewPassword(String password) {
 		if (password.length() > 5){
+			progressDialog.show();
 			new AccountManagerAsyncTask(this, progressDialog, userCredentials, "password", password).execute();
 		} else {
 			Toast.makeText(getApplicationContext(), getResources().getString(R.string.credentials_password_too_short), Toast.LENGTH_SHORT).show();
@@ -285,14 +271,14 @@ public class AccountManagerActivity extends Activity implements AccountManagerCa
 		if (result == 200) {
 			if (type.equals("mail")) {
 				emailButtonVisible = false;
-				setButtonVisibility(passwordButtonVisible, emailButtonVisible);
 		    	userCredentials.setEmail(newValue);
+		    	setUpUi();		    
 		    	toast.setText(getResources().getString(R.string.alert_email_change_success));
 				
 			} else {
 				passwordButtonVisible = false;
-				setButtonVisibility(passwordButtonVisible, emailButtonVisible);
 				userCredentials.setPassword(newValue);
+				setUpUi();
 				toast.setText(getResources().getString(R.string.alert_change_password_success));
 			}
 			
@@ -309,6 +295,11 @@ public class AccountManagerActivity extends Activity implements AccountManagerCa
 		} else if (result == 409) {
 			toast.setText(getResources().getString(R.string.alert_email_change_error_409));
 		}
+		
+		if (progressDialog.isShowing()) {
+			progressDialog.dismiss();
+		}
+		
 		toast.show();
 	}
 	
@@ -318,7 +309,11 @@ public class AccountManagerActivity extends Activity implements AccountManagerCa
 	
 		// closes facebook session and clears cache
 		Session session = Session.getActiveSession();
-		session.closeAndClearTokenInformation();		
+		if (session != null) {
+			session.closeAndClearTokenInformation();	
+			session.close();
+			Session.setActiveSession(null);
+		}
 
 		// if credentials been deleted, go back to login screen
 	    if ((identifier.length() <= 0) && (email.length() <= 0)) {
@@ -327,5 +322,11 @@ public class AccountManagerActivity extends Activity implements AccountManagerCa
 			finish();
 		}
 	}
-	
+
+	// set up the standard server communiation dialog
+	private void setUpDialog() {
+		progressDialog = new ProgressDialog(this);
+		progressDialog.setTitle(getResources().getString(R.string.server_communication));
+		progressDialog.setMessage(getResources().getString(R.string.please_wait));
+	}
 }

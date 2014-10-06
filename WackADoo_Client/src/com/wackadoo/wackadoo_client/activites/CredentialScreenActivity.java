@@ -23,7 +23,7 @@ import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
 import com.facebook.widget.LoginButton.UserInfoChangedCallback;
 import com.wackadoo.wackadoo_client.R;
-import com.wackadoo.wackadoo_client.helper.UtilityHelper;
+import com.wackadoo.wackadoo_client.helper.StaticHelper;
 import com.wackadoo.wackadoo_client.interfaces.CreateAccountCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.GameLoginCallbackInterface;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
@@ -207,7 +207,7 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 	private void triggerLogin() {
 		if (userNameEditText.getText().length() > 0) {
 			if (passwordEditText.getText().length() > 5) {
-				if (UtilityHelper.isValidMail(userNameEditText.getText().toString())) {
+				if (StaticHelper.isValidMail(userNameEditText.getText().toString())) {
 					userCredentials.setEmail(this.userNameEditText.getText().toString());
 				
 				} else {
@@ -231,6 +231,7 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 		@Override
 		public void call(Session session, SessionState state, Exception exception) {
 			if (state.isOpened()) {
+				userCredentials.setFbUser(true);
 				finish();
 			} 
 		}
@@ -270,8 +271,9 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 	// callback interface for errors in login/restore account task
 	@Override
 	public void loginCallbackError(String error, boolean restoreAccount, boolean refresh) {
-		if (restoreAccount) restoreAccount(false);
-		else {
+		if (restoreAccount) {
+			restoreAccount(false);
+		} else {
 			if (error.equals("invalid_grant")) {
 				Toast.makeText(getApplicationContext(), getResources().getString(R.string.login_invalid_grant), Toast.LENGTH_LONG)
 				.show();

@@ -132,7 +132,7 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	@Override
 	protected void onPostExecute(Boolean result) {
 		super.onPostExecute(result);
-
+		
 		if (progressDialog.isShowing()) {
 			progressDialog.dismiss();
 		}

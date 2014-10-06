@@ -18,7 +18,7 @@ import android.widget.Toast;
 
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.adapter.GamesListViewAdapter;
-import com.wackadoo.wackadoo_client.helper.UtilityHelper;
+import com.wackadoo.wackadoo_client.helper.StaticHelper;
 import com.wackadoo.wackadoo_client.interfaces.CharacterCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.CurrentGamesCallbackInterface;
 import com.wackadoo.wackadoo_client.model.GameInformation;
@@ -137,7 +137,7 @@ public class SelectGameActivity extends Activity implements CurrentGamesCallback
 		for (int i = 0; i < games.size(); i++) new GetCharacterAsyncTask(this, userCredentials, games.get(i), false).execute();
 		GamesListViewAdapter adapter = new GamesListViewAdapter(getApplicationContext(), R.layout.table_item_game, games);
 		listView.setAdapter(adapter);
-		UtilityHelper.setListViewHeightBasedOnChildren(listView);
+		StaticHelper.setListViewHeightBasedOnChildren(listView);
 	}
 
 	// callback interface for GetCharacterAsyncTask

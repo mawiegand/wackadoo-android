@@ -33,8 +33,13 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
-public class UtilityHelper {
+public class StaticHelper {
+	
+	public static final String FB_ID_TASK = "facebook_id_task";
+	public static final String FB_CONNECT_TASK = "facebook_connect_task";
+	public static final String FB_LOGIN_TASK = "facebook_login_task";
 
+	
 	// Workaround for dynamic height of the ListView. Fixes issue of not showing every item in listviews when in a scrollview 
 	public static void setListViewHeightBasedOnChildren(ListView listView) {
 	    ListAdapter listAdapter = listView.getAdapter();
@@ -58,23 +63,6 @@ public class UtilityHelper {
 	    listView.requestLayout();
 	}
 
-	// prints key hash for facebook app
-	public static void printKeyHash(Context context){
-	    try {
-	        PackageInfo info = context.getPackageManager().getPackageInfo(
-	        		"com.wackadoo.wackadoo_client", PackageManager.GET_SIGNATURES);
-	        for(Signature signature : info.signatures) {
-	            MessageDigest md = MessageDigest.getInstance("SHA");
-	            md.update(signature.toByteArray());
-	            Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-	        }
-	    } catch (NameNotFoundException e) {
-	        Log.d("KeyHash:", e.toString());
-	    } catch (NoSuchAlgorithmException e) {
-	        Log.d("KeyHash:", e.toString());
-	    }
-	}
-	
 	// checks if String is valid mail adress
 	public static boolean isValidMail(String email) {
 		boolean result = android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
@@ -110,16 +98,20 @@ public class UtilityHelper {
 		// -----  www  -----
 		if (basePath) {
 			baseUrl = context.getString(R.string.basePath);
-			// FacebookAsyncTask:login
-			if (type.equals("facebook_id")) {
+			// FacebookAsyncTask:check id
+			if (type.equals(StaticHelper.FB_ID_TASK)) {
 				urlForRequest = context.getString(R.string.facebookIdPath);
+			
+			// FacebookAsyncTask:login
+			} else if (type.equals(StaticHelper.FB_LOGIN_TASK)) {
+				urlForRequest = context.getString(R.string.facebookLoginPath);
 			}
 		
 		// -----  gs06  -----
 		} else {
 			baseUrl = context.getString(R.string.baseGameServerPath);
 			// FacebookAsyncTask:connect
-			if (type.equals("facebook_connect")) {
+			if (type.equals(StaticHelper.FB_CONNECT_TASK)) {
 				urlForRequest = context.getString(R.string.facebookConnectPath);
 			}
 		}

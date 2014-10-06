@@ -198,7 +198,7 @@
 	 	              	    android:layout_weight="0.26" />
 	    		    	
 	 	              	<FrameLayout 
-	 	              	    android:layout_width="wrap_content"
+	 	              	    android:layout_width="match_parent"
 			 	    		android:layout_height="0px"
 			 	    		android:layout_weight="0.55">
 	 	              	    
@@ -221,7 +221,7 @@
 	 	              	    <TextView 
 	 	              	        android:id="@+id/characterFrameTextview"
 	 	              	        style="@style/customTextViewStyle" 
-	 	              	        android:layout_width="match_parent"
+	 	              	        android:gravity="center"
 	 	              	        android:textSize="8sp"/>
 	 	              	    
 	 	              	</FrameLayout>
