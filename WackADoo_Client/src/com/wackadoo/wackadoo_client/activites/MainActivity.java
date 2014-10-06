@@ -2,6 +2,7 @@ package com.wackadoo.wackadoo_client.activites;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -11,10 +12,10 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.GetChars;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnCreateContextMenuListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -24,36 +25,42 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.Request;
+import com.facebook.Response;
+import com.facebook.Session;
+import com.facebook.Session.StatusCallback;
+import com.facebook.SessionLoginBehavior;
+import com.facebook.SessionState;
+import com.facebook.UiLifecycleHelper;
+import com.facebook.model.GraphUser;
 import com.fivedlab.sample.sample_java.Sample;
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.analytics.AutoPing;
 import com.wackadoo.wackadoo_client.helper.UtilityHelper;
 import com.wackadoo.wackadoo_client.interfaces.CharacterCallbackInterface;
-import com.wackadoo.wackadoo_client.interfaces.CreateAccountCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.CurrentGamesCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.GameLoginCallbackInterface;
-import com.wackadoo.wackadoo_client.model.CharacterInformation;
 import com.wackadoo.wackadoo_client.model.GameInformation;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
 import com.wackadoo.wackadoo_client.tasks.GameLoginAsyncTask;
 import com.wackadoo.wackadoo_client.tasks.GetCharacterAsyncTask;
 import com.wackadoo.wackadoo_client.tasks.GetCurrentGamesAsyncTask;
 
-public class MainActivity extends Activity implements
-		CreateAccountCallbackInterface, GameLoginCallbackInterface, CurrentGamesCallbackInterface, CharacterCallbackInterface, Runnable {
+public class MainActivity extends Activity implements GameLoginCallbackInterface, 
+		CurrentGamesCallbackInterface, CharacterCallbackInterface, Runnable,  StatusCallback{
 
 	private static final String TAG = MainActivity.class.getSimpleName();
 	
-	private ImageButton playBtn, accountmanagerBtn, selectGameBtn, 
-			facebookBtn, shopBtn, soundBtn, infoBtn;
+	private ImageButton playBtn, accountmanagerBtn, selectGameBtn, facebookBtn, shopBtn, soundBtn, infoBtn;
 	private Button characterFrame;
 	private boolean soundOn, lastWorldAccessible, loggedIn;
 	private AnimationDrawable playButtonAnimation;
 	private UserCredentials userCredentials;
 	private Handler customHandler;
 	private ProgressDialog progressDialog;
+	private Handler tokenHandler;
+	private UiLifecycleHelper uiHelper;			// facebook
 	
-	@SuppressLint("NewApi")
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,7 +75,9 @@ public class MainActivity extends Activity implements
 	    infoBtn = (ImageButton) findViewById(R.id.title_info_button);
 	    characterFrame = (Button) findViewById(R.id.characterFrame);
 	    
-	    userCredentials = new UserCredentials(this.getApplicationContext());
+	    // facebook login dialog helper
+	    uiHelper = new UiLifecycleHelper(this, this);
+		uiHelper.onCreate(savedInstanceState);
 	    
 	    // sound is off by default
 	    soundOn = false;
@@ -100,29 +109,58 @@ public class MainActivity extends Activity implements
 		tokenHandler.post(this);
 	}
 
+
+	@Override
+	public void onResume() {
+        super.onResume();
+	    
+        // get updated userCredentials
+        userCredentials = new UserCredentials(getApplicationContext());
+        
+        // warning if no internet connection
+		if (!UtilityHelper.isOnline(this)) {
+			Toast.makeText(getApplicationContext(), getResources().getString(R.string.no_connection), Toast.LENGTH_LONG).show();
+		} else {
+			triggerLogin();
+			triggerGetGames();
+		}
+		uiHelper.onResume();		// facebook
+    }
+	
+    @Override
+    public void onPause() {
+        super.onPause();
+	    uiHelper.onPause();
+    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+	    uiHelper.onDestroy();					// facebook
+	    AutoPing.getInstance().stopAutoPing();	// tracking
+    }
+	
 	// start animation of play button
 	private void setUpPlayButtonAnimation() {
+		
 		// start animation of glance
 		playBtn.setImageResource(R.anim.animationlist_loginbutton);
-		playButtonAnimation = (AnimationDrawable) playBtn.getDrawable();
-		playButtonAnimation.start();
 
-		// start scale animation
 		customHandler = new android.os.Handler();
 		customHandler.postDelayed(updateTimerThread, 0);
 	}
+	
 
 	// runs the scale animation repeatedly
 	private Runnable updateTimerThread = new Runnable() {
-		public void run() {
-			Animation scaleAnimation = AnimationUtils.loadAnimation(
+		Animation scaleAnimation;
+		
+		public void run() {		
+			if (scaleAnimation == null) scaleAnimation = AnimationUtils.loadAnimation(
 					getApplicationContext(), R.anim.scale_loginbutton);
 			playBtn.startAnimation(scaleAnimation);
-			customHandler.postDelayed(this, 6000);
+			customHandler.postDelayed(this, 6400);
 		}
 	};
-
-	private Handler tokenHandler;
 
 	private void setUpButtons() {
 		setUpPlayBtn();
@@ -135,25 +173,6 @@ public class MainActivity extends Activity implements
 	   	setUpCharacterFrame();
 	}
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-		this.userCredentials = new UserCredentials(getApplicationContext());
-		if (!UtilityHelper.isOnline(this)) {
-			Toast.makeText(getApplicationContext(), getResources().getString(R.string.no_connection), Toast.LENGTH_LONG).show();
-		}
-		else {
-			triggerLogin();
-			triggerGetGames();
-		}				
-	}
-	 
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		AutoPing.getInstance().stopAutoPing();
-	}
-	
 	private void setUpFacebookBtn() {
 		facebookBtn.setOnTouchListener(new View.OnTouchListener() {
 			@Override
@@ -186,7 +205,7 @@ public class MainActivity extends Activity implements
 
 				case MotionEvent.ACTION_UP:
 					setUpPlayButtonAnimation();
-					if(loggedIn) {
+					if (loggedIn) {
 						triggerPlayGame();
 					} else {
 						Toast.makeText(getApplicationContext(), getResources().getString(R.string.login_necessary), Toast.LENGTH_SHORT)
@@ -285,7 +304,7 @@ public class MainActivity extends Activity implements
 		// TODO: is last world accessible?
 		lastWorldAccessible = true;
 		
-		if(lastWorldAccessible) {
+		if (lastWorldAccessible) {
 			selectGameBtn.setImageResource(R.drawable.title_changegame_button);
 		} else {
 			selectGameBtn.setImageResource(R.drawable.title_changegame_warn_button);
@@ -298,7 +317,7 @@ public class MainActivity extends Activity implements
 			public boolean onTouch(View v, MotionEvent event) {
 				switch (event.getAction()) {
 					case MotionEvent.ACTION_DOWN: 
-						if(lastWorldAccessible) {
+						if (lastWorldAccessible) {
 							selectGameBtn.setImageResource(R.drawable.title_changegame_button_active);
 						} else {
 							selectGameBtn.setImageResource(R.drawable.title_changegame_warn_button_active);
@@ -306,7 +325,7 @@ public class MainActivity extends Activity implements
 						break;
 						
 					case MotionEvent.ACTION_UP: 
-						if(lastWorldAccessible) {
+						if (lastWorldAccessible) {
 							selectGameBtn.setImageResource(R.drawable.title_changegame_button);
 						} else {
 							selectGameBtn.setImageResource(R.drawable.title_changegame_warn_button);
@@ -333,7 +352,7 @@ public class MainActivity extends Activity implements
 				case MotionEvent.ACTION_UP: 
 					characterFrame.setBackgroundResource(R.drawable.title_character_frame);
 					Intent intent = null;
-					if(loggedIn) {
+					if (loggedIn) {
 						intent = new Intent(MainActivity.this, AccountManagerActivity.class);
 					} else {
 						intent = new Intent(MainActivity.this, CredentialScreenActivity.class);
@@ -351,32 +370,117 @@ public class MainActivity extends Activity implements
 	}
 	
 	private void triggerFacebook() {
-		// TODO Login using Facebook
-		Toast toast = Toast.makeText(this, "Facebook Login derzeit nicht möglich", Toast.LENGTH_SHORT);
-		toast.show();
+		Session session = Session.getActiveSession();
+
+	    if (session == null) {
+	        session = new Session.Builder(MainActivity.this).build();
+	        Session.setActiveSession(session);
+	    
+	    // log out if session is opened
+	    } else if (!session.isClosed()) {
+	    	session.closeAndClearTokenInformation();
+	    	loggedIn = false;
+	    	    
+	    // try to log in with new permission request
+		} else if (!session.isOpened() && !session.isClosed()) {
+	        Session.OpenRequest openRequest = new Session.OpenRequest(MainActivity.this);
+	        openRequest.setPermissions(Arrays.asList("email"));
+	        openRequest.setLoginBehavior(SessionLoginBehavior.SSO_WITH_FALLBACK);
+	        session.openForRead(openRequest);
+	        loggedIn = true;
+	        
+	    // log in
+	    } else {
+	    	Session.openActiveSession(this, true, Arrays.asList("email"), (StatusCallback) this);
+	    	loggedIn = true;
+	    }
 	}
 
+	// facebook: callback interface calls onSessionStateChange to handle session state
+	@Override
+	public void call(Session session, SessionState state, Exception exception) {
+		onSessionStateChange(session, state, exception);	
+	}
+	
+	// facebook: handles login/logout state of session
+	private void onSessionStateChange(Session session, SessionState state, Exception exception) {
+		if (session.isOpened()) {
+			loggedIn = true;
+			updateUi();
+			progressDialog.show();
+			fetchFbData(session, progressDialog);
+			
+		} else if (state.isClosed()) {
+			loggedIn = false;
+			updateUi();
+			Toast.makeText(MainActivity.this, "Facebook Session closed", Toast.LENGTH_SHORT)
+				 .show();
+		}
+	}
+
+    // facebook: handles result for login 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        uiHelper.onActivityResult(requestCode, resultCode, data);
+    }
+    
+    // facebook: login handling
+    @Override
+    public void onSaveInstanceState(Bundle savedState) {
+        super.onSaveInstanceState(savedState);
+        uiHelper.onSaveInstanceState(savedState);
+    }
+	
+    // facebook: fetch user data from facebook
+    private void fetchFbData(final Session session, final ProgressDialog progressDialog) {
+        Request request = Request.newMeRequest(session, new Request.GraphUserCallback() {
+            @Override
+            public void onCompleted(GraphUser user, Response response) {
+                if (session == Session.getActiveSession()) {
+                    if (user != null) {
+                    	if (user.getProperty("email") != null) {
+                    		
+                    	}
+	                    if (progressDialog.isShowing()) {
+	                    	progressDialog.dismiss();
+	                    }
+                    }
+                }
+                if (response.getError() != null) {
+                	Log.d(TAG, "response error: " + response.getError().toString());
+                }
+            }
+        });
+        request.executeAsync();
+    } 
+    
 	private void triggerLogin() {
 		String identifier = userCredentials.getIdentifier();		
 		String accessToken = userCredentials.getAccessToken().getToken();
 		String email = userCredentials.getEmail();
-		
-		if(identifier.length() > 0 || accessToken.length() > 0 || email.length() > 0){
-			if(userCredentials.getAccessToken().isExpired()) {
+
+		if (!identifier.equals("") && !accessToken.equals("") || !email.equals("")) { 
+			if (userCredentials.getAccessToken().isExpired()) {
 				progressDialog.show();
 				new GameLoginAsyncTask(this, userCredentials, false, false, progressDialog).execute();
-			
 			} else {
 				loggedIn = true;
 			}
-		} else if (email.contains("generic") && email.contains("@5dlab.com") ) {
+			
+		} else if (userCredentials.isEmailGenerated()) {
 			progressDialog.show();
 			new GameLoginAsyncTask(this, userCredentials, false, false, progressDialog).execute();
 			
 		} else {
-			loggedIn = false;
+			// facebook: if activity is launched and session not null -> trigger stateChange manually
+			Session session = Session.getActiveSession();
+		    if (session != null && (session.isOpened() || session.isClosed())) {
+		        onSessionStateChange(session, session.getState(), null);
+		    } else {
+		    	loggedIn = false;
+		    }
 		}
-		
 		updateUi();
 	}
 
@@ -384,7 +488,7 @@ public class MainActivity extends Activity implements
 		String accessToken = this.userCredentials.getAccessToken().getToken();
 		String tokenExpiration = this.userCredentials.getAccessToken().getExpireCode();
 		String userId = this.userCredentials.getIdentifier();
-		if(accessToken != null && tokenExpiration != null && !this.userCredentials.getAccessToken().isExpired()) {
+		if (accessToken != null && tokenExpiration != null && !this.userCredentials.getAccessToken().isExpired()) {
 			startGame(accessToken, tokenExpiration, userId);
 		
 		} else {
@@ -405,15 +509,6 @@ public class MainActivity extends Activity implements
 		startActivity(intent);
 	}
 
-	@Override
-	public void onRegistrationCompleted(String identifier, String clientID,	String nickname) {
-		userCredentials.setIdentifier(identifier);
-		userCredentials.setClientID(clientID);
-		userCredentials.setUsername(nickname);
-		triggerLogin();
-		triggerGetGames();
-	}
-
 	// callback interface for GameLoginAsyncTask
 	@Override
 	public void loginCallback(boolean result, String accessToken, String expiration, String identifier, boolean restoreAccount, boolean refresh) {
@@ -422,13 +517,16 @@ public class MainActivity extends Activity implements
 		
 		if (refresh) return;
 		
-		triggerGetGames();
-		
-		if (result) Toast.makeText(getApplicationContext(), getResources().getString(R.string.login_success_toast), Toast.LENGTH_LONG).show();
-		else Toast.makeText(getApplicationContext(), getResources().getString(R.string.login_failed_toast), Toast.LENGTH_LONG).show();
-		
+		if (result) {
+			loggedIn = true;
+			triggerGetGames();
+			Toast.makeText(getApplicationContext(), getResources().getString(R.string.login_success_toast), Toast.LENGTH_LONG)
+			     .show();
+		} else {
+			Toast.makeText(getApplicationContext(), getResources().getString(R.string.login_failed_toast), Toast.LENGTH_LONG)
+			     .show();
+		}
 		// TODO: loggedIn if GetGames failed?
-		loggedIn = true;
 		updateUi();
 	}
 	
@@ -450,6 +548,7 @@ public class MainActivity extends Activity implements
 	@Override
 	public void getCharacterCallback(GameInformation game, boolean createNew) {
 		userCredentials.setUsername(game.getCharacter().getName());
+		userCredentials.setPremiumExpiration(game.getCharacter().getPremiumExpiration());
 		updateUi();
 	}
 	
@@ -465,18 +564,21 @@ public class MainActivity extends Activity implements
 	}
 
 	// callback interface for error in GameLoginAsyncTask
-	// callback interface for error in GameLoginAsyncTask
 	@Override
-	public void loginCallbackError(String error, boolean restoreAccount, boolean refresh) {}
+	public void loginCallbackError(String error, boolean restoreAccount, boolean refresh) {
+		loggedIn = false;
+		updateUi();
+	}
 	
 	// update views in UI depending on user logged in or not
 	private void updateUi() {
-		if(loggedIn) {
+		if (loggedIn) {
 			setUpAccountmanagerBtn();
 			setUpSelectgameBtn();
 			((RelativeLayout) findViewById(R.id.headerShopContainer)).setVisibility(View.VISIBLE);
 			characterFrame.setText("");	
 			((ImageView) findViewById(R.id.characterFrameImageView)).setVisibility(View.VISIBLE);
+			facebookBtn.setVisibility(View.INVISIBLE);
 			((TextView) findViewById(R.id.characterFrameTextview)).setText(userCredentials.getUsername());
 			
 		} else {
@@ -485,6 +587,7 @@ public class MainActivity extends Activity implements
 			((RelativeLayout) findViewById(R.id.headerShopContainer)).setVisibility(View.INVISIBLE);
 			characterFrame.setText(getResources().getString(R.string.credentials_headline));
 			((ImageView) findViewById(R.id.characterFrameImageView)).setVisibility(View.INVISIBLE);
+			facebookBtn.setVisibility(View.VISIBLE);
 			((TextView) findViewById(R.id.characterFrameTextview)).setText("");
 		}
 	}
@@ -498,8 +601,10 @@ public class MainActivity extends Activity implements
 
 	@Override
 	public void run() {
-		if (userCredentials.getAccessToken().isExpired() && (userCredentials.getUsername().length() > 0 || userCredentials.getEmail().length() > 0)) 
+		if (userCredentials.getAccessToken().isExpired() && 
+				(userCredentials.getUsername().length() > 0 || userCredentials.getEmail().length() > 0)) {
 			new GameLoginAsyncTask(this, userCredentials, false, true, progressDialog).execute();
+		}
 		Log.d(TAG, "Token refresh handler");
 		tokenHandler.postDelayed(this, 10000);		
 	}

@@ -3,7 +3,6 @@ package com.wackadoo.wackadoo_client.tasks;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -16,7 +15,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpConnectionParams;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -48,9 +46,9 @@ public class CreateAccountAsyncTask extends AsyncTask<String, Integer, Boolean> 
 		String completeURL = baseURL + String.format(urlForRequest, Locale.getDefault().getCountry().toLowerCase());
 		
 		HttpPost request = new HttpPost(completeURL);
-		StringBuilder sb=new StringBuilder();
+		StringBuilder sb = new StringBuilder();
 		
-		List < NameValuePair > nameValuePairs = new ArrayList < NameValuePair > (6);
+		List <NameValuePair> nameValuePairs = new ArrayList <NameValuePair>(6);
 		nameValuePairs.add(new BasicNameValuePair("client_id", "WACKADOO-IOS"));
 		nameValuePairs.add(new BasicNameValuePair("client_password", "5d"));
 		nameValuePairs.add(new BasicNameValuePair("generic_password", "1"));
@@ -95,16 +93,16 @@ public class CreateAccountAsyncTask extends AsyncTask<String, Integer, Boolean> 
 	protected void onPostExecute(Boolean result) {
 		super.onPostExecute(result);
 		
-		if(progressDialog.isShowing()){
+		if (progressDialog.isShowing()) {
 			progressDialog.dismiss();
 		}
 		
-		if(result) {
+		if (result) {
 			try {
 				String identifier = jsonResponse.getString("identifier");
-				String cliendId = jsonResponse.getString("id");
 				String username = jsonResponse.getString("nickname");
-				listener.onRegistrationCompleted(identifier, cliendId, username);
+				String accountId = jsonResponse.getString("id");
+				listener.onRegistrationCompleted(identifier, username, accountId);
 				
 			} catch(Exception e) {
 				e.printStackTrace();

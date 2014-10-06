@@ -678,7 +678,7 @@ public class Session implements Serializable {
                     continue;
                 }
                 String status = (String) graphObject.getProperty("status");
-                if(status.equals("granted")) {
+                if (status.equals("granted")) {
                     grantedPermissions.add(permission);
                 } else if (status.equals("declined")) {
                     declinedPermissions.add(permission);

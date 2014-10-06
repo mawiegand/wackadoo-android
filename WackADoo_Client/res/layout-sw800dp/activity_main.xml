@@ -218,11 +218,12 @@
 		 	                    android:textColor="@color/white"
 		 	                    android:textSize="12sp" />
 					 	    	
-	 	              	    <TextView 
+	 	              	    <TextView
 	 	              	        android:id="@+id/characterFrameTextview"
-	 	              	        style="@style/customTextViewStyle" 
+	 	              	        style="@style/customTextViewStyle"
 	 	              	        android:layout_width="match_parent"
-	 	              	        android:textSize="8sp"/>
+	 	              	        android:gravity="center"
+	 	              	        android:textSize="8sp" />
 	 	              	    
 	 	              	</FrameLayout>
 				 	</LinearLayout>

@@ -37,6 +37,7 @@ public class GetCharacterAsyncTask extends AsyncTask<String, Integer, Boolean> {
     	this.createNew = createNew;
     	this.accessToken = userCredentials.getAccessToken().getToken();
     }
+    
 	
 	@Override
 	protected Boolean doInBackground(String... params) {

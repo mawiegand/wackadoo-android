@@ -11,12 +11,14 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageButton;
@@ -38,11 +40,14 @@ import com.wackadoo.wackadoo_client.helper.CustomIabHelper;
 import com.wackadoo.wackadoo_client.helper.UtilityHelper;
 import com.wackadoo.wackadoo_client.interfaces.BuyPlayStoreCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.BuyShopOfferCallbackInterface;
+import com.wackadoo.wackadoo_client.interfaces.CharacterCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.CreditsFragmentCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.ShopDataCallbackInterface;
+import com.wackadoo.wackadoo_client.model.GameInformation;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
 import com.wackadoo.wackadoo_client.tasks.BuyPlayStoreAsyncTask;
 import com.wackadoo.wackadoo_client.tasks.BuyShopOfferAsyncTask;
+import com.wackadoo.wackadoo_client.tasks.GetCharacterAsyncTask;
 import com.wackadoo.wackadoo_client.tasks.GetShopDataAsyncTask;
 
 public class ShopActivity extends Activity implements ShopDataCallbackInterface, CreditsFragmentCallbackInterface, BuyShopOfferCallbackInterface, BuyPlayStoreCallbackInterface, OnConsumeFinishedListener {
@@ -85,7 +90,7 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 	@Override
 	public void onDestroy() {
 	    super.onDestroy();
-	    if(billingHelper != null) {
+	    if (billingHelper != null) {
 	    	billingHelper.dispose();
 	    }
 	}
@@ -122,13 +127,13 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 			public boolean onTouch(View v, MotionEvent e) {
 				int action = e.getActionMasked(); 
 				
-				if(action == MotionEvent.ACTION_DOWN) {
+				if (action == MotionEvent.ACTION_DOWN) {
 					((ImageView) v).setImageResource(R.drawable.title_info_button_active);
 					
-				} else if(action == MotionEvent.ACTION_CANCEL) {
+				} else if (action == MotionEvent.ACTION_CANCEL) {
 					((ImageView) v).setImageResource(R.drawable.title_info_button);
 					
-				} else if((action == MotionEvent.ACTION_UP)) {
+				} else if ((action == MotionEvent.ACTION_UP)) {
 					((ImageView) v).setImageResource(R.drawable.title_info_button);
 					switch(v.getId()) {
 		    			case R.id.platinumCreditsInfoBtn:
@@ -161,7 +166,7 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 			public boolean onTouch(View v, MotionEvent event) {
 		    	int action = event.getActionMasked();
 		    	
-		    	if(action == (MotionEvent.ACTION_DOWN)) {
+		    	if (action == (MotionEvent.ACTION_DOWN)) {
 		    		v.setBackgroundColor(getResources().getColor(R.color.shop_listitem_active));
 		    		return true;
 		    	} else if (action == MotionEvent.ACTION_CANCEL) {
@@ -181,7 +186,7 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 	private void openShopInfoFragment(String category) {
 		fragment = null;
 		
-		if(category.equals("platinumCredits")) {
+		if (category.equals("platinumCredits")) {
 			fragment = new ShopInfoFragment("platinumCredits");
 		
 		} else if (category.equals("gold")) {
@@ -234,8 +239,7 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 		new GetShopDataAsyncTask(this, userCredentials, 2, "").execute();		// get platinum account offers
 		new GetShopDataAsyncTask(this, userCredentials, 3, "").execute();		// get bonus offers
 		new GetShopDataAsyncTask(this, userCredentials, 4, "").execute();		// get special offers
-		new GetShopDataAsyncTask(this, userCredentials, 5, "").execute();		// get character shop data
-	
+		new GetShopDataAsyncTask(this, userCredentials, 5, "").execute();		// get character shop data	
 	}
 	
 	private void insertRowItemsInList(List<ShopRowItem> items, ListView list) {
@@ -280,6 +284,19 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 	// handle clicks on special list
 	private void setUpListSpecial(List<ShopRowItem> offers) {
 		listSpecial = offers;
+		if (offers.isEmpty()) {
+			findViewById(R.id.subheadingSpecial).setVisibility(View.GONE);
+			findViewById(R.id.specialInfoBtn).setVisibility(View.GONE);
+			RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) findViewById(R.id.subheadingGold).getLayoutParams();
+			params.addRule(RelativeLayout.BELOW, R.id.shopCreditsAmountText);
+			findViewById(R.id.subheadingGold).setLayoutParams(params);
+		} else {
+			findViewById(R.id.subheadingSpecial).setVisibility(View.VISIBLE);
+			findViewById(R.id.specialInfoBtn).setVisibility(View.VISIBLE);
+			RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) findViewById(R.id.subheadingGold).getLayoutParams();
+			params.addRule(RelativeLayout.BELOW, R.id.listSpecial);
+			findViewById(R.id.subheadingGold).setLayoutParams(params);
+		}
 		insertRowItemsInList(listSpecial, listViewSpecial);
 		listViewSpecial.setOnItemLongClickListener(new OnItemLongClickListener() {
 			@Override
@@ -339,11 +356,11 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 	// callback interface for BuyShopOfferAsyncTask
 	@Override
 	public void buyShopOfferCallback(boolean result, String message) {
-		if(progressDialog.isShowing()) {
+		if (progressDialog.isShowing()) {
 			progressDialog.dismiss();
 		}
 		
-		if(result) {
+		if (result) {
 			Toast.makeText(this, "GEKLAPPT!", Toast.LENGTH_LONG)
 			.show();
 			
@@ -360,7 +377,6 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 		progressDialog.setTitle(getResources().getString(R.string.server_communication));
 		progressDialog.setMessage(getResources().getString(R.string.please_wait));
 	}
-
 	
 	// play store: set up in app billing
 	private void setUpBilling(){
@@ -399,8 +415,8 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 		int response = skuDetails.getInt("RESPONSE_CODE");
 		Log.d(TAG, "---> response: " + response);
 		
-		if(response == 0) {
-			if(progressDialog.isShowing()) {
+		if (response == 0) {
+			if (progressDialog.isShowing()) {
 				progressDialog.dismiss();
 			}
 			Log.d(TAG, "skuDetails: " + skuDetails.toString());
@@ -426,7 +442,7 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 					int priceA = Integer.valueOf(new JSONObject(itemA).getString("price_amount_micros"));
 					int priceB = Integer.valueOf(new JSONObject(itemB).getString("price_amount_micros"));
 				
-					if(priceA > priceB) {
+					if (priceA > priceB) {
 						return 1;
 					} else if (priceA < priceB) {
 						return -1;
@@ -466,5 +482,7 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 		Log.d(TAG, "start play store verification");
 		new BuyPlayStoreAsyncTask(ShopActivity.this, userCredentials.getAccessToken().getToken(), purchase.getOrderId(), purchase.getToken(), purchase.getSku()).execute();
 	}
+
+
 
 }

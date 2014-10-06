@@ -51,7 +51,7 @@ public class BuyShopOfferAsyncTask extends AsyncTask<String, Integer, Boolean> {
 		Log.d(TAG, "complete URL: " + request.getURI());
 		StringBuilder sb = new StringBuilder();
 		
-		List < NameValuePair > nameValuePairs = new ArrayList <NameValuePair>(3);
+		List <NameValuePair> nameValuePairs = new ArrayList <NameValuePair>(3);
 		nameValuePairs.add(new BasicNameValuePair("shop_transaction[offer_id]", String.valueOf(offerId)));
 		nameValuePairs.add(new BasicNameValuePair("shop_transaction[offer_type]", "bonus"));
 		nameValuePairs.add(new BasicNameValuePair("shop_transaction[customer_identifier]", shopCharacterId));
@@ -64,7 +64,6 @@ public class BuyShopOfferAsyncTask extends AsyncTask<String, Integer, Boolean> {
 		    request.setHeader("Authorization", "Bearer " + accessToken);
 		    request.setHeader("Accept", "application/json");
 		    request.setEntity(entity); 
-		    
 		    
 		    HttpResponse response = null;
 		    DefaultHttpClient httpClient = new DefaultHttpClient();
@@ -82,9 +81,9 @@ public class BuyShopOfferAsyncTask extends AsyncTask<String, Integer, Boolean> {
 		    String responseLine = response.getStatusLine().toString();
 		    Log.d(TAG, "response line: " + responseLine);
 		    
-		    if(responseLine.contains("200 OK")) {
+		    if (responseLine.contains("200 OK")) {
 		    	return true;
-		    } else if(responseLine.contains("403 Forbidden")) {
+		    } else if (responseLine.contains("403 Forbidden")) {
 		    	// not enough credits
 		    	return false;
 		    }

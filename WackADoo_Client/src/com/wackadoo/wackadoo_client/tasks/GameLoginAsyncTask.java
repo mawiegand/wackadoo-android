@@ -59,23 +59,32 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	    StringBuilder sb = new StringBuilder();
 	
 	    String username, password;
-	    if(userCredentials.getEmail().length() > 0) {
+	    if (userCredentials.getEmail().length() > 0) {
 	    	username = userCredentials.getEmail();	    	
 	    } else {
-	    	if (userCredentials.getUsername().length() > 0) username = userCredentials.getUsername();
-	    	else username = userCredentials.getIdentifier();	    	
+	    	if (userCredentials.getUsername().length() > 0) {
+	    		username = userCredentials.getUsername();
+	    	} else {
+	    		username = userCredentials.getIdentifier();	    	
+	    	}
 	    }
-	    if(userCredentials.getPassword().length() > 0) password = userCredentials.getPassword();
-	    else password = "egjzdsgt";
+	    if (userCredentials.getPassword().length() > 0) {
+	    	password = userCredentials.getPassword();
+	    } else {
+	    	password = "egjzdsgt";
+	    }
 	    
-	    List <NameValuePair> nameValuePairs = new ArrayList <NameValuePair> (7);
+	    List <NameValuePair> nameValuePairs = new ArrayList <NameValuePair>();
 		nameValuePairs.add(new BasicNameValuePair("client_id", "WACKADOO-IOS"));
 		nameValuePairs.add(new BasicNameValuePair("client_password", "5d"));
-		if (!restoreAccount) nameValuePairs.add(new BasicNameValuePair("username", username));
-		else nameValuePairs.add(new BasicNameValuePair("restore_with_device_token", "true"));
 		nameValuePairs.add(new BasicNameValuePair("password", password));
 		nameValuePairs.add(new BasicNameValuePair("grant_type", "password"));
 		nameValuePairs.add(new BasicNameValuePair("scope", ""));
+		if (!restoreAccount) {
+			nameValuePairs.add(new BasicNameValuePair("username", username));
+		} else {
+			nameValuePairs.add(new BasicNameValuePair("restore_with_device_token", "true"));
+		}
 		
 		// tracking data
 		nameValuePairs.add(new BasicNameValuePair("operating_system", deviceInformation.getOs()));
@@ -91,7 +100,6 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
 			entity.setContentType("application/x-www-form-urlencoded;charset=UTF-8");
 			
 			request.getParams().setParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, Boolean.FALSE);
-			//if (restoreAccount) request.getParams().setParameter("restore_with_device_token", "true");
 			request.setHeader("Accept", "application/json");
 			request.setEntity(entity);  
 			DefaultHttpClient httpClient = new DefaultHttpClient();
@@ -116,6 +124,7 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
 			return true;
 			
     	} catch (Exception e) {
+    		if (sb != null) Log.e(TAG, sb.toString());
     		e.printStackTrace();
     	}		
 		return false;
@@ -125,13 +134,13 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	protected void onPostExecute(Boolean result) {
 		super.onPostExecute(result);
 
-		if(progressDialog.isShowing()) {
+		if (progressDialog.isShowing()) {
 			progressDialog.dismiss();
 		}
 		
 		try {
-			if(result) {
-				if(jsonResponse.has("error")) {
+			if (result) {
+				if (jsonResponse.has("error")) {
 					((GameLoginCallbackInterface) context).loginCallbackError(jsonResponse.getString("error"), restoreAccount, refresh);
 				
 				} else {
@@ -145,5 +154,4 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
 			e.printStackTrace();
 		}
 	}
-
 }

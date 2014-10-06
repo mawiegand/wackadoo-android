@@ -25,10 +25,10 @@ public class LoginJavaScriptHandler {
 		private String getCountry() {
     		String country;
     		String temp = Locale.getDefault().getLanguage(); 
-    		if(temp.length() == 2 && Arrays.asList(serverSupportedLanguageCodes).contains(temp)) {
+    		if (temp.length() == 2 && Arrays.asList(serverSupportedLanguageCodes).contains(temp)) {
     			country = temp + "_";
     			temp = Locale.getDefault().getCountry();
-    			if(temp.length() == 2) {
+    			if (temp.length() == 2) {
     				country += temp;
     				return country;
     			}

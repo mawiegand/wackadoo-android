@@ -77,6 +77,10 @@ public class ShopRowItem implements Comparable<ShopRowItem> {
 	}
 	
 
+	public boolean isNotExpired() {
+		return expiresIn != null && expiresIn.getTime() != 0 && expiresIn.after(new Date());
+	}
+	
 	@Override
     public String toString() {
         return title + "\n" + optionalIconImageId;

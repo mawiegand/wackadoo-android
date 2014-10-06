@@ -10,13 +10,13 @@ import android.util.Log;
 
 public class UserCredentials {
 	
-	private static final String TAG = UserCredentials.class.getSimpleName();
-
 	private Context context;
 	private int gameId;
-	private String username, password, gcPlayerId, fbPlayerId, fbAccessToken, clientID, email, hostname;
+	private String username, password, gcPlayerId, fbPlayerId, fbAccessToken, accountId, email, hostname;
+	private Date premiumExpiration;
 	private AccessToken accessToken;
 	private ClientCredentials clientCredentials;
+	private boolean generatedEmail = true;
 	private boolean generatedPassword = true;
 	
 	public UserCredentials(Context context) {
@@ -39,6 +39,7 @@ public class UserCredentials {
 	}
 	public void setEmail(String email) {
 		this.email = email;
+		generatedEmail = false;
 		persistCredentials();
 	}
 	
@@ -79,38 +80,38 @@ public class UserCredentials {
 		accessToken.setExpireCode(myPrefs.getString("expire_code", ""));
 		accessToken.setToken(myPrefs.getString("accesstoken", ""));
 		accessToken.restoreExpireDate(new Date(myPrefs.getLong("expire_date", 0)));
-		clientID = myPrefs.getString("client_id", "");
+		accountId = myPrefs.getString("account_id", "");
 		username = myPrefs.getString("username", "");
 		email = myPrefs.getString("email", "");
 		password = myPrefs.getString("password", "");
 		generatedPassword = myPrefs.getBoolean("generatedPassword", true);
+		generatedEmail = myPrefs.getBoolean("generatedEmail", true);
 		hostname = myPrefs.getString("hostname", "");
-		gameId = myPrefs.getInt("gameID", 0);
+		gameId = myPrefs.getInt("gameId", 0);
+		premiumExpiration = new Date();
+		premiumExpiration.setTime(myPrefs.getLong("premiumExpiration", 0));
 	}
+	
 	private void persistCredentials() {
 		SharedPreferences myPrefs = context.getSharedPreferences("wad_prefs", 0);
 		SharedPreferences.Editor e = myPrefs.edit();
 		e.putString("identifier", accessToken.getIdentifier());
 		e.putLong("expire_date", accessToken.getCreatedAt().getTime());
-		e.putString("client_id", clientID);
+		e.putString("account_id", accountId);
 		e.putString("username", username);
 		e.putString("email", email);
 		e.putString("password", password);
 		e.putBoolean("generatedPassword", generatedPassword);
+		e.putBoolean("generatedEmail", generatedEmail);
 		e.putString("accesstoken", accessToken.getToken());
 		e.putString("expire_code", accessToken.getExpireCode());
 		e.putString("hostname", hostname);
 		e.putInt("gameId", gameId);
+		if (premiumExpiration != null) e.putLong("premiumExpiration", premiumExpiration.getTime());
 		e.commit();
 	}
 
-	public String getClientID() {
-		return clientID;
-	}
-	public void setClientID(String clientID) {
-		this.clientID = clientID;
-		persistCredentials();
-	}
+
 	
 	public String getHostname() {
 		return hostname;
@@ -130,6 +131,24 @@ public class UserCredentials {
 		persistCredentials();
 	}
 
+	public String getAccountId() {
+		return accountId;
+	}
+
+	public void setAccountId(String accountId) {
+		this.accountId = accountId;
+		persistCredentials();
+	}
+
+	public Date getPremiumExpiration() {
+		return premiumExpiration;
+	}
+
+	public void setPremiumExpiration(Date premiumExpiration) {
+		this.premiumExpiration = premiumExpiration;
+		persistCredentials();
+	}
+
 	public void generateNewAccessToken(String accessToken, String expiration) {
 		this.accessToken = new AccessToken();
 		this.accessToken.setToken(accessToken);
@@ -138,8 +157,11 @@ public class UserCredentials {
 		persistCredentials();
 	}
 	
+	public boolean isEmailGenerated() {
+		return generatedEmail;
+	}
 	public boolean isPasswordGenerated() {
-		return this.generatedPassword;
+		return generatedPassword;
 	}
 
 	public void clearAllCredentials() {

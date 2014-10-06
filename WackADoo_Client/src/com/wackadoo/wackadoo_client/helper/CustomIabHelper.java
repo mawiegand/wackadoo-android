@@ -70,7 +70,7 @@ public class CustomIabHelper extends IabHelper implements QueryInventoryFinished
     
     // handles response with purchased items
     public void onQueryInventoryFinished(IabResult result, Inventory inv) {
-		if(inv != null) {
+		if (inv != null) {
 			// consume already purchased items
         	handleUnconsumedItems(inv, CustomIabHelper.this);
         	

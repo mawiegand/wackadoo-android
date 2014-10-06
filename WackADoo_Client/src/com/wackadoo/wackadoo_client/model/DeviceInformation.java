@@ -21,7 +21,7 @@ public class DeviceInformation {
 	private void loadAppToken() {
 		SharedPreferences myPrefs = context.getSharedPreferences("myPrefs", 0);
 		this.uniqueTrackingToken = myPrefs.getString("uniquetrackingtoken", "");
-		if(this.uniqueTrackingToken.length() <= 0)
+		if (this.uniqueTrackingToken.length() <= 0)
 		{
 			this.createAppToken();
 			this.saveAppToken();

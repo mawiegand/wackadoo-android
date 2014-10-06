@@ -4,7 +4,6 @@
     <!-- General -->
     <string name="app_name">Wack-A-Doo</string>
     <string name="action_settings">Settings</string>
-    <string name="app_id">308180782571605</string>
     <string name="done">Fertig</string>
     <string name="back">Zurück</string>
     <string name="login_failed_toast">Login nicht möglich</string> 
@@ -41,6 +40,8 @@
     <string name="alert_email_change">E-Mail ändern</string>
     <string name="alert_email_change_success">E-Mail erfolgreich geändert</string>
     <string name="alert_email_change_error">Deine E-Mail wurde vom Server NICHT akzeptiert. Bitte versuche es noch mal oder kontaktiere den Support.</string>
+    <string name="alert_email_change_error_403">Du darfst deine E-Mail Adresse nicht schon wieder ändern. Bitte kontaktiere den Support falls du denkst, dass es sich um einen Fehler handelt.</string>
+    <string name="alert_email_change_error_409">Die eingegebene E-Mail Adresse ist nicht gültig oder bereits mit einem anderen Account registriert. Bitte kontaktiere den Support falls du denkst, dass es sich um einen Fehler handelt.</string>
     <string name="alert_ok_button">OK</string>
     <string name="alert_cancel_button">Abbrechen</string>
     <string name="alert_quit">Sind Sie sicher?</string>
@@ -111,6 +112,7 @@
     <string name="shopInfoText_bonus">Mehr Ressourcen? Jeder braucht mehr Ressourcen!</string>
     <string name="shopInfoHeadingText_bonus">Produktionsbonus</string>
     <string name="shopInfoDescText_bonus" formatted="false">Der Produktionsbonus gilt für deine gesamte Produktion der ausgewählten Ressource.\n\n15% globaler Bonus für die Produktion von Fell.\n\n15% globaler Bonus für die Produktion von Stein.\n\n15% globaler Bonus für die Produktion von Holz.</string>
+    <string name="shop_expires_in">Läuft aus am:&#160;</string>
     
     <!-- Info Screen -->
     <string name="infoscreen_support_btn">Support</string>

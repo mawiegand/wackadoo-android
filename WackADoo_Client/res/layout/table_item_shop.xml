@@ -33,4 +33,14 @@
 	    android:layout_centerVertical="true"
 	    android:scaleType="fitCenter" />
 	
+	<TextView
+	    android:id="@+id/shopListViewItemExpiresIn"
+	    style="@style/customTextViewStyle"
+	    android:layout_height="55dp"
+	    android:textSize="@dimen/shopStandardListFontsize" 
+	    android:layout_marginRight="10dp"
+	    android:layout_alignParentRight="true"
+	    android:layout_centerVertical="true"
+	    android:gravity="center"/>
+	
 </RelativeLayout>

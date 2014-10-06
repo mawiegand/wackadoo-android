@@ -1,12 +1,18 @@
 package com.wackadoo.wackadoo_client.helper;
 
 import java.net.InetAddress;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.pm.Signature;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.View.MeasureSpec;
@@ -14,8 +20,6 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-
-import com.wackadoo.wackadoo_client.R;
 
 public class UtilityHelper {
 
@@ -42,6 +46,22 @@ public class UtilityHelper {
 	    listView.requestLayout();
 	}
 
+	// prints key hash for facebook app
+	public static void printKeyHash(Context context){
+	    try {
+	        PackageInfo info = context.getPackageManager().getPackageInfo(
+	        		"com.wackadoo.wackadoo_client", PackageManager.GET_SIGNATURES);
+	        for(Signature signature : info.signatures) {
+	            MessageDigest md = MessageDigest.getInstance("SHA");
+	            md.update(signature.toByteArray());
+	            Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+	        }
+	    } catch (NameNotFoundException e) {
+	        Log.d("KeyHash:", e.toString());
+	    } catch (NoSuchAlgorithmException e) {
+	        Log.d("KeyHash:", e.toString());
+	    }
+	}
 	
 	// Checks if String is valid mail adress
 	public static boolean isValidMail(String email) {

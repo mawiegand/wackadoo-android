@@ -7,7 +7,7 @@ import com.facebook.Session;
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.interfaces.FacebookLoginCallbackInterface;
 
-public class FacebookLoginAsyncTask extends AsyncTask<String, Integer, Double>{
+public class FacebookLoginAsyncTask extends AsyncTask<String, Integer, Boolean>{
 
 	private Context context;
 	    
@@ -16,23 +16,21 @@ public class FacebookLoginAsyncTask extends AsyncTask<String, Integer, Double>{
 	}
 		
 	@Override
-	protected Double doInBackground(String... params) {
-		try {
-			loginWithFacebook();
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-		
-	public  void loginWithFacebook() throws Throwable
-	{
+	protected Boolean doInBackground(String... params) {
 		Session loginSession = Session.getActiveSession();
-		if(loginSession == null || loginSession.getState().isClosed()) {
-			String appId = context.getResources().getString(R.string.app_id);
+		if (loginSession == null || loginSession.getState().isClosed()) {
+			String appId = context.getResources().getString(R.string.facebookAppId);
 			loginSession = new Session.Builder(context).setApplicationId(appId).build();
 		}
-		((FacebookLoginCallbackInterface) context).onFacebookRegistrationCompleted(loginSession);
+		return true;
 	}
-	
+		
+	@Override
+	protected void onPostExecute(Boolean result) {
+		super.onPostExecute(result);
+		
+		if (result) {
+//			((FacebookLoginCallbackInterface) context).onFacebookRegistrationCompleted(loginSession);
+		}
+	}
 }

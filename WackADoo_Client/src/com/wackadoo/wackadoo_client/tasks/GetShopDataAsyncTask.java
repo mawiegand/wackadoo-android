@@ -4,26 +4,18 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.SocketException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpConnectionParams;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -31,8 +23,6 @@ import android.util.Log;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.adapter.ShopRowItem;
 import com.wackadoo.wackadoo_client.interfaces.ShopDataCallbackInterface;
@@ -109,7 +99,6 @@ public class GetShopDataAsyncTask extends AsyncTask<String, Integer, Boolean> {
 		    while((line = reader.readLine()) != null){
 		        sb.append(line);
 		    }
-		    
 		    Log.d(TAG, "response: " + sb);
 		    
 		    // product asynctask
@@ -137,7 +126,7 @@ public class GetShopDataAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	protected void onPostExecute(Boolean result) {
 		super.onPostExecute(result);
 		
-		if(result) {
+		if (result) {
 			((ShopDataCallbackInterface) context).getShopDataCallback(rowItemList, data, shopCharacterId, offerType);
 		}
 	}
@@ -155,7 +144,7 @@ public class GetShopDataAsyncTask extends AsyncTask<String, Integer, Boolean> {
 					int priceA = Integer.valueOf(new JSONObject(itemA).getString("price_amount_micros"));
 					int priceB = Integer.valueOf(new JSONObject(itemB).getString("price_amount_micros"));
 				
-					if(priceA > priceB) {
+					if (priceA > priceB) {
 						return 1;
 					} else if (priceA < priceB) {
 						return -1;
@@ -193,7 +182,7 @@ public class GetShopDataAsyncTask extends AsyncTask<String, Integer, Boolean> {
 						int price = jsonObject.getInt("price");
 						String title = context.getString(R.string.list_platinum_account_text);
 						title = String.format(title, hours, price);
-						ShopRowItem item = new ShopRowItem(id, 0, title, 0, 0, null);
+						ShopRowItem item = new ShopRowItem(id, 0, title, 0, 0, userCredentials.getPremiumExpiration());
 						rowItemList.add(item);
 					}
 					break;
@@ -239,7 +228,7 @@ public class GetShopDataAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	
 	// get id for currency drawable
 	private int getCurrencyImage(int id) {
-		if(id == 1) {
+		if (id == 1) {
 			return R.drawable.goldkroete_big;
 		} else {
 			return R.drawable.platinum_big;
@@ -252,6 +241,7 @@ public class GetShopDataAsyncTask extends AsyncTask<String, Integer, Boolean> {
 			case 0:	return R.drawable.resource_stone;
 			case 1: return R.drawable.resource_wood;
 			case 2: return R.drawable.resource_fur;
+			case 3: return R.drawable.goldkroete_big;
 			default: return 0;
 		}
 	}

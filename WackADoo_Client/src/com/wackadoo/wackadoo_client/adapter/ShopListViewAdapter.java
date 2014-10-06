@@ -1,9 +1,9 @@
 package com.wackadoo.wackadoo_client.adapter;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -30,6 +30,8 @@ public class ShopListViewAdapter extends ArrayAdapter<ShopRowItem> implements On
         ImageView imageView;
         TextView title;
         ImageView optionalImageView;
+        TextView expiresIn;
+        int color;
     }
      
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -43,21 +45,27 @@ public class ShopListViewAdapter extends ArrayAdapter<ShopRowItem> implements On
             holder.title = (TextView) convertView.findViewById(R.id.shopListViewItemText);
             holder.imageView = (ImageView) convertView.findViewById(R.id.shopListViewItemIcon);
             holder.optionalImageView = (ImageView) convertView.findViewById(R.id.shopListViewItemOptionalImage);
+            holder.expiresIn = (TextView) convertView.findViewById(R.id.shopListViewItemExpiresIn);            
             convertView.setTag(holder); 
         } else
             holder = (ViewHolder) convertView.getTag();
 
         holder.title.setText(rowItem.getTitle());
-        if(rowItem.getOptionalIconImageId() != 0){
+        if (rowItem.isNotExpired()) {
+        	holder.color = context.getResources().getColor(R.color.shop_item_buyed);
+        	holder.expiresIn.setText(context.getString(R.string.shop_expires_in)+new SimpleDateFormat().format(rowItem.getExpiresIn()));
+        } else holder.color = context.getResources().getColor(R.color.white);
+        if (rowItem.getOptionalIconImageId() != 0){
         	holder.optionalImageView.setImageResource(rowItem.getOptionalIconImageId());
         } else {
         	holder.optionalImageView.setVisibility(View.GONE);
         }
-        if(rowItem.getIconImageId() != 0){
+        if (rowItem.getIconImageId() != 0){
         	holder.imageView.setImageResource(rowItem.getIconImageId());
         } else {
         	holder.imageView.setVisibility(View.GONE);
         }
+        convertView.setBackgroundColor(holder.color);
          
         convertView.setOnTouchListener(this);
         return convertView;
@@ -67,14 +75,15 @@ public class ShopListViewAdapter extends ArrayAdapter<ShopRowItem> implements On
     public boolean onTouch(View v, MotionEvent event) {
     	int action = event.getActionMasked();
     	
-    	if(action == (MotionEvent.ACTION_DOWN)) {
+    	
+    	if (action == (MotionEvent.ACTION_DOWN)) {
     		v.setBackgroundColor(context.getResources().getColor(R.color.shop_listitem_active));
     		return true;
-    	} else if (action == MotionEvent.ACTION_CANCEL) {
-    		v.setBackgroundColor(context.getResources().getColor(R.color.white));
+    	} else if (action == MotionEvent.ACTION_CANCEL) {    		
+    		v.setBackgroundColor(((ViewHolder)v.getTag()).color);
     		return true;
     	} else if (action == MotionEvent.ACTION_UP) {
-    		v.setBackgroundColor(context.getResources().getColor(R.color.white));
+    		v.setBackgroundColor(((ViewHolder)v.getTag()).color);
     		v.performLongClick();
     		return false;
     	} 
