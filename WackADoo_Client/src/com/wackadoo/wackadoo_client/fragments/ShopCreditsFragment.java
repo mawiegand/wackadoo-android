@@ -33,14 +33,17 @@ public class ShopCreditsFragment extends Fragment {
 	private ListView listView;
 	private ArrayList<ShopRowItem> rowItemList;
 
+	private int platinCredits;
+
 	public ShopCreditsFragment(){
 		
 	}
 	
-	public ShopCreditsFragment(Context context, UserCredentials userCredentials, ArrayList<ShopRowItem> rowItemList) {
+	public ShopCreditsFragment(Context context, UserCredentials userCredentials, ArrayList<ShopRowItem> rowItemList, int platinCredits) {
 		this.context = context;
 		this.userCredentials = userCredentials;
 		this.rowItemList = rowItemList;
+		this.platinCredits = platinCredits;
 	}
 	
 	@Override
@@ -49,7 +52,7 @@ public class ShopCreditsFragment extends Fragment {
 		listView = (ListView) view.findViewById(R.id.listPlatinumCredits);
 		
 		String headerText = context.getResources().getString(R.string.fragment_platinum_credits_heading);
-		headerText = String.format(headerText, 0);	// TODO: fill in credit amount
+		headerText = String.format(headerText, platinCredits);
 		((TextView) view.findViewById(R.id.creditsFragmentHeaderText)).setText(headerText);
 		
 		String footerText = context.getResources().getString(R.string.fragment_platinum_credits_footer);

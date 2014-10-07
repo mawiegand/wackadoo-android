@@ -41,7 +41,7 @@ public class GetCharacterAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	
 	@Override
 	protected Boolean doInBackground(String... params) {
-		
+		if (game.getServer() == null) return false;
 		Activity parent = (Activity) this.listener;
 		String urlForRequest = String.format(parent.getString(R.string.characterURL), Locale.getDefault().getCountry().toLowerCase(Locale.getDefault()));
 		if (createNew) urlForRequest += "create_if_new=true";

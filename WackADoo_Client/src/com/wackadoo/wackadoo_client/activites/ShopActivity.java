@@ -25,6 +25,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,6 +65,8 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 	private CustomIabHelper billingHelper;
 	private ArrayList<String> stringProductList;
 	private String shopCharacterId;
+
+	private int platinCredits;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -160,7 +163,6 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 	}
 	
 	private void setUpCreditsBtn() {
-		// TODO: fill in credit amount
 		RelativeLayout shopCreditsBtn = (RelativeLayout) findViewById(R.id.shopCreditsButton); 
 		shopCreditsBtn.setOnTouchListener(new View.OnTouchListener() {
 			public boolean onTouch(View v, MotionEvent event) {
@@ -205,20 +207,26 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 		// slide shop info fragment in window
         getFragmentManager().beginTransaction()
          	.setCustomAnimations(R.anim.slide_from_right,
-         						R.anim.slide_to_right)
+         						R.anim.slide_to_right,
+         						R.anim.slide_from_right,
+         						R.anim.slide_to_right)         	
         	.add(R.id.activityContainer, fragment)
+        	.addToBackStack(category)
         	.commit();
 	}
 	
 	// handles click on credit category --> Google Play
 	private void openCreditsFragment(ArrayList<ShopRowItem> rowItemsList) {
-		fragment = new ShopCreditsFragment(this, userCredentials, rowItemsList);
+		fragment = new ShopCreditsFragment(this, userCredentials, rowItemsList, platinCredits);
 		
 		// slide shop info fragment in window
 		getFragmentManager().beginTransaction()
 		.setCustomAnimations(R.anim.slide_from_right,
-				R.anim.slide_to_right)
+         					R.anim.slide_to_right,
+         					R.anim.slide_from_right,
+         					R.anim.slide_to_right)  
 				.add(R.id.activityContainer, fragment)
+				.addToBackStack("buyCredits")
 				.commit();
 	}
 	
@@ -341,6 +349,7 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 			case 3: setUpListBonus(offers); break;
 			case 4: setUpListSpecial(offers); break;
 			case 5: 				
+				platinCredits = data;
 				String textAmount = String.format(getString(R.string.current_credit_text), data);
 				((TextView) findViewById(R.id.shopCreditsAmountText)).setText(textAmount);
 				shopCharacterId = customerId;	
@@ -350,6 +359,7 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 				textAmount = String.format(getString(R.string.current_frog_text), data);
 				((TextView) findViewById(R.id.currentFrogText)).setText(textAmount);
 		}
+		((ScrollView) findViewById(R.id.scrollView)).fullScroll(ScrollView.FOCUS_UP);
 	}	
 	
 	
@@ -361,7 +371,7 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 		}
 		
 		if (result) {
-			Toast.makeText(this, "GEKLAPPT!", Toast.LENGTH_LONG)
+			Toast.makeText(this, getString(R.string.buy_item_success), Toast.LENGTH_LONG)
 			.show();
 			
 		} else {

@@ -43,14 +43,6 @@ public class SelectGameActivity extends Activity implements CurrentGamesCallback
 		
 		setUpDoneBtn();
 		setUpListView();
-	
-		// TODO: find a nicer solution for this hack. problem: scrollview is not scrolled to top on start of activity
-		final ScrollView scrollview = ((ScrollView) findViewById(R.id.scrollView)); 
-		scrollview.post(new Runnable() {
-			  @Override public void run() {
-			    scrollview.fullScroll(ScrollView.FOCUS_UP);
-			  }
-		});
 		
 		// fetch current games from server
 		new GetCurrentGamesAsyncTask(this, getApplicationContext(), userCredentials).execute();
@@ -131,7 +123,7 @@ public class SelectGameActivity extends Activity implements CurrentGamesCallback
 
 	// callback interface for GetCurrentGamesAsyncTask
 	@Override
-	public void getCurrentGamesCallback(ArrayList<GameInformation> games) {
+	public void getCurrentGamesCallback(ArrayList<GameInformation> games) {	
 		this.games = games;
 		for (int i = 0; i < games.size(); i++) new GetCharacterAsyncTask(this, userCredentials, games.get(i), false).execute();
 		GamesListViewAdapter adapter = new GamesListViewAdapter(getApplicationContext(), R.layout.table_item_game, games);

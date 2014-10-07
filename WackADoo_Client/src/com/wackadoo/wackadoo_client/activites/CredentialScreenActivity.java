@@ -164,7 +164,6 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 		String title, message;
 		
 		if (success) {
-			// TODO: dynamic character info!
 			title = userCredentials.getUsername();
 			message = String.format(getResources().getString(R.string.account_character_restore_success), title);
 		} else {

@@ -114,7 +114,7 @@ public class GamesListViewAdapter extends ArrayAdapter<GameInformation> implemen
         }
         	
         Calendar startDate = Calendar.getInstance();
-        startDate.setTime(game.getStartedAt());
+        if (game.getStartedAt() != null) startDate.setTime(game.getStartedAt());
         
     	// game already started
     	if (startDate.before(today)) {
