@@ -211,8 +211,10 @@ class FacebookFragment extends Fragment {
      * @param permissions the permissions list, can be null
      */
     protected final void openSessionForRead(String applicationId, List<String> permissions) {
+//        openSessionForRead(applicationId, permissions, SessionLoginBehavior.SUPPRESS_SSO,
+//                Session.DEFAULT_AUTHORIZE_ACTIVITY_CODE);
         openSessionForRead(applicationId, permissions, SessionLoginBehavior.SSO_WITH_FALLBACK,
-                Session.DEFAULT_AUTHORIZE_ACTIVITY_CODE);
+        		Session.DEFAULT_AUTHORIZE_ACTIVITY_CODE);
     }
 
     /**
@@ -240,7 +242,7 @@ class FacebookFragment extends Fragment {
      */
     protected final void openSessionForPublish(String applicationId, List<String> permissions) {
         openSessionForPublish(applicationId, permissions, SessionLoginBehavior.SSO_WITH_FALLBACK,
-                Session.DEFAULT_AUTHORIZE_ACTIVITY_CODE);
+        		Session.DEFAULT_AUTHORIZE_ACTIVITY_CODE);
     }
 
     /**

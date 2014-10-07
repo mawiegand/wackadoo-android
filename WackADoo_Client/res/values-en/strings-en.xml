@@ -15,6 +15,11 @@
     
     <!-- Facebook -->
     <string name="fb_task_failure">Error while connection to facebook. Please try again or contact the support.</string>
+    <string name="fb_connect_title">Connect with Facebook</string>
+    <string name="fb_connect_message">Would you like to connect your Account with Facebook?</string>
+    <string name="fb_character_already_connected">Character already connected! Please contact the support.</string>
+    <string name="fb_user_already_connected">Facebook User already connected! Please contact the support.</string>
+    <string name="fb_connect_error">Error Code %s while connecting Accounts. Please contact Support.</string>
     
     <!-- WebView -->
     <string name="dialog_return_startscreen_text">Do you want to return to den Start Screen?</string>

@@ -90,5 +90,4 @@ public class GetCurrentGamesAsyncTask extends AsyncTask<String, Integer, Boolean
 		super.onPostExecute(result);
 		listener.getCurrentGamesCallback(games);
 	}
-	
 }

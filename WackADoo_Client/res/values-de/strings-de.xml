@@ -16,6 +16,11 @@
     
     <!-- Facebook -->
     <string name="fb_task_failure">Fehler bei Kommunikation mit Facebook. Bitte versuche es erneut oder kontaktiere den Support.</string>
+    <string name="fb_connect_title">Mit Facebook verbinden</string>
+    <string name="fb_connect_message">Möchtest du deinen Account mit Facebook verbinden?</string>
+    <string name="fb_character_already_connected">Charakter ist bereits verbunden! Bitte kontaktiere den Support.</string>
+    <string name="fb_user_already_connected">Facebook Account ist bereits verbunden. Bitte kontaktiere den Support.</string>
+    <string name="fb_connect_error">Fehlercode %s beim Verbinden der Accounts. Bitte kontaktiere den Support.</string>
     
     <!-- WebView -->
     <string name="dialog_return_startscreen_text">Willst du zum Startbildschirm zurückkehren?</string>

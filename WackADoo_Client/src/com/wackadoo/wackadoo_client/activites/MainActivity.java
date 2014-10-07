@@ -9,7 +9,10 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.drawable.AnimationDrawable;
@@ -31,6 +34,7 @@ import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.Session.StatusCallback;
+import com.facebook.SessionLoginBehavior;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphUser;
@@ -52,19 +56,19 @@ import com.wackadoo.wackadoo_client.tasks.GetCharacterAsyncTask;
 import com.wackadoo.wackadoo_client.tasks.GetCurrentGamesAsyncTask;
 
 public class MainActivity extends Activity implements GameLoginCallbackInterface, FacebookTaskCallbackInterface, 
-		CurrentGamesCallbackInterface, CharacterCallbackInterface, Runnable,  StatusCallback {
+		CurrentGamesCallbackInterface, CharacterCallbackInterface, Runnable, StatusCallback {
 
 	private static final String TAG = MainActivity.class.getSimpleName();
 	
 	private ImageButton playBtn, accountmanagerBtn, selectGameBtn, facebookBtn, shopBtn, soundBtn, infoBtn;
 	private Button characterFrame;
-	private boolean soundOn, lastWorldAccessible, loggedIn;
+	private boolean soundOn, lastWorldAccessible, loggedIn, tryConnect;
 	private AnimationDrawable playButtonAnimation;
 	private UserCredentials userCredentials;
 	private Handler customHandler;
 	private ProgressDialog progressDialog;
 	private Handler tokenHandler;
-	private UiLifecycleHelper uiHelper;			// facebook
+	private UiLifecycleHelper uiHelper;		// facebook
 	
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +88,9 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	    uiHelper = new UiLifecycleHelper(this, this);
 		uiHelper.onCreate(savedInstanceState);
 	    
+		// test variable for attempt to connect to facebook
+		tryConnect = false;
+		
 	    // sound is off by default
 	    soundOn = false;
 	    
@@ -135,14 +142,13 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 			} else {
 				triggerLogin();
 			}
-			new GetCurrentGamesAsyncTask(this, getApplicationContext(), userCredentials).execute();		
 		}
-		uiHelper.onResume();		// facebook
+		uiHelper.onResume();	// facebook
     }
     @Override
     public void onPause() {
         super.onPause();
-	    uiHelper.onPause();
+	    uiHelper.onPause();		// facebook
     }
     @Override
     public void onDestroy() {
@@ -195,7 +201,38 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 
 				case MotionEvent.ACTION_UP:
 					facebookBtn.setImageResource(R.drawable.title_facebook_button);
-					triggerFacebook();
+					
+					// fb user so pick friends
+					if (userCredentials.isFbUser()) {
+
+					// no fb user, so show connect dialog
+					} else {
+						if (loggedIn) {
+							AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+							builder.setTitle(R.string.fb_connect_title)
+							.setMessage(R.string.fb_connect_message)
+							.setPositiveButton(R.string.alert_quit_yes, new OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+									tryConnect = true;
+									Session session = Session.getActiveSession();
+									Session.OpenRequest openRequest = new Session.OpenRequest(MainActivity.this);
+									openRequest.setPermissions(Arrays.asList("email"));
+									openRequest.setLoginBehavior(SessionLoginBehavior.SUPPRESS_SSO);
+									session.openForRead(openRequest);
+								}
+							})
+							.setNegativeButton(R.string.alert_quit_no, null)
+							.show();
+							
+						} else {
+							Session session = Session.getActiveSession();
+							Session.OpenRequest openRequest = new Session.OpenRequest(MainActivity.this);
+							openRequest.setPermissions(Arrays.asList("email"));
+							openRequest.setLoginBehavior(SessionLoginBehavior.SUPPRESS_SSO);
+							session.openForRead(openRequest);
+						}
+					}
 					break;
 				}
 				return false;
@@ -376,35 +413,27 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		});
 	}
 	
-	// handle login with facebook
-	private void triggerFacebook() {
-		Session session = Session.getActiveSession();
+	// handle login with credentials
+	private void triggerLogin() {
+		String identifier = userCredentials.getIdentifier();		
+		String accessToken = userCredentials.getAccessToken().getToken();
+		String email = userCredentials.getEmail();
 
-	    if (session == null) {
-	    	session = new Session(this);
-	        Session.setActiveSession(session);
-	        session.closeAndClearTokenInformation();
-	    
-	    // log out if session is opened
-	    } else if (!session.isClosed()) {
-	    	session.closeAndClearTokenInformation();
-	    	userCredentials.clearAllCredentials();
-	    	loggedIn = false;
-	    	    
-	    // try to log in with new permission request
-		} else if (!session.isOpened() && !session.isClosed()) {
-	        Session.OpenRequest openRequest = new Session.OpenRequest(MainActivity.this);
-	        openRequest.setPermissions(Arrays.asList("email"));
-	        session.openForRead(openRequest);
-	        loggedIn = true;
-	        
-	    // log in
-	    } else {
-	    	Session.openActiveSession(this, true, Arrays.asList("email"), (StatusCallback) this);
-	    	loggedIn = true;
-	    }
+		if (!identifier.equals("") && !accessToken.equals("") || !email.equals("")) { 
+			if (userCredentials.getAccessToken().isExpired()) {
+				progressDialog.show();
+				new GameLoginAsyncTask(this, userCredentials, false, false, progressDialog).execute();
+			} else {
+				loggedIn = true;
+				updateUi();
+			}
+			
+		} else if (userCredentials.isEmailGenerated()) {
+			progressDialog.show();
+			new GameLoginAsyncTask(this, userCredentials, false, false, progressDialog).execute();
+		} 
 	}
-
+	
 	// facebook: callback interface calls onSessionStateChange to handle session state
 	@Override
 	public void call(Session session, SessionState state, Exception exception) {
@@ -414,16 +443,18 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	// facebook: handles login/logout state of session
 	private void onSessionStateChange(Session session, SessionState state, Exception exception) {
 		if (session.isOpened()) {
+			Log.d(TAG, "Facebook Session opened!");
 			loggedIn = true;
-			progressDialog.show();
-			fetchFbData(session, progressDialog);
+			userCredentials.setFbUser(true);
+			fetchFbData(session);
 			
 		} else if (state.isClosed()) {
+			Log.d(TAG, "Facebook Session closed!");
 			loggedIn = false;
-			Toast.makeText(MainActivity.this, "Facebook Session closed", Toast.LENGTH_SHORT)
-				 .show();
+			userCredentials.setFbUser(false);
+			tryConnect = false;
+			updateUi();
 		}
-		updateUi();
 	}
 
     // facebook: handles result for login 
@@ -441,18 +472,25 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
     }
 	
     // facebook: fetch user data from facebook
-    private void fetchFbData(final Session session, final ProgressDialog progressDialog) {
+    private void fetchFbData(final Session session) {
         Request request = Request.newMeRequest(session, new Request.GraphUserCallback() {
             @Override
             public void onCompleted(GraphUser user, Response response) {
+            	progressDialog.show();
                 if (session == Session.getActiveSession()) {
                     if (user != null) {
                     	userCredentials.setFbPlayerId(user.getId());	
                     	userCredentials.setEmail(user.getProperty("email").toString());
                     	userCredentials.setFbAccessToken(session.getAccessToken());
                     }
-                    // check if current facebook id is not used
-                    new FacebookLoginAsyncTask(MainActivity.this, userCredentials).execute();
+                    
+                    // try to connect character with facebook account
+                    if (tryConnect) {
+                    	new FacebookAccountAsyncTask(MainActivity.this, userCredentials, StaticHelper.FB_CONNECT_TASK).execute();
+                   	// check if current facebook id is not used
+                    } else {
+                    	new FacebookAccountAsyncTask(MainActivity.this, userCredentials, StaticHelper.FB_ID_TASK).execute();
+                    }
                 }
                 if (response.getError() != null) {
                 	Log.d(TAG, "response error: " + response.getError().toString());
@@ -462,38 +500,6 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
         request.executeAsync();
     } 
     
-    // handle login with credentials
-	private void triggerLogin() {
-		String identifier = userCredentials.getIdentifier();		
-		String accessToken = userCredentials.getAccessToken().getToken();
-		String email = userCredentials.getEmail();
-		
-		// facebook: if activity is launched and session not null -> trigger stateChange manually
-//		Session session = Session.getActiveSession();
-//		if (session != null) {
-//			if (session.isOpened() || session.isClosed()) {
-//				onSessionStateChange(session, session.getState(), null);
-//			} else {
-//				loggedIn = false;
-//			}
-//			
-//	    // try log in with credentials
-//		} else
-		if (!identifier.equals("") && !accessToken.equals("") || !email.equals("")) { 
-			if (userCredentials.getAccessToken().isExpired()) {
-				progressDialog.show();
-				new GameLoginAsyncTask(this, userCredentials, false, false, progressDialog).execute();
-			} else {
-				loggedIn = true;
-				updateUi();
-			}
-			
-		} else if (userCredentials.isEmailGenerated()) {
-			progressDialog.show();
-			new GameLoginAsyncTask(this, userCredentials, false, false, progressDialog).execute();
-		} 
-	}
-
 	private void triggerPlayGame() {
 		String accessToken = this.userCredentials.getAccessToken().getToken();
 		String tokenExpiration = this.userCredentials.getAccessToken().getExpireCode();
@@ -581,14 +587,22 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	
 	// update views in UI depending on user logged in or not
 	private void updateUi() {
+		if (progressDialog.isShowing()) {
+			progressDialog.dismiss();
+		}
+		
 		if (loggedIn) {
 			setUpAccountmanagerBtn();
 			setUpSelectgameBtn();
 			((RelativeLayout) findViewById(R.id.headerShopContainer)).setVisibility(View.VISIBLE);
 			characterFrame.setText("");	
 			((ImageView) findViewById(R.id.characterFrameImageView)).setVisibility(View.VISIBLE);
-//			facebookBtn.setVisibility(View.INVISIBLE);
 			((TextView) findViewById(R.id.characterFrameTextview)).setText(userCredentials.getUsername());
+			if (userCredentials.isFbUser()) {
+				facebookBtn.setVisibility(View.INVISIBLE);
+			} else {
+				facebookBtn.setVisibility(View.VISIBLE);
+			}
 			
 		} else {
 			accountmanagerBtn.setVisibility(View.INVISIBLE);
@@ -596,7 +610,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 			((RelativeLayout) findViewById(R.id.headerShopContainer)).setVisibility(View.INVISIBLE);
 			characterFrame.setText(getResources().getString(R.string.credentials_headline));
 			((ImageView) findViewById(R.id.characterFrameImageView)).setVisibility(View.INVISIBLE);
-//			facebookBtn.setVisibility(View.VISIBLE);
+			facebookBtn.setVisibility(View.VISIBLE);
 			((TextView) findViewById(R.id.characterFrameTextview)).setText("");
 		}
 	}
@@ -626,59 +640,49 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 			String type = responseResult.getRequest();
 			int responseCode = responseResult.getHttpStatusCode();
 			
-			if (progressDialog.isShowing()) {
-				progressDialog.dismiss();
-			}
-			
+			// if facebook id was checked
 			if (type.equals(StaticHelper.FB_ID_TASK)) {
 				switch (responseCode) {
 					case 200:
-					case 304:
-						Toast.makeText(this, "FACEBOOK ID - Found!", Toast.LENGTH_SHORT)
-							 .show();
+					case 304: 
+						Log.d(TAG, "FACEBOOK ID - FOUND" + responseCode); 
+						new FacebookLoginAsyncTask(this, userCredentials).execute();
 						break;
 						
 					case 404:
-						Toast.makeText(this, "FACEBOOK ID - Free to use! --> Connect", Toast.LENGTH_SHORT)
-							 .show();
-						new FacebookAccountAsyncTask(this, userCredentials, StaticHelper.FB_CONNECT_TASK).execute();
+						Log.d(TAG, "FACEBOOK ID - FREE TO USE" + responseCode);
+						new FacebookLoginAsyncTask(this, userCredentials).execute();
 						break;
 						
-					default:
-						Log.d(TAG, "FACEBOOK ID - ERROR CODE: " + responseCode);
-						break;
+					default: Log.d(TAG, "FACEBOOK ID - ERROR CODE: " + responseCode); progressDialog.dismiss(); break;
 				}
 				
-				
+			// if facebook account was connected to character
 			} else if (type.equals(StaticHelper.FB_CONNECT_TASK)) {
-				switch (responseCode) {
-					case 200:
-						Toast.makeText(this, "FACEBOOK CONNECT - Success!", Toast.LENGTH_SHORT)
-							 .show();
-						break;
-						
-					case 403:
-						Toast.makeText(this, "FACEBOOK CONNECT - Character already connected!", Toast.LENGTH_SHORT)
-							 .show();
-						break;
-						
-					case 409:
-						Toast.makeText(this, "FACEBOOK CONNECT - FB User already connected!", Toast.LENGTH_SHORT)
-						     .show();
-						break;
-						
-					default:
-						Log.d(TAG, "FACEBOOK CONNECT - ERROR CODE: " + responseCode);
-						break;
+				tryConnect = false;
+				if (responseCode == 200) {
+					Log.d(TAG, "FACEBOOK CONNECT - SUCCESS" + responseCode);
+					new FacebookLoginAsyncTask(this, userCredentials).execute();
+				} else {
+					progressDialog.dismiss();	
+					userCredentials.setFbUser(false);
+					userCredentials.setEmail("");
+					switch (responseCode) {
+						case 403: Toast.makeText(this, R.string.fb_character_already_connected, Toast.LENGTH_LONG).show(); break;
+						case 409: Toast.makeText(this, R.string.fb_user_already_connected, Toast.LENGTH_LONG).show(); break;
+						default: Toast.makeText(this, String.format(getString(R.string.fb_connect_error), responseCode), Toast.LENGTH_LONG).show(); break;
+					}
 				}
 				
+			// if facebook account was used to login
 			} else if (type.equals(StaticHelper.FB_LOGIN_TASK)) {
 				try {
 					userCredentials = new UserCredentials(this);
 					JSONObject jsonResponse = new JSONObject(responseResult.getMessage());
 					userCredentials.generateNewAccessToken(jsonResponse.getString("access_token"), jsonResponse.getString("expires_in"));
 					userCredentials.setIdentifier(jsonResponse.getString("user_identifer"));	
-//					triggerLogin();
+					loggedIn = true;
+					new GetCurrentGamesAsyncTask(this, getApplicationContext(), userCredentials).execute();	
 					
 				} catch (JSONException e) {
 					Toast.makeText(this, getString(R.string.fb_task_failure), Toast.LENGTH_SHORT)
@@ -691,7 +695,33 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 			Toast.makeText(this, getString(R.string.fb_task_failure), Toast.LENGTH_SHORT)
 				 .show();
 		}
-		
 	}
 	
+	
+	
+//	Session session = Session.getActiveSession();
+//
+//    if (session == null) {
+//    	session = new Session(MainActivity.this);
+//        Session.setActiveSession(session);
+//        session.closeAndClearTokenInformation();
+//    
+//    // log out if session is opened
+//    } else if (!session.isClosed()) {
+//    	session.closeAndClearTokenInformation();
+//    	userCredentials.clearAllCredentials();
+//    	loggedIn = false;
+//    	    
+//    // try to log in with new permission request
+//	} else if (!session.isOpened() && !session.isClosed()) {
+//        Session.OpenRequest openRequest = new Session.OpenRequest(MainActivity.this);
+//        openRequest.setPermissions(Arrays.asList("email"));
+//        session.openForRead(openRequest);
+//        loggedIn = true;
+//        
+//    // log in
+//    } else {
+//    	Session.openActiveSession(MainActivity.this, true, Arrays.asList("email"), (StatusCallback) MainActivity.this);
+//    	loggedIn = true;
+//    }
 }

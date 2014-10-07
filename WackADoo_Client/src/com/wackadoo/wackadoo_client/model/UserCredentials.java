@@ -36,7 +36,11 @@ public class UserCredentials {
 	}
 	public void setEmail(String email) {
 		this.email = email;
-		generatedEmail = false;
+		if (email.equals("")) {
+			generatedEmail = true;
+		} else {
+			generatedEmail = false;
+		}
 		persistCredentials();
 	}
 	
@@ -101,7 +105,7 @@ public class UserCredentials {
 		e.putString("username", username);
 		e.putString("email", email);
 		e.putString("password", password);
-		e.putBoolean("generatedPassword", generatedEmail);
+		e.putBoolean("generatedEmail", generatedEmail);
 		e.putBoolean("generatedPassword", generatedPassword);
 		e.putString("accesstoken", accessToken.getToken());
 		e.putString("expire_code", accessToken.getExpireCode());

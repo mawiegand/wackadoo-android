@@ -1,6 +1,5 @@
 package com.wackadoo.wackadoo_client.activites;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -18,7 +17,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.LoginActivity;
 import com.facebook.Session;
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.helper.StaticHelper;
@@ -80,7 +78,6 @@ public class AccountManagerActivity extends Activity implements AccountManagerCa
 				passwordButtonVisible = false;
 			}
 		}
-			
 		
 		// if user has own mail, dont show setmail button
 		if (!emailButtonVisible) {
@@ -95,7 +92,7 @@ public class AccountManagerActivity extends Activity implements AccountManagerCa
 		// if user has own password, dont show changepassword button
 		if (!passwordButtonVisible) {
 			passwordButton.setText(getResources().getString(R.string.account_change_password));
-			RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)passwordButton.getLayoutParams();
+			RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) passwordButton.getLayoutParams();
 			params.addRule(RelativeLayout.BELOW, R.id.emailInformationText);
 			passwordButton.setLayoutParams(params); 
 			characterLockedTextView.setVisibility(View.GONE);
@@ -103,7 +100,7 @@ public class AccountManagerActivity extends Activity implements AccountManagerCa
 		}
 		
 		// character connected to facebook
-		if (!emailButtonVisible && !passwordButtonVisible) {
+		if (userCredentials.isFbUser()) {
 			emailTextView.setVisibility(View.GONE);
 			characterLockedTextView.setVisibility(View.VISIBLE);
 			characterLockedTextView.setText(R.string.account_character_connected_fb);
@@ -260,7 +257,24 @@ public class AccountManagerActivity extends Activity implements AccountManagerCa
 	private void signOut() {
 		userCredentials.clearAllCredentials();
 		userCredentials = new UserCredentials(getApplicationContext());
-		checkUserIsLoggedIn();
+		
+		String identifier = this.userCredentials.getIdentifier();
+		String email = this.userCredentials.getEmail();
+	
+		// closes facebook session and clears cache
+		Session session = Session.getActiveSession();
+		if (session != null) {
+			session.closeAndClearTokenInformation();	
+			session.close();
+			Session.setActiveSession(null);
+		}
+
+		// if credentials been deleted, go back to login screen
+	    if ((identifier.length() <= 0) && (email.length() <= 0)) {
+			Intent intent = new Intent(AccountManagerActivity.this, CredentialScreenActivity.class);
+			startActivity(intent);
+			finish();
+		}
 	}
 
 	// callback interface for AccountManagerAsyncTask
@@ -303,26 +317,6 @@ public class AccountManagerActivity extends Activity implements AccountManagerCa
 		toast.show();
 	}
 	
-	private void checkUserIsLoggedIn() {
-		String identifier = this.userCredentials.getIdentifier();
-		String email = this.userCredentials.getEmail();
-	
-		// closes facebook session and clears cache
-		Session session = Session.getActiveSession();
-		if (session != null) {
-			session.closeAndClearTokenInformation();	
-			session.close();
-			Session.setActiveSession(null);
-		}
-
-		// if credentials been deleted, go back to login screen
-	    if ((identifier.length() <= 0) && (email.length() <= 0)) {
-			Intent intent = new Intent(AccountManagerActivity.this, CredentialScreenActivity.class);
-			startActivity(intent);
-			finish();
-		}
-	}
-
 	// set up the standard server communiation dialog
 	private void setUpDialog() {
 		progressDialog = new ProgressDialog(this);

@@ -36,7 +36,6 @@ public class FacebookLoginAsyncTask extends AsyncTask<String, Integer, ResponseR
 	
 	private Context context;
 	private UserCredentials userCredentials;
-	private ResponseResult responseResult;
 	    
 	public FacebookLoginAsyncTask(Context context, UserCredentials userCredentials) {
 	    this.context = context;

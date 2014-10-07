@@ -9,7 +9,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -27,14 +26,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.vending.billing.IabHelper;
-import com.android.vending.billing.IabHelper.OnConsumeFinishedListener;
-import com.android.vending.billing.IabHelper.OnConsumeMultiFinishedListener;
-import com.android.vending.billing.IabHelper.OnIabPurchaseFinishedListener;
-import com.android.vending.billing.IabHelper.QueryInventoryFinishedListener;
-import com.android.vending.billing.IabResult;
-import com.android.vending.billing.Inventory;
-import com.android.vending.billing.Purchase;
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.adapter.ShopListViewAdapter;
 import com.wackadoo.wackadoo_client.adapter.ShopRowItem;
@@ -240,6 +231,7 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 		ShopListViewAdapter adapter = new ShopListViewAdapter(this, R.layout.table_item_shop, items);
 		list.setAdapter(adapter);
 		StaticHelper.setListViewHeightBasedOnChildren(list);
+		
 	}
 
 	// handle clicks on platinum account list
@@ -384,7 +376,6 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 			openCreditsFragment(rowItems);
 		}
 	}
-
 	
 	// play store: returns list of platinum credits ShopRowItems for given list of json products (sorted by price)
 	private ArrayList<ShopRowItem> produceRowItemList() {
