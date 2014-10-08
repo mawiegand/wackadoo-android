@@ -16,6 +16,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.drawable.AnimationDrawable;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -94,6 +95,9 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	    // sound is off by default
 	    soundOn = false;
 	    
+	    // create musicplayer for background music
+	    StaticHelper.backgroundMusicPlayer = MediaPlayer.create(this, R.raw.themesong);
+	    
 	    // user logged out by default
 	    loggedIn = false;
 
@@ -144,11 +148,20 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 			}
 		}
 		uiHelper.onResume();	// facebook
+		
+		// start background music, if its enabled
+		if (soundOn) {
+			StaticHelper.backgroundMusicPlayer.start();
+		}
     }
     @Override
     public void onPause() {
         super.onPause();
 	    uiHelper.onPause();		// facebook
+	    
+	    if (!StaticHelper.continueMusic) {
+	    	StaticHelper.backgroundMusicPlayer.pause();
+	    }
     }
     @Override
     public void onDestroy() {
@@ -216,6 +229,9 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 								public void onClick(DialogInterface dialog, int which) {
 									tryConnect = true;
 									Session session = Session.getActiveSession();
+									if (session == null) { 
+										session = new Session(MainActivity.this);
+									}
 									Session.OpenRequest openRequest = new Session.OpenRequest(MainActivity.this);
 									openRequest.setPermissions(Arrays.asList("email"));
 									openRequest.setLoginBehavior(SessionLoginBehavior.SUPPRESS_SSO);
@@ -278,6 +294,10 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 
 				case MotionEvent.ACTION_UP:
 					shopBtn.setImageResource(R.drawable.title_shop_button);
+					if (soundOn) {
+						StaticHelper.playClickSound(MainActivity.this);			// play click sound
+					}
+					StaticHelper.continueMusic = true;
 					Intent intent = new Intent(MainActivity.this, ShopActivity.class);
 					startActivity(intent);
 					break;
@@ -293,10 +313,12 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 			public void onClick(View v) {
 				if (soundOn) {
 					soundBtn.setImageResource(R.drawable.title_sound_off);
+					StaticHelper.backgroundMusicPlayer.stop();
 					soundOn = false;
 
 				} else {
 					soundBtn.setImageResource(R.drawable.title_sound_on);
+					StaticHelper.backgroundMusicPlayer.start();
 					soundOn = true;
 				}
 			}
@@ -450,9 +472,13 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 			
 		} else if (state.isClosed()) {
 			Log.d(TAG, "Facebook Session closed!");
-			loggedIn = false;
 			userCredentials.setFbUser(false);
-			tryConnect = false;
+			// password generated = attempt to connect fb account to local character failed = dont log out
+			if (userCredentials.isPasswordGenerated()) {
+				tryConnect = false;
+			} else {
+				loggedIn = false;
+			}
 			updateUi();
 		}
 	}
@@ -657,15 +683,22 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 					default: Log.d(TAG, "FACEBOOK ID - ERROR CODE: " + responseCode); progressDialog.dismiss(); break;
 				}
 				
-			// if facebook account was connected to character
+			// if attempt to connect facebook account to character
 			} else if (type.equals(StaticHelper.FB_CONNECT_TASK)) {
 				tryConnect = false;
 				if (responseCode == 200) {
 					Log.d(TAG, "FACEBOOK CONNECT - SUCCESS" + responseCode);
 					new FacebookLoginAsyncTask(this, userCredentials).execute();
+					
 				} else {
-					progressDialog.dismiss();	
-					userCredentials.setFbUser(false);
+					progressDialog.dismiss();
+					// close facebook session again, if connect accounts was not successful
+					Session session = Session.getActiveSession();	
+					if (session.isOpened()) {
+						session.closeAndClearTokenInformation();	
+						session.close();
+						Session.setActiveSession(null);
+					}
 					userCredentials.setEmail("");
 					switch (responseCode) {
 						case 403: Toast.makeText(this, R.string.fb_character_already_connected, Toast.LENGTH_LONG).show(); break;
@@ -696,32 +729,5 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 				 .show();
 		}
 	}
-	
-	
-	
-//	Session session = Session.getActiveSession();
-//
-//    if (session == null) {
-//    	session = new Session(MainActivity.this);
-//        Session.setActiveSession(session);
-//        session.closeAndClearTokenInformation();
-//    
-//    // log out if session is opened
-//    } else if (!session.isClosed()) {
-//    	session.closeAndClearTokenInformation();
-//    	userCredentials.clearAllCredentials();
-//    	loggedIn = false;
-//    	    
-//    // try to log in with new permission request
-//	} else if (!session.isOpened() && !session.isClosed()) {
-//        Session.OpenRequest openRequest = new Session.OpenRequest(MainActivity.this);
-//        openRequest.setPermissions(Arrays.asList("email"));
-//        session.openForRead(openRequest);
-//        loggedIn = true;
-//        
-//    // log in
-//    } else {
-//    	Session.openActiveSession(MainActivity.this, true, Arrays.asList("email"), (StatusCallback) MainActivity.this);
-//    	loggedIn = true;
-//    }
+
 }

@@ -63,7 +63,8 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 		// set up standard server communication dialog
 	    setUpDialog();
 	    
-		setUpButtonListener();
+	    setUpBtns();
+		setUpBackBtn();
 	}
 
 	// facebook: lifecycleHelper to keep track of the session
@@ -82,12 +83,6 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
         super.onDestroy();
 	    uiHelper.onDestroy();
     }
-    
-	private void setUpButtonListener() {
-		setUpFacebookButton();
-		setUpBtns();
-		setUpBackBtn();
-	}
 
 	private void setUpBtns() {
 		OnTouchListener touchListener = new OnTouchListener() {
@@ -146,17 +141,6 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 		});
 	}
 	
-	private void setUpFacebookButton() {
-		loginBtn.setUserInfoChangedCallback(new UserInfoChangedCallback() {
-            @Override
-            public void onUserInfoFetched(GraphUser user) {
-                if (user != null) {
-                	//TODO: Facebook Login
-                } 
-            }
-        });
-	}
-
 	protected void restoreAccount(boolean success) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		String title, message;

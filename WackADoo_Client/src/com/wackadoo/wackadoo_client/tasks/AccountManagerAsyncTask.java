@@ -32,7 +32,7 @@ import com.wackadoo.wackadoo_client.model.UserCredentials;
 
 public class AccountManagerAsyncTask extends AsyncTask<String, Integer, Integer>{
 
-	private final static String TAG = AccountManagerAsyncTask.class.getSimpleName();
+	private static final String TAG = AccountManagerAsyncTask.class.getSimpleName();
 	
     private AccountManagerCallbackInterface listener;
     private ProgressDialog progressDialog;

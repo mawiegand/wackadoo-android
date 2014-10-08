@@ -835,7 +835,7 @@ public abstract class PickerFragment<T extends GraphObject> extends Fragment {
     }
 
     abstract class LoadingStrategy {
-        protected final static int CACHED_RESULT_REFRESH_DELAY = 2 * 1000;
+        protected static final int CACHED_RESULT_REFRESH_DELAY = 2 * 1000;
 
         protected GraphObjectPagingLoader<T> loader;
         protected GraphObjectAdapter<T> adapter;

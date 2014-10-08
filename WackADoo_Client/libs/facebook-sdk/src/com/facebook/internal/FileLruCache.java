@@ -593,7 +593,7 @@ public final class FileLruCache {
     }
 
     // Caches the result of lastModified during sort/heap operations
-    private final static class ModifiedFile implements Comparable<ModifiedFile> {
+    private static final class ModifiedFile implements Comparable<ModifiedFile> {
         private static final int HASH_SEED = 29; // Some random prime number
         private static final int HASH_MULTIPLIER = 37; // Some random prime number
 

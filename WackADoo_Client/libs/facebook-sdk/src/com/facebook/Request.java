@@ -1862,7 +1862,7 @@ public class Request {
         return false;
     }
 
-    final static void serializeToUrlConnection(RequestBatch requests, HttpURLConnection connection)
+    static final void serializeToUrlConnection(RequestBatch requests, HttpURLConnection connection)
     throws IOException, JSONException {
         Logger logger = new Logger(LoggingBehavior.REQUESTS, "Request");
 

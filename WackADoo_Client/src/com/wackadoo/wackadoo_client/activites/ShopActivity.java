@@ -8,7 +8,6 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -33,6 +32,7 @@ import com.wackadoo.wackadoo_client.fragments.ShopCreditsFragment;
 import com.wackadoo.wackadoo_client.fragments.ShopInfoFragment;
 import com.wackadoo.wackadoo_client.helper.CustomIabHelper;
 import com.wackadoo.wackadoo_client.helper.StaticHelper;
+import com.wackadoo.wackadoo_client.helper.WackadooActivity;
 import com.wackadoo.wackadoo_client.interfaces.BuyShopOfferCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.CreditsFragmentCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.ShopDataCallbackInterface;
@@ -40,7 +40,7 @@ import com.wackadoo.wackadoo_client.model.UserCredentials;
 import com.wackadoo.wackadoo_client.tasks.BuyShopOfferAsyncTask;
 import com.wackadoo.wackadoo_client.tasks.GetShopDataAsyncTask;
 
-public class ShopActivity extends Activity implements ShopDataCallbackInterface, CreditsFragmentCallbackInterface, BuyShopOfferCallbackInterface {
+public class ShopActivity extends WackadooActivity implements ShopDataCallbackInterface, CreditsFragmentCallbackInterface, BuyShopOfferCallbackInterface {
 	
 	private static final String TAG = ShopActivity.class.getSimpleName();
 	
@@ -101,6 +101,7 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 	
 		    		case MotionEvent.ACTION_UP: 
 		    			doneBtn.setTextColor(getResources().getColor(R.color.textbox_orange));
+		    			StaticHelper.continueMusic = true;
 		    			ShopActivity.this.finish();
 		    			break;
 				}

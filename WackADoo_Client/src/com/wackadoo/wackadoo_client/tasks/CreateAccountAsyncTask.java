@@ -29,7 +29,7 @@ import com.wackadoo.wackadoo_client.interfaces.CreateAccountCallbackInterface;
 
 public class CreateAccountAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	
-	private final static String TAG = CreateAccountAsyncTask.class.getSimpleName();
+	private static final String TAG = CreateAccountAsyncTask.class.getSimpleName();
 	
     private CreateAccountCallbackInterface listener;
     private ProgressDialog progressDialog;

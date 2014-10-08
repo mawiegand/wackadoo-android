@@ -13,7 +13,8 @@
     
     <!-- Facebook -->
     <string name="facebookIdPath">/identity_provider/%s/facebook/</string>
-    <string name="facebookConnectPath">/game_server/%s/action/fundamental/connect_facebook_actions</string>
+    <string name="facebookConnectPath">/identity_provider/%s/facebook/</string>
+    <!-- <string name="facebookConnectPath">/game_server/%s/action/fundamental/connect_facebook_actions</string>-->
     <string name="facebookLoginPath">/identity_provider/%s/oauth2/fb_access_token</string>
     
     <!-- Games -->

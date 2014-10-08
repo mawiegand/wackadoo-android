@@ -61,13 +61,13 @@ public class FacebookAccountAsyncTask extends AsyncTask<String, Integer, Respons
 	    	//*****************************************//	
 			//*****  connect fb id and character  *****//
 	    	} else if (type.equals(StaticHelper.FB_CONNECT_TASK)) {
-	    		url = StaticHelper.generateUrlForTask(context, false, type);
+	    		url = StaticHelper.generateUrlForTask(context, true, type) + userCredentials.getFbPlayerId();
 	    		request = new HttpPut(url);
 	    		
 	    		// generate entity of name+value pairs
 	    		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-	    		nameValuePairs.add(new BasicNameValuePair("fb_player_id", userCredentials.getFbPlayerId()));
-	    		nameValuePairs.add(new BasicNameValuePair("fb_access_token", userCredentials.getFbAccessToken()));
+	    		nameValuePairs.add(new BasicNameValuePair("id", userCredentials.getFbPlayerId()));
+	    		nameValuePairs.add(new BasicNameValuePair("facebook[access_token]", userCredentials.getFbAccessToken()));
 	    		UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nameValuePairs);
 	    		entity.setContentType("application/x-www-form-urlencoded;charset=UTF-8");
 	    		
@@ -78,6 +78,7 @@ public class FacebookAccountAsyncTask extends AsyncTask<String, Integer, Respons
 			// set up request
 			request.getParams().setParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, Boolean.FALSE);
 			request.setHeader("Accept", "application/json");
+			request.setHeader("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
 			
 			// set up http client
 			DefaultHttpClient httpClient = new DefaultHttpClient();

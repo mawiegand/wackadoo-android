@@ -43,7 +43,7 @@ import java.net.*;
  */
 public final class Util {
 
-    private final static String UTF8 = "UTF-8";
+    private static final String UTF8 = "UTF-8";
 
     /**
      * Generate the multi-part post body providing the parameters and boundary
