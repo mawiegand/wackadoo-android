@@ -52,8 +52,8 @@ public class BuyPlayStoreAsyncTask extends AsyncTask<String, Integer, Boolean> {
 		StringBuilder sb = new StringBuilder();
 		
 		List < NameValuePair > nameValuePairs = new ArrayList <NameValuePair>(3);
-		nameValuePairs.add(new BasicNameValuePair("google_verify_order_action[order_id]", String.valueOf(orderId)));
-		nameValuePairs.add(new BasicNameValuePair("google_verify_order_action[product_id]", String.valueOf(productId)));
+		nameValuePairs.add(new BasicNameValuePair("google_verify_order_action[order_id]", orderId));
+		nameValuePairs.add(new BasicNameValuePair("google_verify_order_action[product_id]", productId));
 		nameValuePairs.add(new BasicNameValuePair("google_verify_order_action[payment_token]", paymentToken));
 
 		try {

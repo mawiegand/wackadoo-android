@@ -549,6 +549,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	public void getCharacterCallback(GameInformation game, boolean createNew) {
 		userCredentials.setUsername(game.getCharacter().getName());
 		userCredentials.setPremiumExpiration(game.getCharacter().getPremiumExpiration());
+		UtilityHelper.drawCharacter(game.getCharacter().getAvatarString(), (ImageView) findViewById(R.id.characterFrameImageView), getResources());
 		updateUi();
 	}
 	

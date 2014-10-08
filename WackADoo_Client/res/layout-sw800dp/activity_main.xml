@@ -69,9 +69,10 @@
 	      				android:layout_weight="0.5">
 		    			
 		    			<ImageButton
-							style="@style/customImageButtonStyle"	
-		    	    		android:id="@+id/shopButton"
-		    	    		android:src="@drawable/title_shop_button" />
+		    			    android:id="@+id/shopButton"
+		    			    style="@style/customImageButtonStyle"
+		    			    android:layout_marginLeft="30dp"
+		    			    android:src="@drawable/title_shop_button" />
 		    			
 	    			</RelativeLayout>
 	    		</LinearLayout>

@@ -202,12 +202,12 @@
 			 	    		android:layout_height="0px"
 			 	    		android:layout_weight="0.55">
 	 	              	    
-		 	              	<ImageView 
+		 	              	<ImageView
 		 	              	    android:id="@+id/characterFrameImageView"
-		 	              	    android:layout_height="match_parent"
-		 	              	    android:layout_width="match_parent"
-		 	              	    android:src="@drawable/standard_character_pic"
-		 	              	    android:visibility="invisible"/>
+		 	              	    android:layout_width="fill_parent"
+		 	              	    android:layout_height="fill_parent"
+		 	              	    android:layout_marginTop="15dp"
+		 	              	    android:visibility="invisible" />
 		 	                
 		 	                <Button
 		 	                    android:id="@+id/characterFrame"
