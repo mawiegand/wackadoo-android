@@ -24,13 +24,14 @@ import com.facebook.widget.LoginButton;
 import com.facebook.widget.LoginButton.UserInfoChangedCallback;
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.helper.StaticHelper;
+import com.wackadoo.wackadoo_client.helper.WackadooActivity;
 import com.wackadoo.wackadoo_client.interfaces.CreateAccountCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.GameLoginCallbackInterface;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
 import com.wackadoo.wackadoo_client.tasks.CreateAccountAsyncTask;
 import com.wackadoo.wackadoo_client.tasks.GameLoginAsyncTask;
 
-public class CredentialScreenActivity extends Activity implements CreateAccountCallbackInterface, GameLoginCallbackInterface{
+public class CredentialScreenActivity extends WackadooActivity implements CreateAccountCallbackInterface, GameLoginCallbackInterface{
 	
 	private static final String TAG = CredentialScreenActivity.class.getSimpleName();
 	
@@ -44,8 +45,7 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 	 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_credentialscreen);   
+		super.onCreate(savedInstanceState, R.layout.activity_credentialscreen);
 		
 		userCredentials = new UserCredentials(getApplicationContext());
 		
@@ -63,8 +63,7 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 		// set up standard server communication dialog
 	    setUpDialog();
 	    
-	    setUpBtns();
-		setUpBackBtn();
+	    setUpButtons();
 	}
 
 	// facebook: lifecycleHelper to keep track of the session
@@ -84,7 +83,7 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 	    uiHelper.onDestroy();
     }
 
-	private void setUpBtns() {
+	private void setUpButtons() {
 		OnTouchListener touchListener = new OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
@@ -111,6 +110,11 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 						case R.id.recoverAccountButton:
 							triggerRestoreAccount();
 							break;
+							
+						case R.id.credentialscreenTopbarBack:
+							StaticHelper.continueMusic = true;
+							finish();
+							break;
 					}
 				}
 				return true;
@@ -119,26 +123,7 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 		signInBtn.setOnTouchListener(touchListener);
 		createAccountBtn.setOnTouchListener(touchListener);
 		restoreAccountBtn.setOnTouchListener(touchListener);
-	}
-	
-	private void setUpBackBtn() {
-		backBtn.setOnTouchListener(new View.OnTouchListener() {
-			@SuppressLint("NewApi")
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				switch (event.getAction()) {
-		    		case MotionEvent.ACTION_DOWN: 			    			
-		    			backBtn.setTextColor(getResources().getColor(R.color.textbox_orange_active));
-		    			break;
-		    			
-		    		case MotionEvent.ACTION_UP: 
-		    			backBtn.setTextColor(getResources().getColor(R.color.textbox_orange));
-		    			finish();
-		    			break;
-				}
-				return true;
-			}
-		});
+		backBtn.setOnTouchListener(touchListener);
 	}
 	
 	protected void restoreAccount(boolean success) {

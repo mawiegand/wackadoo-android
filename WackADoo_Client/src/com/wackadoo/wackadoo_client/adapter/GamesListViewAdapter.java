@@ -8,6 +8,7 @@ import org.joda.time.Days;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.test.PerformanceTestCase;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.wackadoo.wackadoo_client.R;
+import com.wackadoo.wackadoo_client.helper.StaticHelper;
 import com.wackadoo.wackadoo_client.model.GameInformation;
  
 public class GamesListViewAdapter extends ArrayAdapter<GameInformation> implements OnTouchListener {
@@ -60,7 +62,7 @@ public class GamesListViewAdapter extends ArrayAdapter<GameInformation> implemen
         holder.worldItemIcon.setImageResource(R.drawable.check_marked_box);
         
         // game name
-        holder.worldItemNameText.setText(rowItem.getName());					
+        holder.worldItemNameText.setText(rowItem.getName());	
         
         // game player
         String playerText = rowItem.getPresentPlayers() + "/" + rowItem.getMaxPlayers();	
@@ -73,6 +75,7 @@ public class GamesListViewAdapter extends ArrayAdapter<GameInformation> implemen
         holder.worldItemDayText.setText(checkDates(rowItem));
         
         convertView.setOnTouchListener(this);
+        StaticHelper.overrideFonts(context, convertView);
         return convertView;
     }
 

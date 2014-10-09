@@ -1,6 +1,7 @@
 package com.wackadoo.wackadoo_client.fragments;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.activites.ShopActivity;
+import com.wackadoo.wackadoo_client.helper.StaticHelper;
 
 public class ShopInfoFragment extends Fragment {
 
@@ -30,12 +32,11 @@ public class ShopInfoFragment extends Fragment {
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_shop_info, container, false);
-		
 		setUpRessources();
 		setUpTextviews(view);
 		setUpShopBtn(view);
-		
-        return view;
+		StaticHelper.overrideFonts((Context)getActivity(), view);
+		return view;
     }
 	
 	public void setUpShopBtn(View view) {

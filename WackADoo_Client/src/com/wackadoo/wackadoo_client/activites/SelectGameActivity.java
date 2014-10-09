@@ -5,6 +5,7 @@ import java.util.Calendar;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.content.WakefulBroadcastReceiver;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.adapter.GamesListViewAdapter;
 import com.wackadoo.wackadoo_client.helper.StaticHelper;
+import com.wackadoo.wackadoo_client.helper.WackadooActivity;
 import com.wackadoo.wackadoo_client.interfaces.CharacterCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.CurrentGamesCallbackInterface;
 import com.wackadoo.wackadoo_client.model.GameInformation;
@@ -25,7 +27,7 @@ import com.wackadoo.wackadoo_client.model.UserCredentials;
 import com.wackadoo.wackadoo_client.tasks.GetCharacterAsyncTask;
 import com.wackadoo.wackadoo_client.tasks.GetCurrentGamesAsyncTask;
 
-public class SelectGameActivity extends Activity implements CurrentGamesCallbackInterface, CharacterCallbackInterface {
+public class SelectGameActivity extends WackadooActivity implements CurrentGamesCallbackInterface, CharacterCallbackInterface {
 	
 	private ListView listView;
 	private ArrayList<GameInformation> games;
@@ -34,8 +36,7 @@ public class SelectGameActivity extends Activity implements CurrentGamesCallback
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_selectgame);
+		super.onCreate(savedInstanceState, R.layout.activity_selectgame);
 		
 		userCredentials = new UserCredentials(this.getApplicationContext());
 		
@@ -70,6 +71,7 @@ public class SelectGameActivity extends Activity implements CurrentGamesCallback
 						
 					case MotionEvent.ACTION_UP:
 						doneBtn.setTextColor(getResources().getColor(R.color.textbox_orange));
+						StaticHelper.continueMusic = true;
 						finish();
 						break;
 				}

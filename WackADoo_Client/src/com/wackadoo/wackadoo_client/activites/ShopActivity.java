@@ -57,8 +57,7 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_shop);
+		super.onCreate(savedInstanceState, R.layout.activity_shop);
         
         userCredentials = new UserCredentials(this);
         
@@ -72,7 +71,7 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
         listViewGold = (ListView) findViewById(R.id.listGold);
         listViewBonus = (ListView) findViewById(R.id.listBonus);
 
-        setUpBtns();
+        setUpButtons();
         loadShopOffersFromServer(); 
 	}
 	
@@ -84,7 +83,7 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 	    }
 	}
 	
-	public void setUpBtns() {
+	public void setUpButtons() {
 		setUpDoneBtn();
 		setUpCreditsBtn();
 		setUpInfoBtns();
@@ -102,7 +101,7 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 		    		case MotionEvent.ACTION_UP: 
 		    			doneBtn.setTextColor(getResources().getColor(R.color.textbox_orange));
 		    			StaticHelper.continueMusic = true;
-		    			ShopActivity.this.finish();
+		    			finish();
 		    			break;
 				}
 				return true;

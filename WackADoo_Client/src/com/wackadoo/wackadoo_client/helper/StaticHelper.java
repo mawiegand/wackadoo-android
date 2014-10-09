@@ -11,7 +11,9 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpConnectionParams;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -20,8 +22,10 @@ import android.view.View;
 import android.view.View.MeasureSpec;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.wackadoo.wackadoo_client.R;
 
@@ -132,5 +136,59 @@ public class StaticHelper {
 	public static void playClickSound(Context context) {
 		MediaPlayer clickPlayer = MediaPlayer.create(context, R.raw.click);
 		clickPlayer.start();
+	}
+
+	// overrides font with custom font in assets/fonts
+	public static void overrideFonts(final Context context, final View v) {
+		Typeface tf = Typeface.createFromAsset(context.getAssets(), "fonts/Montserrat-Regular.ttf");
+		
+		try {
+	        if (v instanceof ViewGroup) {
+	            ViewGroup vg = (ViewGroup) v;
+	            for (int i = 0; i<vg.getChildCount(); i++) {
+	                View child = vg.getChildAt(i);
+	                overrideFonts(context, child);
+	            }
+	        } else if (v instanceof TextView) {
+	            ((TextView)v).setTypeface(tf);
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	}
+
+	public static void styleDialog(Context context, Dialog dialog) {
+		 // Set title divider color
+	    int id = context.getResources().getIdentifier("titleDivider", "id", "android");
+	    View titleDivider = dialog.findViewById(id);
+	    if (titleDivider != null) {
+	    	titleDivider.setBackgroundColor(context.getResources().getColor(R.color.textbox_orange));
+	    }
+	    
+	    // change font of dialog texts
+	    Typeface tf = Typeface.createFromAsset(context.getAssets(), "fonts/Montserrat-Regular.ttf");
+
+	    // title
+	    id = context.getResources().getIdentifier("alertTitle", "id", "android");
+	    if (dialog.findViewById(id) != null) {
+	    	((TextView) dialog.findViewById(id)).setTypeface(tf);
+	    }
+	    // message
+	    id = context.getResources().getIdentifier("message", "id", "android");
+	    if (dialog.findViewById(id) != null) {
+	    	((TextView) dialog.findViewById(id)).setTypeface(tf);
+	    }
+	    
+	    // positive button
+	    id = context.getResources().getIdentifier("button1", "id", "android");
+	    if (dialog.findViewById(id) != null) {
+	    	((TextView) dialog.findViewById(id)).setTypeface(tf);
+	    }
+	    
+	    // negative button
+	    id = context.getResources().getIdentifier("button2", "id", "android");
+	    if (dialog.findViewById(id) != null) {
+	    	((TextView) dialog.findViewById(id)).setTypeface(tf);
+	    }
 	}
 }

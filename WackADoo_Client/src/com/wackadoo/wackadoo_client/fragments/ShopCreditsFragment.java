@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -58,6 +59,7 @@ public class ShopCreditsFragment extends Fragment {
 		
 		setUpShopBtn(view);
 		setUpListView(listView);
+		StaticHelper.overrideFonts((Context)getActivity(), view);
 		return view;
     }
 	

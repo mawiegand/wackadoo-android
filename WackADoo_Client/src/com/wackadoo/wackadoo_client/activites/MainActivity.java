@@ -8,7 +8,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -44,6 +43,7 @@ import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.analytics.AutoPing;
 import com.wackadoo.wackadoo_client.helper.ResponseResult;
 import com.wackadoo.wackadoo_client.helper.StaticHelper;
+import com.wackadoo.wackadoo_client.helper.WackadooActivity;
 import com.wackadoo.wackadoo_client.interfaces.CharacterCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.CurrentGamesCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.FacebookTaskCallbackInterface;
@@ -56,7 +56,7 @@ import com.wackadoo.wackadoo_client.tasks.GameLoginAsyncTask;
 import com.wackadoo.wackadoo_client.tasks.GetCharacterAsyncTask;
 import com.wackadoo.wackadoo_client.tasks.GetCurrentGamesAsyncTask;
 
-public class MainActivity extends Activity implements GameLoginCallbackInterface, FacebookTaskCallbackInterface, 
+public class MainActivity extends WackadooActivity implements GameLoginCallbackInterface, FacebookTaskCallbackInterface, 
 		CurrentGamesCallbackInterface, CharacterCallbackInterface, Runnable, StatusCallback {
 
 	private static final String TAG = MainActivity.class.getSimpleName();
@@ -92,11 +92,13 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		// test variable for attempt to connect to facebook
 		tryConnect = false;
 		
-	    // sound is off by default
-	    soundOn = false;
+	    // sound is on by default
+	    soundOn = true;
 	    
 	    // create musicplayer for background music
 	    StaticHelper.backgroundMusicPlayer = MediaPlayer.create(this, R.raw.themesong);
+	    StaticHelper.backgroundMusicPlayer.setLooping(true);
+	    StaticHelper.backgroundMusicPlayer.setVolume(100, 100);
 	    
 	    // user logged out by default
 	    loggedIn = false;
@@ -150,6 +152,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		uiHelper.onResume();	// facebook
 		
 		// start background music, if its enabled
+		StaticHelper.continueMusic = false;
 		if (soundOn) {
 			StaticHelper.backgroundMusicPlayer.start();
 		}
@@ -169,7 +172,8 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	    uiHelper.onDestroy();					// facebook
 	    AutoPing.getInstance().stopAutoPing();	// tracking
     }
-	
+
+    
 	// start animation of play button
 	private void setUpPlayButtonAnimation() {
 		// start animation of glance
@@ -223,23 +227,25 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 						if (loggedIn) {
 							AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
 							builder.setTitle(R.string.fb_connect_title)
-							.setMessage(R.string.fb_connect_message)
-							.setPositiveButton(R.string.alert_quit_yes, new OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog, int which) {
-									tryConnect = true;
-									Session session = Session.getActiveSession();
-									if (session == null) { 
-										session = new Session(MainActivity.this);
-									}
-									Session.OpenRequest openRequest = new Session.OpenRequest(MainActivity.this);
-									openRequest.setPermissions(Arrays.asList("email"));
-									openRequest.setLoginBehavior(SessionLoginBehavior.SUPPRESS_SSO);
-									session.openForRead(openRequest);
-								}
-							})
-							.setNegativeButton(R.string.alert_quit_no, null)
-							.show();
+								   .setMessage(R.string.fb_connect_message)
+								   .setPositiveButton(R.string.alert_quit_yes, new OnClickListener() {
+										@Override
+										public void onClick(DialogInterface dialog, int which) {
+											tryConnect = true;
+											Session session = Session.getActiveSession();
+											if (session == null) { 
+												session = new Session(MainActivity.this);
+											}
+											Session.OpenRequest openRequest = new Session.OpenRequest(MainActivity.this);
+											openRequest.setPermissions(Arrays.asList("email"));
+											openRequest.setLoginBehavior(SessionLoginBehavior.SUPPRESS_SSO);
+											session.openForRead(openRequest);
+										}
+								    })
+								   .setNegativeButton(R.string.alert_quit_no, null);
+							AlertDialog dialog = builder.create();
+						    dialog.show();
+						    StaticHelper.styleDialog(MainActivity.this, dialog);
 							
 						} else {
 							Session session = Session.getActiveSession();
@@ -294,9 +300,6 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 
 				case MotionEvent.ACTION_UP:
 					shopBtn.setImageResource(R.drawable.title_shop_button);
-					if (soundOn) {
-						StaticHelper.playClickSound(MainActivity.this);			// play click sound
-					}
 					StaticHelper.continueMusic = true;
 					Intent intent = new Intent(MainActivity.this, ShopActivity.class);
 					startActivity(intent);

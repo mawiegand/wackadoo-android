@@ -3,7 +3,6 @@ package com.wackadoo.wackadoo_client.adapter;
 import java.util.List;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -15,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.wackadoo.wackadoo_client.R;
+import com.wackadoo.wackadoo_client.helper.StaticHelper;
  
 public class ShopListViewAdapter extends ArrayAdapter<ShopRowItem> implements OnTouchListener {
  
@@ -48,6 +48,7 @@ public class ShopListViewAdapter extends ArrayAdapter<ShopRowItem> implements On
             holder = (ViewHolder) convertView.getTag();
 
         holder.title.setText(rowItem.getTitle());
+        
         if (rowItem.getOptionalIconImageId() != 0){
         	holder.optionalImageView.setImageResource(rowItem.getOptionalIconImageId());
         } else {
@@ -60,6 +61,7 @@ public class ShopListViewAdapter extends ArrayAdapter<ShopRowItem> implements On
         }
          
         convertView.setOnTouchListener(this);
+        StaticHelper.overrideFonts(context, convertView);
         return convertView;
     }
 

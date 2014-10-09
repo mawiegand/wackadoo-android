@@ -1,6 +1,5 @@
 package com.wackadoo.wackadoo_client.activites;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -20,11 +19,12 @@ import android.widget.Toast;
 import com.facebook.Session;
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.helper.StaticHelper;
+import com.wackadoo.wackadoo_client.helper.WackadooActivity;
 import com.wackadoo.wackadoo_client.interfaces.AccountManagerCallbackInterface;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
 import com.wackadoo.wackadoo_client.tasks.AccountManagerAsyncTask;
 
-public class AccountManagerActivity extends Activity implements AccountManagerCallbackInterface{
+public class AccountManagerActivity extends WackadooActivity implements AccountManagerCallbackInterface{
 	
 	private static final String TAG = AccountManagerActivity.class.getSimpleName();
 
@@ -38,8 +38,7 @@ public class AccountManagerActivity extends Activity implements AccountManagerCa
 	
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_accountmanager);
+        super.onCreate(savedInstanceState, R.layout.activity_accountmanager);
 	    
 	    userCredentials = new UserCredentials(getApplicationContext());
 	    
@@ -128,6 +127,7 @@ public class AccountManagerActivity extends Activity implements AccountManagerCa
 						
 						switch (v.getId()) {
 							case R.id.accountTopbarBack:
+								StaticHelper.continueMusic = true;
 								finish();
 								break;
 								
@@ -273,6 +273,7 @@ public class AccountManagerActivity extends Activity implements AccountManagerCa
 	    if ((identifier.length() <= 0) && (email.length() <= 0)) {
 			Intent intent = new Intent(AccountManagerActivity.this, CredentialScreenActivity.class);
 			startActivity(intent);
+			StaticHelper.continueMusic = true;
 			finish();
 		}
 	}
