@@ -12,7 +12,7 @@ public class UserCredentials {
 	
 	private Context context;
 	private int gameId;
-	private String username, password, gcPlayerId, fbPlayerId, fbAccessToken, accountId, email, hostname;
+	private String username, password, gcPlayerId, fbPlayerId, fbAccessToken, accountId, email, hostname, avatarString;
 	private Date premiumExpiration;
 	private AccessToken accessToken;
 	private ClientCredentials clientCredentials;
@@ -90,6 +90,7 @@ public class UserCredentials {
 		gameId = myPrefs.getInt("gameId", 0);
 		premiumExpiration = new Date();
 		premiumExpiration.setTime(myPrefs.getLong("premiumExpiration", 0));
+		avatarString = myPrefs.getString("avatarString", "");
 	}
 	
 	private void persistCredentials() {
@@ -108,6 +109,7 @@ public class UserCredentials {
 		e.putString("hostname", hostname);
 		e.putInt("gameId", gameId);
 		if (premiumExpiration != null) e.putLong("premiumExpiration", premiumExpiration.getTime());
+		e.putString("avatarString", avatarString);
 		e.commit();
 	}
 
@@ -146,6 +148,15 @@ public class UserCredentials {
 
 	public void setPremiumExpiration(Date premiumExpiration) {
 		this.premiumExpiration = premiumExpiration;
+		persistCredentials();
+	}
+
+	public String getAvatarString() {
+		return avatarString;
+	}
+
+	public void setAvatarString(String avatarString) {
+		this.avatarString = avatarString;
 		persistCredentials();
 	}
 

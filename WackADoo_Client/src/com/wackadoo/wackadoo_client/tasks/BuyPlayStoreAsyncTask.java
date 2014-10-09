@@ -31,7 +31,6 @@ import com.wackadoo.wackadoo_client.interfaces.BuyShopOfferCallbackInterface;
 public class BuyPlayStoreAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	
 	private static final String TAG = BuyPlayStoreAsyncTask.class.getSimpleName();
-	
     private Context context;
     private String paymentToken, accessToken, orderId, productId;
     

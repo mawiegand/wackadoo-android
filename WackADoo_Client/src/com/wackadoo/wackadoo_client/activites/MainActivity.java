@@ -36,6 +36,7 @@ import com.facebook.model.GraphUser;
 import com.fivedlab.sample.sample_java.Sample;
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.analytics.AutoPing;
+import com.wackadoo.wackadoo_client.helper.Avatar;
 import com.wackadoo.wackadoo_client.helper.UtilityHelper;
 import com.wackadoo.wackadoo_client.interfaces.CharacterCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.CurrentGamesCallbackInterface;
@@ -459,6 +460,13 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		String identifier = userCredentials.getIdentifier();		
 		String accessToken = userCredentials.getAccessToken().getToken();
 		String email = userCredentials.getEmail();
+		final ImageView view = (ImageView) findViewById(R.id.characterFrameImageView);
+		view.post(new Runnable() {
+			  @Override public void run() {
+			    view.setImageBitmap(Avatar.getAvatar(userCredentials.getAvatarString(), view.getWidth(), view.getHeight(), getResources()));
+			  }
+		});
+		
 
 		if (!identifier.equals("") && !accessToken.equals("") || !email.equals("")) { 
 			if (userCredentials.getAccessToken().isExpired()) {
@@ -549,7 +557,9 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	public void getCharacterCallback(GameInformation game, boolean createNew) {
 		userCredentials.setUsername(game.getCharacter().getName());
 		userCredentials.setPremiumExpiration(game.getCharacter().getPremiumExpiration());
-		UtilityHelper.drawCharacter(game.getCharacter().getAvatarString(), (ImageView) findViewById(R.id.characterFrameImageView), getResources());
+		userCredentials.setAvatarString(game.getCharacter().getAvatarString());
+		ImageView view = (ImageView) findViewById(R.id.characterFrameImageView);
+		view.setImageBitmap(Avatar.getAvatar(game.getCharacter().getAvatarString(), view.getWidth(), view.getHeight(), getResources()));
 		updateUi();
 	}
 	

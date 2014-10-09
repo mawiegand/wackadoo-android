@@ -206,14 +206,18 @@
 	 	              	    
 		 	              	<ImageView
 		 	              	    android:id="@+id/characterFrameImageView"
-		 	              	    android:layout_width="match_parent"
-		 	              	    android:layout_height="match_parent"
+		 	              	    android:layout_width="fill_parent"
+		 	              	    android:layout_height="fill_parent"
+		 	              	    android:layout_marginBottom="25dp"
+		 	              	    android:layout_marginLeft="5dp"
+		 	              	    android:layout_marginRight="5dp"
+		 	              	    android:layout_marginTop="15dp"
 		 	              	    android:src="@drawable/standard_character_pic"
 		 	              	    android:visibility="invisible" />
 		 	                
 		 	                <Button
 		 	                    android:id="@+id/characterFrame"
-		 	                    android:layout_width="wrap_content"
+		 	                    android:layout_width="match_parent"
 		 	                    android:layout_height="wrap_content"
 		 	                    android:background="@drawable/title_character_frame"
 		 	                    android:text="@string/credentials_headline"

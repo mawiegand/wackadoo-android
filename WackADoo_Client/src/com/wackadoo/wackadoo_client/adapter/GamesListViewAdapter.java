@@ -15,11 +15,13 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.wackadoo.wackadoo_client.R;
+import com.wackadoo.wackadoo_client.helper.Avatar;
 import com.wackadoo.wackadoo_client.model.GameInformation;
  
 public class GamesListViewAdapter extends ArrayAdapter<GameInformation> implements OnTouchListener {
@@ -57,7 +59,13 @@ public class GamesListViewAdapter extends ArrayAdapter<GameInformation> implemen
         }
 
         // game icon
-        holder.worldItemIcon.setImageResource(R.drawable.check_marked_box);
+        String avatarString = rowItem.getCharacter() == null ? "" : rowItem.getCharacter().getAvatarString();
+        if (avatarString.isEmpty()) {
+        	holder.worldItemIcon.setImageResource(R.drawable.check_marked_box);
+        } else {
+        	holder.worldItemIcon.setImageBitmap(Avatar.getAvatar(avatarString, holder.worldItemIcon.getLayoutParams().height, holder.worldItemIcon.getLayoutParams().height, parent.getResources()));
+        }
+        
         
         // game name
         holder.worldItemNameText.setText(rowItem.getName());					

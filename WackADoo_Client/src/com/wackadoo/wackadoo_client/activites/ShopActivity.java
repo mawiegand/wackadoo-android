@@ -358,6 +358,7 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 			case 6:
 				textAmount = String.format(getString(R.string.current_frog_text), data);
 				((TextView) findViewById(R.id.currentFrogText)).setText(textAmount);
+				break;
 		}
 		((ScrollView) findViewById(R.id.scrollView)).fullScroll(ScrollView.FOCUS_UP);
 	}	
@@ -484,7 +485,19 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 
 	@Override
 	public void buyPlayStoreCallback(boolean result, String message) {
-		Log.d(TAG, "Verification Feedback: "+message);		
+		Log.d(TAG, "Verification Feedback: "+message);	
+		if (result) {
+			Toast.makeText(this, getString(R.string.buy_credits_success), Toast.LENGTH_LONG)
+			.show();
+			Log.d(TAG, "Start getting character infos");	
+			new GetShopDataAsyncTask(this, userCredentials, 5, "").execute();		// get character shop data
+			getFragmentManager().popBackStack();
+			
+		} else {
+			Toast.makeText(this, getString(R.string.buy_credits_fail), Toast.LENGTH_LONG)
+				 .show();
+		}
+		
 	}
 
 	@Override

@@ -31,6 +31,7 @@ public class SelectGameActivity extends Activity implements CurrentGamesCallback
 	private ArrayList<GameInformation> games;
 	private TextView doneBtn;
 	private UserCredentials userCredentials;
+	private GamesListViewAdapter adapter;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +44,9 @@ public class SelectGameActivity extends Activity implements CurrentGamesCallback
 		
 		setUpDoneBtn();
 		setUpListView();
+		
+		adapter = new GamesListViewAdapter(getApplicationContext(), R.layout.table_item_game, games);
+		
 		
 		// fetch current games from server
 		new GetCurrentGamesAsyncTask(this, getApplicationContext(), userCredentials).execute();
@@ -82,7 +86,7 @@ public class SelectGameActivity extends Activity implements CurrentGamesCallback
 				Calendar c = Calendar.getInstance();		// date today
 				
 				// game is full
-				if (clickedGame.getMaxPlayers() == clickedGame.getPresentPlayers()){
+				if (false){//clickedGame.getMaxPlayers() == clickedGame.getPresentPlayers()){
 					toast.setText(getResources().getString(R.string.selectgame_game_full));
 					
 				// signup is disabled 	
@@ -126,14 +130,14 @@ public class SelectGameActivity extends Activity implements CurrentGamesCallback
 	public void getCurrentGamesCallback(ArrayList<GameInformation> games) {	
 		this.games = games;
 		for (int i = 0; i < games.size(); i++) new GetCharacterAsyncTask(this, userCredentials, games.get(i), false).execute();
-		GamesListViewAdapter adapter = new GamesListViewAdapter(getApplicationContext(), R.layout.table_item_game, games);
-		listView.setAdapter(adapter);
-		UtilityHelper.setListViewHeightBasedOnChildren(listView);
 	}
 
 	// callback interface for GetCharacterAsyncTask
 	@Override
 	public void getCharacterCallback(GameInformation game, boolean createNew) {
+		adapter.add(game);
+		listView.setAdapter(adapter);
+		UtilityHelper.setListViewHeightBasedOnChildren(listView);
 		if (createNew) {
 			userCredentials.setUsername(game.getCharacter().getName());
 			finish();
