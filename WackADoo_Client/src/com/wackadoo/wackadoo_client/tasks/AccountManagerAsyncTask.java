@@ -57,7 +57,7 @@ public class AccountManagerAsyncTask extends AsyncTask<String, Integer, Integer>
 		
 		// change email
 		if (type.equals("mail")) {
-			urlForRequest = parent.getString(R.string.changeEmailPath) + userCredentials.getCharacterId();
+			urlForRequest = parent.getString(R.string.changeEmailPath) + userCredentials.getAccountId();
 			completeURL = parent.getString(R.string.basePath) + String.format(urlForRequest, Locale.getDefault().getCountry().toLowerCase());
 			request = new HttpPut(completeURL);
 			nameValuePairs.add(new BasicNameValuePair("identity[email]", value)); 

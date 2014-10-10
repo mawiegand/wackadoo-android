@@ -8,9 +8,6 @@ import org.joda.time.Days;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Typeface;
-import android.test.PerformanceTestCase;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.wackadoo.wackadoo_client.R;
+import com.wackadoo.wackadoo_client.helper.Avatar;
 import com.wackadoo.wackadoo_client.helper.StaticHelper;
 import com.wackadoo.wackadoo_client.model.GameInformation;
  
@@ -59,7 +57,13 @@ public class GamesListViewAdapter extends ArrayAdapter<GameInformation> implemen
         }
 
         // game icon
-        holder.worldItemIcon.setImageResource(R.drawable.check_marked_box);
+        String avatarString = rowItem.getCharacter() == null ? "" : rowItem.getCharacter().getAvatarString();
+        if (avatarString.isEmpty()) {
+        	holder.worldItemIcon.setImageResource(R.drawable.check_marked_box);
+        } else {
+        	holder.worldItemIcon.setImageBitmap(Avatar.getAvatar(avatarString, holder.worldItemIcon.getLayoutParams().height, holder.worldItemIcon.getLayoutParams().height, parent.getResources()));
+        }
+        
         
         // game name
         holder.worldItemNameText.setText(rowItem.getName());	
@@ -117,7 +121,7 @@ public class GamesListViewAdapter extends ArrayAdapter<GameInformation> implemen
         }
         	
         Calendar startDate = Calendar.getInstance();
-        startDate.setTime(game.getStartedAt());
+        if (game.getStartedAt() != null) startDate.setTime(game.getStartedAt());
         
     	// game already started
     	if (startDate.before(today)) {

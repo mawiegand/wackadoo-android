@@ -69,9 +69,10 @@
 	      				android:layout_weight="0.5">
 		    			
 		    			<ImageButton
-							style="@style/customImageButtonStyle"	
-		    	    		android:id="@+id/shopButton"
-		    	    		android:src="@drawable/title_shop_button" />
+		    			    android:id="@+id/shopButton"
+		    			    style="@style/customImageButtonStyle"
+		    			    android:layout_marginLeft="30dp"
+		    			    android:src="@drawable/title_shop_button" />
 		    			
 	    			</RelativeLayout>
 	    		</LinearLayout>
@@ -202,28 +203,32 @@
 			 	    		android:layout_height="0px"
 			 	    		android:layout_weight="0.55">
 	 	              	    
-		 	              	<ImageView 
+		 	              	<ImageView
 		 	              	    android:id="@+id/characterFrameImageView"
-		 	              	    android:layout_height="match_parent"
 		 	              	    android:layout_width="match_parent"
+		 	              	    android:layout_height="match_parent"
+		 	              	    android:layout_marginBottom="25dp"
+		 	              	    android:layout_marginLeft="5dp"
+		 	              	    android:layout_marginRight="5dp"
+		 	              	    android:layout_marginTop="20dp"
 		 	              	    android:src="@drawable/standard_character_pic"
-		 	              	    android:visibility="invisible"/>
-		 	                
-		 	                <Button
-		 	                    android:id="@+id/characterFrame"
-		 	                    android:layout_width="124dp"
-		 	                    android:layout_height="153dp"
-		 	                    android:background="@drawable/title_character_frame"
-		 	                    android:text="@string/credentials_headline"
-		 	                    android:textColor="@color/white"
-		 	                    android:textSize="12sp" />
+		 	              	    android:visibility="invisible" />
 					 	    	
-	 	              	    <TextView 
+	 	              	    <TextView
 	 	              	        android:id="@+id/characterFrameTextview"
-	 	              	        style="@style/customTextViewStyle" 
+	 	              	        style="@style/customTextViewStyle"
 	 	              	        android:layout_width="match_parent"
 	 	              	        android:gravity="center"
-	 	              	        android:textSize="8sp"/>
+	 	              	        android:textSize="8sp" />
+
+	 	              	    <Button
+	 	              	        android:id="@+id/characterFrame"
+	 	              	        android:layout_width="124dp"
+	 	              	        android:layout_height="153dp"
+	 	              	        android:background="@drawable/title_character_frame"
+	 	              	        android:text="@string/credentials_headline"
+	 	              	        android:textColor="@color/white"
+	 	              	        android:textSize="12sp" />
 	 	              	    
 	 	              	</FrameLayout>
 				 	</LinearLayout>

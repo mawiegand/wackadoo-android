@@ -1,6 +1,7 @@
 
 package com.wackadoo.wackadoo_client.model;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -60,7 +61,7 @@ public class CharacterInformation {
     private Boolean platinumLifetime;
     private String playtime;
     private Object premiumAccount;
-    private Object premiumExpiration;
+    private Date premiumExpiration;
     private Object premiumExpirationDisplayedAt;
     private Integer receivedDislikesCount;
     private Integer receivedLikesCount;
@@ -519,11 +520,11 @@ public class CharacterInformation {
         this.premiumAccount = premiumAccount;
     }
 
-    public Object getPremiumExpiration() {
+    public Date getPremiumExpiration() {
         return premiumExpiration;
     }
 
-    public void setPremiumExpiration(Object premiumExpiration) {
+    public void setPremiumExpiration(Date premiumExpiration) {
         this.premiumExpiration = premiumExpiration;
     }
 

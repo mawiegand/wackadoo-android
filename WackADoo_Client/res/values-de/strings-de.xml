@@ -97,10 +97,14 @@
     <string name="subheading_gold_text">Kauf Goldene Frösche</string>
     <string name="list_bonus_text" formatted="false">+%d%% %dh für %d </string>
     <string name="subheading_bonus_text">Produktions Boost</string>
+    <string name="subheading_special_text">Spezialangebote</string>
     <string name="shop_headline_text">Erwirb Credits und tausche sie gegen Komfortfunktionen und Beschleunigungen</string>
     <string name="current_frog_text">Derzeitiger Vorrat an Gold Fröschen: %d</string>
     <string name="current_credit_text">Derzeitiger Vorrat an Platin Credits: %d</string>
-    <string name="buy_item_fail">Fehler bei Kommunikation mit Server. Bitte probiere es später noch ein mal.</string>
+    <string name="buy_item_fail">Du hast nicht genug Platin Credits/Goldfrösche um dieses Item zu kaufen</string>
+    <string name="buy_item_success">Du hast dieses Item erfolgreich gekauft</string>
+    <string name="buy_credits_fail">Da ist beim Kauf wohl was schiefgegangen</string>
+    <string name="buy_credits_success">Die Platin Credits wurden erforlgreich gekauft</string>
 
     <!-- Shop Info -->
    	<string name="shopinfo_topbar_heading">Info Store</string>
@@ -120,6 +124,7 @@
     <string name="shopInfoText_bonus">Mehr Ressourcen? Jeder braucht mehr Ressourcen!</string>
     <string name="shopInfoHeadingText_bonus">Produktionsbonus</string>
     <string name="shopInfoDescText_bonus" formatted="false">Der Produktionsbonus gilt für deine gesamte Produktion der ausgewählten Ressource.\n\n15% globaler Bonus für die Produktion von Fell.\n\n15% globaler Bonus für die Produktion von Stein.\n\n15% globaler Bonus für die Produktion von Holz.</string>
+    <string name="shop_expires_in">Läuft aus am:&#160;</string>
     
     <!-- Info Screen -->
     <string name="infoscreen_support_btn">Support</string>

@@ -23,11 +23,13 @@ import com.wackadoo.wackadoo_client.helper.StaticHelper;
 import com.wackadoo.wackadoo_client.helper.WackadooActivity;
 import com.wackadoo.wackadoo_client.interfaces.CreateAccountCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.GameLoginCallbackInterface;
+import com.wackadoo.wackadoo_client.interfaces.GetAccountCallbackInterface;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
 import com.wackadoo.wackadoo_client.tasks.CreateAccountAsyncTask;
 import com.wackadoo.wackadoo_client.tasks.GameLoginAsyncTask;
+import com.wackadoo.wackadoo_client.tasks.GetAccountAsyncTask;
 
-public class CredentialScreenActivity extends WackadooActivity implements CreateAccountCallbackInterface, GameLoginCallbackInterface{
+public class CredentialScreenActivity extends WackadooActivity implements CreateAccountCallbackInterface, GameLoginCallbackInterface, GetAccountCallbackInterface {
 	
 	private static final String TAG = CredentialScreenActivity.class.getSimpleName();
 	
@@ -126,9 +128,8 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 		String title, message;
 		
 		if (success) {
-			// TODO: dynamic character info!
-			title = "WackyUser1337";
-			message = String.format(getResources().getString(R.string.account_character_restore_success), "WackyUser1337");
+			title = userCredentials.getUsername();
+			message = String.format(getResources().getString(R.string.account_character_restore_success), title);
 		} else {
 			title = getResources().getString(R.string.account_character_restore_failed);
 			message = getResources().getString(R.string.account_character_restore_failure_message);
@@ -213,10 +214,10 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 
     // callback interface for CreateAccountAsyncTask
 	@Override
-	public void onRegistrationCompleted(String identifier, String nickname, String characterId) {
+	public void onRegistrationCompleted(String identifier, String nickname, String accountId) {
 		userCredentials.setIdentifier(identifier);
 		userCredentials.setUsername(nickname);
-		userCredentials.setCharacterId(characterId);
+		userCredentials.setAccountId(accountId);
 		finish();
 	}
 	
@@ -233,6 +234,7 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 		} else {
 			finish();
 		}
+		new GetAccountAsyncTask(this, userCredentials, progressDialog, restoreAccount).execute();
 	}
 	
 	// callback interface for errors in login/restore account task
@@ -252,4 +254,18 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 		}		
 	}
 
+	@Override
+	public void GetAccountCallback(String identifier, String nickname,
+			String accountId, boolean restoreAccount) {
+		userCredentials.setUsername(nickname);
+		userCredentials.setAccountId(accountId);
+		
+		// if async task called to restore locale account, show dialog
+		if (restoreAccount) {
+			restoreAccount(true);
+				
+		} else {
+			finish();
+		}		
+	}
 }

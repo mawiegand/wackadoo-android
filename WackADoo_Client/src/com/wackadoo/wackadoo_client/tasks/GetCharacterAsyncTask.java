@@ -39,10 +39,11 @@ public class GetCharacterAsyncTask extends AsyncTask<String, Integer, Boolean> {
     	this.createNew = createNew;
     	this.accessToken = userCredentials.getAccessToken().getToken();
     }
+    
 	
 	@Override
 	protected Boolean doInBackground(String... params) {
-		
+		if (game.getServer() == null) return false;
 		Activity parent = (Activity) this.listener;
 		String urlForRequest = String.format(parent.getString(R.string.characterPath), Locale.getDefault().getCountry().toLowerCase(Locale.getDefault()));
 		if (createNew) {

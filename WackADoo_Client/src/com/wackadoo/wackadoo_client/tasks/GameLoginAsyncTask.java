@@ -99,7 +99,6 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
 			entity.setContentType("application/x-www-form-urlencoded;charset=UTF-8");
 			
 			request.getParams().setParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, Boolean.FALSE);
-			//if (restoreAccount) request.getParams().setParameter("restore_with_device_token", "true");
 			request.setHeader("Accept", "application/json");
 			request.setEntity(entity);  
 			DefaultHttpClient httpClient = new DefaultHttpClient();
@@ -124,6 +123,7 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
 			return true;
 			
     	} catch (Exception e) {
+    		if (sb != null) Log.e(TAG, sb.toString());
     		e.printStackTrace();
     	}		
 		return false;
@@ -132,7 +132,6 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	@Override
 	protected void onPostExecute(Boolean result) {
 		super.onPostExecute(result);
-		
 		if (progressDialog.isShowing()) {
 			progressDialog.dismiss();
 		}

@@ -1,8 +1,8 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/content"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/white"
     tools:context="com.wackadoo.wackadoo_client.activites.MainActivity"
     tools:ignore="MergeRootFrame" >
@@ -61,19 +61,17 @@
 	 	    			android:layout_height="0dp" >
 	 				</RelativeLayout>
 	    			
-	    		    <RelativeLayout
-	    		        android:id="@+id/shopButtonRelativeContainer"
-	    		        android:layout_width="wrap_content"
-	    		        android:layout_height="0dp"
-	    		        android:layout_gravity="top|left|center"
-	    		        android:layout_weight="0.5" >
+	    		    <RelativeLayout 
+	      	    		android:id="@+id/shopButtonRelativeContainer"
+		        		android:layout_height="0dp"
+	    	    		android:layout_gravity="top|left"
+	        			android:layout_width="wrap_content"
+	      				android:layout_weight="0.5">
 		    			
 		    			<ImageButton
-		    			    android:id="@+id/shopButton"
-		    			    style="@style/customImageButtonStyle"
-		    			    android:layout_alignParentLeft="true"
-		    			    android:layout_marginLeft="20dp"
-		    			    android:src="@drawable/title_shop_button" />
+		    	    		android:id="@+id/shopButton"
+							style="@style/customImageButtonStyle"	
+		    	    		android:src="@drawable/title_shop_button" />
 		    			
 	    			</RelativeLayout>
 	    		</LinearLayout>
@@ -98,7 +96,7 @@
 				    android:id="@+id/title_sound_button" 
 	    	    	android:layout_gravity="right"
 	    	    	android:layout_centerInParent="true"
-	    	    	android:src="@drawable/title_sound_on" 
+	    	    	android:src="@drawable/title_sound_off" 
 					android:paddingRight="45dp"
 	    	    	android:paddingLeft="0dip"
 	    	    	android:layout_alignParentRight="true" />
@@ -197,7 +195,7 @@
 	 	              	    android:id="@+id/characterFrameContainerSpacer"
 	 	              	    android:layout_width="match_parent"
 	 	              	    android:layout_height="0px"
-	 	              	    android:layout_weight="0.30" />
+	 	              	    android:layout_weight="0.26" />
 	    		    	
 	 	              	<FrameLayout 
 	 	              	    android:layout_width="wrap_content"
@@ -206,32 +204,30 @@
 	 	              	    
 		 	              	<ImageView
 		 	              	    android:id="@+id/characterFrameImageView"
-		 	              	    android:layout_width="fill_parent"
-		 	              	    android:layout_height="fill_parent"
-		 	              	    android:layout_marginBottom="25dp"
+		 	              	    android:layout_width="match_parent"
+		 	              	    android:layout_height="match_parent"
+		 	              	    android:layout_marginBottom="5dp"
 		 	              	    android:layout_marginLeft="5dp"
 		 	              	    android:layout_marginRight="5dp"
 		 	              	    android:layout_marginTop="15dp"
 		 	              	    android:src="@drawable/standard_character_pic"
 		 	              	    android:visibility="invisible" />
 		 	                
-		 	                <Button
-		 	                    android:id="@+id/characterFrame"
+		 	                <Button 
+				 	    		android:id="@+id/characterFrame"
+		 	                    android:layout_height="match_parent"
 		 	                    android:layout_width="match_parent"
-		 	                    android:layout_height="wrap_content"
-		 	                    android:background="@drawable/title_character_frame"
-		 	                    android:text="@string/credentials_headline"
-		 	                    android:textColor="@color/white"
-		 	                    android:textSize="12sp" />
+					 	    	android:background="@drawable/title_character_frame"
+					 	    	android:text="@string/credentials_headline"
+					 	    	android:textSize="12sp"
+					 	    	android:textColor="@color/white"/> 
 					 	    	
 	 	              	    <TextView
 	 	              	        android:id="@+id/characterFrameTextview"
 	 	              	        style="@style/customTextViewStyle"
 	 	              	        android:layout_width="match_parent"
-	 	              	        android:layout_height="wrap_content"
-	 	              	        android:layout_gravity="top|center_horizontal"
 	 	              	        android:gravity="center"
-	 	              	        android:textSize="10sp" />
+	 	              	        android:textSize="8sp" />
 	 	              	    
 	 	              	</FrameLayout>
 				 	</LinearLayout>
@@ -254,7 +250,7 @@
 			 	                android:id="@+id/accountmanagerButtonVerticalSpacer"
 			 	                android:layout_width="match_parent"
 			 	                android:layout_height="0dp"
-			 	                android:layout_weight="0.31" />
+			 	                android:layout_weight="0.30" />
 			 	            
 			 	            <RelativeLayout 
 			       				android:id="@+id/accountmanagerButtonVerticalContainer" 
@@ -285,7 +281,7 @@
 		 	                android:id="@+id/chooseworldButtonVerticalSpacer"
 		 	                android:layout_width="match_parent"
 		 	                android:layout_height="0dp"
-		 	                android:layout_weight="0.32" />
+		 	                android:layout_weight="0.07" />
 		 	            
 		 	            <RelativeLayout 
 		       				android:id="@+id/chooseworldButtonVerticalContainer" 
@@ -293,14 +289,13 @@
 				 	    	android:layout_height="0dp"
 				 	    	android:layout_weight="0.75"
 		            		android:layout_gravity="top" >
-
+		 	        		
 		 	        		<ImageButton
-		 	        		    android:id="@+id/chooseworldButton"
 		 	        		    style="@style/customImageButtonStyle"
-		 	        		    android:layout_alignParentLeft="true"
-		 	        		    android:layout_alignParentTop="true"
-		 	        		    android:scaleType="fitStart"
-		 	        		    android:src="@drawable/title_changegame_button" />
+				 	    		android:id="@+id/chooseworldButton"
+					 	    	android:scaleType="fitStart"
+					 	    	android:layout_centerInParent="true"
+					 	    	android:src="@drawable/title_changegame_button"/>
 		 	        		
 			 	   		</RelativeLayout>
 			 	   	</LinearLayout> 
@@ -366,27 +361,24 @@
 		    				android:orientation="vertical"
 		    				android:weightSum="1.0">
 			    		    
-				  		    <RelativeLayout
-				  		        android:id="@+id/facebookSpacer"
-				  		        android:layout_width="match_parent"
-				  		        android:layout_height="0dp"
-				  		        android:layout_weight="0.66" >
-
+				  		    <RelativeLayout 
+			     				android:id="@+id/facebookSpacer" 
+				    			android:layout_width="match_parent"
+				    			android:layout_weight="0.66"
+			        			android:layout_height="0dp">
 							</RelativeLayout>
 				 		    
 				 		    <RelativeLayout 
 			       				android:id="@+id/facebookButtonVerticalContainer" 
 				        		android:layout_width="wrap_content"
-				        		android:layout_weight="0.32"
+				        		android:layout_weight="0.35"
 			            		android:layout_height="0dp"
 			            		android:layout_gravity="center">
 				 		    		
 				 		    		<ImageButton
-				 		    		    android:id="@+id/facebookButton"
-				 		    		    style="@style/customImageButtonStyle"
-				 		    		    android:layout_alignParentTop="true"
-				 		    		    android:src="@drawable/title_facebook_button" />
-
+					 	    			style="@style/customImageButtonStyle"
+					 	    			android:id="@+id/facebookButton"
+					 	    			android:src="@drawable/title_facebook_button"/>
 				 		    </RelativeLayout>
 				 		</LinearLayout>
 			 		</RelativeLayout>

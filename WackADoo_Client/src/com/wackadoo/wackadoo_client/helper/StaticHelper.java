@@ -119,14 +119,6 @@ public class StaticHelper {
 		return completeUrl;
 	}
 	
-	// set up the entity for an async task
-	public static UrlEncodedFormEntity setUpEntity(List<NameValuePair> nameValuePairs) throws UnsupportedEncodingException  {
-		UrlEncodedFormEntity entity = null;
-		entity = new UrlEncodedFormEntity(nameValuePairs);
-		entity.setContentType("application/x-www-form-urlencoded;charset=UTF-8");
-		return entity;
-	}
-	
 	// set up the given httpRequest & httpClient for an async task
 	public static void setUpHttpObjects(DefaultHttpClient httpClient) {
 		HttpConnectionParams.setSoTimeout(httpClient.getParams(), 10*1000); 

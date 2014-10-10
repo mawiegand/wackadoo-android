@@ -195,19 +195,23 @@
 	 	              	    android:id="@+id/characterFrameContainerSpacer"
 	 	              	    android:layout_width="match_parent"
 	 	              	    android:layout_height="0px"
-	 	              	    android:layout_weight="0.26" />
+	 	              	    android:layout_weight="0.34" />
 	    		    	
 	 	              	<FrameLayout 
 	 	              	    android:layout_width="match_parent"
 			 	    		android:layout_height="0px"
 			 	    		android:layout_weight="0.55">
 	 	              	    
-		 	              	<ImageView 
+		 	              	<ImageView
 		 	              	    android:id="@+id/characterFrameImageView"
-		 	              	    android:layout_height="match_parent"
 		 	              	    android:layout_width="match_parent"
+		 	              	    android:layout_height="match_parent"
+		 	              	    android:layout_marginBottom="5dp"
+		 	              	    android:layout_marginLeft="5dp"
+		 	              	    android:layout_marginRight="5dp"
+		 	              	    android:layout_marginTop="15dp"
 		 	              	    android:src="@drawable/standard_character_pic"
-		 	              	    android:visibility="invisible"/>
+		 	              	    android:visibility="invisible" />
 		 	                
 		 	                <Button 
 				 	    		android:id="@+id/characterFrame"
@@ -218,11 +222,12 @@
 					 	    	android:textSize="12sp"
 					 	    	android:textColor="@color/white"/> 
 					 	    	
-	 	              	    <TextView 
+	 	              	    <TextView
 	 	              	        android:id="@+id/characterFrameTextview"
-	 	              	        style="@style/customTextViewStyle" 
+	 	              	        style="@style/customTextViewStyle"
+	 	              	        android:layout_width="match_parent"
 	 	              	        android:gravity="center"
-	 	              	        android:textSize="5sp"/>
+	 	              	        android:textSize="8sp" />
 	 	              	    
 	 	              	</FrameLayout>
 				 	</LinearLayout>

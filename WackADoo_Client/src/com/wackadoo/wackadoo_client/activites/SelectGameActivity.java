@@ -33,6 +33,7 @@ public class SelectGameActivity extends WackadooActivity implements CurrentGames
 	private ArrayList<GameInformation> games;
 	private TextView doneBtn;
 	private UserCredentials userCredentials;
+	private GamesListViewAdapter adapter;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,14 +45,9 @@ public class SelectGameActivity extends WackadooActivity implements CurrentGames
 		
 		setUpDoneBtn();
 		setUpListView();
-	
-		// TODO: find a nicer solution for this hack. problem: scrollview is not scrolled to top on start of activity
-		final ScrollView scrollview = ((ScrollView) findViewById(R.id.scrollView)); 
-		scrollview.post(new Runnable() {
-			  @Override public void run() {
-			    scrollview.fullScroll(ScrollView.FOCUS_UP);
-			  }
-		});
+		
+		adapter = new GamesListViewAdapter(getApplicationContext(), R.layout.table_item_game, games);
+		
 		
 		// fetch current games from server
 		new GetCurrentGamesAsyncTask(this, getApplicationContext(), userCredentials).execute();
@@ -133,17 +129,19 @@ public class SelectGameActivity extends WackadooActivity implements CurrentGames
 
 	// callback interface for GetCurrentGamesAsyncTask
 	@Override
-	public void getCurrentGamesCallback(ArrayList<GameInformation> games) {
+	public void getCurrentGamesCallback(ArrayList<GameInformation> games) {	
 		this.games = games;
-		for (int i = 0; i < games.size(); i++) new GetCharacterAsyncTask(this, userCredentials, games.get(i), false).execute();
-		GamesListViewAdapter adapter = new GamesListViewAdapter(getApplicationContext(), R.layout.table_item_game, games);
-		listView.setAdapter(adapter);
-		StaticHelper.setListViewHeightBasedOnChildren(listView);
+		for (int i = 0; i < games.size(); i++) {
+			new GetCharacterAsyncTask(this, userCredentials, games.get(i), false).execute();
+		}
 	}
 
 	// callback interface for GetCharacterAsyncTask
 	@Override
 	public void getCharacterCallback(GameInformation game, boolean createNew) {
+		adapter.add(game);
+		listView.setAdapter(adapter);
+		StaticHelper.setListViewHeightBasedOnChildren(listView);
 		if (createNew) {
 			userCredentials.setUsername(game.getCharacter().getName());
 			finish();

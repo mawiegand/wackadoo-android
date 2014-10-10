@@ -97,8 +97,8 @@ public class CustomIabHelper extends IabHelper implements QueryInventoryFinished
 	@Override
 	public void onIabPurchaseFinished(IabResult result, Purchase info) {
 		// code 0 = success, code 7 = already purchased
-		if (result.getResponse() == 0 || result.getResponse() == 7) {
-    		consumeAsync(info, null);
+		if(result.getResponse() == 0 || result.getResponse() == 7) {
+    		consumeAsync(info, (OnConsumeFinishedListener) mContext);
 		}
 	}
 	

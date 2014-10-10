@@ -9,11 +9,11 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.graphics.Typeface;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -41,6 +41,7 @@ import com.facebook.model.GraphUser;
 import com.fivedlab.sample.sample_java.Sample;
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.analytics.AutoPing;
+import com.wackadoo.wackadoo_client.helper.Avatar;
 import com.wackadoo.wackadoo_client.helper.CustomProgressDialog;
 import com.wackadoo.wackadoo_client.helper.StaticHelper;
 import com.wackadoo.wackadoo_client.helper.WackadooActivity;
@@ -131,7 +132,6 @@ public class MainActivity extends WackadooActivity implements GameLoginCallbackI
 	@Override
 	public void onResume() {
         super.onResume();
-	    
         // get updated userCredentials
         userCredentials = new UserCredentials(getApplicationContext());
         
@@ -166,6 +166,13 @@ public class MainActivity extends WackadooActivity implements GameLoginCallbackI
 	    if (!StaticHelper.continueMusic) {
 	    	StaticHelper.backgroundMusicPlayer.pause();
 	    }
+	    
+		if (!StaticHelper.isOnline(this)) {
+			Toast.makeText(getApplicationContext(), getResources().getString(R.string.no_connection), Toast.LENGTH_LONG).show();
+		} else {
+			triggerLogin();
+		}
+		uiHelper.onResume();		// facebook
     }
     @Override
     public void onDestroy() {
@@ -174,25 +181,25 @@ public class MainActivity extends WackadooActivity implements GameLoginCallbackI
 	    AutoPing.getInstance().stopAutoPing();	// tracking
     }
 
-	// start animation of play button
+    // start animation of play button
 	private void setUpPlayButtonAnimation() {
+		
 		// start animation of glance
 		playBtn.setImageResource(R.anim.animationlist_loginbutton);
-		playButtonAnimation = (AnimationDrawable) playBtn.getDrawable();
-		playButtonAnimation.start();
 
-		// start scale animation
 		customHandler = new android.os.Handler();
 		customHandler.postDelayed(updateTimerThread, 0);
 	}
-
+	
 	// runs the scale animation repeatedly
 	private Runnable updateTimerThread = new Runnable() {
-		public void run() {
-			Animation scaleAnimation = AnimationUtils.loadAnimation(
+		Animation scaleAnimation;
+		
+		public void run() {		
+			if (scaleAnimation == null) scaleAnimation = AnimationUtils.loadAnimation(
 					getApplicationContext(), R.anim.scale_loginbutton);
 			playBtn.startAnimation(scaleAnimation);
-			customHandler.postDelayed(this, 6000);
+			customHandler.postDelayed(this, 6400);
 		}
 	};
 
@@ -445,12 +452,31 @@ public class MainActivity extends WackadooActivity implements GameLoginCallbackI
 		});
 	}
 	
-	// handle login with credentials
+    // facebook: handles result for login 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        uiHelper.onActivityResult(requestCode, resultCode, data);
+    }
+    
+    // facebook: login handling
+    @Override
+    public void onSaveInstanceState(Bundle savedState) {
+        super.onSaveInstanceState(savedState);
+        uiHelper.onSaveInstanceState(savedState);
+    }
+	
 	private void triggerLogin() {
 		String identifier = userCredentials.getIdentifier();		
 		String accessToken = userCredentials.getAccessToken().getToken();
 		String email = userCredentials.getEmail();
-
+		final ImageView view = (ImageView) findViewById(R.id.characterFrameImageView);
+		view.post(new Runnable() {
+			  @Override public void run() {
+			    view.setImageBitmap(Avatar.getAvatar(userCredentials.getAvatarString(), view.getWidth(), view.getHeight(), getResources()));
+			  }
+		});
+		
 		if (!identifier.equals("") && !accessToken.equals("") || !email.equals("")) { 
 			if (userCredentials.getAccessToken().isExpired()) {
 				progressDialog.show();
@@ -485,7 +511,7 @@ public class MainActivity extends WackadooActivity implements GameLoginCallbackI
 			userCredentials.setFbUser(false);
 			// password generated = attempt to connect fb account to local character failed = dont log out
 			if (userCredentials.isPasswordGenerated()) {
-				tryConnect = false;
+				tryConnect = true;		// TODO: was = false - correct?
 			} else {
 				loggedIn = false;
 			}
@@ -493,21 +519,6 @@ public class MainActivity extends WackadooActivity implements GameLoginCallbackI
 		}
 	}
 
-    // facebook: handles result for login 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        uiHelper.onActivityResult(requestCode, resultCode, data);
-    }
-    
-    // facebook: login handling
-    @Override
-    public void onSaveInstanceState(Bundle savedState) {
-        super.onSaveInstanceState(savedState);
-        uiHelper.onSaveInstanceState(savedState);
-    }
-	
-    // facebook: fetch user data from facebook
     private void fetchFbData(final Session session) {
         Request request = Request.newMeRequest(session, new Request.GraphUserCallback() {
             @Override
@@ -593,13 +604,21 @@ public class MainActivity extends WackadooActivity implements GameLoginCallbackI
 					new GetCharacterAsyncTask(this, userCredentials, games.get(i), true).execute();
 				}
 			}
-		}		
+		} else {
+			ImageView view = (ImageView) findViewById(R.id.characterFrameImageView);
+			view.setImageBitmap(Avatar.getAvatar(userCredentials.getAvatarString(), view.getWidth(), view.getHeight(), getResources()));
+			updateUi();
+		}
 	}	
 	
 	// callback interface for GetCharacterAsyncTask
 	@Override
 	public void getCharacterCallback(GameInformation game, boolean createNew) {
 		userCredentials.setUsername(game.getCharacter().getName());
+		userCredentials.setPremiumExpiration(game.getCharacter().getPremiumExpiration());
+		userCredentials.setAvatarString(game.getCharacter().getAvatarString());
+		ImageView view = (ImageView) findViewById(R.id.characterFrameImageView);
+		view.setImageBitmap(Avatar.getAvatar(game.getCharacter().getAvatarString(), view.getWidth(), view.getHeight(), getResources()));
 		updateUi();
 	}
 	
@@ -626,13 +645,14 @@ public class MainActivity extends WackadooActivity implements GameLoginCallbackI
 		if (progressDialog.isShowing()) {
 			progressDialog.dismiss();
 		}
-		
+
 		if (loggedIn) {
 			setUpAccountmanagerBtn();
 			setUpSelectgameBtn();
 			((RelativeLayout) findViewById(R.id.headerShopContainer)).setVisibility(View.VISIBLE);
 			characterFrame.setText("");	
 			((ImageView) findViewById(R.id.characterFrameImageView)).setVisibility(View.VISIBLE);
+			facebookBtn.setVisibility(View.INVISIBLE);
 			((TextView) findViewById(R.id.characterFrameTextview)).setText(userCredentials.getUsername());
 			if (userCredentials.isFbUser()) {
 				facebookBtn.setVisibility(View.INVISIBLE);
@@ -656,7 +676,7 @@ public class MainActivity extends WackadooActivity implements GameLoginCallbackI
 	public void run() {
 		if (userCredentials.getAccessToken().isExpired() && 
 				(userCredentials.getUsername().length() > 0 || userCredentials.getEmail().length() > 0)) {
-//			new GameLoginAsyncTask(this, userCredentials, false, true, progressDialog).execute();
+			new GameLoginAsyncTask(this, userCredentials, false, true, progressDialog).execute();
 		}
 		Log.d(TAG, "Token refresh handler");
 		tokenHandler.postDelayed(this, 10000);		

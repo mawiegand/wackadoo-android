@@ -8,6 +8,8 @@
     
     <!-- Create Account -->
     <string name="createAccountPath">/identity_provider/%s/identities</string>
+    <!-- Get Account -->
+    <string name="getAccountPath">/identity_provider/%s/identities/self</string>
     <!-- Login -->
     <string name="loginPath">/identity_provider/%s/oauth2/access_token</string>
     
@@ -36,5 +38,7 @@
     <string name="bonusOffersServerPath">/game_server/shop/bonus_offers</string>
     <string name="platinumCreditsServerPath">/game_server/shop/special_offers</string>
     <string name="characterShopInfoPath">/game_server/shop/accounts/</string>
+    <string name="resourceShopInfoPath">/game_server/fundamental/characters/%s/resource_pool</string>
+    
     <!-- https://secure.bytro.com/index.php?eID=api&key=wackadooShop&action=processPayment -->
 </resources>

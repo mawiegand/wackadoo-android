@@ -14,8 +14,9 @@
         android:largeHeap="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
-	    <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebookAppId"/>
+        android:theme="@style/AppTheme" 
+        android:debuggable="true">        
+ 	    <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebookAppId"/>
        
 	    <activity android:name="com.wackadoo.wackadoo_client.activites.SplashActivity" android:screenOrientation="landscape">
             <intent-filter>

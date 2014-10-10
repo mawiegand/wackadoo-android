@@ -263,8 +263,8 @@ public class AccountManagerActivity extends WackadooActivity implements AccountM
 		userCredentials.clearAllCredentials();
 		userCredentials = new UserCredentials(getApplicationContext());
 		
-		String identifier = this.userCredentials.getIdentifier();
-		String email = this.userCredentials.getEmail();
+		String identifier = userCredentials.getIdentifier();
+		String email = userCredentials.getEmail();
 	
 		// closes facebook session and clears cache
 		Session session = Session.getActiveSession();

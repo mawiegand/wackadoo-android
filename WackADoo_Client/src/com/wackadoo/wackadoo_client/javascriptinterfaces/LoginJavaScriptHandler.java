@@ -14,14 +14,14 @@ public class LoginJavaScriptHandler {
 	private String[] serverSupportedLanguageCodes = {"en","de"};
 	
 	public LoginJavaScriptHandler (Context context, String accessToken, String expiration, String userId, String hostname) {
-		this.context = context;
+    	this.context = context;
 		this.accessToken = accessToken;
-		this.expiration = expiration;
-		this.userId = userId;
-		this.hostname = hostname;
-		this.country = this.getCountry();
-	}
-	
+    	this.expiration = expiration;
+    	this.userId = userId;
+    	this.hostname = hostname;
+    	this.country = this.getCountry();
+    }
+    
 	private String getCountry() {
 		String country;
 		String temp = Locale.getDefault().getLanguage(); 
@@ -51,7 +51,7 @@ public class LoginJavaScriptHandler {
 	public String getUserId() {
 	    return this.userId;
 	}
-	
+
 	@JavascriptInterface
 	public String getHostname() {
 		return hostname;
