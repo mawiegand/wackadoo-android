@@ -7,7 +7,6 @@
    		<item name="android:textViewStyle">@style/customTextViewStyle</item>
    		<item name="android:imageButtonStyle">@style/customImageButtonStyle</item>
    		<item name="android:alertDialogTheme">@style/customDialogTheme</item>
-   		<item name="android:progressBarStyle">@style/customProgressbarTheme</item>
     </style>
     
     <!--  custom textview styling -->
@@ -28,6 +27,7 @@
         <item name="android:layout_marginLeft">30dp</item>
         <item name="android:layout_marginRight">30dp</item>
         <item name="android:gravity">center</item>
+        <item name="android:textCursorDrawable">@null</item>
     </style> 
     
     <style name="shopSubHeadingStyle" parent="@style/customTextViewStyle">
@@ -58,24 +58,18 @@
     <!--  custom dialog styling -->
     <style name="customDialogTheme" parent="@android:style/Theme.Holo.Light.Dialog">
         <item name="android:gravity">center|center_vertical</item>
+        <item name="android:textAppearanceMedium">@style/customDialogWindowMessage</item>	
         <item name="android:windowTitleStyle">@style/customDialogWindowTitle</item>
-        <item name="android:borderlessButtonStyle">@style/customDialogButtons</item>	
-        <item name="android:textColorPrimary">@@color/black</item>	<!-- text color dialog message -->
         
         <item name="android:windowBackground">@android:color/transparent</item>
 	    <item name="android:windowMinWidthMajor">@android:dimen/dialog_min_width_major</item>
 	    <item name="android:windowMinWidthMinor">@android:dimen/dialog_min_width_minor</item>
     </style> 
+    <style name="customDialogWindowMessage">
+	    <item name="android:textSize">18sp</item>
+	</style>	
     <style name="customDialogWindowTitle">
-	    <item name="android:textStyle">bold</item>
 	    <item name="android:textSize">30sp</item>
 	    <item name="android:textColor">@color/textbox_orange</item>
 	</style>	
-    <style name="customDialogButtons" parent="@android:style/Widget.Holo.Button.Borderless">
-	    <item name="android:textSize">18sp</item>
-	    <item name="android:textColor">@color/black</item>
-	</style>	
-    <style name="customProgressbarTheme" parent="android:Widget.ProgressBar">
-        <item name="android:textColor">@color/textbox_orange</item>
-	</style>    
 </resources>

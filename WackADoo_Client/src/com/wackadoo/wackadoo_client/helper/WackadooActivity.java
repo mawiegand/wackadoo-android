@@ -11,7 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.wackadoo.wackadoo_client.R;
-import com.wackadoo.wackadoo_client.adapter.ShopRowItem;
+import com.wackadoo.wackadoo_client.model.ShopRowItem;
 
 public class WackadooActivity extends Activity {
 

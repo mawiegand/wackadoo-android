@@ -24,10 +24,10 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.wackadoo.wackadoo_client.helper.ResponseResult;
 import com.wackadoo.wackadoo_client.helper.StaticHelper;
 import com.wackadoo.wackadoo_client.interfaces.FacebookTaskCallbackInterface;
 import com.wackadoo.wackadoo_client.model.DeviceInformation;
+import com.wackadoo.wackadoo_client.model.ResponseResult;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
 
 public class FacebookLoginAsyncTask extends AsyncTask<String, Integer, ResponseResult>{

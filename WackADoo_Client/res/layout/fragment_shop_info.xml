@@ -43,7 +43,7 @@
 			        android:text="@string/shop_headline_text"
 			       	android:gravity="center_vertical|right"
 			       	android:layout_gravity="center_vertical"
-			        android:textSize="@dimen/topBarFontsize"/>
+			        android:textSize="@dimen/shopHeadlineFontsize"/>
 			    
 			    <LinearLayout 
 			        android:id="@+id/headerIconContainer"
@@ -64,7 +64,7 @@
 				        android:layout_height="0dp"
 				        android:layout_width="wrap_content"
 				        android:layout_weight="0.20"
-				        android:scaleType="fitCenter"
+				        android:scaleType="fitEnd"
 				        android:src="@drawable/head_girl_colored_small"
 				        android:adjustViewBounds="true"/>
 				</LinearLayout>
@@ -74,7 +74,7 @@
 		        android:id="@+id/shopInfoHeadingText"
 	    	    style="@style/customTextViewStyle"
 		        android:layout_below="@+id/headlineContainer"
-		        android:textSize="@dimen/topBarFontsize"
+		        android:textSize="@dimen/shopSubheadingFontsize"
 		        android:layout_marginTop="20dp"
 		        android:textStyle="bold"/>
 	    
@@ -82,7 +82,8 @@
 		        android:id="@+id/shopInfoDescText"
 	    	    style="@style/customTextViewStyle"
 		        android:layout_below="@+id/shopInfoHeadingText"
-		        android:layout_marginTop="10dp"/>
+		        android:layout_marginTop="10dp"
+		        android:textSize="@dimen/gameItemSmallTextsize"/>
 		    
 	    </RelativeLayout>
 	</com.wackadoo.wackadoo_client.helper.BounceScrollView>

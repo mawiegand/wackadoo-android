@@ -222,7 +222,7 @@
 	 	              	        android:id="@+id/characterFrameTextview"
 	 	              	        style="@style/customTextViewStyle" 
 	 	              	        android:gravity="center"
-	 	              	        android:textSize="8sp"/>
+	 	              	        android:textSize="5sp"/>
 	 	              	    
 	 	              	</FrameLayout>
 				 	</LinearLayout>

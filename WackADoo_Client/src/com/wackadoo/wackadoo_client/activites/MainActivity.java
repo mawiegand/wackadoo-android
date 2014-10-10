@@ -9,11 +9,11 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.graphics.Typeface;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -41,7 +41,7 @@ import com.facebook.model.GraphUser;
 import com.fivedlab.sample.sample_java.Sample;
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.analytics.AutoPing;
-import com.wackadoo.wackadoo_client.helper.ResponseResult;
+import com.wackadoo.wackadoo_client.helper.CustomProgressDialog;
 import com.wackadoo.wackadoo_client.helper.StaticHelper;
 import com.wackadoo.wackadoo_client.helper.WackadooActivity;
 import com.wackadoo.wackadoo_client.interfaces.CharacterCallbackInterface;
@@ -49,6 +49,7 @@ import com.wackadoo.wackadoo_client.interfaces.CurrentGamesCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.FacebookTaskCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.GameLoginCallbackInterface;
 import com.wackadoo.wackadoo_client.model.GameInformation;
+import com.wackadoo.wackadoo_client.model.ResponseResult;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
 import com.wackadoo.wackadoo_client.tasks.FacebookAccountAsyncTask;
 import com.wackadoo.wackadoo_client.tasks.FacebookLoginAsyncTask;
@@ -67,7 +68,7 @@ public class MainActivity extends WackadooActivity implements GameLoginCallbackI
 	private AnimationDrawable playButtonAnimation;
 	private UserCredentials userCredentials;
 	private Handler customHandler;
-	private ProgressDialog progressDialog;
+	private CustomProgressDialog progressDialog;
 	private Handler tokenHandler;
 	private UiLifecycleHelper uiHelper;		// facebook
 	
@@ -104,7 +105,7 @@ public class MainActivity extends WackadooActivity implements GameLoginCallbackI
 	    loggedIn = false;
 
 	    // set up standard server communication dialog
-	    setUpDialog();
+	    progressDialog = new CustomProgressDialog(this);
 	    
 	    // put version number in textview
 		try {
@@ -173,7 +174,6 @@ public class MainActivity extends WackadooActivity implements GameLoginCallbackI
 	    AutoPing.getInstance().stopAutoPing();	// tracking
     }
 
-    
 	// start animation of play button
 	private void setUpPlayButtonAnimation() {
 		// start animation of glance
@@ -321,6 +321,9 @@ public class MainActivity extends WackadooActivity implements GameLoginCallbackI
 
 				} else {
 					soundBtn.setImageResource(R.drawable.title_sound_on);
+				    StaticHelper.backgroundMusicPlayer = MediaPlayer.create(MainActivity.this, R.raw.themesong);
+				    StaticHelper.backgroundMusicPlayer.setLooping(true);
+				    StaticHelper.backgroundMusicPlayer.setVolume(100, 100);
 					StaticHelper.backgroundMusicPlayer.start();
 					soundOn = true;
 				}
@@ -340,6 +343,7 @@ public class MainActivity extends WackadooActivity implements GameLoginCallbackI
 
 				case MotionEvent.ACTION_UP:
 					infoBtn.setImageResource(R.drawable.title_info_button);
+					StaticHelper.continueMusic = true;
 					Intent intent = new Intent(MainActivity.this, InfoScreenActivity.class);
 					startActivity(intent);
 					break;
@@ -362,6 +366,7 @@ public class MainActivity extends WackadooActivity implements GameLoginCallbackI
 
 				case MotionEvent.ACTION_UP:
 					accountmanagerBtn.setImageResource(R.drawable.title_change_button);
+					StaticHelper.continueMusic = true;
 					Intent intent = new Intent(MainActivity.this, AccountManagerActivity.class);
 					startActivity(intent);
 					break;
@@ -403,6 +408,7 @@ public class MainActivity extends WackadooActivity implements GameLoginCallbackI
 						} else {
 							selectGameBtn.setImageResource(R.drawable.title_changegame_warn_button);
 						}
+						StaticHelper.continueMusic = true;
 						Intent intent = new Intent(MainActivity.this, SelectGameActivity.class);
 						startActivity(intent);
 						break;
@@ -430,6 +436,7 @@ public class MainActivity extends WackadooActivity implements GameLoginCallbackI
 					} else {
 						intent = new Intent(MainActivity.this, CredentialScreenActivity.class);
 					}
+					StaticHelper.continueMusic = true;
 					startActivity(intent);
 					break;
 				}
@@ -642,13 +649,6 @@ public class MainActivity extends WackadooActivity implements GameLoginCallbackI
 			facebookBtn.setVisibility(View.VISIBLE);
 			((TextView) findViewById(R.id.characterFrameTextview)).setText("");
 		}
-	}
-
-	// set up the standard server communiation dialog
-	private void setUpDialog() {
-		progressDialog = new ProgressDialog(this);
-		progressDialog.setTitle(getResources().getString(R.string.server_communication));
-		progressDialog.setMessage(getResources().getString(R.string.please_wait));
 	}
 
 	// start automatic token refresh again

@@ -1,6 +1,5 @@
 package com.wackadoo.wackadoo_client.activites;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
@@ -81,8 +80,11 @@ public class InfoScreenActivity extends WackadooActivity {
     	AlertDialog.Builder builder = new AlertDialog.Builder(this);
     	builder.setTitle(getResources().getString(R.string.infoscreen_copyright_btn))
     		   .setMessage(getResources().getString(R.string.infoscreen_copyright))
-       		   .setPositiveButton(getResources().getString(R.string.alert_ok_button), null)
-    		   .show();
+       		   .setPositiveButton(getResources().getString(R.string.alert_ok_button), null);
+    		   
+        AlertDialog dialog = builder.create();
+	    dialog.show();
+	    StaticHelper.styleDialog(this, dialog);
     }
 
     private void showWebsite() {

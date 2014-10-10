@@ -9,8 +9,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Fragment;
-import android.app.ProgressDialog;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -27,15 +27,16 @@ import android.widget.Toast;
 
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.adapter.ShopListViewAdapter;
-import com.wackadoo.wackadoo_client.adapter.ShopRowItem;
 import com.wackadoo.wackadoo_client.fragments.ShopCreditsFragment;
 import com.wackadoo.wackadoo_client.fragments.ShopInfoFragment;
 import com.wackadoo.wackadoo_client.helper.CustomIabHelper;
+import com.wackadoo.wackadoo_client.helper.CustomProgressDialog;
 import com.wackadoo.wackadoo_client.helper.StaticHelper;
 import com.wackadoo.wackadoo_client.helper.WackadooActivity;
 import com.wackadoo.wackadoo_client.interfaces.BuyShopOfferCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.CreditsFragmentCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.ShopDataCallbackInterface;
+import com.wackadoo.wackadoo_client.model.ShopRowItem;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
 import com.wackadoo.wackadoo_client.tasks.BuyShopOfferAsyncTask;
 import com.wackadoo.wackadoo_client.tasks.GetShopDataAsyncTask;
@@ -50,7 +51,7 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 	private List<ShopRowItem> listGold, listAccount, listBonus;
 	private Fragment fragment;
 	private UserCredentials userCredentials;
-	private ProgressDialog progressDialog;	
+	private CustomProgressDialog progressDialog;	
 	private CustomIabHelper billingHelper;
 	private ArrayList<String> stringProductList;
 	private String shopCharacterId;
@@ -71,6 +72,8 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
         listViewGold = (ListView) findViewById(R.id.listGold);
         listViewBonus = (ListView) findViewById(R.id.listBonus);
 
+		progressDialog = new CustomProgressDialog(this);
+        
         setUpButtons();
         loadShopOffersFromServer(); 
 	}
@@ -219,7 +222,6 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 	
 	// load shop offers from bytro server
 	private void loadShopOffersFromServer() {
-		setUpDialog();
 		progressDialog.show();
 		new GetShopDataAsyncTask(this, userCredentials, 1).execute();		// get golden frog offers
 		new GetShopDataAsyncTask(this, userCredentials, 2).execute();		// get platinum account offers
@@ -243,7 +245,6 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 				int offerId = listAccount.get(position).getId();
-				setUpDialog();
 				progressDialog.show();
 				new BuyShopOfferAsyncTask(ShopActivity.this, userCredentials.getAccessToken().getToken(), offerId, shopCharacterId, "platinum").execute();
 				return true;
@@ -259,7 +260,6 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 				int offerId = listGold.get(position).getId();
-				setUpDialog();
 				progressDialog.show();
 				new BuyShopOfferAsyncTask(ShopActivity.this, userCredentials.getAccessToken().getToken(), offerId, shopCharacterId, "resource").execute();
 				return true;
@@ -275,7 +275,6 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 				int offerId = listBonus.get(position).getId();
-				setUpDialog();
 				progressDialog.show();
 				new BuyShopOfferAsyncTask(ShopActivity.this, userCredentials.getAccessToken().getToken(), offerId, shopCharacterId, "bonus").execute();
 				return true;
@@ -322,16 +321,8 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 		
 	}
 	
-	// set up the standard server communiation dialog
-	private void setUpDialog() {
-		progressDialog = new ProgressDialog(this);
-		progressDialog.setTitle(getResources().getString(R.string.server_communication));
-		progressDialog.setMessage(getResources().getString(R.string.please_wait));
-	}
-	
 	// play store: set up in app billing
 	private void setUpBilling(){
-		setUpDialog();
 		progressDialog.show();
 		
 		// establish connection to play store
@@ -358,6 +349,12 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		billingHelper.handleActivityResult(requestCode, resultCode, data);
+		
+		// play store dialog stops background music
+		StaticHelper.backgroundMusicPlayer = MediaPlayer.create(this, R.raw.themesong);
+		StaticHelper.backgroundMusicPlayer.setLooping(true);
+		StaticHelper.backgroundMusicPlayer.setVolume(100, 100);
+		StaticHelper.backgroundMusicPlayer.start();
 	}
 	
 	// play store: callback interface for billingHelper.getProductsAsyncInternal

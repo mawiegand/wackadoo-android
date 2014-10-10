@@ -1,9 +1,6 @@
 package com.wackadoo.wackadoo_client.activites;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -19,10 +16,9 @@ import android.widget.Toast;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
-import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
-import com.facebook.widget.LoginButton.UserInfoChangedCallback;
 import com.wackadoo.wackadoo_client.R;
+import com.wackadoo.wackadoo_client.helper.CustomProgressDialog;
 import com.wackadoo.wackadoo_client.helper.StaticHelper;
 import com.wackadoo.wackadoo_client.helper.WackadooActivity;
 import com.wackadoo.wackadoo_client.interfaces.CreateAccountCallbackInterface;
@@ -40,7 +36,7 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 	private EditText userNameEditText, passwordEditText;
 	private LoginButton loginBtn;
 	private TextView backBtn;
-	private ProgressDialog progressDialog;
+	private CustomProgressDialog progressDialog;
 	private UiLifecycleHelper uiHelper;			// facebook
 	 
 	@Override
@@ -60,8 +56,7 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 		restoreAccountBtn = (Button) findViewById(R.id.recoverAccountButton);
 		backBtn = (TextView) findViewById(R.id.credentialscreenTopbarBack);
 		
-		// set up standard server communication dialog
-	    setUpDialog();
+		progressDialog = new CustomProgressDialog(this);
 	    
 	    setUpButtons();
 	}
@@ -159,8 +154,11 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 		    	        startActivity(intent);
 		    	        finish();
 		    	    }
-		    	})
-    		   .show();
+		    	});
+		
+		AlertDialog dialog = builder.create();
+	    dialog.show();
+	    StaticHelper.styleDialog(this, dialog);
 	}
 	
 	private void triggerRestoreAccount() {
@@ -254,10 +252,4 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 		}		
 	}
 
-	// set up the standard server communiation dialog
-	private void setUpDialog() {
-		progressDialog = new ProgressDialog(this);
-		progressDialog.setTitle(getResources().getString(R.string.server_communication));
-		progressDialog.setMessage(getResources().getString(R.string.please_wait));
-	}
 }

@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.helper.StaticHelper;
+import com.wackadoo.wackadoo_client.model.ShopRowItem;
  
 public class ShopListViewAdapter extends ArrayAdapter<ShopRowItem> implements OnTouchListener {
  

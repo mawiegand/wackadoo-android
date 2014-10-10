@@ -27,8 +27,8 @@ import android.util.Log;
 
 import com.google.gson.JsonObject;
 import com.wackadoo.wackadoo_client.R;
-import com.wackadoo.wackadoo_client.adapter.ShopRowItem;
 import com.wackadoo.wackadoo_client.interfaces.ShopDataCallbackInterface;
+import com.wackadoo.wackadoo_client.model.ShopRowItem;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
 
 public class GetShopDataAsyncTask extends AsyncTask<String, Integer, Boolean> {

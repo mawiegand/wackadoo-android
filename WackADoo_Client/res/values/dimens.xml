@@ -4,11 +4,13 @@
     <dimen name="standard_margin">25dp</dimen>
     
     <!-- font sizes -->
-    <dimen name="shopStandardListFontsize">16sp</dimen>
-    <dimen name="shopHeadlineFontsize">15sp</dimen>
-    <dimen name="shopSubheadingFontsize">18sp</dimen>
-    <dimen name="topBarFontsize">18sp</dimen>
-    <dimen name="gameItemBigTextsize">20sp</dimen>
+    <dimen name="shopStandardListFontsize">15sp</dimen>
+    <dimen name="shopHeadlineFontsize">14sp</dimen>
+    <dimen name="shopSubheadingFontsize">14sp</dimen>
+    <dimen name="topBarFontsize">16sp</dimen>
+    <dimen name="gameItemBigTextsize">15sp</dimen>
     <dimen name="gameItemSmallTextsize">12sp</dimen>
-
+    <dimen name="accountManagerStdTextsize">15sp</dimen>
+    <dimen name="stdEditTextsize">16sp</dimen>
+    
 </resources>

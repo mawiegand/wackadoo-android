@@ -1,7 +1,6 @@
 package com.wackadoo.wackadoo_client.activites;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,6 +17,7 @@ import android.widget.Toast;
 
 import com.facebook.Session;
 import com.wackadoo.wackadoo_client.R;
+import com.wackadoo.wackadoo_client.helper.CustomProgressDialog;
 import com.wackadoo.wackadoo_client.helper.StaticHelper;
 import com.wackadoo.wackadoo_client.helper.WackadooActivity;
 import com.wackadoo.wackadoo_client.interfaces.AccountManagerCallbackInterface;
@@ -34,7 +34,7 @@ public class AccountManagerActivity extends WackadooActivity implements AccountM
 	private ImageView emailAccountCheckedImage;
 	private enum AlertCallback { Email, Password }
 	private boolean passwordButtonVisible, emailButtonVisible;
-	private ProgressDialog progressDialog;
+	private CustomProgressDialog progressDialog;
 	
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,11 +53,12 @@ public class AccountManagerActivity extends WackadooActivity implements AccountM
         emailInformationTextView = (TextView) findViewById(R.id.emailInformationText);
         backBtn = (TextView) findViewById(R.id.accountTopbarBack);
         emailAccountCheckedImage = (ImageView) findViewById(R.id.emailAccountCheckedImage);
+
+        progressDialog = new CustomProgressDialog(this);
         
 	    loadCredentialsToUI();
 	    setUpButtons();
 	    setUpUi();
-	    setUpDialog();
     }
 	
 	// handles which ui elements are shown for the current user
@@ -185,7 +186,9 @@ public class AccountManagerActivity extends WackadooActivity implements AccountM
     		builder.setTitle(getResources().getString(R.string.account_sign_out_button))
     			   .setMessage(getResources().getString(R.string.alert_quit));
     	}
-	    builder.show();
+    	AlertDialog dialog = builder.create();
+	    dialog.show();
+	    StaticHelper.styleDialog(this, dialog);
 	}
 
 	private void loadCredentialsToUI() {
@@ -230,7 +233,9 @@ public class AccountManagerActivity extends WackadooActivity implements AccountM
     	        dialog.cancel();
     	    }
     	});
-    	builder.show();
+    	AlertDialog dialog = builder.create();
+	    dialog.show();
+	    StaticHelper.styleDialog(this, dialog);
     }
     
     // check mail before changing it
@@ -316,12 +321,5 @@ public class AccountManagerActivity extends WackadooActivity implements AccountM
 		}
 		
 		toast.show();
-	}
-	
-	// set up the standard server communiation dialog
-	private void setUpDialog() {
-		progressDialog = new ProgressDialog(this);
-		progressDialog.setTitle(getResources().getString(R.string.server_communication));
-		progressDialog.setMessage(getResources().getString(R.string.please_wait));
 	}
 }

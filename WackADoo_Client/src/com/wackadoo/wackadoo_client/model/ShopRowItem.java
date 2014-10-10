@@ -1,4 +1,4 @@
-package com.wackadoo.wackadoo_client.adapter;
+package com.wackadoo.wackadoo_client.model;
 
 public class ShopRowItem {
 	

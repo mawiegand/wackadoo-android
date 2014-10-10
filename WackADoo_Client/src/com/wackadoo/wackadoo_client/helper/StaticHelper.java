@@ -12,6 +12,7 @@ import org.apache.http.params.HttpConnectionParams;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.media.MediaPlayer;
@@ -170,6 +171,11 @@ public class StaticHelper {
 
 	    // title
 	    id = context.getResources().getIdentifier("alertTitle", "id", "android");
+	    if (dialog.findViewById(id) != null) {
+	    	((TextView) dialog.findViewById(id)).setTypeface(tf);
+	    }
+	    // title
+	    id = context.getResources().getIdentifier("progressTitle", "id", "android");
 	    if (dialog.findViewById(id) != null) {
 	    	((TextView) dialog.findViewById(id)).setTypeface(tf);
 	    }

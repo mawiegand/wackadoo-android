@@ -1,4 +1,4 @@
-package com.wackadoo.wackadoo_client.helper;
+package com.wackadoo.wackadoo_client.model;
 
 public class ResponseResult {
 	private String request;

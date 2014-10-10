@@ -19,9 +19,9 @@ import android.widget.TextView;
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.activites.ShopActivity;
 import com.wackadoo.wackadoo_client.adapter.ShopListViewAdapter;
-import com.wackadoo.wackadoo_client.adapter.ShopRowItem;
 import com.wackadoo.wackadoo_client.helper.StaticHelper;
 import com.wackadoo.wackadoo_client.interfaces.CreditsFragmentCallbackInterface;
+import com.wackadoo.wackadoo_client.model.ShopRowItem;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
 
 public class ShopCreditsFragment extends Fragment {
