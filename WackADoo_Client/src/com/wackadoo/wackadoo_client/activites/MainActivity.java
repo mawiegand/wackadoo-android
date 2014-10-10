@@ -114,7 +114,6 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	@Override
 	public void onResume() {
         super.onResume();
-	    
         // get updated userCredentials
         userCredentials = new UserCredentials(getApplicationContext());
         
@@ -126,6 +125,8 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 			triggerGetGames();
 		}
 		uiHelper.onResume();		// facebook
+
+		
     }
 	
     @Override
