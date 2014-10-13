@@ -20,6 +20,7 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.wackadoo.wackadoo_client.R;
+import com.wackadoo.wackadoo_client.helper.StaticHelper;
 import com.wackadoo.wackadoo_client.interfaces.CurrentGamesCallbackInterface;
 import com.wackadoo.wackadoo_client.model.GameInformation;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
@@ -40,9 +41,7 @@ public class GetCurrentGamesAsyncTask extends AsyncTask<String, Integer, Boolean
 	@Override
 	protected Boolean doInBackground(String... params) {
 		Activity parent = (Activity) this.listener;
-		String urlForRequest = parent.getString(R.string.gamesPath);
-		String baseURL = parent.getString(R.string.basePath);
-		String completeURL = baseURL + String.format(urlForRequest, Locale.getDefault().getCountry().toLowerCase(Locale.getDefault()));
+		String completeURL = StaticHelper.generateUrlForTask(parent, true, parent.getString(R.string.gamesPath));
 		HttpGet request = new HttpGet(completeURL);
 		
 	    StringBuilder sb=new StringBuilder();

@@ -25,6 +25,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.wackadoo.wackadoo_client.R;
+import com.wackadoo.wackadoo_client.helper.StaticHelper;
 import com.wackadoo.wackadoo_client.interfaces.BuyShopOfferCallbackInterface;
 
 public class BuyShopOfferAsyncTask extends AsyncTask<String, Integer, Boolean> {
@@ -46,10 +47,8 @@ public class BuyShopOfferAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	@Override
 	protected Boolean doInBackground(String... params) {
 		// TODO: correct url?
-		String baseURL = context.getString(R.string.baseGameServerPath);
-		HttpPost request = new HttpPost(baseURL + context.getString(R.string.buyShopItemPath));
+		HttpPost request = new HttpPost(StaticHelper.generateUrlForTask(context, false, context.getString(R.string.buyShopItemPath)));
 		Log.d(TAG, "complete URL: " + request.getURI());
-		StringBuilder sb = new StringBuilder();
 		
 		List <NameValuePair> nameValuePairs = new ArrayList <NameValuePair>(3);
 		nameValuePairs.add(new BasicNameValuePair("shop_transaction[offer_id]", String.valueOf(offerId)));

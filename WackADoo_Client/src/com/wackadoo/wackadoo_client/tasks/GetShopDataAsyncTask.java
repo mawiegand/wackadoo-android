@@ -82,7 +82,7 @@ public class GetShopDataAsyncTask extends AsyncTask<String, Integer, Boolean> {
 		    HttpResponse response = null;
 		    DefaultHttpClient httpClient = new DefaultHttpClient();
 		    HttpConnectionParams.setSoTimeout(httpClient.getParams(), 10*1000); 
-		    HttpConnectionParams.setConnectionTimeout(httpClient.getParams(),10*1000); 
+		    HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 10*1000); 
 	    	
 		    try {
 	             response = httpClient.execute(request); 

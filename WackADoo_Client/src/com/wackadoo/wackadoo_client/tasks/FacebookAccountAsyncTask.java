@@ -24,6 +24,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.helper.StaticHelper;
 import com.wackadoo.wackadoo_client.interfaces.FacebookTaskCallbackInterface;
 import com.wackadoo.wackadoo_client.model.DeviceInformation;
@@ -54,14 +55,14 @@ public class FacebookAccountAsyncTask extends AsyncTask<String, Integer, Respons
 	    	//**********************************************//	
 			//*****  check if fb id is already used  *****//
 	    	if (type.equals(StaticHelper.FB_ID_TASK)) {
-	    		url = StaticHelper.generateUrlForTask(context, true, type) + userCredentials.getFbPlayerId();
+	    		url = StaticHelper.generateUrlForTask(context, true, context.getString(R.string.facebookIdPath)) + userCredentials.getFbPlayerId();
 	    		request = new HttpGet(url);
 	    		
 	    		
 	    	//*****************************************//	
 			//*****  connect fb id and character  *****//
 	    	} else if (type.equals(StaticHelper.FB_CONNECT_TASK)) {
-	    		url = StaticHelper.generateUrlForTask(context, true, type) + userCredentials.getFbPlayerId();
+	    		url = StaticHelper.generateUrlForTask(context, true, context.getString(R.string.facebookConnectPath)) + userCredentials.getFbPlayerId();
 	    		request = new HttpPut(url);
 	    		
 	    		// generate entity of name+value pairs

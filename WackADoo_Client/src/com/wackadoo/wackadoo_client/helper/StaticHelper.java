@@ -6,9 +6,19 @@ import java.net.InetAddress;
 import java.util.List;
 import java.util.Locale;
 
+import org.apache.http.HttpMessage;
+import org.apache.http.HttpRequest;
+import org.apache.http.HttpRequestFactory;
+import org.apache.http.HttpResponse;
+import org.apache.http.MethodNotSupportedException;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.impl.DefaultHttpRequestFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpConnectionParams;
 
 import android.app.Activity;
@@ -29,13 +39,17 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.facebook.HttpMethod;
 import com.wackadoo.wackadoo_client.R;
+import com.wackadoo.wackadoo_client.model.UserCredentials;
+import com.wackadoo.wackadoo_client.tasks.GetCharacterAsyncTask;
 
 public class StaticHelper {
 	
 	public static final String FB_ID_TASK = "facebook_id_task";
 	public static final String FB_CONNECT_TASK = "facebook_connect_task";
 	public static final String FB_LOGIN_TASK = "facebook_login_task";
+	private static final String TAG = StaticHelper.class.getSimpleName();
 
 	// static variables for background music
 	public static MediaPlayer backgroundMusicPlayer;
@@ -93,31 +107,42 @@ public class StaticHelper {
 	}
 	
 	// generates a httpPost object for given type of asynctask
-	public static String generateUrlForTask(Context context, boolean basePath, String type) {
-		String baseUrl = "", urlForRequest = "", completeUrl = ""; 
+	public static String generateUrlForTask(Context context, boolean basePath, String urlForRequest) {
+		String baseUrl = "", completeUrl = ""; 
 		
 		// -----  www  -----
 		if (basePath) {
-			baseUrl = context.getString(R.string.basePath);
-			// FacebookAsyncTask:check id
-			if (type.equals(StaticHelper.FB_ID_TASK)) {
-				urlForRequest = context.getString(R.string.facebookIdPath);
-			
-			// FacebookAsyncTask:connect
-			} else if (type.equals(StaticHelper.FB_CONNECT_TASK)) {
-				urlForRequest = context.getString(R.string.facebookConnectPath);
-		
-			// FacebookAsyncTask:login
-			} else if (type.equals(StaticHelper.FB_LOGIN_TASK)) {
-				urlForRequest = context.getString(R.string.facebookLoginPath);
-			}
-		
+			baseUrl = context.getString(R.string.basePath);		
 		// -----  gs06  -----
 		} else {
 			baseUrl = context.getString(R.string.baseGameServerPath);
 		}
 		completeUrl = baseUrl + String.format(urlForRequest, Locale.getDefault().getCountry().toLowerCase());
 		return completeUrl;
+	}
+	
+	public static HttpResponse executeRequest(HttpMethod method, String url, List<NameValuePair> values, UserCredentials userCredentials) {
+		Log.d(TAG, "completeURL: " + url);
+		UrlEncodedFormEntity entity = null;
+		try {
+			entity = new UrlEncodedFormEntity(values);
+			entity.setContentType("application/x-www-form-urlencoded;charset=UTF-8");
+			
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	    
+		HttpRequest request;
+		try {
+			request = new DefaultHttpRequestFactory().newHttpRequest(method.name(), url);
+			request.getParams().setParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, Boolean.FALSE);
+			request.setHeader("Authorization", "Bearer " + userCredentials.getAccessToken().getToken());
+			request.setHeader("Accept", "application/json");
+		} catch (MethodNotSupportedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	// set up the given httpRequest & httpClient for an async task

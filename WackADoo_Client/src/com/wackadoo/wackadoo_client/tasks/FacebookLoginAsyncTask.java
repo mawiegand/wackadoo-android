@@ -24,6 +24,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.helper.StaticHelper;
 import com.wackadoo.wackadoo_client.interfaces.FacebookTaskCallbackInterface;
 import com.wackadoo.wackadoo_client.model.DeviceInformation;
@@ -49,7 +50,7 @@ public class FacebookLoginAsyncTask extends AsyncTask<String, Integer, ResponseR
 		String statusLine = "";
 
 		try {
-    		url = StaticHelper.generateUrlForTask(context, true, StaticHelper.FB_LOGIN_TASK);
+    		url = StaticHelper.generateUrlForTask(context, true, context.getString(R.string.facebookLoginPath));
     		request = new HttpPost(url);
     		
     		List <NameValuePair> nameValuePairs = new ArrayList <NameValuePair>();
