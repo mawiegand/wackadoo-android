@@ -7,7 +7,7 @@ import android.content.SharedPreferences;
 
 public class UserCredentials {
 	
-	private static final String WAD_PREFS_NAME = "wad_prefs";
+	private static final String WAD_PREFS_NAME = "wad_preferences_credentials";
 	
 	private Context context;
 	private int gameId;

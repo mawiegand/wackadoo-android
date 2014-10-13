@@ -8,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -44,7 +45,6 @@ import com.wackadoo.wackadoo_client.analytics.AutoPing;
 import com.wackadoo.wackadoo_client.helper.Avatar;
 import com.wackadoo.wackadoo_client.helper.CustomProgressDialog;
 import com.wackadoo.wackadoo_client.helper.StaticHelper;
-import com.wackadoo.wackadoo_client.helper.WackadooActivity;
 import com.wackadoo.wackadoo_client.interfaces.CharacterCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.CurrentGamesCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.FacebookTaskCallbackInterface;
@@ -58,7 +58,7 @@ import com.wackadoo.wackadoo_client.tasks.GameLoginAsyncTask;
 import com.wackadoo.wackadoo_client.tasks.GetCharacterAsyncTask;
 import com.wackadoo.wackadoo_client.tasks.GetCurrentGamesAsyncTask;
 
-public class MainActivity extends WackadooActivity implements GameLoginCallbackInterface, FacebookTaskCallbackInterface, 
+public class MainActivity extends Activity implements GameLoginCallbackInterface, FacebookTaskCallbackInterface, 
 		CurrentGamesCallbackInterface, CharacterCallbackInterface, Runnable, StatusCallback {
 
 	private static final String TAG = MainActivity.class.getSimpleName();
@@ -75,7 +75,8 @@ public class MainActivity extends WackadooActivity implements GameLoginCallbackI
 	
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState, R.layout.activity_main);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
         
         // get updated userCredentials
         userCredentials = new UserCredentials(getApplicationContext());
@@ -84,7 +85,7 @@ public class MainActivity extends WackadooActivity implements GameLoginCallbackI
 	    uiHelper = new UiLifecycleHelper(this, this);
 		uiHelper.onCreate(savedInstanceState);
         
-	    // create musicplayer for background music
+	    // create set up player for background music
 	    StaticHelper.setUpPlayer(this);
 	    
 	    setUpUi();
@@ -103,10 +104,11 @@ public class MainActivity extends WackadooActivity implements GameLoginCallbackI
 	@Override
 	public void onResume() {
         super.onResume();
+        uiHelper.onResume();	
         
         // warning if no internet connection
 		if (!StaticHelper.isOnline(this)) {
-			Toast.makeText(getApplicationContext(), getResources().getString(R.string.no_connection), Toast.LENGTH_LONG).show();
+			Toast.makeText(this, getResources().getString(R.string.no_connection), Toast.LENGTH_LONG).show();
 		} else {
 			// facebook: if activity is launched and session not null -> trigger stateChange manually
 			if (userCredentials.isFbUser()) {
@@ -119,7 +121,6 @@ public class MainActivity extends WackadooActivity implements GameLoginCallbackI
 				triggerLogin();
 			}
 		}
-		uiHelper.onResume();	// facebook
 		
 		// start background music, if its enabled
 		StaticHelper.continueMusic = false;
@@ -130,23 +131,16 @@ public class MainActivity extends WackadooActivity implements GameLoginCallbackI
     @Override
     public void onPause() {
         super.onPause();
-	    uiHelper.onPause();		// facebook
+	    uiHelper.onPause();		
 	    
 	    if (!StaticHelper.continueMusic && StaticHelper.backgroundMusicPlayer.isPlaying()) {
 	    	StaticHelper.backgroundMusicPlayer.pause();
 	    }
-	    
-		if (!StaticHelper.isOnline(this)) {
-			Toast.makeText(getApplicationContext(), getResources().getString(R.string.no_connection), Toast.LENGTH_LONG).show();
-		} else {
-			triggerLogin();
-		}
-		uiHelper.onResume();		// facebook
     }
     @Override
     public void onDestroy() {
         super.onDestroy();
-	    uiHelper.onDestroy();					// facebook
+	    uiHelper.onDestroy();					
 	    AutoPing.getInstance().stopAutoPing();	// tracking
     }
 
@@ -199,7 +193,7 @@ public class MainActivity extends WackadooActivity implements GameLoginCallbackI
 		
 		public void run() {		
 			if (scaleAnimation == null) scaleAnimation = AnimationUtils.loadAnimation(
-					getApplicationContext(), R.anim.scale_loginbutton);
+					MainActivity.this, R.anim.scale_loginbutton);
 			playBtn.startAnimation(scaleAnimation);
 			customHandler.postDelayed(this, 6400);
 		}
@@ -287,7 +281,7 @@ public class MainActivity extends WackadooActivity implements GameLoginCallbackI
 					if (loggedIn) {
 						triggerPlayGame();
 					} else {
-						Toast.makeText(getApplicationContext(), getResources().getString(R.string.login_necessary), Toast.LENGTH_SHORT)
+						Toast.makeText(MainActivity.this, getResources().getString(R.string.login_necessary), Toast.LENGTH_SHORT)
 							 .show();
 					}
 					break;
@@ -581,14 +575,21 @@ public class MainActivity extends WackadooActivity implements GameLoginCallbackI
 		
 		if (result) {
 			loggedIn = true;
-			new GetCurrentGamesAsyncTask(this, getApplicationContext(), userCredentials).execute();		
-			Toast.makeText(getApplicationContext(), getResources().getString(R.string.login_success_toast), Toast.LENGTH_LONG)
+			new GetCurrentGamesAsyncTask(this, userCredentials).execute();		
+			Toast.makeText(this, getResources().getString(R.string.login_success_toast), Toast.LENGTH_LONG)
 			     .show();
 		} else {
-			Toast.makeText(getApplicationContext(), getResources().getString(R.string.login_failed_toast), Toast.LENGTH_LONG)
+			Toast.makeText(this, getResources().getString(R.string.login_failed_toast), Toast.LENGTH_LONG)
 			     .show();
 		}
 		// TODO: loggedIn if GetGames failed?
+		updateUi();
+	}
+	
+	// callback interface for error in GameLoginAsyncTask
+	@Override
+	public void loginCallbackError(String error, boolean restoreAccount, boolean refresh) {
+		loggedIn = false;
 		updateUi();
 	}
 	
@@ -632,13 +633,6 @@ public class MainActivity extends WackadooActivity implements GameLoginCallbackI
 		return gameOnline;
 	}
 
-	// callback interface for error in GameLoginAsyncTask
-	@Override
-	public void loginCallbackError(String error, boolean restoreAccount, boolean refresh) {
-		loggedIn = false;
-		updateUi();
-	}
-	
 	// update views in UI depending on user logged in or not
 	private void updateUi() {
 		if (progressDialog.isShowing()) {
@@ -737,7 +731,7 @@ public class MainActivity extends WackadooActivity implements GameLoginCallbackI
 					userCredentials.generateNewAccessToken(jsonResponse.getString("access_token"), jsonResponse.getString("expires_in"));
 					userCredentials.setIdentifier(jsonResponse.getString("user_identifer"));	
 					loggedIn = true;
-					new GetCurrentGamesAsyncTask(this, getApplicationContext(), userCredentials).execute();	
+					new GetCurrentGamesAsyncTask(this, userCredentials).execute();	
 					
 				} catch (JSONException e) {
 					Toast.makeText(this, getString(R.string.fb_task_failure), Toast.LENGTH_SHORT)

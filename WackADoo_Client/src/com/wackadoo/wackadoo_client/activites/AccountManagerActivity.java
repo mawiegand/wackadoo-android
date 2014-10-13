@@ -1,7 +1,6 @@
 package com.wackadoo.wackadoo_client.activites;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -42,11 +41,12 @@ public class AccountManagerActivity extends WackadooActivity implements AccountM
         super.onCreate(savedInstanceState, R.layout.activity_accountmanager);
 	    
 	    userCredentials = new UserCredentials(getApplicationContext());
-        
-        setUpUi();
-        setUpButtons();
+	    
+	    setUpUi();
+	    setUpButtons();
 	    loadCredentialsToUI();
     }
+	
 	
 	private void setUpUi() {
 		usernameTextView = (TextView) findViewById(R.id.usernameText);
@@ -61,19 +61,17 @@ public class AccountManagerActivity extends WackadooActivity implements AccountM
         backBtn = (TextView) findViewById(R.id.accountTopbarBack);
         emailAccountCheckedImage = (ImageView) findViewById(R.id.emailAccountCheckedImage);
 		
-	    // set up standard server communication dialog
+        // set up standard server communication dialog
 	    progressDialog = new CustomProgressDialog(this);
         
-	    // handles which ui elements are shown for the current user 
-		emailButtonVisible = true;
+        // handles which ui elements are shown for the current user
+        emailButtonVisible = true;
 		passwordButtonVisible = true;
-		
-		// fb user has already mail and password
-		if (userCredentials.isFbUser()) {	
+		if (userCredentials.isFbUser()) {
 			emailButtonVisible = false;
 			passwordButtonVisible = false;
 		} else {
-			if (!userCredentials.isEmailGenerated()) { 	
+			if (!userCredentials.isEmailGenerated()) { 
 				emailButtonVisible = false; 
 			} 
 			
@@ -265,15 +263,15 @@ public class AccountManagerActivity extends WackadooActivity implements AccountM
 	private void signOut() {
 		userCredentials.clearAllCredentials();
 		userCredentials = new UserCredentials(getApplicationContext());
-//		
-		String identifier = userCredentials.getIdentifier();
-		String email = userCredentials.getEmail();
+		
+		String identifier = this.userCredentials.getIdentifier();
+		String email = this.userCredentials.getEmail();
 	
 		// closes facebook session and clears cache
 		Session session = Session.getActiveSession();
 		if (session != null) {
 			session.closeAndClearTokenInformation();	
-			session.close();		// TODO: need all methods?
+			session.close();
 			Session.setActiveSession(null);
 		}
 

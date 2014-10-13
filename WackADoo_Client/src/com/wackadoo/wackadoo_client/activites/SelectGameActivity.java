@@ -47,7 +47,7 @@ public class SelectGameActivity extends WackadooActivity implements CurrentGames
 		setUpListView();
 		
 		// fetch current games from server
-		new GetCurrentGamesAsyncTask(this, getApplicationContext(), userCredentials).execute();
+		new GetCurrentGamesAsyncTask(this, userCredentials).execute();
 	}
 	
 	private void setUpDoneBtn() {

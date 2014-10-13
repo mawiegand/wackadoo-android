@@ -1,7 +1,6 @@
 package com.wackadoo.wackadoo_client.activites;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -15,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.Session;
+import com.facebook.Session.StatusCallback;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.widget.LoginButton;
@@ -30,7 +30,7 @@ import com.wackadoo.wackadoo_client.tasks.CreateAccountAsyncTask;
 import com.wackadoo.wackadoo_client.tasks.GameLoginAsyncTask;
 import com.wackadoo.wackadoo_client.tasks.GetAccountAsyncTask;
 
-public class CredentialScreenActivity extends WackadooActivity implements CreateAccountCallbackInterface, GameLoginCallbackInterface, GetAccountCallbackInterface {
+public class CredentialScreenActivity extends WackadooActivity implements CreateAccountCallbackInterface, GameLoginCallbackInterface, GetAccountCallbackInterface, StatusCallback {
 	
 	private static final String TAG = CredentialScreenActivity.class.getSimpleName();
 	
@@ -49,7 +49,7 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 		userCredentials = new UserCredentials(getApplicationContext());
 		
 		//facebook lifecycleHelper to keep track of the session
-		uiHelper = new UiLifecycleHelper(this, statusCallback);
+		uiHelper = new UiLifecycleHelper(this, this);
 		uiHelper.onCreate(savedInstanceState);
 
 	    setUpUi();
@@ -201,15 +201,13 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 	}
 	
 	// facebook: callback interface object to handle current status
-	private Session.StatusCallback statusCallback = new Session.StatusCallback() {
-		@Override
-		public void call(Session session, SessionState state, Exception exception) {
-			if (state.isOpened()) {
-				userCredentials.setFbUser(true);
-				finish();
-			} 
-		}
-	};
+	@Override
+	public void call(Session session, SessionState state, Exception exception) {
+		if (state.isOpened()) {
+			userCredentials.setFbUser(true);
+			finish();
+		} 
+	}
 	
     // facebook: handles result for login 
     @Override

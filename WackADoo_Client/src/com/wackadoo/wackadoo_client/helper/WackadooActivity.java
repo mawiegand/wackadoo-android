@@ -1,17 +1,10 @@
 package com.wackadoo.wackadoo_client.helper;
 
 import android.app.Activity;
-import android.content.Context;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
 
 import com.wackadoo.wackadoo_client.R;
-import com.wackadoo.wackadoo_client.model.ShopRowItem;
 
 public class WackadooActivity extends Activity {
 

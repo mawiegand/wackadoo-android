@@ -32,7 +32,7 @@ public class GetCurrentGamesAsyncTask extends AsyncTask<String, Integer, Boolean
     private ArrayList<GameInformation> games;
 	private String accessToken;
     
-    public GetCurrentGamesAsyncTask(CurrentGamesCallbackInterface callback, Context context, UserCredentials userCredentials) {
+    public GetCurrentGamesAsyncTask(CurrentGamesCallbackInterface callback, UserCredentials userCredentials) {
     	this.listener = callback;
     	this.accessToken = userCredentials.getAccessToken().getToken();
     }
