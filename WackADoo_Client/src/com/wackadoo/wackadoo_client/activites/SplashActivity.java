@@ -17,6 +17,7 @@ public class SplashActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_splash);
 		
+		// start MainActivity after time of SPLASH_TIMER
 		new Handler().postDelayed(new Runnable() {
 			public void run() {
 				Intent i = new Intent(SplashActivity.this, MainActivity.class);

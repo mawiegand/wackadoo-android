@@ -1,24 +1,17 @@
 package com.wackadoo.wackadoo_client.tasks;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.util.EntityUtils;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -26,11 +19,11 @@ import android.util.Log;
 
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.interfaces.BuyPlayStoreCallbackInterface;
-import com.wackadoo.wackadoo_client.interfaces.BuyShopOfferCallbackInterface;
 
 public class BuyPlayStoreAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	
 	private static final String TAG = BuyPlayStoreAsyncTask.class.getSimpleName();
+	
     private Context context;
     private String paymentToken, accessToken, orderId, productId;
     
@@ -64,7 +57,6 @@ public class BuyPlayStoreAsyncTask extends AsyncTask<String, Integer, Boolean> {
 		    request.setHeader("Accept", "application/json");
 		    request.setEntity(entity); 
 		    
-		    
 		    HttpResponse response = null;
 		    DefaultHttpClient httpClient = new DefaultHttpClient();
 		    HttpConnectionParams.setSoTimeout(httpClient.getParams(), 10*1000); 
@@ -74,7 +66,7 @@ public class BuyPlayStoreAsyncTask extends AsyncTask<String, Integer, Boolean> {
 		    	response = httpClient.execute(request); 
 	    	
 		    } catch (SocketException se) {
-	    		Log.e("SocketException", se+"");
+	    		Log.e("SocketException", se + "");
 	    		throw se;
 	    	}
 		    

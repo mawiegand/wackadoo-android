@@ -25,6 +25,7 @@ public class InfoScreenActivity extends WackadooActivity {
 		setUpButtons();
 	}
 	
+	// set up interface elements
 	private void setUpUi() {
 		supportBtn = (TextView) findViewById(R.id.infoscreen_supportbtn);
 		websiteBtn = (TextView) findViewById(R.id.infoscreen_websitebtn);
@@ -32,7 +33,8 @@ public class InfoScreenActivity extends WackadooActivity {
 		copyrightBtn = (TextView) findViewById(R.id.infoscreen_copyright_btn);
 		backBtn = (TextView) findViewById(R.id.infoscreenTopbarBack);
 	}
-	
+
+	// set up touchlistener for buttons
 	private void setUpButtons() {
 		OnTouchListener touchListener = new OnTouchListener() {
 			@Override
@@ -79,6 +81,7 @@ public class InfoScreenActivity extends WackadooActivity {
 		backBtn.setOnTouchListener(touchListener);
 	}
 	
+	// show dialog with copyright information
     private void showCopyrightDialog() {
     	AlertDialog.Builder builder = new AlertDialog.Builder(this);
     	builder.setTitle(getResources().getString(R.string.infoscreen_copyright_btn))
@@ -90,11 +93,13 @@ public class InfoScreenActivity extends WackadooActivity {
 	    StaticHelper.styleDialog(this, dialog);
     }
 
+    // open website in browser
     private void showWebsite() {
     	Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.wack-a-doo.com"));
     	startActivity(browserIntent);
     }
     
+    // open wiki website in browser
     private void showWiki() {
     	Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://wiki.wack-a-doo.com"));
     	startActivity(browserIntent);

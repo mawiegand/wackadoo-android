@@ -66,12 +66,12 @@ public class Avatar {
 	
 	static final int[] drawOrder = {HEAD, TATTOO, MOUTH, CHAIN, VEILCHEN, BEARD, EYES, HAIR};
 	
-	//First index is for gender, second index for part of the avatar and third index is for the selection of the parts.
+	// first index = gender, second index = part of the avatar and third index = selection of the parts
 	static final int[/*GENDER*/][/*PART OF AVATAR*/][/*INDEX OF IMAGE*/] ids = 
 	{
 		{
 			{
-				//Warrior has no chains 
+				// warrior has no chains 
 			},
 			{
 				R.drawable.hg_warrior_eyes_0,

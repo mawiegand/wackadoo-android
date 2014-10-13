@@ -162,13 +162,14 @@ public class UserCredentials {
 	}
 	public void setFbUser(boolean fbUser) {
 		this.isFbUser = fbUser;
+		generatedEmail = false;
+		generatedPassword = false;
 		persistCredentials();
 	}
 	
 	public String getAccountId() {
 		return accountId;
 	}
-
 	public void setAccountId(String accountId) {
 		this.accountId = accountId;
 		persistCredentials();
@@ -177,7 +178,6 @@ public class UserCredentials {
 	public Date getPremiumExpiration() {
 		return premiumExpiration;
 	}
-
 	public void setPremiumExpiration(Date premiumExpiration) {
 		this.premiumExpiration = premiumExpiration;
 		persistCredentials();
@@ -186,7 +186,6 @@ public class UserCredentials {
 	public String getAvatarString() {
 		return avatarString;
 	}
-
 	public void setAvatarString(String avatarString) {
 		this.avatarString = avatarString;
 		persistCredentials();

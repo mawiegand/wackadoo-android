@@ -39,7 +39,6 @@ public class GetCharacterAsyncTask extends AsyncTask<String, Integer, Boolean> {
     	this.createNew = createNew;
     	this.accessToken = userCredentials.getAccessToken().getToken();
     }
-    
 	
 	@Override
 	protected Boolean doInBackground(String... params) {
@@ -86,7 +85,7 @@ public class GetCharacterAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	
 	@Override
 	protected void onPostExecute(Boolean result) {
-		//Character is null if no character is found and createNew = false or if server timed out
+		// character is null, if no character is found and createNew = false or if server timed out
 		game.setJoined(character != null);
 		game.setCharacter(character);
 		listener.getCharacterCallback(game, createNew);

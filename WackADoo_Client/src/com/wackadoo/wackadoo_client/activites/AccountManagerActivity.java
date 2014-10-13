@@ -33,7 +33,6 @@ public class AccountManagerActivity extends WackadooActivity implements AccountM
 	private Button signOutButton, setEmailButton, passwordButton;
 	private ImageView emailAccountCheckedImage;
 	private enum AlertCallback { Email, Password }
-	private boolean passwordButtonVisible, emailButtonVisible;
 	private CustomProgressDialog progressDialog;
 	
 	@Override
@@ -44,10 +43,10 @@ public class AccountManagerActivity extends WackadooActivity implements AccountM
 	    
 	    setUpUi();
 	    setUpButtons();
-	    loadCredentialsToUI();
+	    loadCredentialsToUi();
     }
 	
-	
+	// set up interface elements
 	private void setUpUi() {
 		usernameTextView = (TextView) findViewById(R.id.usernameText);
         setEmailButton = (Button) findViewById(R.id.setEmailButton);
@@ -64,53 +63,39 @@ public class AccountManagerActivity extends WackadooActivity implements AccountM
         // set up standard server communication dialog
 	    progressDialog = new CustomProgressDialog(this);
         
-        // handles which ui elements are shown for the current user
-        emailButtonVisible = true;
-		passwordButtonVisible = true;
+        // handle which UI elements are shown for the current user
 		if (userCredentials.isFbUser()) {
-			emailButtonVisible = false;
-			passwordButtonVisible = false;
-		} else {
-			if (!userCredentials.isEmailGenerated()) { 
-				emailButtonVisible = false; 
-			} 
-			
-			if (!userCredentials.isPasswordGenerated()) {
-				passwordButtonVisible = false;
-			}
-		}
-		
-		// if user has own mail, dont show setmail button
-		if (!emailButtonVisible) {
-			setEmailButton.setVisibility(View.GONE);
-			provideEmailTextView.setVisibility(View.GONE);
-			emailTextView.setVisibility(View.VISIBLE);
-			emailTextView.setText(userCredentials.getEmail());
-			emailInformationTextView.setVisibility(View.INVISIBLE);
-			emailAccountCheckedImage.setVisibility(View.VISIBLE);
-		}
-		
-		// if user has own password, dont show changepassword button
-		if (!passwordButtonVisible) {
-			passwordButton.setText(getResources().getString(R.string.account_change_password));
-			RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) passwordButton.getLayoutParams();
-			params.addRule(RelativeLayout.BELOW, R.id.emailInformationText);
-			passwordButton.setLayoutParams(params); 
-			characterLockedTextView.setVisibility(View.GONE);
-			makeCharacterPortableTextView.setVisibility(View.GONE);
-		}
-		
-		// character connected to facebook
-		if (userCredentials.isFbUser()) {
-			emailTextView.setVisibility(View.GONE);
 			characterLockedTextView.setVisibility(View.VISIBLE);
 			characterLockedTextView.setText(R.string.account_character_connected_fb);
-			emailAccountCheckedImage.setVisibility(View.INVISIBLE);
+			emailTextView.setVisibility(View.GONE);
+			setEmailButton.setVisibility(View.GONE);
 			passwordButton.setVisibility(View.GONE);
+			provideEmailTextView.setVisibility(View.GONE);
+			makeCharacterPortableTextView.setVisibility(View.GONE);
+			emailAccountCheckedImage.setVisibility(View.INVISIBLE);
+			
+		} else {
+			if (!userCredentials.isEmailGenerated()) { 
+				setEmailButton.setVisibility(View.GONE);
+				emailTextView.setVisibility(View.VISIBLE);
+				emailTextView.setText(userCredentials.getEmail());
+				emailInformationTextView.setVisibility(View.INVISIBLE);
+				emailAccountCheckedImage.setVisibility(View.VISIBLE);
+				provideEmailTextView.setVisibility(View.GONE);
+				
+			} 
+			if (!userCredentials.isPasswordGenerated()) {
+				passwordButton.setText(getResources().getString(R.string.account_change_password));
+				makeCharacterPortableTextView.setVisibility(View.GONE);
+				RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) passwordButton.getLayoutParams();	// because characterPortable is GONE
+				params.addRule(RelativeLayout.BELOW, R.id.emailInformationText);
+				passwordButton.setLayoutParams(params); 
+				characterLockedTextView.setVisibility(View.GONE);
+			}
 		}
     }
     
-	// sets up touchlistener for buttons
+	// set up touchlistener for buttons
     private void setUpButtons() {
     	OnTouchListener touchListener = new OnTouchListener() {
 			@Override
@@ -134,7 +119,7 @@ public class AccountManagerActivity extends WackadooActivity implements AccountM
 								break;
 								
 							case R.id.signOutButton:
-								triggerSignOut();
+								showSignoutDialog();
 								break;
 								
 							case R.id.setEmailButton:
@@ -164,7 +149,8 @@ public class AccountManagerActivity extends WackadooActivity implements AccountM
 		}
 	}
     
-	private void triggerSignOut() {
+    // set up and show dialog for log out confirmation
+	private void showSignoutDialog() {
 		DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
     	    @Override	
     	    public void onClick(DialogInterface dialog, int which) {
@@ -192,7 +178,8 @@ public class AccountManagerActivity extends WackadooActivity implements AccountM
 	    StaticHelper.styleDialog(this, dialog);
 	}
 
-	private void loadCredentialsToUI() {
+	// loads email and username to interface
+	private void loadCredentialsToUi() {
     	String username = userCredentials.getUsername();
     	if (!username.isEmpty()) {
     		usernameTextView.setText(username);
@@ -207,7 +194,7 @@ public class AccountManagerActivity extends WackadooActivity implements AccountM
     	}
 	}
 
-	// show dialog to change mail/password
+	// set up and show dialog to change mail/password
     private void showInputAlertDialogWithText(String text, final AlertCallback callback) {
     	AlertDialog.Builder builder = new AlertDialog.Builder(this);
     	builder.setTitle(text);
@@ -243,9 +230,9 @@ public class AccountManagerActivity extends WackadooActivity implements AccountM
     private void enteredNewEmail(String email) {
 		if (StaticHelper.isValidMail(email)){
 			progressDialog.show();
-			new AccountManagerAsyncTask(this, progressDialog, userCredentials, "mail", email).execute();
+			new AccountManagerAsyncTask(this, userCredentials, "mail", email).execute();
 		} else {
-			Toast.makeText(getApplicationContext(), getResources().getString(R.string.credentials_email_not_valid), Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, getResources().getString(R.string.credentials_email_not_valid), Toast.LENGTH_SHORT).show();
 		}
 	}
 	
@@ -253,9 +240,9 @@ public class AccountManagerActivity extends WackadooActivity implements AccountM
 	private void enteredNewPassword(String password) {
 		if (password.length() > 5){
 			progressDialog.show();
-			new AccountManagerAsyncTask(this, progressDialog, userCredentials, "password", password).execute();
+			new AccountManagerAsyncTask(this, userCredentials, "password", password).execute();
 		} else {
-			Toast.makeText(getApplicationContext(), getResources().getString(R.string.credentials_password_too_short), Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, getResources().getString(R.string.credentials_password_too_short), Toast.LENGTH_SHORT).show();
 		}
 	}
 	
@@ -288,16 +275,19 @@ public class AccountManagerActivity extends WackadooActivity implements AccountM
 	@Override
 	public void accountManagerCallback(String type, Integer result, String newValue) {
 		Toast toast = Toast.makeText(this, null, Toast.LENGTH_SHORT);
+		if (progressDialog.isShowing()) {
+			progressDialog.dismiss();
+		}
 		
 		if (result == 200) {
 			if (type.equals("mail")) {
-				emailButtonVisible = false;
+				// email successfully changed
 		    	userCredentials.setEmail(newValue);
 		    	setUpUi();		    
 		    	toast.setText(getResources().getString(R.string.alert_email_change_success));
 				
 			} else {
-				passwordButtonVisible = false;
+				// password successfully changed
 				userCredentials.setPassword(newValue);
 				setUpUi();
 				toast.setText(getResources().getString(R.string.alert_change_password_success));
@@ -321,6 +311,6 @@ public class AccountManagerActivity extends WackadooActivity implements AccountM
 			progressDialog.dismiss();
 		}
 		
-		toast.show();
+		toast.show(); progressDialog.dismiss();
 	}
 }

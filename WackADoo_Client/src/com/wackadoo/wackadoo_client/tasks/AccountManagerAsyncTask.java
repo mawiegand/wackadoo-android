@@ -35,14 +35,12 @@ public class AccountManagerAsyncTask extends AsyncTask<String, Integer, Integer>
 	private static final String TAG = AccountManagerAsyncTask.class.getSimpleName();
 	
     private AccountManagerCallbackInterface listener;
-    private ProgressDialog progressDialog;
     private String value, type;
     private UserCredentials userCredentials;
     private JSONObject jsonResponse;
     
-    public AccountManagerAsyncTask(AccountManagerCallbackInterface listener, ProgressDialog progressDialog, UserCredentials userCredentials, String type, String value) {
+    public AccountManagerAsyncTask(AccountManagerCallbackInterface listener, UserCredentials userCredentials, String type, String value) {
     	this.listener = listener;
-    	this.progressDialog = progressDialog;
     	this.userCredentials = userCredentials;
     	this.value = value;
     	this.type = type;

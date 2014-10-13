@@ -1,19 +1,13 @@
 package com.wackadoo.wackadoo_client.helper;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
-import java.util.List;
 import java.util.Locale;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpConnectionParams;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.media.MediaPlayer;
@@ -24,7 +18,6 @@ import android.view.View;
 import android.view.View.MeasureSpec;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -41,7 +34,7 @@ public class StaticHelper {
 	public static MediaPlayer backgroundMusicPlayer;
 	public static boolean continueMusic;
 
-	// Workaround for dynamic height of the ListView. Fixes issue of not showing every item in listviews when in a scrollview 
+	// workaround for dynamic height of the ListView. fixes issue of not showing every item in listviews when in a scrollview 
 	public static void setListViewHeightBasedOnChildren(ListView listView) {
 	    ListAdapter listAdapter = listView.getAdapter();
 	    if (listAdapter == null)
@@ -64,13 +57,13 @@ public class StaticHelper {
 	    listView.requestLayout();
 	}
 
-	// checks if String is valid mail adress
+	// check if string is valid mail adress
 	public static boolean isValidMail(String email) {
 		boolean result = android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
 		return result;
 	}
 
-	// checks if the device is connected to the internet
+	// check if the device is connected to the internet
 	public static boolean isOnline(Activity activity) {
 	    ConnectivityManager cm =
 	        (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -81,6 +74,7 @@ public class StaticHelper {
 	    return false;
 	}
 	
+	// check if host is available or offline
 	public static boolean isHostAvailable(String hostname, Activity activity) {
 		try {
 			InetAddress.getAllByName(hostname);
@@ -92,7 +86,7 @@ public class StaticHelper {
 		}		
 	}
 	
-	// generates a httpPost object for given type of asynctask
+	// generate a httpPost object for given type of asynctask
 	public static String generateUrlForTask(Context context, boolean basePath, String type) {
 		String baseUrl = "", urlForRequest = "", completeUrl = ""; 
 		
@@ -139,7 +133,7 @@ public class StaticHelper {
 		clickPlayer.start();
 	}
 
-	// overrides font with custom font in assets/fonts
+	// override font with custom font in assets/fonts
 	public static void overrideFonts(final Context context, final View v) {
 		Typeface tf = Typeface.createFromAsset(context.getAssets(), "fonts/Montserrat-Regular.ttf");
 		
@@ -158,6 +152,7 @@ public class StaticHelper {
 	    }
 	}
 
+	// style given dialog in layout colors and font
 	public static void styleDialog(Context context, Dialog dialog) {
 		 // Set title divider color
 	    int id = context.getResources().getIdentifier("titleDivider", "id", "android");

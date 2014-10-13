@@ -9,6 +9,7 @@ public class CustomProgressDialog extends ProgressDialog {
 
 	private Context context;
 	
+	// constructor for standard server communication dialog
 	public CustomProgressDialog(Context context) {
 		super(context);
 		this.context = context;
@@ -17,6 +18,7 @@ public class CustomProgressDialog extends ProgressDialog {
 		setCancelable(false);
 	}
 	
+	// show and style dialog
 	@Override
 	public void show() {
 		super.show();

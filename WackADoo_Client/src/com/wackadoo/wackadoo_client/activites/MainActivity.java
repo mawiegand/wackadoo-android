@@ -78,9 +78,6 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-        // get updated userCredentials
-        userCredentials = new UserCredentials(getApplicationContext());
-        
         //facebook lifecycleHelper to keep track of the session
 	    uiHelper = new UiLifecycleHelper(this, this);
 		uiHelper.onCreate(savedInstanceState);
@@ -106,6 +103,9 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
         super.onResume();
         uiHelper.onResume();	
         
+        // get updated userCredentials
+        userCredentials = new UserCredentials(getApplicationContext());
+        
         // warning if no internet connection
 		if (!StaticHelper.isOnline(this)) {
 			Toast.makeText(this, getResources().getString(R.string.no_connection), Toast.LENGTH_LONG).show();
@@ -118,7 +118,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 				}
 				
 			} else {
-				triggerLogin();
+				handleLogin();
 			}
 		}
 		
@@ -144,6 +144,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	    AutoPing.getInstance().stopAutoPing();	// tracking
     }
 
+	// set up interface elements
     private void setUpUi() {
     	playBtn = (ImageButton) findViewById(R.id.loginButton);
 	    accountmanagerBtn = (ImageButton) findViewById(R.id.accountmanagerButton);
@@ -199,6 +200,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		}
 	};
 
+	// start setup methods for each button in UI
 	private void setUpButtons() {
 		setUpPlayBtn();
 	   	setUpShopBtn();
@@ -210,6 +212,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	   	setUpCharacterFrame();
 	}
 
+	// set up touchlistener for facebook button
 	private void setUpFacebookBtn() {
 		facebookBtn.setOnTouchListener(new View.OnTouchListener() {
 			@Override
@@ -265,6 +268,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		});
 	}
 
+	// set up touchlistener for play button
 	private void setUpPlayBtn() {
 		playBtn.setOnTouchListener(new View.OnTouchListener() {
 			@SuppressLint("NewApi")
@@ -291,6 +295,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		});
 	}
 
+	// set up touchlistener for shop button
 	private void setUpShopBtn() {
 		shopBtn.setOnTouchListener(new View.OnTouchListener() {
 			@SuppressLint("NewApi")
@@ -313,6 +318,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		});
 	}
 
+	// set up touchlistener for sound button
 	private void setUpSoundBtn() {
 		soundBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -334,6 +340,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		});
 	}
 
+	// set up touchlistener for info button
 	private void setUpInfoBtn() {
 		infoBtn.setOnTouchListener(new View.OnTouchListener() {
 			@SuppressLint("NewApi")
@@ -356,6 +363,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		});
 	}
 
+	// set up touchlistener for accountmanager button
 	private void setUpAccountmanagerBtn() {
 		accountmanagerBtn.setOnTouchListener(new View.OnTouchListener() {
 			@SuppressLint("NewApi")
@@ -378,6 +386,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		});
 	}
 	
+	// set up touchlistener for selectgame button
 	private void setUpSelectgameBtn() {
 		// TODO: is last world accessible?
 		lastWorldAccessible = true;
@@ -418,6 +427,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		});
 	}
 
+	// set up touchlistener for characterframe
 	private void setUpCharacterFrame() {
 		characterFrame.setOnTouchListener(new View.OnTouchListener() {
 			@SuppressLint("NewApi")
@@ -445,21 +455,8 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		});
 	}
 	
-    // facebook: handles result for login 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        uiHelper.onActivityResult(requestCode, resultCode, data);
-    }
-    
-    // facebook: login handling
-    @Override
-    public void onSaveInstanceState(Bundle savedState) {
-        super.onSaveInstanceState(savedState);
-        uiHelper.onSaveInstanceState(savedState);
-    }
-	
-	private void triggerLogin() {
+	// handle current credentials, decide how to login and start progress
+	private void handleLogin() {
 		String identifier = userCredentials.getIdentifier();		
 		String accessToken = userCredentials.getAccessToken().getToken();
 		String email = userCredentials.getEmail();
@@ -473,7 +470,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		if (!identifier.equals("") && !accessToken.equals("") || !email.equals("")) { 
 			if (userCredentials.getAccessToken().isExpired()) {
 				progressDialog.show();
-				new GameLoginAsyncTask(this, userCredentials, false, false, progressDialog).execute();
+				new GameLoginAsyncTask(this, userCredentials, false, false).execute();
 			} else {
 				loggedIn = true;
 				updateUi();
@@ -481,9 +478,23 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 			
 		} else if (userCredentials.isEmailGenerated()) {
 			progressDialog.show();
-			new GameLoginAsyncTask(this, userCredentials, false, false, progressDialog).execute();
+			new GameLoginAsyncTask(this, userCredentials, false, false).execute();
 		} 
 	}
+	
+    // facebook: handles result for login 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        uiHelper.onActivityResult(requestCode, resultCode, data);
+    }
+    
+    // facebook: login handling
+    @Override
+    public void onSaveInstanceState(Bundle savedState) {
+        super.onSaveInstanceState(savedState);
+        uiHelper.onSaveInstanceState(savedState);
+    }
 	
 	// facebook: callback interface calls onSessionStateChange to handle session state
 	@Override
@@ -512,6 +523,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		}
 	}
 
+	// facebook: start async request for user data
     private void fetchFbData(final Session session) {
         Request request = Request.newMeRequest(session, new Request.GraphUserCallback() {
             @Override
@@ -540,19 +552,21 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
         request.executeAsync();
     } 
     
+    // handle click on playgame button
 	private void triggerPlayGame() {
-		String accessToken = this.userCredentials.getAccessToken().getToken();
-		String tokenExpiration = this.userCredentials.getAccessToken().getExpireCode();
-		String userId = this.userCredentials.getIdentifier();
-		if (accessToken != null && tokenExpiration != null && !this.userCredentials.getAccessToken().isExpired()) {
+		String accessToken = userCredentials.getAccessToken().getToken();
+		String tokenExpiration = userCredentials.getAccessToken().getExpireCode();
+		String userId = userCredentials.getIdentifier();
+		if (accessToken != null && tokenExpiration != null && !userCredentials.getAccessToken().isExpired()) {
 			startGame(accessToken, tokenExpiration, userId);
 		
 		} else {
 			progressDialog.show();
-			new GameLoginAsyncTask(this, userCredentials, false, false, progressDialog).execute();
+			new GameLoginAsyncTask(this, userCredentials, false, false).execute();
 		}
 	}
 
+	// start webview activity to play game with necessary data
 	private void startGame(String accessToken, String expiration, String userId) {
 		Intent intent = new Intent(MainActivity.this, WackadooWebviewActivity.class);
 		Bundle bundle = new Bundle();
@@ -571,7 +585,9 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		userCredentials.generateNewAccessToken(accessToken, expiration);
 		userCredentials.setIdentifier(identifier);
 		
-		if (refresh) return;
+		if (refresh) {
+			return;
+		}
 		
 		if (result) {
 			loggedIn = true;
@@ -622,6 +638,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		updateUi();
 	}
 	
+	// check if a game in given list is online
 	private boolean isGameOnline(ArrayList<GameInformation> games, int gameId) {
 		boolean gameOnline = false;
 		for (int i=0; i<games.size(); i++) {
@@ -664,12 +681,12 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		}
 	}
 
-	// start automatic token refresh again
+	// start automatic token refresh 
 	@Override
 	public void run() {
 		if (userCredentials.getAccessToken().isExpired() && 
 				(userCredentials.getUsername().length() > 0 || userCredentials.getEmail().length() > 0)) {
-			new GameLoginAsyncTask(this, userCredentials, false, true, progressDialog).execute();
+			new GameLoginAsyncTask(this, userCredentials, false, true).execute();
 		}
 		Log.d(TAG, "Token refresh handler");
 		tokenHandler.postDelayed(this, 10000);		

@@ -29,6 +29,7 @@ public class ShopInfoFragment extends Fragment {
 		ressourceArray = new int[4];
 	}
 	
+    // set up the view and fill in data
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_shop_info, container, false);
@@ -39,6 +40,7 @@ public class ShopInfoFragment extends Fragment {
 		return view;
     }
 	
+	// set up touchlistener for shop button
 	public void setUpShopBtn(View view) {
 		shopBtn = (TextView) view.findViewById(R.id.shopinfoTopbarShop);
 		shopBtn.setOnTouchListener(new View.OnTouchListener() {

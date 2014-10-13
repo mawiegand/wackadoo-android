@@ -17,7 +17,6 @@ import com.facebook.Session;
 import com.facebook.Session.StatusCallback;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
-import com.facebook.widget.LoginButton;
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.helper.CustomProgressDialog;
 import com.wackadoo.wackadoo_client.helper.StaticHelper;
@@ -37,7 +36,6 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 	private UserCredentials userCredentials;
 	private Button signInBtn, createAccountBtn, restoreAccountBtn;
 	private EditText userNameEditText, passwordEditText;
-	private LoginButton loginBtn;
 	private TextView backBtn;
 	private CustomProgressDialog progressDialog;
 	private UiLifecycleHelper uiHelper;		
@@ -72,11 +70,11 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 	    uiHelper.onDestroy();
     }
 
+	// set up interface elements
     private void setUpUi() {
     	signInBtn = (Button) findViewById(R.id.signInButton);
 		passwordEditText = (EditText) findViewById(R.id.passwordField);
 		userNameEditText = (EditText) findViewById(R.id.usernameField);
-		loginBtn = (LoginButton) findViewById(R.id.facebookButton);
 		createAccountBtn = (Button) findViewById(R.id.createAccountButton);
 		restoreAccountBtn = (Button) findViewById(R.id.recoverAccountButton);
 		backBtn = (TextView) findViewById(R.id.credentialscreenTopbarBack);
@@ -85,6 +83,7 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 	    progressDialog = new CustomProgressDialog(this);
     }
     
+	// set up touchlistener for buttons
 	private void setUpButtons() {
 		OnTouchListener touchListener = new OnTouchListener() {
 			@Override
@@ -110,12 +109,12 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 							break;
 							
 						case R.id.recoverAccountButton:
-							triggerRestoreAccount();
+							progressDialog.show();
+							new GameLoginAsyncTask(CredentialScreenActivity.this, userCredentials, true, false).execute();
 							break;
 							
 						case R.id.credentialscreenTopbarBack:
 							StaticHelper.continueMusic = true;
-							String test = userCredentials.getIdentifier();
 							finish();
 							break;
 					}
@@ -129,7 +128,8 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 		backBtn.setOnTouchListener(touchListener);
 	}
 	
-	protected void restoreAccount(boolean success) {
+	// set up and show dialog when account was restored
+	private void showRestoreAccountDialog(boolean success) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		String title, message;
 		
@@ -145,7 +145,10 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
     		   .setMessage(message)
     		   .setPositiveButton(getResources().getString(R.string.alert_ok_button), new DialogInterface.OnClickListener() { 
 		    	    @Override
-		    	    public void onClick(DialogInterface dialog, int which) { finish(); }
+		    	    public void onClick(DialogInterface dialog, int which) { 
+						StaticHelper.continueMusic = true;
+		    	    	finish(); 
+		    	    }
 		    	})
 	    	   .setNegativeButton(getResources().getString(R.string.infoscreen_support_btn), new DialogInterface.OnClickListener() {
 		    	    @Override
@@ -168,16 +171,14 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 	    StaticHelper.styleDialog(this, dialog);
 	}
 	
-	private void triggerRestoreAccount() {
-		new GameLoginAsyncTask(this, userCredentials, true, false, progressDialog).execute();
-	}
-	
-	protected void triggerCreateAccount() {
+	// trigger create account process
+	private void triggerCreateAccount() {
 		userCredentials.clearAllCredentials();
 		progressDialog.show();
-		new CreateAccountAsyncTask(this, progressDialog).execute();
+		new CreateAccountAsyncTask(this).execute();
 	}
 
+	// controll login data and trigger login process
 	private void triggerLogin() {
 		if (userNameEditText.getText().length() > 0) {
 			if (passwordEditText.getText().length() > 5) {
@@ -189,18 +190,17 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 				}
 				userCredentials.setPassword(this.passwordEditText.getText().toString());
 				progressDialog.show();
-
-				new GameLoginAsyncTask(this, userCredentials, false, false, progressDialog).execute();
+				new GameLoginAsyncTask(this, userCredentials, false, false).execute();
 			} 
 			else {
-				Toast.makeText(getApplicationContext(), getResources().getString(R.string.credentials_password_too_short), Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, getResources().getString(R.string.credentials_password_too_short), Toast.LENGTH_SHORT).show();
 			}
 		} else {
-			Toast.makeText(getApplicationContext(), getResources().getString(R.string.credentials_email_not_valid), Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, getResources().getString(R.string.credentials_email_not_valid), Toast.LENGTH_SHORT).show();
 		}
 	}
 	
-	// facebook: callback interface object to handle current status
+	// facebook: callback interface to handle facebook login
 	@Override
 	public void call(Session session, SessionState state, Exception exception) {
 		if (state.isOpened()) {
@@ -219,9 +219,13 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
     // callback interface for CreateAccountAsyncTask
 	@Override
 	public void onRegistrationCompleted(String identifier, String nickname, String accountId) {
+		if (progressDialog.isShowing()) {
+			progressDialog.dismiss();
+		}
 		userCredentials.setIdentifier(identifier);
 		userCredentials.setUsername(nickname);
 		userCredentials.setAccountId(accountId);
+		StaticHelper.continueMusic = true;
 		finish();
 	}
 	
@@ -233,41 +237,51 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 		
 		// if async task called to restore locale account, show dialog
 		if (restoreAccount) {
-			restoreAccount(true);
+			showRestoreAccountDialog(true);
 		
 		} else {
+			StaticHelper.continueMusic = true;
 			finish();
 		}
-		new GetAccountAsyncTask(this, userCredentials, progressDialog, restoreAccount).execute();
+		new GetAccountAsyncTask(this, userCredentials, restoreAccount).execute();
 	}
 	
 	// callback interface for errors in login/restore account task
 	@Override
 	public void loginCallbackError(String error, boolean restoreAccount, boolean refresh) {
+		if (progressDialog.isShowing()) {
+			progressDialog.dismiss();
+		}
+		
 		if (restoreAccount) {
-			restoreAccount(false);
+			showRestoreAccountDialog(false);
 		} else {
 			if (error.equals("invalid_grant")) {
-				Toast.makeText(getApplicationContext(), getResources().getString(R.string.login_invalid_grant), Toast.LENGTH_LONG)
+				Toast.makeText(this, getResources().getString(R.string.login_invalid_grant), Toast.LENGTH_LONG)
 				.show();
 			
 			} else {
-				Toast.makeText(getApplicationContext(), getResources().getString(R.string.login_failed_toast), Toast.LENGTH_LONG)
+				Toast.makeText(this, getResources().getString(R.string.login_failed_toast), Toast.LENGTH_LONG)
 				.show();
 			}
 		}		
 	}
 
+	// callback interface for GetAccountAsyncTask
 	@Override
 	public void getAccountCallback(String identifier, String nickname, String accountId, boolean restoreAccount) {
+		if (progressDialog.isShowing()) {
+			progressDialog.dismiss();
+		}
+		
 		userCredentials.setUsername(nickname);
 		userCredentials.setAccountId(accountId);
 		
 		// if async task called to restore locale account, show dialog
 		if (restoreAccount) {
-			restoreAccount(true);
-				
+			showRestoreAccountDialog(true);
 		} else {
+			StaticHelper.continueMusic = true;
 			finish();
 		}		
 	}

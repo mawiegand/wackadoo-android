@@ -39,9 +39,9 @@ public class SelectGameActivity extends WackadooActivity implements CurrentGames
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState, R.layout.activity_selectgame);
 		
-		userCredentials = new UserCredentials(this.getApplicationContext());
+		userCredentials = new UserCredentials(getApplicationContext());
 		games = new ArrayList<GameInformation>();
-		adapter = new GamesListViewAdapter(getApplicationContext(), R.layout.table_item_game, games);
+		adapter = new GamesListViewAdapter(this, R.layout.table_item_game, games);
 		
 		setUpDoneBtn();
 		setUpListView();
@@ -50,6 +50,7 @@ public class SelectGameActivity extends WackadooActivity implements CurrentGames
 		new GetCurrentGamesAsyncTask(this, userCredentials).execute();
 	}
 	
+	// set up touchlistener for done button
 	private void setUpDoneBtn() {
 		doneBtn = (TextView) findViewById(R.id.selectgamesTopbarDone);
 		doneBtn.setOnTouchListener(new OnTouchListener() {
@@ -73,15 +74,15 @@ public class SelectGameActivity extends WackadooActivity implements CurrentGames
 		});
 	}
 
+	// set up touchlistener for items in listview
 	private void setUpListView() {
 		listView = (ListView) findViewById(R.id.listGames);
-
 		listView.setOnItemLongClickListener(new OnItemLongClickListener() {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 				GameInformation clickedGame = games.get(position);
 				
-				Toast toast = Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT);
+				Toast toast = Toast.makeText(SelectGameActivity.this, "", Toast.LENGTH_SHORT);
 				Calendar c = Calendar.getInstance();		// date today
 				
 				// game is full

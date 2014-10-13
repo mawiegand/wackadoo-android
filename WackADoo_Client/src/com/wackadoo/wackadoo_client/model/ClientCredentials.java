@@ -2,8 +2,6 @@ package com.wackadoo.wackadoo_client.model;
 
 import android.content.Context;
 
-import com.google.gson.annotations.Expose;
-
 public class ClientCredentials {
 	
 	private String uid;

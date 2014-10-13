@@ -20,7 +20,7 @@
 	<com.wackadoo.wackadoo_client.helper.BounceScrollView 
 	    android:layout_width="match_parent" 
 	    android:layout_height="match_parent"
-	    android:layout_marginTop="33dp"
+	    android:layout_marginTop="28dp"
 	    android:scrollbars="none">
 	    
 	    <RelativeLayout 

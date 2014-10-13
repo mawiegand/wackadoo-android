@@ -16,7 +16,6 @@ public class GameInformation {
 	@SerializedName("default_game?") 
 	private boolean defaultGame;
 	
-	
 	public int getId() {
 		return id;
 	}
