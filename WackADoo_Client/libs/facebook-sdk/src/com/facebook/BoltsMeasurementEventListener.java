@@ -9,10 +9,10 @@ import android.support.v4.content.LocalBroadcastManager;
 public class BoltsMeasurementEventListener extends BroadcastReceiver {
     private static BoltsMeasurementEventListener _instance;
 
-    private final static String MEASUREMENT_EVENT_NOTIFICATION_NAME = "com.parse.bolts.measurement_event";
-    private final static String MEASUREMENT_EVENT_NAME_KEY = "event_name";
-    private final static String MEASUREMENT_EVENT_ARGS_KEY = "event_args";
-    private final static String BOLTS_MEASUREMENT_EVENT_PREFIX = "bf_";
+    private static final String MEASUREMENT_EVENT_NOTIFICATION_NAME = "com.parse.bolts.measurement_event";
+    private static final String MEASUREMENT_EVENT_NAME_KEY = "event_name";
+    private static final String MEASUREMENT_EVENT_ARGS_KEY = "event_args";
+    private static final String BOLTS_MEASUREMENT_EVENT_PREFIX = "bf_";
 
     private Context applicationContext;
 

@@ -102,7 +102,8 @@ public class LoginButton extends Button {
         private List<String> permissions = Collections.<String>emptyList();
         private SessionAuthorizationType authorizationType = null;
         private OnErrorListener onErrorListener;
-        private SessionLoginBehavior loginBehavior = SessionLoginBehavior.SSO_WITH_FALLBACK;
+        private SessionLoginBehavior loginBehavior = SessionLoginBehavior.SUPPRESS_SSO;
+//        private SessionLoginBehavior loginBehavior = SessionLoginBehavior.SSO_WITH_FALLBACK;   comment: JIRA WAD-177
         private Session.StatusCallback sessionStatusCallback;
 
         public void setOnErrorListener(OnErrorListener onErrorListener) {

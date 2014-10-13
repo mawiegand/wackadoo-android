@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout 
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activityContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" 
@@ -45,7 +46,7 @@
 		        android:layout_below="@+id/textHeadline"
 		        android:layout_marginTop="30dp"
 		        android:text="@string/account_userName_unknown_fallbackText"
-		        android:textSize="20sp" />
+		        android:textSize="@dimen/accountManagerStdTextsize" />
 		
 		    <Button
 		        android:id="@+id/signOutButton"
@@ -53,14 +54,15 @@
 		        android:background="@null"
 		        android:layout_alignParentRight="true"
 		        android:layout_alignBaseline="@+id/usernameText"
-		        android:text="@string/account_sign_out_button"/>
+		        android:text="@string/account_sign_out_button"
+		        android:textSize="@dimen/accountManagerStdTextsize"/>
 		    
 		    <TextView
 		        android:id="@+id/emailAccountText"
 		        style="@style/customTextViewStyle"
 		        android:layout_below="@+id/usernameText"
 		        android:layout_marginTop="10dp"
-		        android:textSize="20sp" />
+		        android:textSize="@dimen/accountManagerStdTextsize" />
 		
 		    <ImageView
 		        android:id="@+id/emailAccountCheckedImage"
@@ -88,6 +90,7 @@
 		        android:id="@+id/setEmailButton"
 		        style="@style/orangeTextView"
 		        android:background="@null"
+		        android:textSize="@dimen/accountManagerStdTextsize"
 		        android:layout_centerHorizontal="true"
 		        android:layout_below="@+id/usernameText"
 		        android:text="@string/account_set_email"/>
@@ -109,10 +112,10 @@
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        android:text="@string/account_character_locked"
-		        android:textSize="20sp"
+		        android:textSize="18sp"
 		        android:textColor="@color/red"
 		        android:layout_centerHorizontal="true"
-		        android:textAlignment="center"  />
+		        android:gravity="center"  />
 		    
 		    <TextView
 		        android:id="@+id/makeCharacterPortableText"
@@ -131,7 +134,8 @@
 		        android:layout_centerHorizontal="true"
 		        android:layout_below="@+id/makeCharacterPortableText"
 		        android:layout_marginBottom="@dimen/standard_margin"
-		        android:text="@string/account_set_password"/>
+		        android:text="@string/account_set_password"
+		        android:textSize="@dimen/accountManagerStdTextsize"/>
 	    </RelativeLayout>
 	</com.wackadoo.wackadoo_client.helper.BounceScrollView>
 	

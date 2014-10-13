@@ -5,6 +5,7 @@ import java.util.Calendar;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.content.WakefulBroadcastReceiver;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -17,7 +18,8 @@ import android.widget.Toast;
 
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.adapter.GamesListViewAdapter;
-import com.wackadoo.wackadoo_client.helper.UtilityHelper;
+import com.wackadoo.wackadoo_client.helper.StaticHelper;
+import com.wackadoo.wackadoo_client.helper.WackadooActivity;
 import com.wackadoo.wackadoo_client.interfaces.CharacterCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.CurrentGamesCallbackInterface;
 import com.wackadoo.wackadoo_client.model.GameInformation;
@@ -25,7 +27,7 @@ import com.wackadoo.wackadoo_client.model.UserCredentials;
 import com.wackadoo.wackadoo_client.tasks.GetCharacterAsyncTask;
 import com.wackadoo.wackadoo_client.tasks.GetCurrentGamesAsyncTask;
 
-public class SelectGameActivity extends Activity implements CurrentGamesCallbackInterface, CharacterCallbackInterface {
+public class SelectGameActivity extends WackadooActivity implements CurrentGamesCallbackInterface, CharacterCallbackInterface {
 	
 	private ListView listView;
 	private ArrayList<GameInformation> games;
@@ -35,21 +37,17 @@ public class SelectGameActivity extends Activity implements CurrentGamesCallback
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_selectgame);
+		super.onCreate(savedInstanceState, R.layout.activity_selectgame);
 		
 		userCredentials = new UserCredentials(this.getApplicationContext());
-		
 		games = new ArrayList<GameInformation>();
+		adapter = new GamesListViewAdapter(getApplicationContext(), R.layout.table_item_game, games);
 		
 		setUpDoneBtn();
 		setUpListView();
 		
-		adapter = new GamesListViewAdapter(getApplicationContext(), R.layout.table_item_game, games);
-		
-		
 		// fetch current games from server
-		new GetCurrentGamesAsyncTask(this, getApplicationContext(), userCredentials).execute();
+		new GetCurrentGamesAsyncTask(this, userCredentials).execute();
 	}
 	
 	private void setUpDoneBtn() {
@@ -66,6 +64,7 @@ public class SelectGameActivity extends Activity implements CurrentGamesCallback
 						
 					case MotionEvent.ACTION_UP:
 						doneBtn.setTextColor(getResources().getColor(R.color.textbox_orange));
+						StaticHelper.continueMusic = true;
 						finish();
 						break;
 				}
@@ -86,7 +85,7 @@ public class SelectGameActivity extends Activity implements CurrentGamesCallback
 				Calendar c = Calendar.getInstance();		// date today
 				
 				// game is full
-				if (false){//clickedGame.getMaxPlayers() == clickedGame.getPresentPlayers()){
+				if (clickedGame.getMaxPlayers() == clickedGame.getPresentPlayers()){
 					toast.setText(getResources().getString(R.string.selectgame_game_full));
 					
 				// signup is disabled 	
@@ -129,7 +128,9 @@ public class SelectGameActivity extends Activity implements CurrentGamesCallback
 	@Override
 	public void getCurrentGamesCallback(ArrayList<GameInformation> games) {	
 		this.games = games;
-		for (int i = 0; i < games.size(); i++) new GetCharacterAsyncTask(this, userCredentials, games.get(i), false).execute();
+		for (int i = 0; i < games.size(); i++) {
+			new GetCharacterAsyncTask(this, userCredentials, games.get(i), false).execute();
+		}
 	}
 
 	// callback interface for GetCharacterAsyncTask
@@ -137,7 +138,7 @@ public class SelectGameActivity extends Activity implements CurrentGamesCallback
 	public void getCharacterCallback(GameInformation game, boolean createNew) {
 		adapter.add(game);
 		listView.setAdapter(adapter);
-		UtilityHelper.setListViewHeightBasedOnChildren(listView);
+		StaticHelper.setListViewHeightBasedOnChildren(listView);
 		if (createNew) {
 			userCredentials.setUsername(game.getCharacter().getName());
 			finish();

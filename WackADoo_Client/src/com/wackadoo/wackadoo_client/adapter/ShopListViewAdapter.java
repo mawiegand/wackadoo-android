@@ -15,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.wackadoo.wackadoo_client.R;
+import com.wackadoo.wackadoo_client.helper.StaticHelper;
+import com.wackadoo.wackadoo_client.model.ShopRowItem;
  
 public class ShopListViewAdapter extends ArrayAdapter<ShopRowItem> implements OnTouchListener {
  
@@ -54,7 +56,9 @@ public class ShopListViewAdapter extends ArrayAdapter<ShopRowItem> implements On
         if (rowItem.isNotExpired()) {
         	holder.color = context.getResources().getColor(R.color.shop_item_buyed);
         	holder.expiresIn.setText(context.getString(R.string.shop_expires_in)+new SimpleDateFormat().format(rowItem.getExpiresIn()));
-        } else holder.color = context.getResources().getColor(R.color.white);
+        } else {
+        	holder.color = context.getResources().getColor(R.color.white);
+        }
         if (rowItem.getOptionalIconImageId() != 0){
         	holder.optionalImageView.setImageResource(rowItem.getOptionalIconImageId());
         } else {
@@ -68,14 +72,14 @@ public class ShopListViewAdapter extends ArrayAdapter<ShopRowItem> implements On
         convertView.setBackgroundColor(holder.color);
          
         convertView.setOnTouchListener(this);
+        StaticHelper.overrideFonts(context, convertView);
         return convertView;
     }
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
     	int action = event.getActionMasked();
-    	
-    	
+
     	if (action == (MotionEvent.ACTION_DOWN)) {
     		v.setBackgroundColor(context.getResources().getColor(R.color.shop_listitem_active));
     		return true;

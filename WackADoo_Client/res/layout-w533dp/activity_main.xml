@@ -96,7 +96,7 @@
 				    android:id="@+id/title_sound_button" 
 	    	    	android:layout_gravity="right"
 	    	    	android:layout_centerInParent="true"
-	    	    	android:src="@drawable/title_sound_off" 
+	    	    	android:src="@drawable/title_sound_on" 
 					android:paddingRight="45dp"
 	    	    	android:paddingLeft="0dip"
 	    	    	android:layout_alignParentRight="true" />

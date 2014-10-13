@@ -24,8 +24,8 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.wackadoo.wackadoo_client.R;
-import com.wackadoo.wackadoo_client.adapter.ShopRowItem;
 import com.wackadoo.wackadoo_client.interfaces.ShopDataCallbackInterface;
+import com.wackadoo.wackadoo_client.model.ShopRowItem;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
 
 public class GetShopDataAsyncTask extends AsyncTask<String, Integer, Boolean> {
@@ -69,7 +69,7 @@ public class GetShopDataAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	@Override
 	protected Boolean doInBackground(String... params) {
 		// TODO: correct url?
-		String baseURL = context.getString(R.string.baseGameServerURL);
+		String baseURL = context.getString(R.string.baseGameServerPath);
 		HttpGet request = new HttpGet(baseURL + offerURL);
 		Log.d(TAG, "complete URL: " + request.getURI());
 		StringBuilder sb = new StringBuilder();

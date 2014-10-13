@@ -2,16 +2,16 @@ package com.wackadoo.wackadoo_client.model;
 
 import java.util.Date;
 
-import com.wackadoo.wackadoo_client.activites.CredentialScreenActivity;
-
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 public class UserCredentials {
 	
+	private static final String WAD_PREFS_NAME = "wad_preferences_credentials";
+	
 	private Context context;
 	private int gameId;
+	private boolean isFbUser;
 	private String username, password, gcPlayerId, fbPlayerId, fbAccessToken, accountId, email, hostname, avatarString;
 	private Date premiumExpiration;
 	private AccessToken accessToken;
@@ -39,7 +39,11 @@ public class UserCredentials {
 	}
 	public void setEmail(String email) {
 		this.email = email;
-		generatedEmail = false;
+		if (email.equals("")) {
+			generatedEmail = true;
+		} else {
+			generatedEmail = false;
+		}
 		persistCredentials();
 	}
 	
@@ -75,11 +79,14 @@ public class UserCredentials {
 	}
 	
 	private void loadCredentials() {
-		SharedPreferences myPrefs = context.getSharedPreferences("wad_prefs", 0);
+		SharedPreferences myPrefs = context.getSharedPreferences(WAD_PREFS_NAME, Context.MODE_PRIVATE);
 		accessToken.setIdentifier(myPrefs.getString("identifier", ""));
 		accessToken.setExpireCode(myPrefs.getString("expire_code", ""));
 		accessToken.setToken(myPrefs.getString("accesstoken", ""));
 		accessToken.restoreExpireDate(new Date(myPrefs.getLong("expire_date", 0)));
+		fbPlayerId = myPrefs.getString("fb_player_id", "");
+		fbAccessToken = myPrefs.getString("fb_access_token", "");
+		isFbUser = myPrefs.getBoolean("is_fb_user", false);
 		accountId = myPrefs.getString("account_id", "");
 		username = myPrefs.getString("username", "");
 		email = myPrefs.getString("email", "");
@@ -94,10 +101,13 @@ public class UserCredentials {
 	}
 	
 	private void persistCredentials() {
-		SharedPreferences myPrefs = context.getSharedPreferences("wad_prefs", 0);
+		SharedPreferences myPrefs = context.getSharedPreferences(WAD_PREFS_NAME, Context.MODE_PRIVATE);
 		SharedPreferences.Editor e = myPrefs.edit();
 		e.putString("identifier", accessToken.getIdentifier());
 		e.putLong("expire_date", accessToken.getCreatedAt().getTime());
+		e.putString("fb_player_id", fbPlayerId);
+		e.putString("fb_access_token", fbAccessToken);
+		e.putBoolean("is_fb_user", isFbUser);
 		e.putString("account_id", accountId);
 		e.putString("username", username);
 		e.putString("email", email);
@@ -108,17 +118,16 @@ public class UserCredentials {
 		e.putString("expire_code", accessToken.getExpireCode());
 		e.putString("hostname", hostname);
 		e.putInt("gameId", gameId);
-		if (premiumExpiration != null) e.putLong("premiumExpiration", premiumExpiration.getTime());
+		if (premiumExpiration != null) {
+			e.putLong("premiumExpiration", premiumExpiration.getTime());
+		}
 		e.putString("avatarString", avatarString);
 		e.commit();
 	}
 
-
-	
 	public String getHostname() {
 		return hostname;
 	}
-
 	public void setHostname(String hostname) {
 		this.hostname = hostname;
 		persistCredentials();
@@ -127,12 +136,35 @@ public class UserCredentials {
 	public int getGameId() {
 		return gameId;
 	}
-
 	public void setGameId(int gameId) {
 		this.gameId = gameId;
 		persistCredentials();
 	}
 
+	public String getFbPlayerId() {
+		return fbPlayerId;
+	}
+	public void setFbPlayerId(String fbPlayerId) {
+		this.fbPlayerId = fbPlayerId;
+		persistCredentials();
+	}
+	
+	public String getFbAccessToken() {
+		return fbAccessToken;
+	}
+	public void setFbAccessToken(String fbAccessToken) {
+		this.fbAccessToken = fbAccessToken;
+		persistCredentials();
+	}
+
+	public boolean isFbUser() {
+		return isFbUser;
+	}
+	public void setFbUser(boolean fbUser) {
+		this.isFbUser = fbUser;
+		persistCredentials();
+	}
+	
 	public String getAccountId() {
 		return accountId;
 	}
@@ -176,15 +208,10 @@ public class UserCredentials {
 	}
 
 	public void clearAllCredentials() {
-		SharedPreferences myPrefs = context.getSharedPreferences("wad_prefs", 0);
+		SharedPreferences myPrefs = context.getSharedPreferences(WAD_PREFS_NAME, Context.MODE_PRIVATE);
 		SharedPreferences.Editor e = myPrefs.edit();
 		e.clear();
 		e.commit();
 	}
-
-
-
-	
-
 }
 

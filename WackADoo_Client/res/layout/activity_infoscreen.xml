@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout 
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activityContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" 
@@ -27,14 +28,14 @@
             android:id="@+id/infoscreen_vertical_spacer"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.25"/>
+            android:layout_weight="0.23"/>
             
         <LinearLayout 
         	android:id="@+id/infoscreen_horizontal_container"
         	android:layout_height="0dp"
         	android:layout_width="match_parent"
         	android:orientation="horizontal"
-        	android:layout_weight="0.75"
+        	android:layout_weight="0.77"
         	android:weightSum="1.0">
         	
 	        <RelativeLayout 
@@ -125,12 +126,12 @@
 		            android:id="@+id/infoscreen_contributors_spacer"
 		            android:layout_width="match_parent"
 		            android:layout_height="0dp"
-		            android:layout_weight="0.03"/>
+		            android:layout_weight="0.08"/>
 	            
                 <TextView 
                     android:id="@+id/infoscreen_contributors_text"
                     style="@style/customTextViewStyle"
-                    android:textSize="10sp"
+                    android:textSize="7sp"
                     android:layout_height="0dp"
                     android:layout_width="match_parent"
                     android:layout_weight="0.27"
@@ -140,7 +141,7 @@
 		        	android:id="@+id/infoscreen_content_thirdrow"
 		            android:layout_width="match_parent"
 		            android:layout_height="0dp"
-		            android:layout_weight="0.30"
+		            android:layout_weight="0.25"
 		            android:orientation="horizontal"
 		            android:weightSum="1.0">
 	                
@@ -162,7 +163,7 @@
 				            android:id="@+id/infoscreen_mfg_spacer"
 				            android:layout_width="match_parent"
 				            android:layout_height="0dp"
-				            android:layout_weight="0.20"/>
+				            android:layout_weight="0.15"/>
 	                    
 	                    <TextView 
 		                    android:id="@+id/infoscreen_supportedby_text"
@@ -183,7 +184,7 @@
 	                    <ImageView 
 		                    android:id="@+id/infoscreen_mfg_logo"
 		                    android:layout_height="0dp"
-		                    android:layout_weight="0.35"
+		                    android:layout_weight="0.40"
 		                    android:layout_width="wrap_content"
 		                    android:scaleType="fitCenter"
 		                    android:src="@drawable/filmfoerderung_logo"/>

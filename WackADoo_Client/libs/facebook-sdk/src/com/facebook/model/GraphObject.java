@@ -475,7 +475,7 @@ public interface GraphObject {
 
         }
 
-        private final static class GraphObjectProxy extends ProxyBase<JSONObject> {
+        private static final class GraphObjectProxy extends ProxyBase<JSONObject> {
             private static final String CLEAR_METHOD = "clear";
             private static final String CONTAINSKEY_METHOD = "containsKey";
             private static final String CONTAINSVALUE_METHOD = "containsValue";
@@ -703,7 +703,7 @@ public interface GraphObject {
             }
         }
 
-        private final static class GraphObjectListImpl<T> extends AbstractList<T> implements GraphObjectList<T> {
+        private static final class GraphObjectListImpl<T> extends AbstractList<T> implements GraphObjectList<T> {
             private final JSONArray state;
             private final Class<?> itemType;
 

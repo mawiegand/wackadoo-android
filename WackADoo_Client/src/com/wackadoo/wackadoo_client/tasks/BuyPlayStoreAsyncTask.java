@@ -45,7 +45,7 @@ public class BuyPlayStoreAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	@Override
 	protected Boolean doInBackground(String... params) {
 		// TODO: correct url?
-		String baseURL = context.getString(R.string.baseGameServerURL);
+		String baseURL = context.getString(R.string.baseGameServerPath);
 		HttpPost request = new HttpPost("https://test1.wack-a-doo.de/game_server/action/shop/google_verify_order_actions");
 		Log.d(TAG, "complete URL: " + request.getURI());
 		StringBuilder sb = new StringBuilder();

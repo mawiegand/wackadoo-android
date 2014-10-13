@@ -18,6 +18,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.wackadoo.wackadoo_client.R;
+import com.wackadoo.wackadoo_client.helper.StaticHelper;
 import com.wackadoo.wackadoo_client.javascriptinterfaces.LoginJavaScriptHandler;
 
 public class WackadooWebviewActivity extends Activity {	
@@ -100,8 +101,10 @@ public class WackadooWebviewActivity extends Activity {
 									finish();									
 								}
 							})
-    					   .setNegativeButton(R.string.alert_quit_no, null)
-    					   .show();
+    					   .setNegativeButton(R.string.alert_quit_no, null);
+    				AlertDialog dialog = builder.create();
+				    dialog.show();
+				    StaticHelper.styleDialog(WackadooWebviewActivity.this, dialog);
     			}
     			return true;
 	    	}

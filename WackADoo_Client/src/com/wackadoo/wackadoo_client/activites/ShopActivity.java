@@ -8,11 +8,9 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.app.Fragment;
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -34,24 +32,27 @@ import com.android.vending.billing.IabResult;
 import com.android.vending.billing.Purchase;
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.adapter.ShopListViewAdapter;
-import com.wackadoo.wackadoo_client.adapter.ShopRowItem;
 import com.wackadoo.wackadoo_client.fragments.ShopCreditsFragment;
 import com.wackadoo.wackadoo_client.fragments.ShopInfoFragment;
 import com.wackadoo.wackadoo_client.helper.CustomIabHelper;
+import com.wackadoo.wackadoo_client.helper.CustomProgressDialog;
+import com.wackadoo.wackadoo_client.helper.StaticHelper;
 import com.wackadoo.wackadoo_client.helper.UtilityHelper;
+import com.wackadoo.wackadoo_client.helper.WackadooActivity;
 import com.wackadoo.wackadoo_client.interfaces.BuyPlayStoreCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.BuyShopOfferCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.CharacterCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.CreditsFragmentCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.ShopDataCallbackInterface;
-import com.wackadoo.wackadoo_client.model.GameInformation;
+import com.wackadoo.wackadoo_client.model.ShopRowItem;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
 import com.wackadoo.wackadoo_client.tasks.BuyPlayStoreAsyncTask;
 import com.wackadoo.wackadoo_client.tasks.BuyShopOfferAsyncTask;
 import com.wackadoo.wackadoo_client.tasks.GetCharacterAsyncTask;
 import com.wackadoo.wackadoo_client.tasks.GetShopDataAsyncTask;
 
-public class ShopActivity extends Activity implements ShopDataCallbackInterface, CreditsFragmentCallbackInterface, BuyShopOfferCallbackInterface, BuyPlayStoreCallbackInterface, OnConsumeFinishedListener {
+public class ShopActivity extends WackadooActivity implements ShopDataCallbackInterface, CreditsFragmentCallbackInterface,
+		BuyShopOfferCallbackInterface, BuyPlayStoreCallbackInterface, OnConsumeFinishedListener {
 	
 	private static final String TAG = ShopActivity.class.getSimpleName();
 	
@@ -61,32 +62,20 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 	private List<ShopRowItem> listGold, listAccount, listBonus, listSpecial;
 	private Fragment fragment;
 	private UserCredentials userCredentials;
-	private ProgressDialog progressDialog;	
+	private CustomProgressDialog progressDialog;	
 	private CustomIabHelper billingHelper;
 	private ArrayList<String> stringProductList;
 	private String shopCharacterId;
-
 	private int platinCredits;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_shop);
+		super.onCreate(savedInstanceState, R.layout.activity_shop);
         
         userCredentials = new UserCredentials(this);
-        
-        doneBtn = (TextView) findViewById(R.id.shopTopbarDone);
-        platinumCreditsInfoBtn = (ImageButton) findViewById(R.id.platinumCreditsInfoBtn);
-        goldInfoBtn = (ImageButton) findViewById(R.id.goldInfoBtn);
-        platinumAccountInfoBtn = (ImageButton) findViewById(R.id.platinumAccountInfoBtn);
-        bonusInfoBtn = (ImageButton) findViewById(R.id.bonusInfoBtn);
-        
-        listViewPlatinumAccount = (ListView) findViewById(R.id.listPlatinumAccount);
-        listViewGold = (ListView) findViewById(R.id.listGold);
-        listViewBonus = (ListView) findViewById(R.id.listBonus);
-        listViewSpecial = (ListView) findViewById(R.id.listSpecial);
 
-        setUpBtns();
+        setUpUi();
+        setUpButtons();
         loadShopOffersFromServer(); 
 	}
 	
@@ -98,7 +87,23 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 	    }
 	}
 	
-	public void setUpBtns() {
+	private void setUpUi() {
+		doneBtn = (TextView) findViewById(R.id.shopTopbarDone);
+        platinumCreditsInfoBtn = (ImageButton) findViewById(R.id.platinumCreditsInfoBtn);
+        goldInfoBtn = (ImageButton) findViewById(R.id.goldInfoBtn);
+        platinumAccountInfoBtn = (ImageButton) findViewById(R.id.platinumAccountInfoBtn);
+        bonusInfoBtn = (ImageButton) findViewById(R.id.bonusInfoBtn);
+        
+        listViewPlatinumAccount = (ListView) findViewById(R.id.listPlatinumAccount);
+        listViewGold = (ListView) findViewById(R.id.listGold);
+        listViewBonus = (ListView) findViewById(R.id.listBonus);
+        listViewSpecial = (ListView) findViewById(R.id.listSpecial);
+        
+        // set up standard server communication dialog
+	    progressDialog = new CustomProgressDialog(this);
+	}
+	
+	public void setUpButtons() {
 		setUpDoneBtn();
 		setUpCreditsBtn();
 		setUpInfoBtns();
@@ -115,7 +120,8 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 	
 		    		case MotionEvent.ACTION_UP: 
 		    			doneBtn.setTextColor(getResources().getColor(R.color.textbox_orange));
-		    			ShopActivity.this.finish();
+		    			StaticHelper.continueMusic = true;
+		    			finish();
 		    			break;
 				}
 				return true;
@@ -241,7 +247,6 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 	
 	// load shop offers from bytro server
 	private void loadShopOffersFromServer() {
-		setUpDialog();
 		progressDialog.show();
 		new GetShopDataAsyncTask(this, userCredentials, 1, "").execute();		// get golden frog offers
 		new GetShopDataAsyncTask(this, userCredentials, 2, "").execute();		// get platinum account offers
@@ -253,7 +258,8 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 	private void insertRowItemsInList(List<ShopRowItem> items, ListView list) {
 		ShopListViewAdapter adapter = new ShopListViewAdapter(this, R.layout.table_item_shop, items);
 		list.setAdapter(adapter);
-		UtilityHelper.setListViewHeightBasedOnChildren(list);
+		StaticHelper.setListViewHeightBasedOnChildren(list);
+		
 	}
 
 	// handle clicks on platinum account list
@@ -265,7 +271,6 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 				int offerId = listAccount.get(position).getId();
-				setUpDialog();
 				progressDialog.show();
 				new BuyShopOfferAsyncTask(ShopActivity.this, userCredentials.getAccessToken().getToken(), offerId, shopCharacterId, "platinum").execute();
 				return true;
@@ -281,7 +286,6 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 				int offerId = listGold.get(position).getId();
-				setUpDialog();
 				progressDialog.show();
 				new BuyShopOfferAsyncTask(ShopActivity.this, userCredentials.getAccessToken().getToken(), offerId, shopCharacterId, "resource").execute();
 				return true;
@@ -310,15 +314,12 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 				int offerId = listSpecial.get(position).getId();
-				setUpDialog();
 				progressDialog.show();
 				new BuyShopOfferAsyncTask(ShopActivity.this, userCredentials.getAccessToken().getToken(), offerId, shopCharacterId, "special").execute();
 				return true;
 			}
 		});
 	}
-	
-	
 	
 	// handle clicks on bonus list
 	private void setUpListBonus(List<ShopRowItem> offers) {
@@ -329,7 +330,6 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 				int offerId = listBonus.get(position).getId();
-				setUpDialog();
 				progressDialog.show();
 				new BuyShopOfferAsyncTask(ShopActivity.this, userCredentials.getAccessToken().getToken(), offerId, shopCharacterId, "bonus").execute();
 				return true;
@@ -363,7 +363,6 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 		((ScrollView) findViewById(R.id.scrollView)).fullScroll(ScrollView.FOCUS_UP);
 	}	
 	
-	
 	// callback interface for BuyShopOfferAsyncTask
 	@Override
 	public void buyShopOfferCallback(boolean result, String message) {
@@ -382,16 +381,8 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 		
 	}
 	
-	// set up the standard server communiation dialog
-	private void setUpDialog() {
-		progressDialog = new ProgressDialog(this);
-		progressDialog.setTitle(getResources().getString(R.string.server_communication));
-		progressDialog.setMessage(getResources().getString(R.string.please_wait));
-	}
-	
 	// play store: set up in app billing
 	private void setUpBilling(){
-		setUpDialog();
 		progressDialog.show();
 		
 		// establish connection to play store
@@ -418,6 +409,12 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		billingHelper.handleActivityResult(requestCode, resultCode, data);
+		
+		// play store dialog stops background music
+		StaticHelper.backgroundMusicPlayer = MediaPlayer.create(this, R.raw.themesong);
+		StaticHelper.backgroundMusicPlayer.setLooping(true);
+		StaticHelper.backgroundMusicPlayer.setVolume(100, 100);
+		StaticHelper.backgroundMusicPlayer.start();
 	}
 	
 	// play store: callback interface for billingHelper.getProductsAsyncInternal
@@ -437,8 +434,6 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 			openCreditsFragment(rowItems);
 		}
 	}
-	
-
 	
 	// play store: returns list of platinum credits ShopRowItems for given list of json products (sorted by price)
 	private ArrayList<ShopRowItem> produceRowItemList() {
@@ -505,7 +500,5 @@ public class ShopActivity extends Activity implements ShopDataCallbackInterface,
 		Log.d(TAG, "start play store verification");
 		new BuyPlayStoreAsyncTask(ShopActivity.this, userCredentials.getAccessToken().getToken(), purchase.getOrderId(), purchase.getToken(), purchase.getSku()).execute();
 	}
-
-
 
 }

@@ -13,6 +13,14 @@
     <string name="server_communication">Connecting to server</string>
     <string name="please_wait">Please wait&#8230;</string>
     
+    <!-- Facebook -->
+    <string name="fb_task_failure">Error while connection to facebook. Please try again or contact the support.</string>
+    <string name="fb_connect_title">Connect with Facebook</string>
+    <string name="fb_connect_message">Would you like to connect your Account with Facebook?</string>
+    <string name="fb_character_already_connected">Character already connected! Please contact the support.</string>
+    <string name="fb_user_already_connected">Facebook User already connected! Please contact the support.</string>
+    <string name="fb_connect_error">Error Code %s while connecting Accounts. Please contact Support.</string>
+    
     <!-- WebView -->
     <string name="dialog_return_startscreen_text">Do you want to return to den Start Screen?</string>
     
@@ -52,6 +60,7 @@
     <string name="account_set_email">Set Email</string>
     <string name="account_provide_email">Provide an email to be used in password retrieval, and to recive ingame events.</string>
     <string name="account_character_locked">Your character is presently locked to this particular device!</string>
+    <string name="account_character_connected_fb">Your character is presently connected to your Facebook account.</string>
     <string name="account_character_portable">You have these options to make your character &quot;portable&quot;</string>
     <string name="account_set_password">Set A Password</string>
     <string name="account_userName_unknown_fallbackText">Unknown User</string>
@@ -119,6 +128,6 @@
     <string name="infoscreen_copyright_btn">Copyright Notice</string>
     <string name="infoscreen_supported">Supported by</string>
    	<string name="infoscreen_contributors">Contributors: Anand, Jan-Niklas Bartholomäus, Max Buck, Christian Seidel, Matteo Bottin, David Canela, Patrick Fox, Maggie Jaglo, Jan Hendrik Kegel, Sascha Lange, Stefan Mattern, Thomas Mohr, Arno Möller, Christiane Lange, Hai Pham, Pikomi, Hajo Runne, Julian Schmid, Susan Tackenberg, Christian Wansart, Jupp Wegner, Marcel Wiegand </string>
-   	<string name="infoscreen_copyright">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata </string>
+   	<string name="infoscreen_copyright">Copyright 2013 5D Lab GmbH. All rights reserved.\n\nThe app makes use of following 3rd party libraries:\nGson Library &#169; 2008&#8211;2011\nJoda Time &#169; 2002&#8211;2013\n\nOur servers are powered by the Augmented Worlds Engine &#169; 2011&#8211;2013 5D Lab GmbH and built upon Ruby on Rails.</string>
     
 </resources>

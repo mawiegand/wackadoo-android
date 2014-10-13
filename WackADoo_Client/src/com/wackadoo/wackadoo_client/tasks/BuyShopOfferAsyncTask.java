@@ -46,7 +46,7 @@ public class BuyShopOfferAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	@Override
 	protected Boolean doInBackground(String... params) {
 		// TODO: correct url?
-		String baseURL = context.getString(R.string.baseGameServerURL);
+		String baseURL = context.getString(R.string.baseGameServerPath);
 		HttpPost request = new HttpPost(baseURL + context.getString(R.string.buyShopItemPath));
 		Log.d(TAG, "complete URL: " + request.getURI());
 		StringBuilder sb = new StringBuilder();

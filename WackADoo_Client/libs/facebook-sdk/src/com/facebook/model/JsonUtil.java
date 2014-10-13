@@ -44,7 +44,7 @@ class JsonUtil {
         return false;
     }
 
-    private final static class JSONObjectEntry implements Map.Entry<String, Object> {
+    private static final class JSONObjectEntry implements Map.Entry<String, Object> {
         private final String key;
         private final Object value;
 

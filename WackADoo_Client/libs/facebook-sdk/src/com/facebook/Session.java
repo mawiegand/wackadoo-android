@@ -1884,6 +1884,7 @@ public class Session implements Serializable {
         private static final long serialVersionUID = 1L;
 
         private final StartActivityDelegate startActivityDelegate;
+//        private SessionLoginBehavior loginBehavior = SessionLoginBehavior.SUPPRESS_SSO;
         private SessionLoginBehavior loginBehavior = SessionLoginBehavior.SSO_WITH_FALLBACK;
         private int requestCode = DEFAULT_AUTHORIZE_ACTIVITY_CODE;
         private StatusCallback statusCallback;

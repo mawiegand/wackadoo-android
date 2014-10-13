@@ -32,7 +32,7 @@ import com.wackadoo.wackadoo_client.model.UserCredentials;
 
 public class AccountManagerAsyncTask extends AsyncTask<String, Integer, Integer>{
 
-	private final static String TAG = AccountManagerAsyncTask.class.getSimpleName();
+	private static final String TAG = AccountManagerAsyncTask.class.getSimpleName();
 	
     private AccountManagerCallbackInterface listener;
     private ProgressDialog progressDialog;
@@ -53,18 +53,18 @@ public class AccountManagerAsyncTask extends AsyncTask<String, Integer, Integer>
 		Activity parent = (Activity) listener;
 		String urlForRequest, completeURL;
 		AbstractHttpMessage request;
-		List <NameValuePair> nameValuePairs = new ArrayList <NameValuePair>();
+		List<NameValuePair> nameValuePairs = new ArrayList <NameValuePair>();
 		
 		// change email
 		if (type.equals("mail")) {
-			urlForRequest = parent.getString(R.string.changeEmailURL) + userCredentials.getAccountId();
-			completeURL = parent.getString(R.string.baseURL) + String.format(urlForRequest, Locale.getDefault().getCountry().toLowerCase());
+			urlForRequest = parent.getString(R.string.changeEmailPath) + userCredentials.getAccountId();
+			completeURL = parent.getString(R.string.basePath) + String.format(urlForRequest, Locale.getDefault().getCountry().toLowerCase());
 			request = new HttpPut(completeURL);
-			nameValuePairs.add(new BasicNameValuePair("identity[email]", value)); //characterNewMail	
+			nameValuePairs.add(new BasicNameValuePair("identity[email]", value)); 
 			
 		// change password
 		} else {
-			urlForRequest = parent.getString(R.string.changePasswordURL);
+			urlForRequest = parent.getString(R.string.changePasswordPath);
 			completeURL = userCredentials.getHostname() + String.format(urlForRequest, Locale.getDefault().getCountry().toLowerCase());
 			request = new HttpPost(completeURL);
 			Log.d(TAG, "***** change password from '" + userCredentials.getPassword() + "' to '" + value + "'");

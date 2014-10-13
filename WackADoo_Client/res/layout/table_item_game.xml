@@ -2,8 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-	android:background="@color/white" 
-	android:padding="5dp">
+	android:background="@color/white">
 	
 	<ImageView
         android:id="@+id/worldItemIcon"
@@ -18,6 +17,7 @@
 	    android:layout_height="wrap_content"
 	    android:textSize="@dimen/gameItemBigTextsize" 
 	    android:layout_alignParentTop="true"
+	    android:layout_marginTop="5dp"
 	    android:layout_toRightOf="@id/worldItemIcon"
 	    android:layout_marginLeft="20dp"/>
 	
@@ -25,20 +25,17 @@
         android:id="@+id/worldItemPlayerIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-	    android:layout_below="@+id/worldItemNameText"
 	    android:layout_alignLeft="@+id/worldItemNameText"
-	    android:layout_alignBaseline="@+id/worldItemIcon"
+	    android:layout_alignBottom="@+id/worldItemIcon"
 	    android:scaleType="fitCenter" 
 	    android:src="@drawable/heads_black"/>
 	
 	<TextView
 	    android:id="@+id/worldItemPlayerCount"
 	    style="@style/customTextViewStyle"
-	    android:layout_height="wrap_content"
-	    android:layout_width="wrap_content"
 	    android:textSize="@dimen/gameItemSmallTextsize" 
-	    android:layout_below="@+id/worldItemNameText"
-	    android:layout_marginTop="5dp"
+	    android:layout_alignBottom="@+id/worldItemPlayerIcon"
+	    android:layout_marginBottom="5dp"
 	    android:layout_toRightOf="@id/worldItemPlayerIcon"
 	    android:layout_marginLeft="5dp"/>
 	
@@ -48,6 +45,7 @@
 	    android:layout_height="wrap_content"
 	    android:textSize="@dimen/gameItemBigTextsize" 
 	    android:layout_alignParentTop="true"
+	    android:layout_marginTop="5dp"
 	    android:layout_alignParentRight="true"
 	    android:layout_marginRight="10dp"/>
 	
@@ -58,6 +56,6 @@
 	    android:layout_width="wrap_content"
 	    android:textSize="@dimen/gameItemSmallTextsize" 
 	    android:layout_alignRight="@+id/worldItemScopeText"
-	    android:layout_alignTop="@+id/worldItemPlayerCount"/>
+	    android:layout_alignBottom="@+id/worldItemPlayerCount"/>
 	
 </RelativeLayout>

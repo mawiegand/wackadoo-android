@@ -27,7 +27,7 @@ import com.wackadoo.wackadoo_client.interfaces.CreateAccountCallbackInterface;
 
 public class CreateAccountAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	
-	private final static String TAG = CreateAccountAsyncTask.class.getSimpleName();
+	private static final String TAG = CreateAccountAsyncTask.class.getSimpleName();
 	
     private CreateAccountCallbackInterface listener;
     private ProgressDialog progressDialog;
@@ -41,8 +41,8 @@ public class CreateAccountAsyncTask extends AsyncTask<String, Integer, Boolean> 
 	@Override
 	protected Boolean doInBackground(String... params) {
 		Activity parent = (Activity) listener;
-		String urlForRequest = parent.getString(R.string.createAccountURL);
-		String baseURL = parent.getString(R.string.baseURL);
+		String urlForRequest = parent.getString(R.string.createAccountPath);
+		String baseURL = parent.getString(R.string.basePath);
 		String completeURL = baseURL + String.format(urlForRequest, Locale.getDefault().getCountry().toLowerCase());
 		
 		HttpPost request = new HttpPost(completeURL);

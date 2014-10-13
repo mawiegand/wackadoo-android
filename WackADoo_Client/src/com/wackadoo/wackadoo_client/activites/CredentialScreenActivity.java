@@ -1,9 +1,6 @@
 package com.wackadoo.wackadoo_client.activites;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -17,13 +14,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.Session;
+import com.facebook.Session.StatusCallback;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
-import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
-import com.facebook.widget.LoginButton.UserInfoChangedCallback;
 import com.wackadoo.wackadoo_client.R;
-import com.wackadoo.wackadoo_client.helper.UtilityHelper;
+import com.wackadoo.wackadoo_client.helper.CustomProgressDialog;
+import com.wackadoo.wackadoo_client.helper.StaticHelper;
+import com.wackadoo.wackadoo_client.helper.WackadooActivity;
 import com.wackadoo.wackadoo_client.interfaces.CreateAccountCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.GameLoginCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.GetAccountCallbackInterface;
@@ -32,7 +30,7 @@ import com.wackadoo.wackadoo_client.tasks.CreateAccountAsyncTask;
 import com.wackadoo.wackadoo_client.tasks.GameLoginAsyncTask;
 import com.wackadoo.wackadoo_client.tasks.GetAccountAsyncTask;
 
-public class CredentialScreenActivity extends Activity implements CreateAccountCallbackInterface, GameLoginCallbackInterface, GetAccountCallbackInterface{
+public class CredentialScreenActivity extends WackadooActivity implements CreateAccountCallbackInterface, GameLoginCallbackInterface, GetAccountCallbackInterface, StatusCallback {
 	
 	private static final String TAG = CredentialScreenActivity.class.getSimpleName();
 	
@@ -41,34 +39,23 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 	private EditText userNameEditText, passwordEditText;
 	private LoginButton loginBtn;
 	private TextView backBtn;
-	private ProgressDialog progressDialog;
-	private UiLifecycleHelper uiHelper;			// facebook
-	 
+	private CustomProgressDialog progressDialog;
+	private UiLifecycleHelper uiHelper;		
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_credentialscreen);   
+		super.onCreate(savedInstanceState, R.layout.activity_credentialscreen);
 		
 		userCredentials = new UserCredentials(getApplicationContext());
 		
-		uiHelper = new UiLifecycleHelper(this, statusCallback);
+		//facebook lifecycleHelper to keep track of the session
+		uiHelper = new UiLifecycleHelper(this, this);
 		uiHelper.onCreate(savedInstanceState);
 
-		signInBtn = (Button) findViewById(R.id.signInButton);
-		passwordEditText = (EditText) findViewById(R.id.passwordField);
-		userNameEditText = (EditText) findViewById(R.id.usernameField);
-		loginBtn = (LoginButton) findViewById(R.id.facebookButton);
-		createAccountBtn = (Button) findViewById(R.id.createAccountButton);
-		restoreAccountBtn = (Button) findViewById(R.id.recoverAccountButton);
-		backBtn = (TextView) findViewById(R.id.credentialscreenTopbarBack);
-		
-		// set up standard server communication dialog
-	    setUpDialog();
-	    
-		setUpButtonListener();
+	    setUpUi();
+	    setUpButtons();
 	}
 
-	// facebook: lifecycleHelper to keep track of the session
 	@Override
     public void onResume() {
         super.onResume();
@@ -84,14 +71,21 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
         super.onDestroy();
 	    uiHelper.onDestroy();
     }
-    
-	private void setUpButtonListener() {
-		setUpFacebookButton();
-		setUpBtns();
-		setUpBackBtn();
-	}
 
-	private void setUpBtns() {
+    private void setUpUi() {
+    	signInBtn = (Button) findViewById(R.id.signInButton);
+		passwordEditText = (EditText) findViewById(R.id.passwordField);
+		userNameEditText = (EditText) findViewById(R.id.usernameField);
+		loginBtn = (LoginButton) findViewById(R.id.facebookButton);
+		createAccountBtn = (Button) findViewById(R.id.createAccountButton);
+		restoreAccountBtn = (Button) findViewById(R.id.recoverAccountButton);
+		backBtn = (TextView) findViewById(R.id.credentialscreenTopbarBack);
+		
+		// set up standard server communication dialog
+	    progressDialog = new CustomProgressDialog(this);
+    }
+    
+	private void setUpButtons() {
 		OnTouchListener touchListener = new OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
@@ -118,6 +112,12 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 						case R.id.recoverAccountButton:
 							triggerRestoreAccount();
 							break;
+							
+						case R.id.credentialscreenTopbarBack:
+							StaticHelper.continueMusic = true;
+							String test = userCredentials.getIdentifier();
+							finish();
+							break;
 					}
 				}
 				return true;
@@ -126,39 +126,9 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 		signInBtn.setOnTouchListener(touchListener);
 		createAccountBtn.setOnTouchListener(touchListener);
 		restoreAccountBtn.setOnTouchListener(touchListener);
+		backBtn.setOnTouchListener(touchListener);
 	}
 	
-	private void setUpBackBtn() {
-		backBtn.setOnTouchListener(new View.OnTouchListener() {
-			@SuppressLint("NewApi")
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				switch (event.getAction()) {
-		    		case MotionEvent.ACTION_DOWN: 			    			
-		    			backBtn.setTextColor(getResources().getColor(R.color.textbox_orange_active));
-		    			break;
-		    			
-		    		case MotionEvent.ACTION_UP: 
-		    			backBtn.setTextColor(getResources().getColor(R.color.textbox_orange));
-		    			finish();
-		    			break;
-				}
-				return true;
-			}
-		});
-	}
-	
-	private void setUpFacebookButton() {
-		loginBtn.setUserInfoChangedCallback(new UserInfoChangedCallback() {
-            @Override
-            public void onUserInfoFetched(GraphUser user) {
-                if (user != null) {
-                	//TODO: Facebook Login
-                } 
-            }
-        });
-	}
-
 	protected void restoreAccount(boolean success) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		String title, message;
@@ -191,8 +161,11 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 		    	        startActivity(intent);
 		    	        finish();
 		    	    }
-		    	})
-    		   .show();
+		    	});
+		
+		AlertDialog dialog = builder.create();
+	    dialog.show();
+	    StaticHelper.styleDialog(this, dialog);
 	}
 	
 	private void triggerRestoreAccount() {
@@ -208,7 +181,7 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 	private void triggerLogin() {
 		if (userNameEditText.getText().length() > 0) {
 			if (passwordEditText.getText().length() > 5) {
-				if (UtilityHelper.isValidMail(userNameEditText.getText().toString())) {
+				if (StaticHelper.isValidMail(userNameEditText.getText().toString())) {
 					userCredentials.setEmail(this.userNameEditText.getText().toString());
 				
 				} else {
@@ -228,14 +201,13 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 	}
 	
 	// facebook: callback interface object to handle current status
-	private Session.StatusCallback statusCallback = new Session.StatusCallback() {
-		@Override
-		public void call(Session session, SessionState state, Exception exception) {
-			if (state.isOpened()) {
-				finish();
-			} 
-		}
-	};
+	@Override
+	public void call(Session session, SessionState state, Exception exception) {
+		if (state.isOpened()) {
+			userCredentials.setFbUser(true);
+			finish();
+		} 
+	}
 	
     // facebook: handles result for login 
     @Override
@@ -258,14 +230,23 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 	public void loginCallback(boolean result, String accessToken, String expiration, String userIdentifier, boolean restoreAccount, boolean refresh) {
 		userCredentials.generateNewAccessToken(accessToken, expiration);
 		userCredentials.setIdentifier(userIdentifier);
+		
+		// if async task called to restore locale account, show dialog
+		if (restoreAccount) {
+			restoreAccount(true);
+		
+		} else {
+			finish();
+		}
 		new GetAccountAsyncTask(this, userCredentials, progressDialog, restoreAccount).execute();
 	}
 	
 	// callback interface for errors in login/restore account task
 	@Override
 	public void loginCallbackError(String error, boolean restoreAccount, boolean refresh) {
-		if (restoreAccount) restoreAccount(false);
-		else {
+		if (restoreAccount) {
+			restoreAccount(false);
+		} else {
 			if (error.equals("invalid_grant")) {
 				Toast.makeText(getApplicationContext(), getResources().getString(R.string.login_invalid_grant), Toast.LENGTH_LONG)
 				.show();
@@ -277,17 +258,8 @@ public class CredentialScreenActivity extends Activity implements CreateAccountC
 		}		
 	}
 
-	// set up the standard server communiation dialog
-	private void setUpDialog() {
-		progressDialog = new ProgressDialog(this);
-		progressDialog.setTitle(getResources().getString(R.string.server_communication));
-		progressDialog.setMessage(getResources().getString(R.string.please_wait));
-	}
-
-	
 	@Override
-	public void GetAccountCallback(String identifier, String nickname,
-			String accountId, boolean restoreAccount) {
+	public void getAccountCallback(String identifier, String nickname, String accountId, boolean restoreAccount) {
 		userCredentials.setUsername(nickname);
 		userCredentials.setAccountId(accountId);
 		

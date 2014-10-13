@@ -1,6 +1,6 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/container"
+    android:id="@+id/content"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@color/white"
@@ -98,7 +98,7 @@
 				    android:id="@+id/title_sound_button" 
 	    	    	android:layout_gravity="right"
 	    	    	android:layout_centerInParent="true"
-	    	    	android:src="@drawable/title_sound_off" 
+	    	    	android:src="@drawable/title_sound_on" 
 					android:paddingRight="45dp"
 	    	    	android:paddingLeft="0dip"
 	    	    	android:layout_alignParentRight="true" />

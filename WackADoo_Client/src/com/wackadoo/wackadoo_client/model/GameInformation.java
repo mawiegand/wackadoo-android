@@ -100,12 +100,14 @@ public class GameInformation {
 	public void setServer(String server) {
 		this.server = server;
 	}
+	
 	public boolean isDefaultGame() {
 		return defaultGame;
 	}
 	public void setDefaultGame(boolean defaultGame) {
 		this.defaultGame = defaultGame;
 	}
+	
 	public CharacterInformation getCharacter() {
 		return character;
 	}

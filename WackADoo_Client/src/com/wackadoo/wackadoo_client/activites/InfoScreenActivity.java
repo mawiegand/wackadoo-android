@@ -1,6 +1,5 @@
 package com.wackadoo.wackadoo_client.activites;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
@@ -11,26 +10,30 @@ import android.view.View.OnTouchListener;
 import android.widget.TextView;
 
 import com.wackadoo.wackadoo_client.R;
+import com.wackadoo.wackadoo_client.helper.StaticHelper;
+import com.wackadoo.wackadoo_client.helper.WackadooActivity;
 
-public class InfoScreenActivity extends Activity {
+public class InfoScreenActivity extends WackadooActivity {
 
 	private TextView backBtn, supportBtn, wikiBtn, copyrightBtn, websiteBtn;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_infoscreen);
+		super.onCreate(savedInstanceState, R.layout.activity_infoscreen);
 		
+		setUpUi();
+		setUpButtons();
+	}
+	
+	private void setUpUi() {
 		supportBtn = (TextView) findViewById(R.id.infoscreen_supportbtn);
 		websiteBtn = (TextView) findViewById(R.id.infoscreen_websitebtn);
 		wikiBtn = (TextView) findViewById(R.id.infoscreen_wikibtn);
 		copyrightBtn = (TextView) findViewById(R.id.infoscreen_copyright_btn);
-		
-		setUpBackBtn();
-		setUpLinkBtns();
+		backBtn = (TextView) findViewById(R.id.infoscreenTopbarBack);
 	}
 	
-	private void setUpLinkBtns() {
+	private void setUpButtons() {
 		OnTouchListener touchListener = new OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent e) {
@@ -59,6 +62,11 @@ public class InfoScreenActivity extends Activity {
 						case R.id.infoscreen_copyright_btn:
 							showCopyrightDialog();
 							break;
+							
+						case R.id.infoscreenTopbarBack:
+			    			StaticHelper.continueMusic = true;
+			    			finish();
+							break;
 					}
 				}
 				return true;
@@ -68,34 +76,18 @@ public class InfoScreenActivity extends Activity {
 		websiteBtn.setOnTouchListener(touchListener);
 		wikiBtn.setOnTouchListener(touchListener);
 		copyrightBtn.setOnTouchListener(touchListener);
+		backBtn.setOnTouchListener(touchListener);
 	}
 	
-	private void setUpBackBtn() {
-		backBtn = (TextView) findViewById(R.id.infoscreenTopbarBack);
-		backBtn.setOnTouchListener(new View.OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent e) {
-				switch (e.getAction()) {
-		    		case MotionEvent.ACTION_DOWN: 
-		    			backBtn.setTextColor(getResources().getColor(R.color.textbox_orange_active));
-		    			break;
-
-		    		case MotionEvent.ACTION_UP: 
-		    			backBtn.setTextColor(getResources().getColor(R.color.textbox_orange));
-		    			finish();
-		    			break;
-			    }
-				return true;
-			}
-		});
-	}
-
     private void showCopyrightDialog() {
     	AlertDialog.Builder builder = new AlertDialog.Builder(this);
     	builder.setTitle(getResources().getString(R.string.infoscreen_copyright_btn))
     		   .setMessage(getResources().getString(R.string.infoscreen_copyright))
-       		   .setPositiveButton(getResources().getString(R.string.alert_ok_button), null)
-    		   .show();
+       		   .setPositiveButton(getResources().getString(R.string.alert_ok_button), null);
+    		   
+        AlertDialog dialog = builder.create();
+	    dialog.show();
+	    StaticHelper.styleDialog(this, dialog);
     }
 
     private void showWebsite() {

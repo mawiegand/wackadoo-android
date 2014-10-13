@@ -28,7 +28,9 @@
 			    android:id="@+id/scrollViewContainer"
 			    android:layout_width="match_parent"
 			    android:layout_height="wrap_content"
-			    android:orientation="vertical">
+			    android:orientation="vertical"
+			    android:layout_marginLeft="@dimen/standard_margin"
+			    android:layout_marginRight="@dimen/standard_margin">
 			    
 			    <LinearLayout 
 			        android:id="@+id/headlineContainer"
@@ -72,50 +74,50 @@
 			            android:text="@string/list_platinum_credits_text" />
 
 			        <ImageButton
-			            android:id="@+id/platinumCreditsInfoBtn"
-			            style="@style/customImageButtonStyle"
-			            android:layout_alignParentRight="true"
-			            android:layout_alignTop="@+id/subheadingPlatinumCredits"
-			            android:src="@drawable/title_info_button" />
-
+				        android:id="@+id/platinumCreditsInfoBtn"
+				        style="@style/customImageButtonStyle"
+				        android:layout_alignBottom="@+id/subheadingPlatinumCredits"
+				        android:layout_alignParentRight="true"
+				        android:src="@drawable/title_info_button"/>
+			        
 			        <RelativeLayout
 			            android:id="@+id/shopCreditsButton"
-			            android:layout_width="match_parent"
-			            android:layout_height="wrap_content"
-			            android:layout_below="@id/subheadingPlatinumCredits"
-			            android:background="@color/white" >
-
-			            <ImageView
-			                android:id="@+id/shopCreditsImage"
-			                android:layout_width="wrap_content"
-			                android:layout_height="55dp"
-			                android:paddingLeft="10dp"
-			                android:paddingRight="0dp"
-			                android:scaleType="fitCenter"
-			                android:src="@drawable/platinum_big" />
-
-			            <TextView
-			                android:id="@+id/shopCreditsText"
-			                style="@style/customTextViewStyle"
-			                android:layout_height="55dp"
-			                android:layout_centerVertical="true"
-			                android:layout_marginLeft="10dp"
-			                android:layout_toRightOf="@id/shopCreditsImage"
-			                android:gravity="center"
-			                android:text="@string/list_platinum_credits_text"
-			                android:textSize="@dimen/shopStandardListFontsize"
-			                android:textStyle="bold" />
-			        </RelativeLayout>
-
-			        <TextView
-			            android:id="@+id/shopCreditsAmountText"
-			            style="@style/shopSubHeadingStyle"
-			            android:layout_below="@id/shopCreditsButton"
-			            android:layout_marginTop="5dp"
-			            android:scaleType="fitCenter"
-			            android:textAllCaps="false"
-			            android:textSize="14sp" />
-
+					    android:layout_width="match_parent"
+					    android:layout_height="wrap_content"
+					    android:layout_below="@id/subheadingPlatinumCredits"
+					    android:background="@color/white" >
+						
+						<ImageView
+					        android:id="@+id/shopCreditsImage"
+					        android:layout_width="wrap_content"
+					        android:layout_height="55dp"
+					        android:paddingLeft="10dp"
+					        android:paddingRight="0dp"
+					        android:scaleType="fitCenter"
+					        android:src="@drawable/platinum_big" />
+						
+						<TextView
+						    android:id="@+id/shopCreditsText"
+						    style="@style/customTextViewStyle"
+						    android:layout_height="55dp"
+						    android:textStyle="bold"
+						    android:textSize="@dimen/shopStandardListFontsize" 
+						    android:layout_toRightOf="@id/shopCreditsImage"
+						    android:layout_marginLeft="10dp"
+						    android:layout_centerVertical="true"
+						    android:text="@string/list_platinum_credits_text"
+						    android:gravity="center"/>
+					</RelativeLayout>
+					
+					<TextView
+				        android:id="@+id/shopCreditsAmountText"
+				        style="@style/shopSubHeadingStyle"
+		                android:layout_below="@id/shopCreditsButton"
+		                android:layout_marginTop="5dp"
+		                android:textAllCaps="false"
+			            android:textSize="12sp"
+					    android:scaleType="fitCenter" />
+		
 			        <TextView
 			            android:id="@+id/subheadingSpecial"
 			            style="@style/shopSubHeadingStyle"
@@ -126,7 +128,7 @@
 			            android:id="@+id/specialInfoBtn"
 			            style="@style/customImageButtonStyle"
 			            android:layout_alignParentRight="true"
-			            android:layout_alignTop="@+id/subheadingSpecial"
+			            android:layout_alignBottom="@+id/subheadingSpecial"
 			            android:src="@drawable/title_info_button" />
 
 			        <ListView
@@ -137,17 +139,20 @@
 			            android:layout_below="@+id/specialInfoBtn" >
 			        </ListView>
 			        
-			        <TextView
+			        <TextView 
 			            android:id="@+id/subheadingGold"
 			            style="@style/shopSubHeadingStyle"
 			            android:layout_below="@id/listSpecial"
-			            android:text="@string/subheading_gold_text" />
-
+			            android:layout_marginTop="5dp"
+			            android:scaleType="fitCenter"
+			            android:textAllCaps="false"
+			            android:textSize="14sp" />
+			        			        
 			        <ImageButton
 			            android:id="@+id/goldInfoBtn"
 			            style="@style/customImageButtonStyle"
 			            android:layout_alignParentRight="true"
-			            android:layout_alignTop="@+id/subheadingGold"
+			            android:layout_alignBottom="@+id/subheadingGold"
 			            android:src="@drawable/title_info_button" />
 
 			        <ListView
@@ -163,7 +168,7 @@
 			            android:layout_below="@id/listGold"
 			            android:layout_marginTop="5dp"
 			            android:textAllCaps="false"
-			            android:textSize="14sp" />
+			            android:textSize="12sp" />
 
 			        <TextView
 			            android:id="@+id/subheadingPlatinumAccount"
@@ -175,7 +180,7 @@
 			            android:id="@+id/platinumAccountInfoBtn"
 			            style="@style/customImageButtonStyle"
 			            android:layout_alignParentRight="true"
-			            android:layout_alignTop="@+id/subheadingPlatinumAccount"
+			            android:layout_alignBottom="@+id/subheadingPlatinumAccount"
 			            android:src="@drawable/title_info_button" />
 
 			        <ListView
@@ -192,11 +197,11 @@
 			            android:text="@string/subheading_bonus_text" />
 
 			        <ImageButton
-			            android:id="@+id/bonusInfoBtn"
-			            style="@style/customImageButtonStyle"
-			            android:layout_alignParentRight="true"
-			            android:layout_alignTop="@+id/subheadingBonus"
-			            android:src="@drawable/title_info_button" />
+				        android:id="@+id/bonusInfoBtn"
+				        style="@style/customImageButtonStyle"
+				        android:layout_alignBottom="@+id/subheadingBonus"
+				        android:layout_alignParentRight="true"
+				        android:src="@drawable/title_info_button"/>
 
 			        <ListView
 			            android:id="@+id/listBonus"
@@ -205,7 +210,6 @@
 			            android:layout_below="@id/subheadingBonus"
 			            android:layout_centerHorizontal="true" />
 
-			        
 			    </RelativeLayout>
 	            
 			    <RelativeLayout 

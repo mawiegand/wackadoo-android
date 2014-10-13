@@ -43,8 +43,8 @@ public class GetAccountAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	@Override
 	protected Boolean doInBackground(String... params) {
 		Activity parent = (Activity) listener;
-		String urlForRequest = parent.getString(R.string.getAccountURL);
-		String baseURL = parent.getString(R.string.baseURL);
+		String urlForRequest = parent.getString(R.string.getAccountPath);
+		String baseURL = parent.getString(R.string.basePath);
 		String completeURL = baseURL + String.format(urlForRequest, Locale.getDefault().getCountry().toLowerCase());
 		
 		HttpGet request = new HttpGet(completeURL);
@@ -94,7 +94,7 @@ public class GetAccountAsyncTask extends AsyncTask<String, Integer, Boolean> {
 				String identifier = jsonResponse.getString("identifier");
 				String username = jsonResponse.getString("nickname");
 				String accountId = jsonResponse.getString("id");
-				listener.GetAccountCallback(identifier, username, accountId, restoreAccount);
+				listener.getAccountCallback(identifier, username, accountId, restoreAccount);
 				
 			} catch(Exception e) {
 				e.printStackTrace();

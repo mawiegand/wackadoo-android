@@ -45,7 +45,7 @@ public class UiLifecycleHelper {
     private static final String DIALOG_CALL_BUNDLE_SAVE_KEY =
             "com.facebook.UiLifecycleHelper.pendingFacebookDialogCallKey";
 
-    private final static String ACTIVITY_NULL_MESSAGE = "activity cannot be null";
+    private static final String ACTIVITY_NULL_MESSAGE = "activity cannot be null";
 
     private final Activity activity;
     private final Session.StatusCallback callback;
