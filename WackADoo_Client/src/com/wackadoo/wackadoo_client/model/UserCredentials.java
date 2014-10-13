@@ -89,7 +89,6 @@ public class UserCredentials {
 		username = myPrefs.getString("username", "");
 		email = myPrefs.getString("email", "");
 		password = myPrefs.getString("password", "");
-		generatedEmail = myPrefs.getBoolean("generatedEmail", true);
 		generatedPassword = myPrefs.getBoolean("generatedPassword", true);
 		generatedEmail = myPrefs.getBoolean("generatedEmail", true);
 		hostname = myPrefs.getString("hostname", "");
@@ -111,7 +110,6 @@ public class UserCredentials {
 		e.putString("username", username);
 		e.putString("email", email);
 		e.putString("password", password);
-		e.putBoolean("generatedEmail", generatedEmail);
 		e.putBoolean("generatedPassword", generatedPassword);
 		e.putBoolean("generatedEmail", generatedEmail);
 		e.putString("accesstoken", accessToken.getToken());
