@@ -94,7 +94,7 @@ public class GetAccountAsyncTask extends AsyncTask<String, Integer, Boolean> {
 				String identifier = jsonResponse.getString("identifier");
 				String username = jsonResponse.getString("nickname");
 				String accountId = jsonResponse.getString("id");
-				listener.GetAccountCallback(identifier, username, accountId, restoreAccount);
+				listener.getAccountCallback(identifier, username, accountId, restoreAccount);
 				
 			} catch(Exception e) {
 				e.printStackTrace();

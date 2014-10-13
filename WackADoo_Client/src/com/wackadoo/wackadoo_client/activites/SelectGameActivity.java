@@ -40,14 +40,11 @@ public class SelectGameActivity extends WackadooActivity implements CurrentGames
 		super.onCreate(savedInstanceState, R.layout.activity_selectgame);
 		
 		userCredentials = new UserCredentials(this.getApplicationContext());
-		
 		games = new ArrayList<GameInformation>();
+		adapter = new GamesListViewAdapter(getApplicationContext(), R.layout.table_item_game, games);
 		
 		setUpDoneBtn();
 		setUpListView();
-		
-		adapter = new GamesListViewAdapter(getApplicationContext(), R.layout.table_item_game, games);
-		
 		
 		// fetch current games from server
 		new GetCurrentGamesAsyncTask(this, getApplicationContext(), userCredentials).execute();

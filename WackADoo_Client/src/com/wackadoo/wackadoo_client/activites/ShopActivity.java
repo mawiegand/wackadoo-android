@@ -66,7 +66,6 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 	private CustomIabHelper billingHelper;
 	private ArrayList<String> stringProductList;
 	private String shopCharacterId;
-
 	private int platinCredits;
 	
 	@Override
@@ -74,20 +73,8 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 		super.onCreate(savedInstanceState, R.layout.activity_shop);
         
         userCredentials = new UserCredentials(this);
-        
-        doneBtn = (TextView) findViewById(R.id.shopTopbarDone);
-        platinumCreditsInfoBtn = (ImageButton) findViewById(R.id.platinumCreditsInfoBtn);
-        goldInfoBtn = (ImageButton) findViewById(R.id.goldInfoBtn);
-        platinumAccountInfoBtn = (ImageButton) findViewById(R.id.platinumAccountInfoBtn);
-        bonusInfoBtn = (ImageButton) findViewById(R.id.bonusInfoBtn);
-        
-        listViewPlatinumAccount = (ListView) findViewById(R.id.listPlatinumAccount);
-        listViewGold = (ListView) findViewById(R.id.listGold);
-        listViewBonus = (ListView) findViewById(R.id.listBonus);
-        listViewSpecial = (ListView) findViewById(R.id.listSpecial);
 
-		progressDialog = new CustomProgressDialog(this);
-        
+        setUpUi();
         setUpButtons();
         loadShopOffersFromServer(); 
 	}
@@ -98,6 +85,22 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 	    if (billingHelper != null) {
 	    	billingHelper.dispose();
 	    }
+	}
+	
+	private void setUpUi() {
+		doneBtn = (TextView) findViewById(R.id.shopTopbarDone);
+        platinumCreditsInfoBtn = (ImageButton) findViewById(R.id.platinumCreditsInfoBtn);
+        goldInfoBtn = (ImageButton) findViewById(R.id.goldInfoBtn);
+        platinumAccountInfoBtn = (ImageButton) findViewById(R.id.platinumAccountInfoBtn);
+        bonusInfoBtn = (ImageButton) findViewById(R.id.bonusInfoBtn);
+        
+        listViewPlatinumAccount = (ListView) findViewById(R.id.listPlatinumAccount);
+        listViewGold = (ListView) findViewById(R.id.listGold);
+        listViewBonus = (ListView) findViewById(R.id.listBonus);
+        listViewSpecial = (ListView) findViewById(R.id.listSpecial);
+        
+        // set up standard server communication dialog
+	    progressDialog = new CustomProgressDialog(this);
 	}
 	
 	public void setUpButtons() {

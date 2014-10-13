@@ -1,6 +1,7 @@
 package com.wackadoo.wackadoo_client.activites;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -39,31 +40,22 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 	private LoginButton loginBtn;
 	private TextView backBtn;
 	private CustomProgressDialog progressDialog;
-	private UiLifecycleHelper uiHelper;			// facebook
-	 
+	private UiLifecycleHelper uiHelper;		
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState, R.layout.activity_credentialscreen);
 		
 		userCredentials = new UserCredentials(getApplicationContext());
 		
+		//facebook lifecycleHelper to keep track of the session
 		uiHelper = new UiLifecycleHelper(this, statusCallback);
 		uiHelper.onCreate(savedInstanceState);
 
-		signInBtn = (Button) findViewById(R.id.signInButton);
-		passwordEditText = (EditText) findViewById(R.id.passwordField);
-		userNameEditText = (EditText) findViewById(R.id.usernameField);
-		loginBtn = (LoginButton) findViewById(R.id.facebookButton);
-		createAccountBtn = (Button) findViewById(R.id.createAccountButton);
-		restoreAccountBtn = (Button) findViewById(R.id.recoverAccountButton);
-		backBtn = (TextView) findViewById(R.id.credentialscreenTopbarBack);
-		
-		progressDialog = new CustomProgressDialog(this);
-	    
+	    setUpUi();
 	    setUpButtons();
 	}
 
-	// facebook: lifecycleHelper to keep track of the session
 	@Override
     public void onResume() {
         super.onResume();
@@ -80,6 +72,19 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 	    uiHelper.onDestroy();
     }
 
+    private void setUpUi() {
+    	signInBtn = (Button) findViewById(R.id.signInButton);
+		passwordEditText = (EditText) findViewById(R.id.passwordField);
+		userNameEditText = (EditText) findViewById(R.id.usernameField);
+		loginBtn = (LoginButton) findViewById(R.id.facebookButton);
+		createAccountBtn = (Button) findViewById(R.id.createAccountButton);
+		restoreAccountBtn = (Button) findViewById(R.id.recoverAccountButton);
+		backBtn = (TextView) findViewById(R.id.credentialscreenTopbarBack);
+		
+		// set up standard server communication dialog
+	    progressDialog = new CustomProgressDialog(this);
+    }
+    
 	private void setUpButtons() {
 		OnTouchListener touchListener = new OnTouchListener() {
 			@Override
@@ -110,6 +115,7 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 							
 						case R.id.credentialscreenTopbarBack:
 							StaticHelper.continueMusic = true;
+							String test = userCredentials.getIdentifier();
 							finish();
 							break;
 					}
@@ -255,8 +261,7 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 	}
 
 	@Override
-	public void GetAccountCallback(String identifier, String nickname,
-			String accountId, boolean restoreAccount) {
+	public void getAccountCallback(String identifier, String nickname, String accountId, boolean restoreAccount) {
 		userCredentials.setUsername(nickname);
 		userCredentials.setAccountId(accountId);
 		

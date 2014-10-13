@@ -21,13 +21,16 @@ public class InfoScreenActivity extends WackadooActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState, R.layout.activity_infoscreen);
 		
+		setUpUi();
+		setUpButtons();
+	}
+	
+	private void setUpUi() {
 		supportBtn = (TextView) findViewById(R.id.infoscreen_supportbtn);
 		websiteBtn = (TextView) findViewById(R.id.infoscreen_websitebtn);
 		wikiBtn = (TextView) findViewById(R.id.infoscreen_wikibtn);
 		copyrightBtn = (TextView) findViewById(R.id.infoscreen_copyright_btn);
 		backBtn = (TextView) findViewById(R.id.infoscreenTopbarBack);
-		
-		setUpButtons();
 	}
 	
 	private void setUpButtons() {

@@ -7,6 +7,8 @@ import android.content.SharedPreferences;
 
 public class UserCredentials {
 	
+	private static final String WAD_PREFS_NAME = "wad_prefs";
+	
 	private Context context;
 	private int gameId;
 	private boolean isFbUser;
@@ -77,7 +79,7 @@ public class UserCredentials {
 	}
 	
 	private void loadCredentials() {
-		SharedPreferences myPrefs = context.getSharedPreferences("wad_prefs", 0);
+		SharedPreferences myPrefs = context.getSharedPreferences(WAD_PREFS_NAME, Context.MODE_PRIVATE);
 		accessToken.setIdentifier(myPrefs.getString("identifier", ""));
 		accessToken.setExpireCode(myPrefs.getString("expire_code", ""));
 		accessToken.setToken(myPrefs.getString("accesstoken", ""));
@@ -100,7 +102,7 @@ public class UserCredentials {
 	}
 	
 	private void persistCredentials() {
-		SharedPreferences myPrefs = context.getSharedPreferences("wad_prefs", 0);
+		SharedPreferences myPrefs = context.getSharedPreferences(WAD_PREFS_NAME, Context.MODE_PRIVATE);
 		SharedPreferences.Editor e = myPrefs.edit();
 		e.putString("identifier", accessToken.getIdentifier());
 		e.putLong("expire_date", accessToken.getCreatedAt().getTime());
@@ -118,7 +120,9 @@ public class UserCredentials {
 		e.putString("expire_code", accessToken.getExpireCode());
 		e.putString("hostname", hostname);
 		e.putInt("gameId", gameId);
-		if (premiumExpiration != null) e.putLong("premiumExpiration", premiumExpiration.getTime());
+		if (premiumExpiration != null) {
+			e.putLong("premiumExpiration", premiumExpiration.getTime());
+		}
 		e.putString("avatarString", avatarString);
 		e.commit();
 	}
@@ -206,7 +210,7 @@ public class UserCredentials {
 	}
 
 	public void clearAllCredentials() {
-		SharedPreferences myPrefs = context.getSharedPreferences("wad_prefs", 0);
+		SharedPreferences myPrefs = context.getSharedPreferences(WAD_PREFS_NAME, Context.MODE_PRIVATE);
 		SharedPreferences.Editor e = myPrefs.edit();
 		e.clear();
 		e.commit();

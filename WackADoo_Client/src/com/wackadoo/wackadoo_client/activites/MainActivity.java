@@ -9,11 +9,11 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.graphics.Typeface;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -71,52 +71,23 @@ public class MainActivity extends WackadooActivity implements GameLoginCallbackI
 	private Handler customHandler;
 	private CustomProgressDialog progressDialog;
 	private Handler tokenHandler;
-	private UiLifecycleHelper uiHelper;		// facebook
+	private UiLifecycleHelper uiHelper;		
 	
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        super.onCreate(savedInstanceState, R.layout.activity_main);
         
-	    playBtn = (ImageButton) findViewById(R.id.loginButton);
-	    accountmanagerBtn = (ImageButton) findViewById(R.id.accountmanagerButton);
-	    selectGameBtn = (ImageButton) findViewById(R.id.chooseworldButton);
-	    shopBtn = (ImageButton) findViewById(R.id.shopButton);
-	    facebookBtn = (ImageButton) findViewById(R.id.facebookButton);
-	    soundBtn = (ImageButton) findViewById(com.wackadoo.wackadoo_client.R.id.title_sound_button);
-	    infoBtn = (ImageButton) findViewById(R.id.title_info_button);
-	    characterFrame = (Button) findViewById(R.id.characterFrame);
-	    
-	    // facebook login dialog helper
+        // get updated userCredentials
+        userCredentials = new UserCredentials(getApplicationContext());
+        
+        //facebook lifecycleHelper to keep track of the session
 	    uiHelper = new UiLifecycleHelper(this, this);
 		uiHelper.onCreate(savedInstanceState);
-	    
-		// test variable for attempt to connect to facebook
-		tryConnect = false;
-		
-	    // sound is on by default
-	    soundOn = true;
-	    
+        
 	    // create musicplayer for background music
-	    StaticHelper.backgroundMusicPlayer = MediaPlayer.create(this, R.raw.themesong);
-	    StaticHelper.backgroundMusicPlayer.setLooping(true);
-	    StaticHelper.backgroundMusicPlayer.setVolume(100, 100);
+	    StaticHelper.setUpPlayer(this);
 	    
-	    // user logged out by default
-	    loggedIn = false;
-
-	    // set up standard server communication dialog
-	    progressDialog = new CustomProgressDialog(this);
-	    
-	    // put version number in textview
-		try {
-			String versionName = "Version " + getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
-			((TextView) findViewById(R.id.title_version_text)).setText(versionName);
-		} 
-		catch (NameNotFoundException e) {
-			e.printStackTrace(); 
-		} 
-	    
+	    setUpUi();
 	    setUpButtons();
 	    setUpPlayButtonAnimation();
 
@@ -132,8 +103,6 @@ public class MainActivity extends WackadooActivity implements GameLoginCallbackI
 	@Override
 	public void onResume() {
         super.onResume();
-        // get updated userCredentials
-        userCredentials = new UserCredentials(getApplicationContext());
         
         // warning if no internet connection
 		if (!StaticHelper.isOnline(this)) {
@@ -154,7 +123,7 @@ public class MainActivity extends WackadooActivity implements GameLoginCallbackI
 		
 		// start background music, if its enabled
 		StaticHelper.continueMusic = false;
-		if (soundOn) {
+		if (soundOn && !StaticHelper.backgroundMusicPlayer.isPlaying()) {
 			StaticHelper.backgroundMusicPlayer.start();
 		}
     }
@@ -163,7 +132,7 @@ public class MainActivity extends WackadooActivity implements GameLoginCallbackI
         super.onPause();
 	    uiHelper.onPause();		// facebook
 	    
-	    if (!StaticHelper.continueMusic) {
+	    if (!StaticHelper.continueMusic && StaticHelper.backgroundMusicPlayer.isPlaying()) {
 	    	StaticHelper.backgroundMusicPlayer.pause();
 	    }
 	    
@@ -181,6 +150,39 @@ public class MainActivity extends WackadooActivity implements GameLoginCallbackI
 	    AutoPing.getInstance().stopAutoPing();	// tracking
     }
 
+    private void setUpUi() {
+    	playBtn = (ImageButton) findViewById(R.id.loginButton);
+	    accountmanagerBtn = (ImageButton) findViewById(R.id.accountmanagerButton);
+	    selectGameBtn = (ImageButton) findViewById(R.id.chooseworldButton);
+	    shopBtn = (ImageButton) findViewById(R.id.shopButton);
+	    facebookBtn = (ImageButton) findViewById(R.id.facebookButton);
+	    soundBtn = (ImageButton) findViewById(com.wackadoo.wackadoo_client.R.id.title_sound_button);
+	    infoBtn = (ImageButton) findViewById(R.id.title_info_button);
+	    characterFrame = (Button) findViewById(R.id.characterFrame);
+	    
+	    // set up standard server communication dialog
+	    progressDialog = new CustomProgressDialog(this);
+	    
+		// test variable for attempt to connect to facebook
+		tryConnect = false;
+		
+	    // sound is on by default
+	    soundOn = true;
+	    
+	    // user logged out by default
+	    loggedIn = false;
+	    
+	    // put version number in textview
+		try {
+			String versionName = "Version " + getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+			((TextView) findViewById(R.id.title_version_text)).setText(versionName);
+			((TextView) findViewById(R.id.title_version_text)).setTypeface(Typeface.createFromAsset(getAssets(), "fonts/Montserrat-Regular.ttf"));
+		} 
+		catch (NameNotFoundException e) {
+			e.printStackTrace(); 
+		} 
+    }
+    
     // start animation of play button
 	private void setUpPlayButtonAnimation() {
 		
@@ -361,7 +363,6 @@ public class MainActivity extends WackadooActivity implements GameLoginCallbackI
 	}
 
 	private void setUpAccountmanagerBtn() {
-		accountmanagerBtn.setVisibility(View.VISIBLE);
 		accountmanagerBtn.setOnTouchListener(new View.OnTouchListener() {
 			@SuppressLint("NewApi")
 			@Override
@@ -384,8 +385,6 @@ public class MainActivity extends WackadooActivity implements GameLoginCallbackI
 	}
 	
 	private void setUpSelectgameBtn() {
-		selectGameBtn.setVisibility(View.VISIBLE);
-		
 		// TODO: is last world accessible?
 		lastWorldAccessible = true;
 		

@@ -1,6 +1,7 @@
 package com.wackadoo.wackadoo_client.activites;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -41,8 +42,14 @@ public class AccountManagerActivity extends WackadooActivity implements AccountM
         super.onCreate(savedInstanceState, R.layout.activity_accountmanager);
 	    
 	    userCredentials = new UserCredentials(getApplicationContext());
-	    
-        usernameTextView = (TextView) findViewById(R.id.usernameText);
+        
+        setUpUi();
+        setUpButtons();
+	    loadCredentialsToUI();
+    }
+	
+	private void setUpUi() {
+		usernameTextView = (TextView) findViewById(R.id.usernameText);
         setEmailButton = (Button) findViewById(R.id.setEmailButton);
 		passwordButton = (Button) findViewById(R.id.passwordButton);
         signOutButton = (Button) findViewById(R.id.signOutButton);
@@ -53,24 +60,20 @@ public class AccountManagerActivity extends WackadooActivity implements AccountM
         emailInformationTextView = (TextView) findViewById(R.id.emailInformationText);
         backBtn = (TextView) findViewById(R.id.accountTopbarBack);
         emailAccountCheckedImage = (ImageView) findViewById(R.id.emailAccountCheckedImage);
-
-        progressDialog = new CustomProgressDialog(this);
+		
+	    // set up standard server communication dialog
+	    progressDialog = new CustomProgressDialog(this);
         
-	    loadCredentialsToUI();
-	    setUpButtons();
-	    setUpUi();
-    }
-	
-	// handles which ui elements are shown for the current user
-	private void setUpUi() {
+	    // handles which ui elements are shown for the current user 
 		emailButtonVisible = true;
 		passwordButtonVisible = true;
 		
-		if (userCredentials.isFbUser()) {
+		// fb user has already mail and password
+		if (userCredentials.isFbUser()) {	
 			emailButtonVisible = false;
 			passwordButtonVisible = false;
 		} else {
-			if (!userCredentials.isEmailGenerated()) { 
+			if (!userCredentials.isEmailGenerated()) { 	
 				emailButtonVisible = false; 
 			} 
 			
@@ -262,7 +265,7 @@ public class AccountManagerActivity extends WackadooActivity implements AccountM
 	private void signOut() {
 		userCredentials.clearAllCredentials();
 		userCredentials = new UserCredentials(getApplicationContext());
-		
+//		
 		String identifier = userCredentials.getIdentifier();
 		String email = userCredentials.getEmail();
 	
@@ -270,7 +273,7 @@ public class AccountManagerActivity extends WackadooActivity implements AccountM
 		Session session = Session.getActiveSession();
 		if (session != null) {
 			session.closeAndClearTokenInformation();	
-			session.close();
+			session.close();		// TODO: need all methods?
 			Session.setActiveSession(null);
 		}
 

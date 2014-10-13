@@ -1,5 +1,6 @@
 package com.wackadoo.wackadoo_client.helper;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.util.List;
@@ -125,6 +126,13 @@ public class StaticHelper {
 		HttpConnectionParams.setConnectionTimeout(httpClient.getParams(),10*1000); 
 	}
 
+	// set up backgroundMusicPlayer for background music 
+	public static void setUpPlayer(Context context) {
+		backgroundMusicPlayer = MediaPlayer.create(context, R.raw.themesong);
+		backgroundMusicPlayer.setLooping(true);
+		backgroundMusicPlayer.setVolume(100, 100);
+	}
+	
 	// static method to play a click sound, typically called when button is clicked
 	public static void playClickSound(Context context) {
 		MediaPlayer clickPlayer = MediaPlayer.create(context, R.raw.click);

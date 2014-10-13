@@ -35,13 +35,15 @@ public class WackadooActivity extends Activity {
 	protected void onResume() {
 		super.onResume();
 		StaticHelper.continueMusic = false;
-		StaticHelper.backgroundMusicPlayer.start();
+		if (!StaticHelper.backgroundMusicPlayer.isPlaying()) {
+			StaticHelper.backgroundMusicPlayer.start();
+		}
 	}
 	
 	@Override
 	protected void onPause() {
 		super.onPause();
-		if (!StaticHelper.continueMusic) {
+		if (!StaticHelper.continueMusic && StaticHelper.backgroundMusicPlayer.isPlaying()) {
 			StaticHelper.backgroundMusicPlayer.stop();
 		}
 	}
