@@ -310,7 +310,6 @@ public class AccountManagerActivity extends WackadooActivity implements AccountM
 		if (progressDialog.isShowing()) {
 			progressDialog.dismiss();
 		}
-		
-		toast.show(); progressDialog.dismiss();
+		toast.show(); 
 	}
 }

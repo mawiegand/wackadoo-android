@@ -13,9 +13,11 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.AbstractHttpMessage;
+import org.apache.http.message.BasicHttpRequest;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpConnectionParams;
@@ -27,6 +29,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.wackadoo.wackadoo_client.R;
+import com.wackadoo.wackadoo_client.helper.StaticHelper;
 import com.wackadoo.wackadoo_client.interfaces.AccountManagerCallbackInterface;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
 
@@ -50,13 +53,12 @@ public class AccountManagerAsyncTask extends AsyncTask<String, Integer, Integer>
 	protected Integer doInBackground(String... params) {
 		Activity parent = (Activity) listener;
 		String urlForRequest, completeURL;
-		AbstractHttpMessage request;
+		HttpRequestBase request;
 		List<NameValuePair> nameValuePairs = new ArrayList <NameValuePair>();
 		
 		// change email
 		if (type.equals("mail")) {
-			urlForRequest = parent.getString(R.string.changeEmailPath) + userCredentials.getAccountId();
-			completeURL = parent.getString(R.string.basePath) + String.format(urlForRequest, Locale.getDefault().getCountry().toLowerCase());
+			completeURL = StaticHelper.generateUrlForTask(parent, true, parent.getString(R.string.changeEmailPath) + userCredentials.getAccountId());
 			request = new HttpPut(completeURL);
 			nameValuePairs.add(new BasicNameValuePair("identity[email]", value)); 
 			

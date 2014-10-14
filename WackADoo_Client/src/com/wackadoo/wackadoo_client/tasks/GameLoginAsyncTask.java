@@ -24,6 +24,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.wackadoo.wackadoo_client.R;
+import com.wackadoo.wackadoo_client.helper.StaticHelper;
 import com.wackadoo.wackadoo_client.interfaces.GameLoginCallbackInterface;
 import com.wackadoo.wackadoo_client.model.DeviceInformation;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
@@ -48,10 +49,7 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
     @Override
 	protected Boolean doInBackground(String... params) {
 	    DeviceInformation deviceInformation = new DeviceInformation(context);
-	    
-		String urlForRequest = context.getString(R.string.loginPath);
-		String baseURL = context.getString(R.string.basePath);
-		String completeURL = baseURL + String.format(urlForRequest, Locale.getDefault().getCountry().toLowerCase());
+		String completeURL = StaticHelper.generateUrlForTask(context, true, context.getString(R.string.loginPath));
 	    HttpPost request = new HttpPost(completeURL);
 	    StringBuilder sb = new StringBuilder();
 	

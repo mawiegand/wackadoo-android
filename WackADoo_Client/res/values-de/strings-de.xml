@@ -101,7 +101,7 @@
     <string name="shop_headline_text">Erwirb Credits und tausche sie gegen Komfortfunktionen und Beschleunigungen</string>
     <string name="current_frog_text">Derzeitiger Vorrat an Gold Fröschen: %d</string>
     <string name="current_credit_text">Derzeitiger Vorrat an Platin Credits: %d</string>
-    <string name="buy_item_fail">Du hast nicht genug Platin Credits/Goldfrösche um dieses Item zu kaufen</string>
+    <string name="buy_item_fail">Du hast nicht genug Platin Credits / Goldfrösche um dieses Item zu kaufen</string>
     <string name="buy_item_success">Du hast dieses Item erfolgreich gekauft</string>
     <string name="buy_credits_fail">Da ist beim Kauf wohl was schiefgegangen</string>
     <string name="buy_credits_success">Die Platin Credits wurden erforlgreich gekauft</string>

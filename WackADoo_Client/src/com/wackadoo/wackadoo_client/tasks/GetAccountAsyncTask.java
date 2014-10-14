@@ -18,6 +18,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.wackadoo.wackadoo_client.R;
+import com.wackadoo.wackadoo_client.helper.StaticHelper;
 import com.wackadoo.wackadoo_client.interfaces.GetAccountCallbackInterface;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
 
@@ -41,14 +42,11 @@ public class GetAccountAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	@Override
 	protected Boolean doInBackground(String... params) {
 		Activity parent = (Activity) listener;
-		String urlForRequest = parent.getString(R.string.getAccountPath);
-		String baseURL = parent.getString(R.string.basePath);
-		String completeURL = baseURL + String.format(urlForRequest, Locale.getDefault().getCountry().toLowerCase());
+		String completeURL = StaticHelper.generateUrlForTask(parent, true, parent.getString(R.string.getAccountPath));
 		
 		HttpGet request = new HttpGet(completeURL);
 		StringBuilder sb = new StringBuilder();
 		
-
 		try {	    
 		    request.getParams().setParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, Boolean.FALSE);
 		    request.setHeader("Authorization", "Bearer " + accessToken);
