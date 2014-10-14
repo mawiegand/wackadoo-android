@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activityContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    android:background="@color/white">
+        
+    <!-- ............... BACKGROUND ............... -->
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/title_bg"
+        android:scaleType="centerCrop"
+        android:alpha="0.7" />
+	
+    <!-- ............... CONTENT ............... -->
+    <LinearLayout 
+        android:id="@+id/infoscreen_container"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:weightSum="1.0">
+        
+        <RelativeLayout 
+            android:id="@+id/infoscreen_vertical_spacer"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.23"/>
+            
+        <LinearLayout 
+        	android:id="@+id/infoscreen_horizontal_container"
+        	android:layout_height="0dp"
+        	android:layout_width="match_parent"
+        	android:orientation="horizontal"
+        	android:layout_weight="0.77"
+        	android:weightSum="1.0">
+        	
+	        <RelativeLayout 
+	            android:id="@+id/infoscreen_horizontal_spacer"
+	            android:layout_width="0dp"
+	            android:layout_height="match_parent"
+	            android:layout_weight="0.45"/>
+            
+	        <LinearLayout 
+	        	android:id="@+id/infoscreen_content_container"
+	            android:layout_width="0dp"
+	            android:layout_height="match_parent"
+	            android:layout_weight="0.45"
+	            android:orientation="vertical"
+	            android:weightSum="1.0">
+	            
+	            <LinearLayout 
+		        	android:id="@+id/infoscreen_content_firstrow"
+		            android:layout_width="match_parent"
+		            android:layout_height="0dp"
+		            android:layout_weight="0.40"
+		            android:orientation="horizontal"
+		            android:weightSum="1.0">
+		            
+				    <ImageView
+				        android:id="@+id/logo_5d"
+				        android:layout_width="0dp"
+				        android:layout_height="wrap_content"
+				        android:src="@drawable/fived_lab"
+				        android:scaleType="fitStart"
+				        android:layout_weight="0.40"/>
+				    
+			        <RelativeLayout 
+			            android:id="@+id/infoscreen_logo_spacer"
+			            android:layout_width="0dp"
+			            android:layout_height="match_parent"
+			            android:layout_weight="0.10"/>
+		            
+				    <RelativeLayout
+				        android:id="@+id/infoscreen_button_container"
+				        android:layout_width="0dp"
+				        android:layout_height="294dp"
+				        android:layout_weight="0.50" >
+					    
+					    <TextView
+					        android:id="@+id/infoscreen_supportbtn"
+					        style="@style/orangeTextView"
+					        android:layout_width="match_parent"
+					        android:layout_alignParentTop="true"
+					        android:layout_marginTop="10dp"
+					        android:gravity="center"
+					        android:text="@string/infoscreen_support_btn"
+					        android:textSize="15sp" />
+					    
+					    <TextView
+					        android:id="@+id/infoscreen_websitebtn"
+					        style="@style/orangeTextView"
+					        android:layout_width="match_parent"
+					        android:layout_below="@+id/infoscreen_supportbtn"
+					        android:layout_marginTop="10dp"
+					        android:gravity="center"
+					        android:text="@string/infoscreen_website_btn"
+					        android:textSize="15sp" />
+					    
+					    <TextView
+					        android:id="@+id/infoscreen_wikibtn"
+					        style="@style/orangeTextView"
+					        android:layout_width="match_parent"
+					        android:layout_below="@+id/infoscreen_websitebtn"
+					        android:layout_marginTop="10dp"
+					        android:gravity="center"
+					        android:text="@string/infoscreen_wiki_btn"
+					        android:textSize="15sp" />
+					    
+					    <TextView
+					        android:id="@+id/infoscreen_copyright_btn"
+					        style="@style/orangeTextView"
+					        android:layout_width="match_parent"
+					        android:layout_below="@+id/infoscreen_wikibtn"
+					        android:layout_marginTop="10dp"
+					        android:gravity="center"
+					        android:text="@string/infoscreen_copyright_btn"
+					        android:textSize="15sp" />
+
+				    </RelativeLayout>
+				</LinearLayout> 
+				
+	            <RelativeLayout 
+		            android:id="@+id/infoscreen_contributors_spacer"
+		            android:layout_width="match_parent"
+		            android:layout_height="0dp"
+		            android:layout_weight="0.08"/>
+	            
+                <TextView
+                    android:id="@+id/infoscreen_contributors_text"
+                    style="@style/customTextViewStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.27"
+                    android:text="@string/infoscreen_contributors"
+                    android:textSize="12sp" />
+                
+	            <LinearLayout 
+		        	android:id="@+id/infoscreen_content_thirdrow"
+		            android:layout_width="match_parent"
+		            android:layout_height="0dp"
+		            android:layout_weight="0.25"
+		            android:orientation="horizontal"
+		            android:weightSum="1.0">
+	                
+	                <RelativeLayout 
+			            android:id="@+id/infoscreen_lastrow_spacer"
+			            android:layout_width="0dp"
+			            android:layout_height="match_parent"
+			            android:layout_weight="0.50"/>
+	                
+	                <LinearLayout 
+	                    android:id="@+id/infoscreen_mfg_container"
+	                    android:layout_height="match_parent"
+	                    android:layout_width="0dp"
+	                    android:layout_weight="0.5"
+	                    android:orientation="vertical"
+	                    android:weightSum="1.0">
+	                    
+	                    <RelativeLayout 
+				            android:id="@+id/infoscreen_mfg_spacer"
+				            android:layout_width="match_parent"
+				            android:layout_height="0dp"
+				            android:layout_weight="0.15"/>
+	                    
+	                    <TextView 
+		                    android:id="@+id/infoscreen_supportedby_text"
+		                    style="@style/customTextViewStyle"
+		                    android:textSize="10sp"
+		                    android:layout_height="0dp"
+		                    android:layout_weight="0.25"
+		                    android:layout_width="match_parent"
+		                    android:gravity="center"
+		                    android:text="@string/infoscreen_supported"/>
+	                    
+	                    <RelativeLayout 
+				            android:id="@+id/infoscreen_mfg_logo_spacer"
+				            android:layout_width="match_parent"
+				            android:layout_height="0dp"
+				            android:layout_weight="0.05"/>
+	                    
+	                    <ImageView 
+		                    android:id="@+id/infoscreen_mfg_logo"
+		                    android:layout_height="0dp"
+		                    android:layout_weight="0.40"
+		                    android:layout_width="wrap_content"
+		                    android:scaleType="fitCenter"
+		                    android:src="@drawable/filmfoerderung_logo"/>
+	                    
+	                    <RelativeLayout 
+				            android:id="@+id/infoscreen_mfg_bottom_spacer"
+				            android:layout_width="match_parent"
+				            android:layout_height="0dp"
+				            android:layout_weight="0.20"/>
+	                </LinearLayout>
+	                
+				</LinearLayout>
+	            
+			</LinearLayout>
+			
+		    <RelativeLayout
+		        android:id="@+id/infoscreen_button_container_end" 
+		        android:layout_width="0dp"
+		   		android:layout_height="wrap_content"
+		   		android:layout_weight="0.10"/>
+            
+        </LinearLayout>
+    </LinearLayout>
+	
+	<RelativeLayout
+ 		android:id="@+id/infoscreenTopbar"
+ 	    android:layout_width="match_parent"
+ 	    android:layout_height="wrap_content"
+ 	    android:background="@color/topbar_background_dark">
+ 	    
+ 	    <TextView 
+ 	        android:id="@+id/infoscreenTopbarBack"
+ 	        style="@style/customTextViewStyle"
+ 	        android:layout_alignParentLeft="true"
+		    android:layout_marginLeft="@dimen/standard_margin"
+ 	        android:text="@string/back" 
+ 	        android:textStyle="bold"
+ 	        android:textSize="@dimen/topBarFontsize"
+ 	        android:textColor="@color/textbox_orange"
+ 	        android:padding="5dp"/>
+	 	    
+	</RelativeLayout>
+</FrameLayout>

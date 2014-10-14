@@ -12,6 +12,7 @@
     <string name="login_invalid_grant">Email and/or Password wrong!</string>
     <string name="server_communication">Connecting to server</string>
     <string name="please_wait">Please wait&#8230;</string>
+    <string name="no_connection">There is no internet connection</string>
     
     <!-- Facebook -->
     <string name="fb_task_failure">Error while connection to facebook. Please try again or contact the support.</string>
@@ -101,6 +102,9 @@
 	<string name="current_frog_text">Current Golden Frog Amount: %d</string>
 	<string name="current_credit_text">Current Platinum Credit Amount: %d</string>
 	<string name="buy_item_fail">Not able to communicate with server. Please try again later.</string>
+	<string name="buy_item_success">You buyed this item</string>
+	<string name="buy_credits_fail">Not able to communicate with server. Please try again later.</string>
+    <string name="buy_credits_success">The platinum credits were buyed successful</string>
     
     <!-- Shop Info -->
     <string name="shopinfo_topbar_heading">Info Store</string>
@@ -120,6 +124,7 @@
     <string name="shopInfoText_bonus">More Resources? Everyone needs more resources!</string>
     <string name="shopInfoHeadingText_bonus">Production Bonus</string>
     <string name="shopInfoDescText_bonus" formatted="false">The production bonus is valid across your total production of the chosen resource.\n\n15% global production bonus for fur production.\n\n15% global production bonus for stone production.\n\n15% global production bonus for wood production.</string>
+    <string name="shop_expires_in">Expires on:&#160;</string>
     
      <!-- Info Screen -->
     <string name="infoscreen_support_btn">Support</string>

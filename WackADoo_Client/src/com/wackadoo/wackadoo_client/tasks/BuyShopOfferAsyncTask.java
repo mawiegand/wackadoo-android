@@ -45,7 +45,7 @@ public class BuyShopOfferAsyncTask extends AsyncTask<String, Integer, Boolean> {
 		
 		List <NameValuePair> nameValuePairs = new ArrayList <NameValuePair>(3);
 		nameValuePairs.add(new BasicNameValuePair("shop_transaction[offer_id]", String.valueOf(offerId)));
-		nameValuePairs.add(new BasicNameValuePair("shop_transaction[offer_type]", "bonus"));
+		nameValuePairs.add(new BasicNameValuePair("shop_transaction[offer_type]", offerType));
 		nameValuePairs.add(new BasicNameValuePair("shop_transaction[customer_identifier]", shopCharacterId));
 
 		try {
@@ -73,7 +73,7 @@ public class BuyShopOfferAsyncTask extends AsyncTask<String, Integer, Boolean> {
 		    String responseLine = response.getStatusLine().toString();
 		    Log.d(TAG, "response line: " + responseLine);
 		    
-		    if (responseLine.contains("200 OK")) {
+		    if (responseLine.contains("20")) {
 		    	return true;
 		    } else if (responseLine.contains("403 Forbidden")) {
 		    	// not enough credits

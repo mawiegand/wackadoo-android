@@ -475,6 +475,10 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 			} else {
 				loggedIn = true;
 				updateUi();
+				if (userCredentials.getAvatarString() == null || userCredentials.getAvatarString() == "") {
+					new GetCurrentGamesAsyncTask(this, userCredentials).execute();
+					progressDialog.show();
+				}
 			}
 			
 		} else if (userCredentials.isEmailGenerated()) {
@@ -592,15 +596,14 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		
 		if (result) {
 			loggedIn = true;
-			new GetCurrentGamesAsyncTask(this, userCredentials).execute();		
-			Toast.makeText(this, getResources().getString(R.string.login_success_toast), Toast.LENGTH_LONG)
-			     .show();
+			new GetCurrentGamesAsyncTask(this, userCredentials).execute();	
+			progressDialog.show();	
 		} else {
 			Toast.makeText(this, getResources().getString(R.string.login_failed_toast), Toast.LENGTH_LONG)
 			     .show();
+			updateUi();
 		}
 		// TODO: loggedIn if GetGames failed?
-		updateUi();
 	}
 	
 	// callback interface for error in GameLoginAsyncTask
@@ -624,6 +627,8 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		} else {
 			ImageView view = (ImageView) findViewById(R.id.characterFrameImageView);
 			view.setImageBitmap(Avatar.getAvatar(userCredentials.getAvatarString(), view.getWidth(), view.getHeight(), getResources()));
+			Toast.makeText(this, getResources().getString(R.string.login_success_toast), Toast.LENGTH_LONG)
+		     .show();
 			updateUi();
 		}
 	}	
@@ -636,6 +641,8 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		userCredentials.setAvatarString(game.getCharacter().getAvatarString());
 		ImageView view = (ImageView) findViewById(R.id.characterFrameImageView);
 		view.setImageBitmap(Avatar.getAvatar(game.getCharacter().getAvatarString(), view.getWidth(), view.getHeight(), getResources()));
+		Toast.makeText(this, getResources().getString(R.string.login_success_toast), Toast.LENGTH_LONG)
+	     .show();
 		updateUi();
 	}
 	

@@ -143,10 +143,8 @@ public class AccountManagerActivity extends WackadooActivity implements AccountM
 			setEmailButton.setOnTouchListener(touchListener);
 		}
 		
-		if (userCredentials.isPasswordGenerated()) { 
-			passwordButton.setVisibility(View.VISIBLE);
-			passwordButton.setOnTouchListener(touchListener);
-		}
+		passwordButton.setVisibility(View.VISIBLE);
+		passwordButton.setOnTouchListener(touchListener);
 	}
     
     // set up and show dialog for log out confirmation
