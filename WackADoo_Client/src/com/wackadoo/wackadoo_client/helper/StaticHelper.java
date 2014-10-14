@@ -13,9 +13,12 @@ import org.apache.http.HttpResponse;
 import org.apache.http.MethodNotSupportedException;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.DefaultHttpRequestFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.CoreProtocolPNames;
@@ -121,28 +124,43 @@ public class StaticHelper {
 		return completeUrl;
 	}
 	
-	public static HttpResponse executeRequest(HttpMethod method, String url, List<NameValuePair> values, UserCredentials userCredentials) {
+	public static HttpResponse executeRequest(String method, String url, List<NameValuePair> values, String accessToken) {
 		Log.d(TAG, "completeURL: " + url);
-		UrlEncodedFormEntity entity = null;
+		HttpResponse response = null;
 		try {
-			entity = new UrlEncodedFormEntity(values);
-			entity.setContentType("application/x-www-form-urlencoded;charset=UTF-8");
-			
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}	    
-		HttpRequest request;
-		try {
-			request = new DefaultHttpRequestFactory().newHttpRequest(method.name(), url);
+			HttpRequestBase request = null;
+			if (method.equals(HttpGet.METHOD_NAME)) {
+				request = new HttpGet(url);
+			}
+			if (method.equals(HttpPost.METHOD_NAME)) {
+				request = new HttpPost(url);
+			}
+			if (method.equals(HttpPut.METHOD_NAME)) {
+				request = new HttpPut(url);
+			}
 			request.getParams().setParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, Boolean.FALSE);
-			request.setHeader("Authorization", "Bearer " + userCredentials.getAccessToken().getToken());
+			if (accessToken != null) {
+				request.setHeader("Authorization", "Bearer " + accessToken);
+			}
 			request.setHeader("Accept", "application/json");
-		} catch (MethodNotSupportedException e) {
+			
+			DefaultHttpClient httpClient = new DefaultHttpClient();
+			HttpConnectionParams.setSoTimeout(httpClient.getParams(), 10*1000); 
+			HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 10*1000); 
+			
+			if (request instanceof HttpEntityEnclosingRequestBase) {
+				UrlEncodedFormEntity entity = new UrlEncodedFormEntity(values);
+				entity.setContentType("application/x-www-form-urlencoded;charset=UTF-8");
+				((HttpEntityEnclosingRequestBase) request).setEntity(entity);  
+			}
+			
+			response = httpClient.execute(request);
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return null;
+		
+		return response;
 	}
 	
 	// set up the given httpRequest & httpClient for an async task

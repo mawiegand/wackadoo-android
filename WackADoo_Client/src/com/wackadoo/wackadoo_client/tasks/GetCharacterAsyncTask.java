@@ -7,6 +7,7 @@ import java.util.Locale;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpConnectionParams;
@@ -17,6 +18,7 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.wackadoo.wackadoo_client.R;
+import com.wackadoo.wackadoo_client.helper.StaticHelper;
 import com.wackadoo.wackadoo_client.interfaces.CharacterCallbackInterface;
 import com.wackadoo.wackadoo_client.model.CharacterInformation;
 import com.wackadoo.wackadoo_client.model.GameInformation;
@@ -50,20 +52,11 @@ public class GetCharacterAsyncTask extends AsyncTask<String, Integer, Boolean> {
 			urlForRequest += "create_if_new=true";
 		}
 		String completeURL = game.getServer() + "/" + urlForRequest;
-		HttpGet request = new HttpGet(completeURL);
 		
 	    StringBuilder sb=new StringBuilder();
-	    HttpResponse response = null;
 	    
 	    try {
-		    request.getParams().setParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, Boolean.FALSE);
-		    request.setHeader("Authorization", "Bearer " + accessToken);
-		    request.setHeader("Accept", "application/json");
-		    
-		    DefaultHttpClient httpClient = new DefaultHttpClient();
-		    HttpConnectionParams.setSoTimeout(httpClient.getParams(), 10*1000); 
-		    HttpConnectionParams.setConnectionTimeout(httpClient.getParams(),10*1000); 
-	    	response = httpClient.execute(request); 
+	    	HttpResponse response = StaticHelper.executeRequest(HttpGet.METHOD_NAME, completeURL, null, accessToken);
     	
 		    InputStream in = response.getEntity().getContent();
 		    BufferedReader reader = new BufferedReader(new InputStreamReader(in));

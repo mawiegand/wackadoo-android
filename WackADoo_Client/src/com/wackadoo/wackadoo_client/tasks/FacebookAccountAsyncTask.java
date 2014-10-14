@@ -47,48 +47,32 @@ public class FacebookAccountAsyncTask extends AsyncTask<String, Integer, Respons
 		
 	@Override
 	protected ResponseResult doInBackground(String... params) {
-		HttpRequestBase request = null;
+		String method = null;
 		String url = "";
 		String statusLine = "";
+		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 
 		try {
 	    	//**********************************************//	
 			//*****  check if fb id is already used  *****//
 	    	if (type.equals(StaticHelper.FB_ID_TASK)) {
 	    		url = StaticHelper.generateUrlForTask(context, true, context.getString(R.string.facebookIdPath)) + userCredentials.getFbPlayerId();
-	    		request = new HttpGet(url);
+	    		method = HttpGet.METHOD_NAME;
 	    		
 	    		
 	    	//*****************************************//	
 			//*****  connect fb id and character  *****//
 	    	} else if (type.equals(StaticHelper.FB_CONNECT_TASK)) {
 	    		url = StaticHelper.generateUrlForTask(context, true, context.getString(R.string.facebookConnectPath)) + userCredentials.getFbPlayerId();
-	    		request = new HttpPut(url);
+	    		method = HttpPost.METHOD_NAME;
 	    		
-	    		// generate entity of name+value pairs
-	    		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+	    		// generate entity of name+value pairs	    		
 	    		nameValuePairs.add(new BasicNameValuePair("id", userCredentials.getFbPlayerId()));
 	    		nameValuePairs.add(new BasicNameValuePair("facebook[access_token]", userCredentials.getFbAccessToken()));
-	    		UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nameValuePairs);
-	    		entity.setContentType("application/x-www-form-urlencoded;charset=UTF-8");
-	    		
-				request.setHeader("Authorization", "Bearer " + userCredentials.getAccessToken().getToken());
-				((HttpPut) request).setEntity(entity);
 	    	}
 			
-			// set up request
-			request.getParams().setParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, Boolean.FALSE);
-			request.setHeader("Accept", "application/json");
-			request.setHeader("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
-			
-			// set up http client
-			DefaultHttpClient httpClient = new DefaultHttpClient();
-			HttpConnectionParams.setSoTimeout(httpClient.getParams(), 10*1000); 
-			HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 10*1000); 
-		
-			Log.d(TAG, "---> Complete url " + url);
 			Log.d(TAG, "---> Facebook request for " + userCredentials.getEmail() + " | " + userCredentials.getFbPlayerId() + " | " + userCredentials.getFbAccessToken());
-			HttpResponse response = httpClient.execute(request); 
+			HttpResponse response = StaticHelper.executeRequest(method, url, nameValuePairs, userCredentials.getAccessToken().getToken());
 			
 			// validate response
 			InputStream in = response.getEntity().getContent();

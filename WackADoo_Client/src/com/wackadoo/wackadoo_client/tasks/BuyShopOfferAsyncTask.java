@@ -47,8 +47,7 @@ public class BuyShopOfferAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	@Override
 	protected Boolean doInBackground(String... params) {
 		// TODO: correct url?
-		HttpPost request = new HttpPost(StaticHelper.generateUrlForTask(context, false, context.getString(R.string.buyShopItemPath)));
-		Log.d(TAG, "complete URL: " + request.getURI());
+		String completeURL = StaticHelper.generateUrlForTask(context, false, context.getString(R.string.buyShopItemPath));
 		
 		List <NameValuePair> nameValuePairs = new ArrayList <NameValuePair>(3);
 		nameValuePairs.add(new BasicNameValuePair("shop_transaction[offer_id]", String.valueOf(offerId)));
@@ -56,26 +55,7 @@ public class BuyShopOfferAsyncTask extends AsyncTask<String, Integer, Boolean> {
 		nameValuePairs.add(new BasicNameValuePair("shop_transaction[customer_identifier]", shopCharacterId));
 
 		try {
-			UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nameValuePairs);
-		    entity.setContentType("application/x-www-form-urlencoded;charset=UTF-8");
-		    
-		    request.getParams().setParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, Boolean.FALSE);
-		    request.setHeader("Authorization", "Bearer " + accessToken);
-		    request.setHeader("Accept", "application/json");
-		    request.setEntity(entity); 
-		    
-		    HttpResponse response = null;
-		    DefaultHttpClient httpClient = new DefaultHttpClient();
-		    HttpConnectionParams.setSoTimeout(httpClient.getParams(), 10*1000); 
-		    HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 10*1000); 
-	    	
-		    try {
-		    	response = httpClient.execute(request); 
-	    	
-		    } catch (SocketException se) {
-	    		Log.e("SocketException", se+"");
-	    		throw se;
-	    	}
+			HttpResponse response = StaticHelper.executeRequest(HttpPost.METHOD_NAME, completeURL, nameValuePairs, null);
 		    
 		    String responseLine = response.getStatusLine().toString();
 		    Log.d(TAG, "response line: " + responseLine);

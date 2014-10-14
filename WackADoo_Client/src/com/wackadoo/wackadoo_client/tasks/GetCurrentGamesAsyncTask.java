@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Locale;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpConnectionParams;
@@ -42,23 +43,13 @@ public class GetCurrentGamesAsyncTask extends AsyncTask<String, Integer, Boolean
 	protected Boolean doInBackground(String... params) {
 		Activity parent = (Activity) this.listener;
 		String completeURL = StaticHelper.generateUrlForTask(parent, true, parent.getString(R.string.gamesPath));
-		HttpGet request = new HttpGet(completeURL);
 		
 	    StringBuilder sb=new StringBuilder();
-	    HttpResponse response = null;
 	    
-	    games = new ArrayList<GameInformation>();
-	    
-	    request.getParams().setParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, Boolean.FALSE);
-		request.setHeader("Authorization", "Bearer " + accessToken);
-		request.setHeader("Accept", "application/json");
-		    
-		DefaultHttpClient httpClient = new DefaultHttpClient();
-		HttpConnectionParams.setSoTimeout(httpClient.getParams(), 10*1000); 
-		HttpConnectionParams.setConnectionTimeout(httpClient.getParams(),10*1000); 
+	    games = new ArrayList<GameInformation>();  
 		
 	    try {
-	    	response = httpClient.execute(request); 
+	    	HttpResponse response = StaticHelper.executeRequest(HttpGet.METHOD_NAME, completeURL, null, accessToken);
 		    InputStream in = response.getEntity().getContent();
 		    BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 		    

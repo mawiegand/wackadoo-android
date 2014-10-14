@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpConnectionParams;
@@ -24,6 +25,7 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.wackadoo.wackadoo_client.R;
+import com.wackadoo.wackadoo_client.helper.StaticHelper;
 import com.wackadoo.wackadoo_client.interfaces.ShopDataCallbackInterface;
 import com.wackadoo.wackadoo_client.model.ShopRowItem;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
@@ -69,28 +71,11 @@ public class GetShopDataAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	@Override
 	protected Boolean doInBackground(String... params) {
 		// TODO: correct url?
-		String baseURL = context.getString(R.string.baseGameServerPath);
-		HttpGet request = new HttpGet(baseURL + offerURL);
-		Log.d(TAG, "complete URL: " + request.getURI());
+		String completeURL = context.getString(R.string.baseGameServerPath) + offerURL;
 		StringBuilder sb = new StringBuilder();
 		
 		try {
-		    request.getParams().setParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, Boolean.FALSE);
-		    request.setHeader("Authorization", "Bearer " + userCredentials.getAccessToken().getToken());
-		    request.setHeader("Accept", "application/json");
-		    
-		    HttpResponse response = null;
-		    DefaultHttpClient httpClient = new DefaultHttpClient();
-		    HttpConnectionParams.setSoTimeout(httpClient.getParams(), 10*1000); 
-		    HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 10*1000); 
-	    	
-		    try {
-	             response = httpClient.execute(request); 
-	    	
-		    } catch (SocketException se) {
-	    		Log.e("SocketException", se+"");
-	    		throw se;
-	    	}
+			HttpResponse response = StaticHelper.executeRequest(HttpGet.METHOD_NAME, completeURL, null, userCredentials.getAccessToken().getToken());
 		    
 		    InputStream in = response.getEntity().getContent();
 		    BufferedReader reader = new BufferedReader(new InputStreamReader(in));

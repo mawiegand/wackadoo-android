@@ -51,7 +51,6 @@ public class FacebookLoginAsyncTask extends AsyncTask<String, Integer, ResponseR
 
 		try {
     		url = StaticHelper.generateUrlForTask(context, true, context.getString(R.string.facebookLoginPath));
-    		request = new HttpPost(url);
     		
     		List <NameValuePair> nameValuePairs = new ArrayList <NameValuePair>();
     		nameValuePairs.add(new BasicNameValuePair("fb_player_id", userCredentials.getFbPlayerId()));
@@ -71,22 +70,8 @@ public class FacebookLoginAsyncTask extends AsyncTask<String, Integer, ResponseR
     		nameValuePairs.add(new BasicNameValuePair("[device_information][device_token]", deviceInformation.getUniqueTrackingToken()));
     		nameValuePairs.add(new BasicNameValuePair("vendor_token", deviceInformation.getUniqueTrackingToken()));
     		
-    		UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nameValuePairs);
-    		entity.setContentType("application/x-www-form-urlencoded;charset=UTF-8");
-    		((HttpPost) request).setEntity(entity);
-    	
-			// set up request
-			request.getParams().setParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, Boolean.FALSE);
-			request.setHeader("Accept", "application/json");
-			
-			// set up http client
-			DefaultHttpClient httpClient = new DefaultHttpClient();
-			HttpConnectionParams.setSoTimeout(httpClient.getParams(), 10*1000); 
-			HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 10*1000); 
-		
-			Log.d(TAG, "---> Complete url " + url);
 			Log.d(TAG, "---> Facebook request for " + userCredentials.getEmail() + " | " + userCredentials.getFbPlayerId());
-			HttpResponse response = httpClient.execute(request); 
+			HttpResponse response = StaticHelper.executeRequest(HttpPost.METHOD_NAME, url, nameValuePairs, userCredentials.getAccessToken().getToken());
 			
 			// validate response
 			InputStream in = response.getEntity().getContent();

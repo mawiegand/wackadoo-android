@@ -44,7 +44,6 @@ public class CreateAccountAsyncTask extends AsyncTask<String, Integer, Boolean> 
 		Activity parent = (Activity) listener;
 		String completeURL = StaticHelper.generateUrlForTask(parent, true, parent.getString(R.string.createAccountPath));
 		
-		HttpPost request = new HttpPost(completeURL);
 		StringBuilder sb = new StringBuilder();
 		
 		List <NameValuePair> nameValuePairs = new ArrayList <NameValuePair>(6);
@@ -56,20 +55,8 @@ public class CreateAccountAsyncTask extends AsyncTask<String, Integer, Boolean> 
 		nameValuePairs.add(new BasicNameValuePair("password_confirmation", "egjzdsgt"));
 
 		try {
-			UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nameValuePairs);
-		    entity.setContentType("application/x-www-form-urlencoded;charset=UTF-8");
-		    
-		    request.getParams().setParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, Boolean.FALSE);
-		    request.setHeader("Accept", "application/json");
-		    request.setEntity(entity);  
-		    
-		    HttpResponse response = null;
-		    DefaultHttpClient httpClient = new DefaultHttpClient();
-		    HttpConnectionParams.setSoTimeout(httpClient.getParams(), 10*1000); 
-		    HttpConnectionParams.setConnectionTimeout(httpClient.getParams(),10*1000); 
-
-		    Log.d(TAG, "Create Account Request");
-		    response = httpClient.execute(request); 
+			Log.d(TAG, "Create Account Request");
+			HttpResponse response = StaticHelper.executeRequest(HttpPost.METHOD_NAME, completeURL, nameValuePairs, null);
 		
 		    InputStream in = response.getEntity().getContent();
 		    BufferedReader reader = new BufferedReader(new InputStreamReader(in));

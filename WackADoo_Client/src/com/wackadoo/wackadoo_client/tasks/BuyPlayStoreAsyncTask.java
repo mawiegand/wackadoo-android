@@ -25,6 +25,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.wackadoo.wackadoo_client.R;
+import com.wackadoo.wackadoo_client.helper.StaticHelper;
 import com.wackadoo.wackadoo_client.interfaces.BuyPlayStoreCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.BuyShopOfferCallbackInterface;
 
@@ -46,8 +47,7 @@ public class BuyPlayStoreAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	protected Boolean doInBackground(String... params) {
 		// TODO: correct url?
 		String baseURL = context.getString(R.string.baseGameServerPath);
-		HttpPost request = new HttpPost("https://test1.wack-a-doo.de/game_server/action/shop/google_verify_order_actions");
-		Log.d(TAG, "complete URL: " + request.getURI());
+		String completeURL = "https://test1.wack-a-doo.de/game_server/action/shop/google_verify_order_actions";
 		StringBuilder sb = new StringBuilder();
 		
 		List < NameValuePair > nameValuePairs = new ArrayList <NameValuePair>(3);
@@ -56,27 +56,7 @@ public class BuyPlayStoreAsyncTask extends AsyncTask<String, Integer, Boolean> {
 		nameValuePairs.add(new BasicNameValuePair("google_verify_order_action[payment_token]", paymentToken));
 
 		try {
-			UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nameValuePairs);
-		    entity.setContentType("application/x-www-form-urlencoded;charset=UTF-8");
-		    
-		    request.getParams().setParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, Boolean.FALSE);
-		    request.setHeader("Authorization", "Bearer " + accessToken);
-		    request.setHeader("Accept", "application/json");
-		    request.setEntity(entity); 
-		    
-		    
-		    HttpResponse response = null;
-		    DefaultHttpClient httpClient = new DefaultHttpClient();
-		    HttpConnectionParams.setSoTimeout(httpClient.getParams(), 10*1000); 
-		    HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 10*1000); 
-	    	
-		    try {
-		    	response = httpClient.execute(request); 
-	    	
-		    } catch (SocketException se) {
-	    		Log.e("SocketException", se+"");
-	    		throw se;
-	    	}
+			HttpResponse response = StaticHelper.executeRequest(HttpPost.METHOD_NAME, completeURL, nameValuePairs, null);
 		    
 		    String responseLine = response.getStatusLine().toString();
 		    Log.d(TAG, "response line: " + responseLine);

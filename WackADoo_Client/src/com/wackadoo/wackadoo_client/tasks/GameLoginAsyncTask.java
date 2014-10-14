@@ -52,7 +52,6 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	protected Boolean doInBackground(String... params) {
 	    DeviceInformation deviceInformation = new DeviceInformation(context);
 		String completeURL = StaticHelper.generateUrlForTask(context, true, context.getString(R.string.loginPath));
-	    HttpPost request = new HttpPost(completeURL);
 	    StringBuilder sb = new StringBuilder();
 	
 	    String username, password;
@@ -92,21 +91,9 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
 		nameValuePairs.add(new BasicNameValuePair("[device_information][device_token]", deviceInformation.getUniqueTrackingToken()));
 		nameValuePairs.add(new BasicNameValuePair("vendor_token", deviceInformation.getUniqueTrackingToken()));
 
-		try {
-			UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nameValuePairs);
-			entity.setContentType("application/x-www-form-urlencoded;charset=UTF-8");
-			
-			request.getParams().setParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, Boolean.FALSE);
-			request.setHeader("Accept", "application/json");
-			request.setEntity(entity);  
-			DefaultHttpClient httpClient = new DefaultHttpClient();
-			HttpConnectionParams.setSoTimeout(httpClient.getParams(), 10*1000); 
-			HttpConnectionParams.setConnectionTimeout(httpClient.getParams(),10*1000); 
-			
-			HttpResponse response = null;
-			
+		try {	
 			Log.d(TAG, "Login Request for " + username + " and pw " + password);
-			response = httpClient.execute(request); 
+			HttpResponse response = StaticHelper.executeRequest(HttpPost.METHOD_NAME, completeURL, nameValuePairs, userCredentials.getAccessToken().getToken());
 
 			InputStream in = response.getEntity().getContent();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(in));

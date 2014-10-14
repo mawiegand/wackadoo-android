@@ -56,42 +56,29 @@ public class AccountManagerAsyncTask extends AsyncTask<String, Integer, Integer>
 		Activity parent = (Activity) listener;
 		String urlForRequest, completeURL;
 		HttpRequestBase request;
+		String method;
 		List<NameValuePair> nameValuePairs = new ArrayList <NameValuePair>();
 		
 		// change email
 		if (type.equals("mail")) {
 			urlForRequest = 
 			completeURL = StaticHelper.generateUrlForTask(parent, true, parent.getString(R.string.changeEmailPath) + userCredentials.getAccountId());
-			request = new HttpPut(completeURL);
+			method = HttpPut.METHOD_NAME;
 			nameValuePairs.add(new BasicNameValuePair("identity[email]", value)); 
 			
 		// change password
 		} else {
 			urlForRequest = parent.getString(R.string.changePasswordPath);
 			completeURL = userCredentials.getHostname() + String.format(urlForRequest, Locale.getDefault().getCountry().toLowerCase());
-			request = new HttpPost(completeURL);
+			method = HttpPost.METHOD_NAME;
 			Log.d(TAG, "***** change password from '" + userCredentials.getPassword() + "' to '" + value + "'");
 			nameValuePairs.add(new BasicNameValuePair("character[password]", value));	
 		}
 
-		Log.d(TAG, "completeURL: " + completeURL);
 		StringBuilder sb = new StringBuilder();
 
 		try {
-			UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nameValuePairs);
-		    entity.setContentType("application/x-www-form-urlencoded;charset=UTF-8");
-		    
-		    request.getParams().setParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, Boolean.FALSE);
-		    request.setHeader("Authorization", "Bearer " + userCredentials.getAccessToken().getToken());
-		    request.setHeader("Accept", "application/json");
-		    ((HttpEntityEnclosingRequestBase) request).setEntity(entity);  
-		    
-		    HttpResponse response = null;
-		    DefaultHttpClient httpClient = new DefaultHttpClient();
-		    HttpConnectionParams.setSoTimeout(httpClient.getParams(), 10*1000); 
-		    HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 10*1000); 
-
-		    response = httpClient.execute((HttpUriRequest) request); 
+			HttpResponse response = StaticHelper.executeRequest(method, completeURL, nameValuePairs, userCredentials.getAccessToken().getToken());
 		
 		    String responseLine = response.getStatusLine().toString();
 		    Log.d(TAG, "response line: " + responseLine);

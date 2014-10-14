@@ -7,6 +7,7 @@ import java.util.Locale;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpConnectionParams;
@@ -46,22 +47,12 @@ public class GetAccountAsyncTask extends AsyncTask<String, Integer, Boolean> {
 		Activity parent = (Activity) listener;
 		String completeURL = StaticHelper.generateUrlForTask(parent, true, parent.getString(R.string.getAccountPath));
 		
-		HttpGet request = new HttpGet(completeURL);
 		StringBuilder sb = new StringBuilder();
 		
 
 		try {	    
-		    request.getParams().setParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, Boolean.FALSE);
-		    request.setHeader("Authorization", "Bearer " + accessToken);
-		    request.setHeader("Accept", "application/json");
-		    
-		    HttpResponse response = null;
-		    DefaultHttpClient httpClient = new DefaultHttpClient();
-		    HttpConnectionParams.setSoTimeout(httpClient.getParams(), 10*1000); 
-		    HttpConnectionParams.setConnectionTimeout(httpClient.getParams(),10*1000); 
-
 		    Log.d(TAG, "Get Account Request");
-		    response = httpClient.execute(request); 
+		    HttpResponse response = StaticHelper.executeRequest(HttpGet.METHOD_NAME, completeURL, null, accessToken);
 		
 		    InputStream in = response.getEntity().getContent();
 		    BufferedReader reader = new BufferedReader(new InputStreamReader(in));
