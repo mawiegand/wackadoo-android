@@ -80,7 +80,7 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 		backBtn = (TextView) findViewById(R.id.credentialscreenTopbarBack);
 		
 		// set up standard server communication dialog
-	    progressDialog = new CustomProgressDialog(this);
+	    progressDialog = new CustomProgressDialog(CredentialScreenActivity.this);
     }
     
 	// set up touchlistener for buttons
@@ -234,15 +234,7 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 	public void loginCallback(boolean result, String accessToken, String expiration, String userIdentifier, boolean restoreAccount, boolean refresh) {
 		userCredentials.generateNewAccessToken(accessToken, expiration);
 		userCredentials.setIdentifier(userIdentifier);
-		
-		// if async task called to restore locale account, show dialog
-		if (restoreAccount) {
-			showRestoreAccountDialog(true);
-		
-		} else {
-			StaticHelper.continueMusic = true;
-			finish();
-		}
+		// fetch account data to show in imterface
 		new GetAccountAsyncTask(this, userCredentials, restoreAccount).execute();
 	}
 	

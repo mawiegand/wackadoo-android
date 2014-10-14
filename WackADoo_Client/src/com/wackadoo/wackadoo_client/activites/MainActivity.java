@@ -365,6 +365,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 
 	// set up touchlistener for accountmanager button
 	private void setUpAccountmanagerBtn() {
+		accountmanagerBtn.setVisibility(View.VISIBLE);
 		accountmanagerBtn.setOnTouchListener(new View.OnTouchListener() {
 			@SuppressLint("NewApi")
 			@Override
@@ -388,6 +389,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	
 	// set up touchlistener for selectgame button
 	private void setUpSelectgameBtn() {
+		selectGameBtn.setVisibility(View.VISIBLE);
 		// TODO: is last world accessible?
 		lastWorldAccessible = true;
 		
@@ -396,7 +398,6 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		} else {
 			selectGameBtn.setImageResource(R.drawable.title_changegame_warn_button);
 		}
-			
 		
 		selectGameBtn.setOnTouchListener(new View.OnTouchListener() {
 			@SuppressLint("NewApi")
