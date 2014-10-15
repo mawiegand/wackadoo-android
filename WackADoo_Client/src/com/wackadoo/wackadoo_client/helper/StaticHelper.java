@@ -112,7 +112,11 @@ public class StaticHelper {
 			baseUrl = context.getString(R.string.baseGameServerPath);
 		}
 		
-		completeUrl = baseUrl + String.format(urlForRequest, Locale.getDefault().getCountry().toLowerCase());
+		String locale = Locale.getDefault().getCountry().toLowerCase();
+		if (locale != "en" && locale != "de") {
+			locale = "en";
+		}
+		completeUrl = baseUrl + String.format(urlForRequest, locale);
 		return completeUrl;
 	}
 	

@@ -1,17 +1,12 @@
 package com.wackadoo.wackadoo_client.tasks;
 
-import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.CoreProtocolPNames;
-import org.apache.http.params.HttpConnectionParams;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -48,7 +43,7 @@ public class BuyShopOfferAsyncTask extends AsyncTask<String, Integer, Boolean> {
 		nameValuePairs.add(new BasicNameValuePair("shop_transaction[customer_identifier]", shopCharacterId));
 
 		try {
-			HttpResponse response = StaticHelper.executeRequest(HttpPost.METHOD_NAME, completeURL, nameValuePairs, null);
+			HttpResponse response = StaticHelper.executeRequest(HttpPost.METHOD_NAME, completeURL, nameValuePairs, accessToken);
 		    
 		    String responseLine = response.getStatusLine().toString();
 		    Log.d(TAG, "response line: " + responseLine);

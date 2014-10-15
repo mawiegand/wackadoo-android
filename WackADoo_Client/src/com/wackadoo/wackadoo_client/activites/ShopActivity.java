@@ -384,6 +384,8 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 		if (result) {
 			Toast.makeText(this, getString(R.string.buy_item_success), Toast.LENGTH_LONG)
 			.show();
+			//TODO Should the shop be reloaded?
+			loadShopOffersFromServer();
 			
 		} else {
 			Toast.makeText(this, getString(R.string.buy_item_fail), Toast.LENGTH_LONG)

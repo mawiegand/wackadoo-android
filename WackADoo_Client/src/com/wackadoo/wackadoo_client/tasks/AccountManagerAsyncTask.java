@@ -65,8 +65,7 @@ public class AccountManagerAsyncTask extends AsyncTask<String, Integer, Integer>
 			
 		// change password
 		} else {
-			urlForRequest = parent.getString(R.string.changePasswordPath);
-			completeURL = userCredentials.getHostname() + String.format(urlForRequest, Locale.getDefault().getCountry().toLowerCase());
+			completeURL = StaticHelper.generateUrlForTask(parent, false, parent.getString(R.string.changePasswordPath));
 			method = HttpPost.METHOD_NAME;
 			Log.d(TAG, "***** change password from '" + userCredentials.getPassword() + "' to '" + value + "'");
 			nameValuePairs.add(new BasicNameValuePair("character[password]", value));	
