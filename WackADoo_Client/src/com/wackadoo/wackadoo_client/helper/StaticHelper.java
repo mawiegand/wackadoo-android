@@ -12,6 +12,7 @@ import org.apache.http.HttpRequestFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.MethodNotSupportedException;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpGet;
@@ -124,42 +125,36 @@ public class StaticHelper {
 		return completeUrl;
 	}
 	
-	public static HttpResponse executeRequest(String method, String url, List<NameValuePair> values, String accessToken) {
+	public static HttpResponse executeRequest(String method, String url, List<NameValuePair> values, String accessToken) throws ClientProtocolException, IOException {
 		Log.d(TAG, "completeURL: " + url);
 		HttpResponse response = null;
-		try {
-			HttpRequestBase request = null;
-			if (method.equals(HttpGet.METHOD_NAME)) {
-				request = new HttpGet(url);
-			}
-			if (method.equals(HttpPost.METHOD_NAME)) {
-				request = new HttpPost(url);
-			}
-			if (method.equals(HttpPut.METHOD_NAME)) {
-				request = new HttpPut(url);
-			}
-			request.getParams().setParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, Boolean.FALSE);
-			if (accessToken != null) {
-				request.setHeader("Authorization", "Bearer " + accessToken);
-			}
-			request.setHeader("Accept", "application/json");
-			
-			DefaultHttpClient httpClient = new DefaultHttpClient();
-			HttpConnectionParams.setSoTimeout(httpClient.getParams(), 10*1000); 
-			HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 10*1000); 
-			
-			if (request instanceof HttpEntityEnclosingRequestBase) {
-				UrlEncodedFormEntity entity = new UrlEncodedFormEntity(values);
-				entity.setContentType("application/x-www-form-urlencoded;charset=UTF-8");
-				((HttpEntityEnclosingRequestBase) request).setEntity(entity);  
-			}
-			
-			response = httpClient.execute(request);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		HttpRequestBase request = null;
+		if (method.equals(HttpGet.METHOD_NAME)) {
+			request = new HttpGet(url);
 		}
-		
+		if (method.equals(HttpPost.METHOD_NAME)) {
+			request = new HttpPost(url);
+		}
+		if (method.equals(HttpPut.METHOD_NAME)) {
+			request = new HttpPut(url);
+		}
+		request.getParams().setParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, Boolean.FALSE);
+		if (accessToken != null) {
+			request.setHeader("Authorization", "Bearer " + accessToken);
+		}
+		request.setHeader("Accept", "application/json");
+
+		DefaultHttpClient httpClient = new DefaultHttpClient();
+		HttpConnectionParams.setSoTimeout(httpClient.getParams(), 10*1000); 
+		HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 10*1000); 
+
+		if (request instanceof HttpEntityEnclosingRequestBase) {
+			UrlEncodedFormEntity entity = new UrlEncodedFormEntity(values);
+			entity.setContentType("application/x-www-form-urlencoded;charset=UTF-8");
+			((HttpEntityEnclosingRequestBase) request).setEntity(entity);  
+		}
+
+		response = httpClient.execute(request);		
 		return response;
 	}
 	
