@@ -27,7 +27,6 @@ import android.util.Log;
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.helper.StaticHelper;
 import com.wackadoo.wackadoo_client.interfaces.FacebookTaskCallbackInterface;
-import com.wackadoo.wackadoo_client.model.DeviceInformation;
 import com.wackadoo.wackadoo_client.model.ResponseResult;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
 
@@ -58,7 +57,6 @@ public class FacebookAccountAsyncTask extends AsyncTask<String, Integer, Respons
 	    	if (type.equals(StaticHelper.FB_ID_TASK)) {
 	    		url = StaticHelper.generateUrlForTask(context, true, context.getString(R.string.facebookIdPath)) + userCredentials.getFbPlayerId();
 	    		method = HttpGet.METHOD_NAME;
-	    		
 	    		
 	    	//*****************************************//	
 			//*****  connect fb id and character  *****//

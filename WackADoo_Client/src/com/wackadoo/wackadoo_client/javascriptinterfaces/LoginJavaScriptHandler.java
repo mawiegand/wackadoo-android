@@ -19,7 +19,7 @@ public class LoginJavaScriptHandler {
     	this.expiration = expiration;
     	this.userId = userId;
     	this.hostname = hostname;
-    	this.country = this.getCountry();
+    	this.country = getCountry();
     }
     
 	private String getCountry() {
@@ -39,17 +39,17 @@ public class LoginJavaScriptHandler {
 	
 	@JavascriptInterface
 	public String getAccessToken() {
-		return this.accessToken;
+		return accessToken;
 	}
 	
 	@JavascriptInterface
 	public String getExpiration() {
-		return this.expiration;
+		return expiration;
 	}
 	
 	@JavascriptInterface
 	public String getUserId() {
-	    return this.userId;
+	    return userId;
 	}
 
 	@JavascriptInterface
@@ -59,7 +59,7 @@ public class LoginJavaScriptHandler {
 	
 	@JavascriptInterface
 	public String getCountryCode() {
-	    return this.country;
+	    return country;
 	}
 	
 	@JavascriptInterface

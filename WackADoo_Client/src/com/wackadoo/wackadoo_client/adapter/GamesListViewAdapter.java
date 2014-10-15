@@ -37,6 +37,7 @@ public class GamesListViewAdapter extends ArrayAdapter<GameInformation> implemen
         TextView worldItemNameText, worldItemPlayerCount, worldItemScopeText, worldItemDayText;
     }
      
+    // set up the view and fill in data
     public View getView(int position, View convertView, ViewGroup parent) {
     	ViewHolder holder = null;
     	GameInformation rowItem = getItem(position);
@@ -64,7 +65,6 @@ public class GamesListViewAdapter extends ArrayAdapter<GameInformation> implemen
         	holder.worldItemIcon.setImageBitmap(Avatar.getAvatar(avatarString, holder.worldItemIcon.getLayoutParams().height, holder.worldItemIcon.getLayoutParams().height, parent.getResources()));
         }
         
-        
         // game name
         holder.worldItemNameText.setText(rowItem.getName());	
         
@@ -83,6 +83,7 @@ public class GamesListViewAdapter extends ArrayAdapter<GameInformation> implemen
         return convertView;
     }
 
+    // handle touch events on this item
     @Override
     public boolean onTouch(View v, MotionEvent event) {
     	int action = event.getActionMasked();

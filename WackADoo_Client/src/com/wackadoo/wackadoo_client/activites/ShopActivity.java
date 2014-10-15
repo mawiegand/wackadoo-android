@@ -16,7 +16,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageButton;
@@ -37,18 +36,15 @@ import com.wackadoo.wackadoo_client.fragments.ShopInfoFragment;
 import com.wackadoo.wackadoo_client.helper.CustomIabHelper;
 import com.wackadoo.wackadoo_client.helper.CustomProgressDialog;
 import com.wackadoo.wackadoo_client.helper.StaticHelper;
-import com.wackadoo.wackadoo_client.helper.UtilityHelper;
 import com.wackadoo.wackadoo_client.helper.WackadooActivity;
 import com.wackadoo.wackadoo_client.interfaces.BuyPlayStoreCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.BuyShopOfferCallbackInterface;
-import com.wackadoo.wackadoo_client.interfaces.CharacterCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.CreditsFragmentCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.ShopDataCallbackInterface;
 import com.wackadoo.wackadoo_client.model.ShopRowItem;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
 import com.wackadoo.wackadoo_client.tasks.BuyPlayStoreAsyncTask;
 import com.wackadoo.wackadoo_client.tasks.BuyShopOfferAsyncTask;
-import com.wackadoo.wackadoo_client.tasks.GetCharacterAsyncTask;
 import com.wackadoo.wackadoo_client.tasks.GetShopDataAsyncTask;
 
 public class ShopActivity extends WackadooActivity implements ShopDataCallbackInterface, CreditsFragmentCallbackInterface,
@@ -87,6 +83,7 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 	    }
 	}
 	
+	// set up interface elements
 	private void setUpUi() {
 		doneBtn = (TextView) findViewById(R.id.shopTopbarDone);
         platinumCreditsInfoBtn = (ImageButton) findViewById(R.id.platinumCreditsInfoBtn);
@@ -103,12 +100,14 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 	    progressDialog = new CustomProgressDialog(this);
 	}
 	
+	// start setup methods for each button in UI
 	public void setUpButtons() {
 		setUpDoneBtn();
 		setUpCreditsBtn();
 		setUpInfoBtns();
 	}
 	
+	// set up touchlistener for done button
 	private void setUpDoneBtn() {
 		doneBtn.setOnTouchListener(new View.OnTouchListener() {
 			@Override
@@ -168,6 +167,7 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 		bonusInfoBtn.setOnTouchListener(touchListener);
 	}
 	
+	// set up touchlistener for credits button
 	private void setUpCreditsBtn() {
 		RelativeLayout shopCreditsBtn = (RelativeLayout) findViewById(R.id.shopCreditsButton); 
 		shopCreditsBtn.setOnTouchListener(new View.OnTouchListener() {
@@ -190,7 +190,7 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 		});
 	}
 	
-	// handles click on info button for category
+	// start slideIn animation of fragment and open it
 	private void openShopInfoFragment(String category) {
 		fragment = null;
 		
@@ -221,7 +221,7 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
         	.commit();
 	}
 	
-	// handles click on credit category --> Google Play
+	// handle click on credit category --> Google Play
 	private void openCreditsFragment(ArrayList<ShopRowItem> rowItemsList) {
 		fragment = new ShopCreditsFragment(this, userCredentials, rowItemsList, platinCredits);
 		
@@ -236,6 +236,7 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 				.commit();
 	}
 	
+	// start slideOut animation of fragment to remove it from screen
 	public void removeShopFragment() {
 		// slide shop info fragment out of window
         getFragmentManager().beginTransaction()
@@ -245,7 +246,18 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 			.commit();
 	}
 	
-	// load shop offers from bytro server
+	// callback interface for credits fragment -> which item was clicked
+	public void creditsFragmentCallback(int clickedPackage) {
+		try {
+			JSONObject jsonItem = new JSONObject(stringProductList.get(clickedPackage));
+			billingHelper.launchPurchaseFlow(ShopActivity.this, jsonItem.getString("productId"), 1337); 
+			
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	// start tasks to load shop offers from bytro server
 	private void loadShopOffersFromServer() {
 		progressDialog.show();
 		new GetShopDataAsyncTask(this, userCredentials, 1, "").execute();		// get golden frog offers
@@ -255,18 +267,17 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 		new GetShopDataAsyncTask(this, userCredentials, 5, "").execute();		// get character shop data	
 	}
 	
+	// set up and fill given listview with items of given list
 	private void insertRowItemsInList(List<ShopRowItem> items, ListView list) {
 		ShopListViewAdapter adapter = new ShopListViewAdapter(this, R.layout.table_item_shop, items);
 		list.setAdapter(adapter);
 		StaticHelper.setListViewHeightBasedOnChildren(list);
-		
 	}
 
-	// handle clicks on platinum account list
+	// handle clicks on items in platinum account list
 	private void setUpListPlatinumAccount(List<ShopRowItem> offers) {
 		listAccount = offers;
 		insertRowItemsInList(listAccount, listViewPlatinumAccount);
-		
 		listViewPlatinumAccount.setOnItemLongClickListener(new OnItemLongClickListener() {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -278,7 +289,7 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 		});
 	}
 	
-	// handle clicks on gold list
+	// handle clicks on items in gold list
 	private void setUpListGold(List<ShopRowItem> offers) {
 		listGold = offers;
 		insertRowItemsInList(listGold, listViewGold);
@@ -293,7 +304,7 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 		});
 	}
 	
-	// handle clicks on special list
+	// handle clicks on items in special list
 	private void setUpListSpecial(List<ShopRowItem> offers) {
 		listSpecial = offers;
 		if (offers.isEmpty()) {
@@ -321,7 +332,7 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 		});
 	}
 	
-	// handle clicks on bonus list
+	// handle clicks on items in bonus list
 	private void setUpListBonus(List<ShopRowItem> offers) {
 		listBonus = offers;
 		Collections.sort(offers);
@@ -381,6 +392,30 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 		
 	}
 	
+	// callback interface for consumption of play store item
+	@Override
+	public void onConsumeFinished(Purchase purchase, IabResult result) {
+		Log.d(TAG, "start play store verification");
+		new BuyPlayStoreAsyncTask(this, userCredentials.getAccessToken().getToken(), purchase.getOrderId(), purchase.getToken(), purchase.getSku()).execute();
+	}
+	
+	// callback interface for communication with backend after successful play store purchase
+	@Override
+	public void buyPlayStoreCallback(boolean result, String message) {
+		if (result) {
+			Toast.makeText(this, getString(R.string.buy_credits_success), Toast.LENGTH_LONG)
+			     .show();
+			// get character new credit amount
+			new GetShopDataAsyncTask(this, userCredentials, 5, "").execute();	
+			// remove credit fragment and shop shop again
+			getFragmentManager().popBackStack();		
+			
+		} else {
+			Toast.makeText(this, getString(R.string.buy_credits_fail), Toast.LENGTH_LONG)
+				 .show();
+		}
+	}
+	
 	// play store: set up in app billing
 	private void setUpBilling(){
 		progressDialog.show();
@@ -391,17 +426,6 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 		
 		billingHelper.enableDebugLogging(true);		// TODO: remove before publishing
 		billingHelper.startUp();
-	}
-	
-	// callback interface for credits fragment -> which item was clicked
-	public void creditsFragmentCallback(int clickedPackage) {
-		try {
-			JSONObject jsonItem = new JSONObject(stringProductList.get(clickedPackage));
-			billingHelper.launchPurchaseFlow(ShopActivity.this, jsonItem.getString("productId"), 1337); 
-			
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	// play store: handle result of play store fragment
@@ -476,29 +500,6 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 			e.printStackTrace();
 		}
 		return rowItemList;
-	}
-
-	@Override
-	public void buyPlayStoreCallback(boolean result, String message) {
-		Log.d(TAG, "Verification Feedback: "+message);	
-		if (result) {
-			Toast.makeText(this, getString(R.string.buy_credits_success), Toast.LENGTH_LONG)
-			.show();
-			Log.d(TAG, "Start getting character infos");	
-			new GetShopDataAsyncTask(this, userCredentials, 5, "").execute();		// get character shop data
-			getFragmentManager().popBackStack();
-			
-		} else {
-			Toast.makeText(this, getString(R.string.buy_credits_fail), Toast.LENGTH_LONG)
-				 .show();
-		}
-		
-	}
-
-	@Override
-	public void onConsumeFinished(Purchase purchase, IabResult result) {
-		Log.d(TAG, "start play store verification");
-		new BuyPlayStoreAsyncTask(ShopActivity.this, userCredentials.getAccessToken().getToken(), purchase.getOrderId(), purchase.getToken(), purchase.getSku()).execute();
 	}
 
 }

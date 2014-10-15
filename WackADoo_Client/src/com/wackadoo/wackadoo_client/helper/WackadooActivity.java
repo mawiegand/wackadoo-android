@@ -6,6 +6,7 @@ import android.view.KeyEvent;
 
 import com.wackadoo.wackadoo_client.R;
 
+// custom activity subclass, to handle background music
 public class WackadooActivity extends Activity {
 
 	protected void onCreate(Bundle savedInstanceState, int layoutId) {
@@ -29,6 +30,7 @@ public class WackadooActivity extends Activity {
 		super.onResume();
 		StaticHelper.continueMusic = false;
 		if (!StaticHelper.backgroundMusicPlayer.isPlaying()) {
+			StaticHelper.setUpPlayer(this);
 			StaticHelper.backgroundMusicPlayer.start();
 		}
 	}

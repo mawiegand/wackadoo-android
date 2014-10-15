@@ -28,16 +28,14 @@ public class GetAccountAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	private final static String TAG = GetAccountAsyncTask.class.getSimpleName();
 	
     private GetAccountCallbackInterface listener;
-    private ProgressDialog progressDialog;
     private JSONObject jsonResponse;
 
 	private String accessToken;
 
 	private boolean restoreAccount;
     
-    public GetAccountAsyncTask(GetAccountCallbackInterface callback, UserCredentials userCredentials, ProgressDialog progressDialog, boolean restoreAccount) {
+    public GetAccountAsyncTask(GetAccountCallbackInterface callback, UserCredentials userCredentials, boolean restoreAccount) {
     	this.listener = callback;
-    	this.progressDialog = progressDialog;
     	this.restoreAccount = restoreAccount;
     	this.accessToken = userCredentials.getAccessToken().getToken();
     }
@@ -49,7 +47,6 @@ public class GetAccountAsyncTask extends AsyncTask<String, Integer, Boolean> {
 		
 		StringBuilder sb = new StringBuilder();
 		
-
 		try {	    
 		    Log.d(TAG, "Get Account Request");
 		    HttpResponse response = StaticHelper.executeRequest(HttpGet.METHOD_NAME, completeURL, null, accessToken);
@@ -74,10 +71,6 @@ public class GetAccountAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	@Override
 	protected void onPostExecute(Boolean result) {
 		super.onPostExecute(result);
-		
-		if (progressDialog.isShowing()) {
-			progressDialog.dismiss();
-		}
 		
 		if (result) {
 			try {

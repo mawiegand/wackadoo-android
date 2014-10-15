@@ -6,6 +6,7 @@ import android.util.DisplayMetrics;
 import android.widget.ScrollView;
 
 public class BounceScrollView extends ScrollView {
+	
     private static final int MAX_Y_OVERSCROLL_DISTANCE = 100;
 
     private Context context;
@@ -29,14 +30,14 @@ public class BounceScrollView extends ScrollView {
         initBounceScrollView();
     }
 
-    //get the density of the screen and do some maths with it on the max overscroll distance
+    // get the density of the screen and calculate max overscroll distance
     private void initBounceScrollView() {
         final DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         final float density = metrics.density;
         maxYOverscrollDistance = (int) (density * MAX_Y_OVERSCROLL_DISTANCE);
     }
 
-    // replace incoming maxOverScrollY with own custom mMaxYOverscrollDistance
+    // replace maxOverScrollY with own calculated maxYOverscrollDistance
     @Override
     protected boolean overScrollBy(int deltaX, int deltaY, int scrollX, int scrollY, int scrollRangeX, int scrollRangeY, int maxOverScrollX, int maxOverScrollY, boolean isTouchEvent) { 
         return super.overScrollBy(deltaX, deltaY, scrollX, scrollY, scrollRangeX, scrollRangeY, maxOverScrollX, maxYOverscrollDistance, isTouchEvent);  

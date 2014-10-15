@@ -1,14 +1,11 @@
 package com.wackadoo.wackadoo_client.helper;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.util.List;
 import java.util.Locale;
 
-import org.apache.http.HttpMessage;
 import org.apache.http.HttpRequest;
-import org.apache.http.HttpRequestFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.MethodNotSupportedException;
 import org.apache.http.NameValuePair;
@@ -19,7 +16,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.DefaultHttpRequestFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.CoreProtocolPNames;
@@ -27,7 +23,6 @@ import org.apache.http.params.HttpConnectionParams;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.media.MediaPlayer;
@@ -38,28 +33,24 @@ import android.view.View;
 import android.view.View.MeasureSpec;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.facebook.HttpMethod;
 import com.wackadoo.wackadoo_client.R;
-import com.wackadoo.wackadoo_client.model.UserCredentials;
-import com.wackadoo.wackadoo_client.tasks.GetCharacterAsyncTask;
 
 public class StaticHelper {
 	
+	private static final String TAG = StaticHelper.class.getSimpleName();
 	public static final String FB_ID_TASK = "facebook_id_task";
 	public static final String FB_CONNECT_TASK = "facebook_connect_task";
 	public static final String FB_LOGIN_TASK = "facebook_login_task";
-	private static final String TAG = StaticHelper.class.getSimpleName();
 
 	// static variables for background music
 	public static MediaPlayer backgroundMusicPlayer;
 	public static boolean continueMusic;
 
-	// Workaround for dynamic height of the ListView. Fixes issue of not showing every item in listviews when in a scrollview 
+	// workaround for dynamic height of the ListView. fixes issue of not showing every item in listviews when in a scrollview 
 	public static void setListViewHeightBasedOnChildren(ListView listView) {
 	    ListAdapter listAdapter = listView.getAdapter();
 	    if (listAdapter == null)
@@ -82,13 +73,13 @@ public class StaticHelper {
 	    listView.requestLayout();
 	}
 
-	// checks if String is valid mail adress
+	// check if string is valid mail adress
 	public static boolean isValidMail(String email) {
 		boolean result = android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
 		return result;
 	}
 
-	// checks if the device is connected to the internet
+	// check if the device is connected to the internet
 	public static boolean isOnline(Activity activity) {
 	    ConnectivityManager cm =
 	        (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -99,6 +90,7 @@ public class StaticHelper {
 	    return false;
 	}
 	
+	// check if host is available or offline
 	public static boolean isHostAvailable(String hostname, Activity activity) {
 		try {
 			InetAddress.getAllByName(hostname);
@@ -114,13 +106,12 @@ public class StaticHelper {
 	public static String generateUrlForTask(Context context, boolean basePath, String urlForRequest) {
 		String baseUrl = "", completeUrl = ""; 
 		
-		// -----  www  -----
-		if (basePath) {
+		if (basePath) {	// www  
 			baseUrl = context.getString(R.string.basePath);		
-		// -----  gs06  -----
-		} else {
+		} else {		// gs06 
 			baseUrl = context.getString(R.string.baseGameServerPath);
 		}
+		
 		completeUrl = baseUrl + String.format(urlForRequest, Locale.getDefault().getCountry().toLowerCase());
 		return completeUrl;
 	}
@@ -177,7 +168,7 @@ public class StaticHelper {
 		clickPlayer.start();
 	}
 
-	// overrides font with custom font in assets/fonts
+	// override font with custom font in assets/fonts
 	public static void overrideFonts(final Context context, final View v) {
 		Typeface tf = Typeface.createFromAsset(context.getAssets(), "fonts/Montserrat-Regular.ttf");
 		
@@ -196,6 +187,7 @@ public class StaticHelper {
 	    }
 	}
 
+	// style given dialog in layout colors and font
 	public static void styleDialog(Context context, Dialog dialog) {
 		 // Set title divider color
 	    int id = context.getResources().getIdentifier("titleDivider", "id", "android");

@@ -9,16 +9,12 @@ import java.util.List;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpConnectionParams;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -54,7 +50,6 @@ public class FacebookLoginAsyncTask extends AsyncTask<String, Integer, ResponseR
     		
     		List <NameValuePair> nameValuePairs = new ArrayList <NameValuePair>();
     		nameValuePairs.add(new BasicNameValuePair("fb_player_id", userCredentials.getFbPlayerId()));
-//	    		nameValuePairs.add(new BasicNameValuePair("fb_access_token", userCredentials.getFbAccessToken()));
     		nameValuePairs.add(new BasicNameValuePair("client_id", "WACKADOO-FBCANVAS"));
     		nameValuePairs.add(new BasicNameValuePair("client_password", "5d"));
     		nameValuePairs.add(new BasicNameValuePair("grant_type", "fb-player-id"));

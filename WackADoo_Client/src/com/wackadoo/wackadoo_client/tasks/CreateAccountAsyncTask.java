@@ -31,12 +31,10 @@ public class CreateAccountAsyncTask extends AsyncTask<String, Integer, Boolean> 
 	private static final String TAG = CreateAccountAsyncTask.class.getSimpleName();
 	
     private CreateAccountCallbackInterface listener;
-    private ProgressDialog progressDialog;
     private JSONObject jsonResponse;
     
-    public CreateAccountAsyncTask(CreateAccountCallbackInterface callback, ProgressDialog progressDialog) {
+    public CreateAccountAsyncTask(CreateAccountCallbackInterface callback) {
     	this.listener = callback;
-    	this.progressDialog = progressDialog;
     }
 	
 	@Override
@@ -78,10 +76,6 @@ public class CreateAccountAsyncTask extends AsyncTask<String, Integer, Boolean> 
 	@Override
 	protected void onPostExecute(Boolean result) {
 		super.onPostExecute(result);
-		
-		if (progressDialog.isShowing()) {
-			progressDialog.dismiss();
-		}
 		
 		if (result) {
 			try {

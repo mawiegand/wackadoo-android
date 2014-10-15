@@ -33,7 +33,6 @@ public class ShopCreditsFragment extends Fragment {
 	private TextView shopBtn;
 	private ListView listView;
 	private ArrayList<ShopRowItem> rowItemList;
-
 	private int platinCredits;
 
 	public ShopCreditsFragment(){
@@ -47,6 +46,7 @@ public class ShopCreditsFragment extends Fragment {
 		this.platinCredits = platinCredits;
 	}
 	
+    // set up the view and fill in data
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_shop_credits, container, false);
@@ -66,16 +66,9 @@ public class ShopCreditsFragment extends Fragment {
 		return view;
     }
 	
-	@Override
-	public void onPause() {
-		// TODO Auto-generated method stub
-		super.onPause();
-	}
-	
+	// set up touchlistener for shop button
 	private void setUpShopBtn(View view) {
 		shopBtn = (TextView) view.findViewById(R.id.shopCreditsFragmentTopbarShop);
-		
-		shopBtn.setEnabled(true);
 		shopBtn.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent e) {
@@ -86,18 +79,12 @@ public class ShopCreditsFragment extends Fragment {
 
 		    		case MotionEvent.ACTION_UP: 
 		    			shopBtn.setTextColor(getResources().getColor(R.color.textbox_orange));
+		    			((ShopActivity) getActivity()).removeShopFragment();
 		    			break;
 			    }
-				return false;
+				return true;
 			}
 		});
-		   
-		shopBtn.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				((ShopActivity) getActivity()).removeShopFragment();
-			}
-	   	});
 	}
 
 	// add products and clicklistener to listview

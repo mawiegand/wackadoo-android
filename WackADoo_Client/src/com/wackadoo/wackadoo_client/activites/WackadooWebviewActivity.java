@@ -23,71 +23,71 @@ import com.wackadoo.wackadoo_client.javascriptinterfaces.LoginJavaScriptHandler;
 
 public class WackadooWebviewActivity extends Activity {	
 
-		private static final String TAG = WackadooWebviewActivity.class.getSimpleName();
-		
-		private WebView webView;
-		private int width;
-		
-	    @SuppressLint({ "NewApi", "JavascriptInterface" })
-		@Override
-	    protected void onCreate(Bundle savedInstanceState) {
-	        super.onCreate(savedInstanceState);
-	        requestWindowFeature(Window.FEATURE_NO_TITLE);
-	        setContentView(R.layout.activity_wackadoowebview);
-	        
-	        webView = (WebView) findViewById(R.id.main_webView);
-	        if (savedInstanceState != null) {
-	            webView.restoreState(savedInstanceState);
-	        }
-	        
-	        // test: scale webview to fit device window
-	        WindowManager manager = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
-    	    DisplayMetrics metrics = new DisplayMetrics();
-    	    manager.getDefaultDisplay().getMetrics(metrics);
-    	    metrics.widthPixels /= metrics.density;
-	        width = metrics.widthPixels;
-	        
-	        // test: rescale window after page is loaded
-	        webView.setWebViewClient(new WebViewClient() {
-	        	@Override
-	        	public void onPageFinished(WebView view, String url) {
-	        		super.onPageFinished(view, url);
-	        	    webView.loadUrl("javascript:var scale = " + width + " / document.body.scrollWidth; document.body.style.zoom = scale;");
-	        	}
-	        	
-	        	public void onScaleChanged(WebView view, float oldScale, float newScale) {
-	        		super.onScaleChanged(view, oldScale, newScale);
-	        		Log.d(TAG, "Scale changed!");
-	        	}
-	        });
-	        
-	        webView.setWebChromeClient(new WebChromeClient());
-	        
-	        WebSettings webSettings = webView.getSettings();
-	        webSettings.setJavaScriptEnabled(true);
-	        webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
-	        webSettings.setLoadWithOverviewMode(true);
-	        webSettings.setUseWideViewPort(true);
-	        
-	        Bundle b = getIntent().getExtras();
-	        final LoginJavaScriptHandler loginHandler = new LoginJavaScriptHandler(this, b.getString("accessToken"), b.getString("expiration"), b.getString("userId"), b.getString("hostname"));
-	        webView.addJavascriptInterface(loginHandler, "LoginHandler");
-	        
-	        webView.loadUrl("file:///android_asset/index.html");
-	    }
-	    
-	    protected void onSaveInstanceState(Bundle outState) {
-	    	webView.saveState(outState);
-	    }
+	private static final String TAG = WackadooWebviewActivity.class.getSimpleName();
+	
+	private WebView webView;
+	private int width;
+	
+    @SuppressLint({ "NewApi", "JavascriptInterface" })
+	@Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(R.layout.activity_wackadoowebview);
+        
+        webView = (WebView) findViewById(R.id.main_webView);
+        if (savedInstanceState != null) {
+            webView.restoreState(savedInstanceState);
+        }
+        
+        // test: scale webview to fit device window
+        WindowManager manager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+	    DisplayMetrics metrics = new DisplayMetrics();
+	    manager.getDefaultDisplay().getMetrics(metrics);
+	    metrics.widthPixels /= metrics.density;
+        width = metrics.widthPixels;
+        
+        // test: rescale window after page is loaded
+        webView.setWebViewClient(new WebViewClient() {
+        	@Override
+        	public void onPageFinished(WebView view, String url) {
+        		super.onPageFinished(view, url);
+        	    webView.loadUrl("javascript:var scale = " + width + " / document.body.scrollWidth; document.body.style.zoom = scale;");
+        	}
+        	
+        	public void onScaleChanged(WebView view, float oldScale, float newScale) {
+        		super.onScaleChanged(view, oldScale, newScale);
+        		Log.d(TAG, "Scale changed!");
+        	}
+        });
+        
+        webView.setWebChromeClient(new WebChromeClient());
+        
+        WebSettings webSettings = webView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
+        webSettings.setLoadWithOverviewMode(true);
+        webSettings.setUseWideViewPort(true);
+        
+        Bundle b = getIntent().getExtras();
+        final LoginJavaScriptHandler loginHandler = new LoginJavaScriptHandler(this, b.getString("accessToken"), b.getString("expiration"), b.getString("userId"), b.getString("hostname"));
+        webView.addJavascriptInterface(loginHandler, "LoginHandler");
+        
+        webView.loadUrl("file:///android_asset/index.html");
+    }
+    
+    protected void onSaveInstanceState(Bundle outState) {
+    	webView.saveState(outState);
+    }
 
-	    @Override
-	    protected void onResume() {
-	    	super.onResume();
-	    }
-	    
-	    // use device backbutton to go back one page in webview
-	    @Override
-	    public boolean onKeyDown(int keyCode, KeyEvent event) {
+    @Override
+    protected void onResume() {
+    	super.onResume();
+    }
+    
+    // use device backbutton to go back one page in webview
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
 	    	if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_BACK) {
     			if (webView.canGoBack()) {
     				webView.goBack();

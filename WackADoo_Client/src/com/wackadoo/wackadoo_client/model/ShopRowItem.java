@@ -62,20 +62,16 @@ public class ShopRowItem implements Comparable<ShopRowItem> {
 	public int getBonus() {
 		return bonus;
 	}
-
 	public void setBonus(int bonus) {
 		this.bonus = bonus;
 	}
 	
-
 	public Date getExpiresIn() {
 		return expiresIn;
 	}
-
 	public void setExpiresIn(Date expiresIn) {
 		this.expiresIn = expiresIn;
 	}
-	
 
 	public boolean isNotExpired() {
 		return expiresIn != null && expiresIn.getTime() != 0 && expiresIn.after(new Date());
@@ -86,7 +82,6 @@ public class ShopRowItem implements Comparable<ShopRowItem> {
         return title + "\n" + optionalIconImageId;
     }
 
-	
 	@Override
 	public int compareTo(ShopRowItem another) {
 		int compareIcon = another.getIconImageId() - getIconImageId();

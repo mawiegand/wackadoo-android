@@ -36,16 +36,14 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
     private Context context;
 	private UserCredentials userCredentials;
 	private JSONObject jsonResponse;
-	private ProgressDialog progressDialog;
 	private boolean restoreAccount;
 	private boolean refresh;
     
-    public GameLoginAsyncTask(Context context, UserCredentials userCredentials, boolean restoreAccount, boolean refresh, ProgressDialog progressDialog) {
+    public GameLoginAsyncTask(Context context, UserCredentials userCredentials, boolean restoreAccount, boolean refresh) {
     	this.context = context;
     	this.refresh = refresh;
     	this.userCredentials = userCredentials;
     	this.restoreAccount = restoreAccount;
-    	this.progressDialog = progressDialog;
     }
     
     @Override
@@ -117,9 +115,6 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	@Override
 	protected void onPostExecute(Boolean result) {
 		super.onPostExecute(result);
-		if (progressDialog.isShowing()) {
-			progressDialog.dismiss();
-		}
 		
 		try {
 			if (result) {

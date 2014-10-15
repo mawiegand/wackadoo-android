@@ -27,13 +27,11 @@ public class DeviceInformation {
 			this.saveAppToken();
 		}
 	}
-	
 	@SuppressLint("TrulyRandom")
 	private void createAppToken() {
 		SecureRandom random = new SecureRandom();
 		this.uniqueTrackingToken = new BigInteger(80, random).toString(16);
 	}
-	
 	private void saveAppToken() {
 		SharedPreferences myPrefs = context.getSharedPreferences("myPrefs", 0);
 		SharedPreferences.Editor e = myPrefs.edit();
@@ -48,10 +46,6 @@ public class DeviceInformation {
 		this.hardware = android.os.Build.MANUFACTURER + " " + android.os.Build.MODEL;
 	}
 	
-	private String determinePlatform() {
-		return "";
-	}
-
 	public String getOs() {
 		return os;
 	}

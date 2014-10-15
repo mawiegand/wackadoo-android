@@ -36,6 +36,7 @@ public class ShopListViewAdapter extends ArrayAdapter<ShopRowItem> implements On
         int color;
     }
      
+    // set up the view and fill in data
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
         ShopRowItem rowItem = getItem(position);
@@ -76,6 +77,7 @@ public class ShopListViewAdapter extends ArrayAdapter<ShopRowItem> implements On
         return convertView;
     }
 
+    // handle touch events on this item
     @Override
     public boolean onTouch(View v, MotionEvent event) {
     	int action = event.getActionMasked();

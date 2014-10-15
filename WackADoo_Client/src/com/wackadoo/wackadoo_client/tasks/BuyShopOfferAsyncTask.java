@@ -1,24 +1,17 @@
 package com.wackadoo.wackadoo_client.tasks;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.util.EntityUtils;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -51,7 +44,7 @@ public class BuyShopOfferAsyncTask extends AsyncTask<String, Integer, Boolean> {
 		
 		List <NameValuePair> nameValuePairs = new ArrayList <NameValuePair>(3);
 		nameValuePairs.add(new BasicNameValuePair("shop_transaction[offer_id]", String.valueOf(offerId)));
-		nameValuePairs.add(new BasicNameValuePair("shop_transaction[offer_type]", "bonus"));
+		nameValuePairs.add(new BasicNameValuePair("shop_transaction[offer_type]", offerType));
 		nameValuePairs.add(new BasicNameValuePair("shop_transaction[customer_identifier]", shopCharacterId));
 
 		try {
@@ -60,7 +53,7 @@ public class BuyShopOfferAsyncTask extends AsyncTask<String, Integer, Boolean> {
 		    String responseLine = response.getStatusLine().toString();
 		    Log.d(TAG, "response line: " + responseLine);
 		    
-		    if (responseLine.contains("200 OK")) {
+		    if (responseLine.contains("20")) {
 		    	return true;
 		    } else if (responseLine.contains("403 Forbidden")) {
 		    	// not enough credits
