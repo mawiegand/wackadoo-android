@@ -51,6 +51,7 @@ public class InfoScreenActivity extends WackadooActivity {
 					
 					switch(v.getId()) {
 						case R.id.infoscreen_supportbtn:
+							showSupport();
 							break;
 							
 						case R.id.infoscreen_websitebtn:
@@ -81,6 +82,15 @@ public class InfoScreenActivity extends WackadooActivity {
 		backBtn.setOnTouchListener(touchListener);
 	}
 	
+	protected void showSupport() {
+		Intent intent = new Intent(Intent.ACTION_SENDTO); 
+        intent.setType("text/plain");
+        intent.setData(Uri.parse("mailto:support@5dlab.com")); 
+        intent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.infoscreen_support_subject));
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // this will make such that when user returns to your app, your app is displayed, instead of the email app.
+        startActivity(intent);		
+	}
+
 	// show dialog with copyright information
     private void showCopyrightDialog() {
     	AlertDialog.Builder builder = new AlertDialog.Builder(this);

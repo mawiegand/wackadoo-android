@@ -85,32 +85,38 @@
 	            android:layout_height="match_parent">
 			</RelativeLayout>
 	   		
-	   		<RelativeLayout 
-	      	    android:id="@+id/headerControls"  
-		        android:layout_height="wrap_content"
-	    	    android:layout_gravity="center"
-	        	android:layout_width="0dp"
-	      		android:layout_weight="0.2">
+	   		<RelativeLayout
+	   		    android:id="@+id/headerControls"
+	   		    android:layout_width="0dp"
+	   		    android:layout_height="match_parent"
+	   		    android:layout_gravity="center"
+	   		    android:layout_marginBottom="20dp"
+	   		    android:layout_marginTop="20dp"
+	   		    android:layout_weight="0.20" >
 	    		
 	   		    <ImageButton
+	   		        android:id="@+id/title_sound_button"
 	   		        style="@style/customImageButtonStyle"
-				    android:id="@+id/title_sound_button" 
-	    	    	android:layout_gravity="right"
-	    	    	android:layout_centerInParent="true"
-	    	    	android:src="@drawable/title_sound_on" 
-					android:paddingRight="45dp"
-	    	    	android:paddingLeft="0dip"
-	    	    	android:layout_alignParentRight="true" />
+	   		        android:layout_width="40dp"
+	   		        android:layout_height="match_parent"
+	   		        android:layout_alignParentRight="true"
+	   		        android:layout_gravity="right"
+	   		        android:layout_marginRight="70dp"
+	   		        android:scaleType="fitCenter"
+	   		        android:src="@drawable/title_sound_on" />
 	   		    
 	    		<ImageButton
+	    		    android:id="@+id/title_info_button"
 	    		    style="@style/customImageButtonStyle"
-	    		    android:id="@+id/title_info_button" 
-	    	    	android:layout_gravity="right"
-	    	    	android:layout_centerInParent="true"
-	    	    	android:src="@drawable/title_info_button"
-	    	    	android:paddingRight="10dip"
-	    	    	android:paddingLeft="0dip"
-	    	    	android:layout_alignParentRight="true" />
+	    		    android:layout_width="40dp"
+	    		    android:layout_height="match_parent"
+	    		    android:layout_alignBottom="@+id/title_sound_button"
+	    		    android:layout_alignParentRight="true"
+	    		    android:layout_gravity="right"
+	    		    android:layout_marginRight="10dp"
+	    		    android:cropToPadding="true"
+	    		    android:scaleType="fitCenter"
+	    		    android:src="@drawable/title_info_button" />
 				
 	   		</RelativeLayout>    		
 	    </LinearLayout>
@@ -196,7 +202,7 @@
 	 	              	    android:id="@+id/characterFrameContainerSpacer"
 	 	              	    android:layout_width="match_parent"
 	 	              	    android:layout_height="0px"
-	 	              	    android:layout_weight="0.31" />
+	 	              	    android:layout_weight="0.27" />
 	    		    	
 	 	              	<FrameLayout 
 	 	              	    android:layout_width="wrap_content"
@@ -210,17 +216,10 @@
 		 	              	    android:layout_marginBottom="25dp"
 		 	              	    android:layout_marginLeft="5dp"
 		 	              	    android:layout_marginRight="5dp"
-		 	              	    android:layout_marginTop="20dp"
+		 	              	    android:layout_marginTop="25dp"
 		 	              	    android:src="@drawable/standard_character_pic"
 		 	              	    android:visibility="invisible" />
 					 	    	
-	 	              	    <TextView
-	 	              	        android:id="@+id/characterFrameTextview"
-	 	              	        style="@style/customTextViewStyle"
-	 	              	        android:layout_width="match_parent"
-	 	              	        android:gravity="center"
-	 	              	        android:textSize="8sp" />
-
 	 	              	    <Button
 	 	              	        android:id="@+id/characterFrame"
 	 	              	        android:layout_width="124dp"
@@ -228,8 +227,14 @@
 	 	              	        android:background="@drawable/title_character_frame"
 	 	              	        android:text="@string/credentials_headline"
 	 	              	        android:textColor="@color/white"
-	 	              	        android:textSize="12sp" />
-	 	              	    
+	 	              	        android:textSize="20sp" />
+		 	              	
+		 	              	<TextView
+	 	              	        android:id="@+id/characterFrameTextview"
+	 	              	        style="@style/customTextViewStyle"
+	 	              	        android:layout_width="match_parent"
+	 	              	        android:gravity="center"
+	 	              	        android:textSize="12sp" />              	    
 	 	              	</FrameLayout>
 				 	</LinearLayout>
 		 	

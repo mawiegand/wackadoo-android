@@ -109,6 +109,10 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
         // warning if no internet connection
 		if (!StaticHelper.isOnline(this)) {
 			Toast.makeText(this, getResources().getString(R.string.no_connection), Toast.LENGTH_LONG).show();
+			userCredentials.clearAllCredentials();
+			userCredentials = new UserCredentials(getApplicationContext());
+			loggedIn = false;
+			updateUi();
 		} else {
 			// facebook: if activity is launched and session not null -> trigger stateChange manually
 			if (userCredentials.isFbUser()) {

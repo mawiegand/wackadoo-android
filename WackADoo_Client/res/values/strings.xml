@@ -134,5 +134,6 @@
     <string name="infoscreen_supported">Supported by</string>
    	<string name="infoscreen_contributors">Contributors: Anand, Jan-Niklas Bartholomäus, Max Buck, Christian Seidel, Matteo Bottin, David Canela, Patrick Fox, Maggie Jaglo, Jan Hendrik Kegel, Sascha Lange, Stefan Mattern, Thomas Mohr, Arno Möller, Christiane Lange, Hai Pham, Pikomi, Hajo Runne, Julian Schmid, Susan Tackenberg, Christian Wansart, Jupp Wegner, Marcel Wiegand </string>
    	<string name="infoscreen_copyright">Copyright 2013 5D Lab GmbH. All rights reserved.\n\nThe app makes use of following 3rd party libraries:\nGson Library &#169; 2008&#8211;2011\nJoda Time &#169; 2002&#8211;2013\n\nOur servers are powered by the Augmented Worlds Engine &#169; 2011&#8211;2013 5D Lab GmbH and built upon Ruby on Rails.</string>
-    
+    <string name="infoscreen_support_subject">Support question</string>
+   	
 </resources>
