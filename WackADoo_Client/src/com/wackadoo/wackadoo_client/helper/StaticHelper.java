@@ -49,6 +49,7 @@ public class StaticHelper {
 	// static variables for background music
 	public static MediaPlayer backgroundMusicPlayer;
 	public static boolean continueMusic;
+	public static boolean soundOn;
 
 	// workaround for dynamic height of the ListView. fixes issue of not showing every item in listviews when in a scrollview 
 	public static void setListViewHeightBasedOnChildren(ListView listView) {

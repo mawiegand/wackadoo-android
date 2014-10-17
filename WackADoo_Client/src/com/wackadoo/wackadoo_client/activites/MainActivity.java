@@ -65,7 +65,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	
 	private ImageButton playBtn, accountmanagerBtn, selectGameBtn, facebookBtn, shopBtn, soundBtn, infoBtn;
 	private Button characterFrame;
-	private boolean soundOn, lastWorldAccessible, loggedIn, tryConnect;
+	private boolean lastWorldAccessible, loggedIn, tryConnect;
 	private AnimationDrawable playButtonAnimation;
 	private UserCredentials userCredentials;
 	private Handler customHandler;
@@ -128,7 +128,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		
 		// start background music, if its enabled
 		StaticHelper.continueMusic = false;
-		if (soundOn && !StaticHelper.backgroundMusicPlayer.isPlaying()) {
+		if (StaticHelper.soundOn && !StaticHelper.backgroundMusicPlayer.isPlaying()) {
 			StaticHelper.backgroundMusicPlayer.start();
 		}
     }
@@ -166,7 +166,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		tryConnect = false;
 		
 	    // sound is on by default
-	    soundOn = true;
+	    StaticHelper.soundOn = true;
 	    
 	    // user logged out by default
 	    loggedIn = false;
@@ -327,10 +327,10 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		soundBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (soundOn) {
+				if (StaticHelper.soundOn) {
 					soundBtn.setImageResource(R.drawable.title_sound_off);
 					StaticHelper.backgroundMusicPlayer.stop();
-					soundOn = false;
+					StaticHelper.soundOn = false;
 
 				} else {
 					soundBtn.setImageResource(R.drawable.title_sound_on);
@@ -338,7 +338,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 				    StaticHelper.backgroundMusicPlayer.setLooping(true);
 				    StaticHelper.backgroundMusicPlayer.setVolume(100, 100);
 					StaticHelper.backgroundMusicPlayer.start();
-					soundOn = true;
+					StaticHelper.soundOn = true;
 				}
 			}
 		});
@@ -583,6 +583,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		bundle.putString("expiration", expiration);
 		bundle.putString("userId", userId);
 		bundle.putString("hostname", "https://gs05.wack-a-doo.com");
+		//TODO Hardcoded url
 		//bundle.putString("hostname", userCredentials.getHostname());
 		intent.putExtras(bundle);
 		startActivity(intent);
