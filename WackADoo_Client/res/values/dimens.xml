@@ -7,7 +7,7 @@
     <dimen name="shopStandardListFontsize">15sp</dimen>
     <dimen name="shopHeadlineFontsize">14sp</dimen>
     <dimen name="shopSubheadingFontsize">14sp</dimen>
-    <dimen name="topBarFontsize">16sp</dimen>
+    <dimen name="topBarFontsize">18sp</dimen>
     <dimen name="gameItemBigTextsize">15sp</dimen>
     <dimen name="gameItemSmallTextsize">12sp</dimen>
     <dimen name="accountManagerStdTextsize">15sp</dimen>

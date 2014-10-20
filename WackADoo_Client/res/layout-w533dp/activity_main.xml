@@ -80,7 +80,7 @@
 	    	<RelativeLayout 
 	       		android:id="@+id/headerSpacer" 
 		        android:layout_width="0dp"
-		        android:layout_weight="0.6"
+		        android:layout_weight="0.5"
 	            android:layout_height="match_parent">
 			</RelativeLayout>
 	   		
@@ -89,7 +89,7 @@
 		        android:layout_height="wrap_content"
 	    	    android:layout_gravity="center"
 	        	android:layout_width="0dp"
-	      		android:layout_weight="0.2">
+	      		android:layout_weight="0.3">
 	    		
 	   		    <ImageButton
 	   		        style="@style/customImageButtonStyle"
@@ -97,7 +97,7 @@
 	    	    	android:layout_gravity="right"
 	    	    	android:layout_centerInParent="true"
 	    	    	android:src="@drawable/title_sound_on" 
-					android:paddingRight="45dp"
+					android:paddingRight="55dp"
 	    	    	android:paddingLeft="0dip"
 	    	    	android:layout_alignParentRight="true" />
 	   		    
@@ -195,7 +195,7 @@
 	 	              	    android:id="@+id/characterFrameContainerSpacer"
 	 	              	    android:layout_width="match_parent"
 	 	              	    android:layout_height="0px"
-	 	              	    android:layout_weight="0.30" />
+	 	              	    android:layout_weight="0.33" />
 	    		    	
 	 	              	<FrameLayout
 	 	              	    android:layout_width="wrap_content"

@@ -200,6 +200,8 @@ public class AccountManagerActivity extends WackadooActivity implements AccountM
     	final EditText input = new EditText(this);
     	if (callback.equals(AlertCallback.Password)) {
 	    	input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+		} else {
+			input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
 		}
     	
     	builder.setView(input);

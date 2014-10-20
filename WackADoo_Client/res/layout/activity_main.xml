@@ -375,10 +375,10 @@
 			            		android:layout_height="0dp"
 			            		android:layout_gravity="center">
 				 		    		
-				 		    		<ImageButton
-					 	    			style="@style/customImageButtonStyle"
-					 	    			android:id="@+id/facebookButton"
-					 	    			android:src="@drawable/title_facebook_button"/>
+			 		    		<ImageButton
+				 	    			style="@style/customImageButtonStyle"
+				 	    			android:id="@+id/facebookButton"
+				 	    			android:src="@drawable/title_facebook_button"/>
 				 		    </RelativeLayout>
 				 		</LinearLayout>
 			 		</RelativeLayout>

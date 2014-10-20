@@ -62,14 +62,9 @@
  	    
  	    <TextView 
  	        android:id="@+id/selectgamesTopbarDone"
- 	        style="@style/customTextViewStyle"
+ 	        style="@style/navigationButtonStyle"
  	        android:layout_alignParentRight="true"
- 	        android:layout_marginRight="@dimen/standard_margin"
- 	        android:text="@string/done" 
- 	        android:textSize="@dimen/topBarFontsize"
- 	        android:textColor="@color/textbox_orange"
- 	        android:textStyle="bold"
- 	        android:padding="5dp"/>
+ 	        android:text="@string/done"/>
  	    
  	</RelativeLayout>
 </FrameLayout>

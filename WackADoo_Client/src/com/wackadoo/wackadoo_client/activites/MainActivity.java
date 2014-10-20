@@ -22,11 +22,13 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -218,7 +220,9 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 
 	// set up touchlistener for facebook button
 	private void setUpFacebookBtn() {
-		facebookBtn.setOnTouchListener(new View.OnTouchListener() {
+		OnTouchListener touchListener = new OnTouchListener() {
+//		((RelativeLayout) findViewById(R.id.facebookButtonContainer)).setOnTouchListener(new View.OnTouchListener() {
+//		facebookBtn.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent e) {
 				switch (e.getAction()) {
@@ -259,17 +263,22 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 							
 						} else {
 							Session session = Session.getActiveSession();
-							Session.OpenRequest openRequest = new Session.OpenRequest(MainActivity.this);
-							openRequest.setPermissions(Arrays.asList("email"));
-							openRequest.setLoginBehavior(SessionLoginBehavior.SUPPRESS_SSO);
-							session.openForRead(openRequest);
+//							if (session != null && session.isClosed()) {
+								Session.OpenRequest openRequest = new Session.OpenRequest(MainActivity.this);
+								openRequest.setPermissions(Arrays.asList("email"));
+								openRequest.setLoginBehavior(SessionLoginBehavior.SUPPRESS_SSO);
+								session.openForRead(openRequest);
+//							}
 						}
 					}
 					break;
 				}
 				return false;
 			}
-		});
+		};
+		// make clickable area bigger by enabling click on outer container
+		facebookBtn.setOnTouchListener(touchListener);
+		((RelativeLayout) findViewById(R.id.facebookButtonContainer)).setOnTouchListener(touchListener);
 	}
 
 	// set up touchlistener for play button
@@ -301,7 +310,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 
 	// set up touchlistener for shop button
 	private void setUpShopBtn() {
-		shopBtn.setOnTouchListener(new View.OnTouchListener() {
+		OnTouchListener touchListener = new View.OnTouchListener() {
 			@SuppressLint("NewApi")
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
@@ -319,7 +328,10 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 				}
 				return true;
 			}
-		});
+		};
+		// make clickable area bigger by enabling click on outer container
+		shopBtn.setOnTouchListener(touchListener);
+		((RelativeLayout) findViewById(R.id.headerShopContainer)).setOnTouchListener(touchListener);
 	}
 
 	// set up touchlistener for sound button
@@ -370,7 +382,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	// set up touchlistener for accountmanager button
 	private void setUpAccountmanagerBtn() {
 		accountmanagerBtn.setVisibility(View.VISIBLE);
-		accountmanagerBtn.setOnTouchListener(new View.OnTouchListener() {
+		OnTouchListener touchListener = new View.OnTouchListener() {
 			@SuppressLint("NewApi")
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
@@ -388,7 +400,10 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 				}
 				return true;
 			}
-		});
+		};
+		// make clickable area bigger by enabling click on outer container
+		accountmanagerBtn.setOnTouchListener(touchListener);
+		((RelativeLayout) findViewById(R.id.accountmanagerButtonVerticalContainer)).setOnTouchListener(touchListener);
 	}
 	
 	// set up touchlistener for selectgame button
@@ -403,7 +418,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 			selectGameBtn.setImageResource(R.drawable.title_changegame_warn_button);
 		}
 		
-		selectGameBtn.setOnTouchListener(new View.OnTouchListener() {
+		OnTouchListener touchListener = new View.OnTouchListener() {
 			@SuppressLint("NewApi")
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
@@ -429,7 +444,10 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 				}
 				return true;
 			}
-		});
+		};
+		// make clickable area bigger by enabling click on outer container
+		selectGameBtn.setOnTouchListener(touchListener);
+		((RelativeLayout) findViewById(R.id.chooseworldButtonVerticalContainer)).setOnTouchListener(touchListener);
 	}
 
 	// set up touchlistener for characterframe
@@ -521,6 +539,11 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 			
 		} else if (state.isClosed()) {
 			Log.d(TAG, "Facebook Session closed!");
+			if (session != null) {
+				session.closeAndClearTokenInformation();	
+				session.close();
+				Session.setActiveSession(null);
+			}
 			userCredentials.setFbUser(false);
 			// password generated = attempt to connect fb account to local character failed = dont log out
 			if (userCredentials.isPasswordGenerated()) {

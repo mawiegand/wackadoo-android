@@ -147,14 +147,8 @@
 	 	    
 	 	    <TextView 
 	 	        android:id="@+id/accountTopbarBack"
-	 	        style="@style/customTextViewStyle"
+	 	        style="@style/navigationButtonStyle"
 	 	        android:layout_alignParentLeft="true"
-			    android:layout_marginLeft="@dimen/standard_margin"
-	 	        android:text="@string/done" 
-	 	        android:textStyle="bold"
-	 	        android:textSize="@dimen/topBarFontsize"
-	 	        android:textColor="@color/textbox_orange"
-	 	        android:padding="5dp"/>
-	 	    
-	 	</RelativeLayout>
+	 	        android:text="@string/done"/>
+	</RelativeLayout>
 </FrameLayout>
