@@ -61,18 +61,18 @@ import com.wackadoo.wackadoo_client.tasks.GetCharacterAsyncTask;
 import com.wackadoo.wackadoo_client.tasks.GetCurrentGamesAsyncTask;
 
 public class MainActivity extends Activity implements GameLoginCallbackInterface, FacebookTaskCallbackInterface, 
-		CurrentGamesCallbackInterface, CharacterCallbackInterface, Runnable, StatusCallback {
+		CurrentGamesCallbackInterface, CharacterCallbackInterface, StatusCallback {
 
 	private static final String TAG = MainActivity.class.getSimpleName();
+	private static final int UPDATE_ANIMATION_TIMER = 6400;
+	private static final int UPDATE_TOKEN_TIMER = 10000;
 	
 	private ImageButton playBtn, accountmanagerBtn, selectGameBtn, facebookBtn, shopBtn, soundBtn, infoBtn;
 	private Button characterFrame;
 	private boolean lastWorldAccessible, loggedIn, tryConnect;
-	private AnimationDrawable playButtonAnimation;
 	private UserCredentials userCredentials;
-	private Handler customHandler;
 	private CustomProgressDialog progressDialog;
-	private Handler tokenHandler;
+	private Handler mAnimationHandler, mTokenHandler;
 	private UiLifecycleHelper uiHelper;		
 	
 	@Override
@@ -89,15 +89,16 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	    
 	    setUpUi();
 	    setUpButtons();
-	    setUpPlayButtonAnimation();
+	   
+	    // set up handlers
+	    mAnimationHandler = new android.os.Handler();
+		mTokenHandler = new android.os.Handler();
 
 		// start tracking
 		Sample.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.ZZZZZ"));
 		Sample.setServerSide(false);
 		Sample.setAppToken("wad-rt82-fhjk-18");
 		AutoPing.getInstance().startAutoPing();
-		tokenHandler = new Handler();
-		tokenHandler.post(this);
 	}
 
 	@Override
@@ -110,11 +111,11 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
         
         // warning if no internet connection
 		if (!StaticHelper.isOnline(this)) {
-			Toast.makeText(this, getResources().getString(R.string.no_connection), Toast.LENGTH_LONG).show();
 			userCredentials.clearAllCredentials();
 			userCredentials = new UserCredentials(getApplicationContext());
 			loggedIn = false;
 			updateUi();
+			
 		} else {
 			// facebook: if activity is launched and session not null -> trigger stateChange manually
 			if (userCredentials.isFbUser()) {
@@ -133,11 +134,17 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		if (StaticHelper.soundOn && !StaticHelper.backgroundMusicPlayer.isPlaying()) {
 			StaticHelper.backgroundMusicPlayer.start();
 		}
+		
+		// restart threads
+		mAnimationHandler.postDelayed(updateAnimationThread, UPDATE_ANIMATION_TIMER);
+		mTokenHandler.postDelayed(updateTokenThread, UPDATE_TOKEN_TIMER);
     }
     @Override
     public void onPause() {
         super.onPause();
 	    uiHelper.onPause();		
+	    mAnimationHandler.removeCallbacks(updateAnimationThread);
+	    mTokenHandler.removeCallbacks(updateTokenThread);
 	    
 	    if (!StaticHelper.continueMusic && StaticHelper.backgroundMusicPlayer.isPlaying()) {
 	    	StaticHelper.backgroundMusicPlayer.pause();
@@ -184,28 +191,31 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		} 
     }
     
-    // start animation of play button
-	private void setUpPlayButtonAnimation() {
-		
-		// start animation of glance
-		playBtn.setImageResource(R.anim.animationlist_loginbutton);
-
-		customHandler = new android.os.Handler();
-		customHandler.postDelayed(updateTimerThread, 0);
-	}
-	
-	// runs the scale animation repeatedly
-	private Runnable updateTimerThread = new Runnable() {
-		Animation scaleAnimation;
-		
-		public void run() {		
-			if (scaleAnimation == null) scaleAnimation = AnimationUtils.loadAnimation(
-					MainActivity.this, R.anim.scale_loginbutton);
+	//  thread for scale animation
+	private Runnable updateAnimationThread = new Runnable() {
+		public void run() {	
+			Log.d(TAG, "Animation Thread");
+			// run scale animation
+			Animation scaleAnimation = AnimationUtils.loadAnimation(
+				MainActivity.this, R.anim.scale_loginbutton);
 			playBtn.startAnimation(scaleAnimation);
-			customHandler.postDelayed(this, 6400);
+			
+			mAnimationHandler.postDelayed(this, UPDATE_ANIMATION_TIMER);
 		}
 	};
-
+	
+	//  thread for automatic token refresh
+	private Runnable updateTokenThread = new Runnable() {
+		public void run() {	
+			Log.d(TAG, "Token Thread");
+			if (userCredentials.getAccessToken().isExpired() && 
+					(userCredentials.getUsername().length() > 0 || userCredentials.getEmail().length() > 0)) {
+				new GameLoginAsyncTask(MainActivity.this, userCredentials, false, true).execute();
+			}
+			mTokenHandler.postDelayed(this, UPDATE_TOKEN_TIMER);
+		}
+	};
+	
 	// start setup methods for each button in UI
 	private void setUpButtons() {
 		setUpPlayBtn();
@@ -221,8 +231,6 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	// set up touchlistener for facebook button
 	private void setUpFacebookBtn() {
 		OnTouchListener touchListener = new OnTouchListener() {
-//		((RelativeLayout) findViewById(R.id.facebookButtonContainer)).setOnTouchListener(new View.OnTouchListener() {
-//		facebookBtn.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent e) {
 				switch (e.getAction()) {
@@ -233,42 +241,39 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 				case MotionEvent.ACTION_UP:
 					facebookBtn.setImageResource(R.drawable.title_facebook_button);
 					
-					// fb user so pick friends
-					if (userCredentials.isFbUser()) {
-
-					// no fb user, so show connect dialog
+					// warning if no internet connection
+					if (!StaticHelper.isOnline(MainActivity.this)) {
+						Toast.makeText(MainActivity.this, getResources().getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
 					} else {
 						if (loggedIn) {
 							AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
 							builder.setTitle(R.string.fb_connect_title)
-								   .setMessage(R.string.fb_connect_message)
-								   .setPositiveButton(R.string.alert_quit_yes, new OnClickListener() {
-										@Override
-										public void onClick(DialogInterface dialog, int which) {
-											tryConnect = true;
-											Session session = Session.getActiveSession();
-											if (session == null) { 
-												session = new Session(MainActivity.this);
-											}
-											Session.OpenRequest openRequest = new Session.OpenRequest(MainActivity.this);
-											openRequest.setPermissions(Arrays.asList("email"));
-											openRequest.setLoginBehavior(SessionLoginBehavior.SUPPRESS_SSO);
-											session.openForRead(openRequest);
-										}
-								    })
-								   .setNegativeButton(R.string.alert_quit_no, null);
+							.setMessage(R.string.fb_connect_message)
+							.setPositiveButton(R.string.alert_quit_yes, new OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+									tryConnect = true;
+									Session session = Session.getActiveSession();
+									if (session == null) { 
+										session = new Session(MainActivity.this);
+									}
+									Session.OpenRequest openRequest = new Session.OpenRequest(MainActivity.this);
+									openRequest.setPermissions(Arrays.asList("email"));
+									openRequest.setLoginBehavior(SessionLoginBehavior.SUPPRESS_SSO);
+									session.openForRead(openRequest);
+								}
+							})
+							.setNegativeButton(R.string.alert_quit_no, null);
 							AlertDialog dialog = builder.create();
-						    dialog.show();
-						    StaticHelper.styleDialog(MainActivity.this, dialog);
+							dialog.show();
+							StaticHelper.styleDialog(MainActivity.this, dialog);
 							
 						} else {
 							Session session = Session.getActiveSession();
-//							if (session != null && session.isClosed()) {
-								Session.OpenRequest openRequest = new Session.OpenRequest(MainActivity.this);
-								openRequest.setPermissions(Arrays.asList("email"));
-								openRequest.setLoginBehavior(SessionLoginBehavior.SUPPRESS_SSO);
-								session.openForRead(openRequest);
-//							}
+							Session.OpenRequest openRequest = new Session.OpenRequest(MainActivity.this);
+							openRequest.setPermissions(Arrays.asList("email"));
+							openRequest.setLoginBehavior(SessionLoginBehavior.SUPPRESS_SSO);
+							session.openForRead(openRequest);
 						}
 					}
 					break;
@@ -283,6 +288,9 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 
 	// set up touchlistener for play button
 	private void setUpPlayBtn() {
+		// start animation of glance
+		playBtn.setImageResource(R.anim.animationlist_loginbutton);
+				
 		playBtn.setOnTouchListener(new View.OnTouchListener() {
 			@SuppressLint("NewApi")
 			@Override
@@ -290,11 +298,12 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:
 					playBtn.setImageResource(R.drawable.title_play_button_active);
-					customHandler.removeCallbacks(updateTimerThread);
+					mAnimationHandler.removeCallbacks(updateAnimationThread);
 					break;
 
 				case MotionEvent.ACTION_UP:
-					setUpPlayButtonAnimation();
+					playBtn.setImageResource(R.anim.animationlist_loginbutton);
+					mAnimationHandler.postDelayed(updateAnimationThread, UPDATE_ANIMATION_TIMER);
 					if (loggedIn) {
 						triggerPlayGame();
 					} else {
@@ -655,7 +664,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		} else {
 			ImageView view = (ImageView) findViewById(R.id.characterFrameImageView);
 			view.setImageBitmap(Avatar.getAvatar(userCredentials.getAvatarString(), view.getWidth(), view.getHeight(), getResources()));
-			Toast.makeText(this, getResources().getString(R.string.login_success_toast), Toast.LENGTH_LONG)
+			Toast.makeText(this, getResources().getString(R.string.login_success_toast), Toast.LENGTH_SHORT)
 		     .show();
 			updateUi();
 		}
@@ -669,8 +678,8 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		userCredentials.setAvatarString(game.getCharacter().getAvatarString());
 		ImageView view = (ImageView) findViewById(R.id.characterFrameImageView);
 		view.setImageBitmap(Avatar.getAvatar(game.getCharacter().getAvatarString(), view.getWidth(), view.getHeight(), getResources()));
-		Toast.makeText(this, getResources().getString(R.string.login_success_toast), Toast.LENGTH_LONG)
-	     .show();
+		Toast.makeText(this, getResources().getString(R.string.login_success_toast), Toast.LENGTH_SHORT)
+	         .show();
 		updateUi();
 	}
 	
@@ -715,17 +724,6 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 			facebookBtn.setVisibility(View.VISIBLE);
 			((TextView) findViewById(R.id.characterFrameTextview)).setText("");
 		}
-	}
-
-	// start automatic token refresh 
-	@Override
-	public void run() {
-		if (userCredentials.getAccessToken().isExpired() && 
-				(userCredentials.getUsername().length() > 0 || userCredentials.getEmail().length() > 0)) {
-			new GameLoginAsyncTask(this, userCredentials, false, true).execute();
-		}
-		Log.d(TAG, "Token refresh handler");
-		tokenHandler.postDelayed(this, 10000);		
 	}
 
 	// callback interface for FacebookAsyncTask

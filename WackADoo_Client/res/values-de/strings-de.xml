@@ -12,7 +12,7 @@
     <string name="login_invalid_grant">E-Mail und/oder Passwort falsch!</string>
     <string name="server_communication">Verbinde zum Server</string>
     <string name="please_wait">Bitte warten&#8230;</string>
-    <string name="no_connection">Es besteht keine Internetverbindung</string>
+    <string name="no_connection">Bitte aktiviere deine Internetverbindung, sonst funktioniert Wack-a-Doo nicht</string>
     
     <!-- Facebook -->
     <string name="fb_task_failure">Fehler bei Kommunikation mit Facebook. Bitte versuche es erneut oder kontaktiere den Support.</string>
