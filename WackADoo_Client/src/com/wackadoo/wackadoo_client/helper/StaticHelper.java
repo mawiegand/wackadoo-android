@@ -5,9 +5,9 @@ import java.net.InetAddress;
 import java.util.List;
 import java.util.Locale;
 
-import org.apache.http.HttpRequest;
+import javax.net.ssl.SSLException;
+
 import org.apache.http.HttpResponse;
-import org.apache.http.MethodNotSupportedException;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -16,7 +16,9 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.impl.DefaultHttpRequestFactory;
+import org.apache.http.conn.ssl.AbstractVerifier;
+import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.conn.ssl.X509HostnameVerifier;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpConnectionParams;
@@ -153,12 +155,6 @@ public class StaticHelper {
 		response = httpClient.execute(request);		
 		return response;
 	}
-	
-	// set up the given httpRequest & httpClient for an async task
-	public static void setUpHttpObjects(DefaultHttpClient httpClient) {
-		HttpConnectionParams.setSoTimeout(httpClient.getParams(), 10*1000); 
-		HttpConnectionParams.setConnectionTimeout(httpClient.getParams(),10*1000); 
-	}
 
 	// set up backgroundMusicPlayer for background music 
 	public static void setUpPlayer(Context context) {
@@ -232,4 +228,5 @@ public class StaticHelper {
 	    	((TextView) dialog.findViewById(id)).setTypeface(tf);
 	    }
 	}
+	
 }

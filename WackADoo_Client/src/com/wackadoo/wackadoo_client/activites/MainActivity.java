@@ -646,6 +646,8 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	// callback interface for error in GameLoginAsyncTask
 	@Override
 	public void loginCallbackError(String error, boolean restoreAccount, boolean refresh) {
+		Toast.makeText(this, getString(R.string.login_failed_toast), Toast.LENGTH_SHORT)
+			 .show();
 		loggedIn = false;
 		updateUi();
 	}

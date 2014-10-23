@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.MailTo;
 import android.net.Uri;
+import android.net.http.SslError;
+import android.webkit.SslErrorHandler;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -82,6 +84,11 @@ public class GameWebViewClient extends WebViewClient {
 		return true;
 	}
 
+	@Override
+	public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+		handler.proceed();
+	}
+	
 	// test: rescale window after page is loaded
 	@Override
 	public void onPageFinished(WebView view, String url) {

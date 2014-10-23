@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -80,6 +81,18 @@ public class WackadooWebviewActivity extends Activity {
     	// start automatic connection test in background
     	mConnectionHandler = new android.os.Handler();
     	mConnectionHandler.postDelayed(checkConnectionThread, UPDATE_CONNECTION_TIMER);
+    }
+    
+    // log touch events 
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent evt) {
+        float x = evt.getAxisValue(MotionEvent.AXIS_X);
+        float y = evt.getAxisValue(MotionEvent.AXIS_Y);
+        Log.i("TOUCH", "---->" + evt.getActionMasked() + ": " + x + "|" + y);
+        // 0 = ACTION_DOWN, 1 = ACTION_UP, 2 = ACTION_MOVE, 
+        // 5 = ACTION_POINTER_1_DOWN, 6 = ACTION_POINTER_1_UP
+        return super.dispatchTouchEvent(evt);
+
     }
     
     @Override
