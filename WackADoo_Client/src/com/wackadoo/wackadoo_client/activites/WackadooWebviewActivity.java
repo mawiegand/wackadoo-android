@@ -6,12 +6,15 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.net.http.SslError;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Window;
 import android.view.WindowManager;
+import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -59,6 +62,13 @@ public class WackadooWebviewActivity extends Activity {
         		super.onScaleChanged(view, oldScale, newScale);
         		Log.d(TAG, "Scale changed!");
         	}
+        	
+        	@Override
+        	public void onReceivedSslError(WebView view,
+        			SslErrorHandler handler, SslError error) {
+        		handler.proceed();
+        	}
+        	
         });
         
         webView.setWebChromeClient(new WebChromeClient());
@@ -68,6 +78,11 @@ public class WackadooWebviewActivity extends Activity {
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
         webSettings.setLoadWithOverviewMode(true);
         webSettings.setUseWideViewPort(true);
+        webSettings.setDomStorageEnabled(true);	
+        
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            WebView.setWebContentsDebuggingEnabled(true);
+        }
         
         Bundle b = getIntent().getExtras();
         final LoginJavaScriptHandler loginHandler = new LoginJavaScriptHandler(this, b.getString("accessToken"), b.getString("expiration"), b.getString("userId"), b.getString("hostname"));

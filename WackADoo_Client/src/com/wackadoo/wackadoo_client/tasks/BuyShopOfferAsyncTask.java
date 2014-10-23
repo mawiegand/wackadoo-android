@@ -15,6 +15,7 @@ import android.util.Log;
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.helper.StaticHelper;
 import com.wackadoo.wackadoo_client.interfaces.BuyShopOfferCallbackInterface;
+import com.wackadoo.wackadoo_client.model.UserCredentials;
 
 public class BuyShopOfferAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	
@@ -22,11 +23,12 @@ public class BuyShopOfferAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	
     private Context context;
     private int offerId;
-    private String offerType, shopCharacterId, accessToken;
+    private String offerType, shopCharacterId;
+	private UserCredentials userCredentials;
     
-    public BuyShopOfferAsyncTask(Context context, String accessToken, int offerId, String shopCharacterId, String offerType) {
+    public BuyShopOfferAsyncTask(Context context, UserCredentials userCredentials, int offerId, String shopCharacterId, String offerType) {
     	this.context = context;
-    	this.accessToken = accessToken;
+    	this.userCredentials = userCredentials;
     	this.offerId = offerId;
     	this.offerType = offerType;
     	this.shopCharacterId = shopCharacterId;
@@ -35,7 +37,7 @@ public class BuyShopOfferAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	@Override
 	protected Boolean doInBackground(String... params) {
 		// TODO: correct url?
-		String completeURL = StaticHelper.generateUrlForTask(context, false, context.getString(R.string.buyShopItemPath));
+		String completeURL = StaticHelper.generateUrlForTask(context, false, context.getString(R.string.buyShopItemPath), userCredentials);
 		
 		List <NameValuePair> nameValuePairs = new ArrayList <NameValuePair>(3);
 		nameValuePairs.add(new BasicNameValuePair("shop_transaction[offer_id]", String.valueOf(offerId)));
@@ -43,7 +45,7 @@ public class BuyShopOfferAsyncTask extends AsyncTask<String, Integer, Boolean> {
 		nameValuePairs.add(new BasicNameValuePair("shop_transaction[customer_identifier]", shopCharacterId));
 
 		try {
-			HttpResponse response = StaticHelper.executeRequest(HttpPost.METHOD_NAME, completeURL, nameValuePairs, accessToken);
+			HttpResponse response = StaticHelper.executeRequest(HttpPost.METHOD_NAME, completeURL, nameValuePairs, userCredentials.getAccessToken().getToken());
 		    
 		    String responseLine = response.getStatusLine().toString();
 		    Log.d(TAG, "response line: " + responseLine);

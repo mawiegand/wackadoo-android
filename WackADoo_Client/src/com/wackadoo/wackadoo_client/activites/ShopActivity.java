@@ -283,7 +283,7 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 				int offerId = listAccount.get(position).getId();
 				progressDialog.show();
-				new BuyShopOfferAsyncTask(ShopActivity.this, userCredentials.getAccessToken().getToken(), offerId, shopCharacterId, "platinum").execute();
+				new BuyShopOfferAsyncTask(ShopActivity.this, userCredentials, offerId, shopCharacterId, "platinum").execute();
 				return true;
 			}
 		});
@@ -298,7 +298,7 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 				int offerId = listGold.get(position).getId();
 				progressDialog.show();
-				new BuyShopOfferAsyncTask(ShopActivity.this, userCredentials.getAccessToken().getToken(), offerId, shopCharacterId, "resource").execute();
+				new BuyShopOfferAsyncTask(ShopActivity.this, userCredentials, offerId, shopCharacterId, "resource").execute();
 				return true;
 			}
 		});
@@ -326,7 +326,7 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 				int offerId = listSpecial.get(position).getId();
 				progressDialog.show();
-				new BuyShopOfferAsyncTask(ShopActivity.this, userCredentials.getAccessToken().getToken(), offerId, shopCharacterId, "special").execute();
+				new BuyShopOfferAsyncTask(ShopActivity.this, userCredentials, offerId, shopCharacterId, "special").execute();
 				return true;
 			}
 		});
@@ -342,7 +342,7 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 				int offerId = listBonus.get(position).getId();
 				progressDialog.show();
-				new BuyShopOfferAsyncTask(ShopActivity.this, userCredentials.getAccessToken().getToken(), offerId, shopCharacterId, "bonus").execute();
+				new BuyShopOfferAsyncTask(ShopActivity.this, userCredentials, offerId, shopCharacterId, "bonus").execute();
 				return true;
 			}
 		});
@@ -398,7 +398,7 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 	@Override
 	public void onConsumeFinished(Purchase purchase, IabResult result) {
 		Log.d(TAG, "start play store verification");
-		new BuyPlayStoreAsyncTask(this, userCredentials.getAccessToken().getToken(), purchase.getOrderId(), purchase.getToken(), purchase.getSku()).execute();
+		new BuyPlayStoreAsyncTask(this, userCredentials, purchase.getOrderId(), purchase.getToken(), purchase.getSku()).execute();
 	}
 	
 	// callback interface for communication with backend after successful play store purchase

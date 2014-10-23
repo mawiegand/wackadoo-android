@@ -71,7 +71,7 @@ public class GetShopDataAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	@Override
 	protected Boolean doInBackground(String... params) {
 		// TODO: correct url?
-		String completeURL = context.getString(R.string.baseGameServerPath) + offerURL;
+		String completeURL = StaticHelper.generateUrlForTask(context, false, offerURL, userCredentials);
 		StringBuilder sb = new StringBuilder();
 		
 		try {

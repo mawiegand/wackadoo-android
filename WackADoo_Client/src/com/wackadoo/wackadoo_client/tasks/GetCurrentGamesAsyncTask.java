@@ -42,7 +42,7 @@ public class GetCurrentGamesAsyncTask extends AsyncTask<String, Integer, Boolean
 	@Override
 	protected Boolean doInBackground(String... params) {
 		Activity parent = (Activity) this.listener;
-		String completeURL = StaticHelper.generateUrlForTask(parent, true, parent.getString(R.string.gamesPath));
+		String completeURL = StaticHelper.generateUrlForTask(parent, true, parent.getString(R.string.gamesPath), null);
 		
 	    StringBuilder sb=new StringBuilder();
 	    

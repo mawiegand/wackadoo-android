@@ -86,7 +86,7 @@ public class SelectGameActivity extends WackadooActivity implements CurrentGames
 				Calendar c = Calendar.getInstance();		// date today
 				
 				// game is full
-				if (clickedGame.getMaxPlayers() == clickedGame.getPresentPlayers()){
+				if (false) {//clickedGame.getMaxPlayers() == clickedGame.getPresentPlayers()){
 					toast.setText(getResources().getString(R.string.selectgame_game_full));
 					
 				// signup is disabled 	
@@ -141,7 +141,7 @@ public class SelectGameActivity extends WackadooActivity implements CurrentGames
 		listView.setAdapter(adapter);
 		StaticHelper.setListViewHeightBasedOnChildren(listView);
 		if (createNew) {
-			userCredentials.setUsername(game.getCharacter().getName());
+			//userCredentials.setUsername(game.getCharacter().getName());
 			finish();
 		}
 	}

@@ -43,7 +43,7 @@ public class GetAccountAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	@Override
 	protected Boolean doInBackground(String... params) {
 		Activity parent = (Activity) listener;
-		String completeURL = StaticHelper.generateUrlForTask(parent, true, parent.getString(R.string.getAccountPath));
+		String completeURL = StaticHelper.generateUrlForTask(parent, true, parent.getString(R.string.getAccountPath), null);
 		
 		StringBuilder sb = new StringBuilder();
 		

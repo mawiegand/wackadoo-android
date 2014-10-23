@@ -582,9 +582,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		bundle.putString("accessToken", accessToken);
 		bundle.putString("expiration", expiration);
 		bundle.putString("userId", userId);
-		bundle.putString("hostname", "https://gs05.wack-a-doo.com");
-		//TODO Hardcoded url
-		//bundle.putString("hostname", userCredentials.getHostname());
+		bundle.putString("hostname", userCredentials.getHostname());
 		intent.putExtras(bundle);
 		startActivity(intent);
 	}
@@ -621,6 +619,9 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	// callback interface for GetCurrentGamesAsyncTask
 	@Override
 	public void getCurrentGamesCallback(ArrayList<GameInformation> games) {
+		//games.add(new GameInformation());
+		//games.get(0).setDefaultGame(true);
+		//games.get(0).setServer("https://192.168.178.94");
 		if (userCredentials.getHostname() == "" || !isGameOnline(games, userCredentials.getGameId())) {
 			for (int i = 0; i < games.size(); i++) {
 				if (games.get(i).isDefaultGame()) {
