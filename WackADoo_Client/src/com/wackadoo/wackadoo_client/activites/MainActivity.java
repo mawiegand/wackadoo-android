@@ -614,9 +614,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		bundle.putString("accessToken", accessToken);
 		bundle.putString("expiration", expiration);
 		bundle.putString("userId", userId);
-		bundle.putString("hostname", "https://gs05.wack-a-doo.com");
-		//TODO Hardcoded url
-		//bundle.putString("hostname", userCredentials.getHostname());
+		bundle.putString("hostname", userCredentials.getHostname());
 		intent.putExtras(bundle);
 		startActivity(intent);
 	}
@@ -654,21 +652,31 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	
 	// callback interface for GetCurrentGamesAsyncTask
 	@Override
-	public void getCurrentGamesCallback(ArrayList<GameInformation> games) {
-		if (userCredentials.getHostname() == "" || !isGameOnline(games, userCredentials.getGameId())) {
-			for (int i = 0; i < games.size(); i++) {
-				if (games.get(i).isDefaultGame()) {
-					userCredentials.setHostname(games.get(i).getServer());
-					userCredentials.setGameId(games.get(i).getId());
-					new GetCharacterAsyncTask(this, userCredentials, games.get(i), true).execute();
+	public void getCurrentGamesCallback(boolean result, ArrayList<GameInformation> games) {
+		// TODO: remove before release
+//		games.add(new GameInformation());
+//		games.get(0).setDefaultGame(true);
+//		games.get(0).setServer(getString(R.string.basePath));
+		
+		if (result) {
+			if (userCredentials.getHostname() == "" || !isGameOnline(games, userCredentials.getGameId())) {
+				for (int i = 0; i < games.size(); i++) {
+					if (games.get(i).isDefaultGame()) {
+						userCredentials.setHostname(games.get(i).getServer());
+						userCredentials.setGameId(games.get(i).getId());
+						new GetCharacterAsyncTask(this, userCredentials, games.get(i), true).execute();
+					}
 				}
+			} else {
+				ImageView view = (ImageView) findViewById(R.id.characterFrameImageView);
+				view.setImageBitmap(Avatar.getAvatar(userCredentials.getAvatarString(), view.getWidth(), view.getHeight(), getResources()));
+				Toast.makeText(this, getResources().getString(R.string.login_success_toast), Toast.LENGTH_SHORT)
+					 .show();
+				updateUi();
 			}
 		} else {
-			ImageView view = (ImageView) findViewById(R.id.characterFrameImageView);
-			view.setImageBitmap(Avatar.getAvatar(userCredentials.getAvatarString(), view.getWidth(), view.getHeight(), getResources()));
-			Toast.makeText(this, getResources().getString(R.string.login_success_toast), Toast.LENGTH_SHORT)
-		     .show();
-			updateUi();
+			Toast.makeText(this, getResources().getString(R.string.error_server_communication), Toast.LENGTH_SHORT)
+				 .show();
 		}
 	}	
 	

@@ -13,6 +13,7 @@
     <string name="server_communication">Connecting to server</string>
     <string name="please_wait">Please wait&#8230;</string>
     <string name="no_connection">Please activate your internet connection, it\'s necessary for playing Wack-a-Doo</string>
+    <string name="error_server_communication">Error while communicating with server. Please try again</string>
     
     <!-- Facebook -->
     <string name="fb_task_failure">Error while connection to facebook. Please try again or contact the support.</string>

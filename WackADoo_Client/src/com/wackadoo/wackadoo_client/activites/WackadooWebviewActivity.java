@@ -3,30 +3,22 @@ package com.wackadoo.wackadoo_client.activites;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
-import android.view.Window;
-import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.helper.GameWebViewClient;
 import com.wackadoo.wackadoo_client.helper.StaticHelper;
 import com.wackadoo.wackadoo_client.javascriptinterfaces.LoginJavaScriptHandler;
-import com.wackadoo.wackadoo_client.tasks.GameLoginAsyncTask;
 
 public class WackadooWebviewActivity extends Activity {	
 
@@ -48,13 +40,6 @@ public class WackadooWebviewActivity extends Activity {
             webView.restoreState(savedInstanceState);
         }
         
-        // test: scale webview to fit device window
-//        WindowManager manager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
-//	    DisplayMetrics metrics = new DisplayMetrics();
-//	    manager.getDefaultDisplay().getMetrics(metrics);
-//	    metrics.widthPixels /= metrics.density;
-//        width = metrics.widthPixels;
-        
         webView.setWebViewClient(new GameWebViewClient(this));
         webView.setWebChromeClient(new WebChromeClient());
         
@@ -63,6 +48,11 @@ public class WackadooWebviewActivity extends Activity {
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
         webSettings.setLoadWithOverviewMode(true);
         webSettings.setUseWideViewPort(true);
+        webSettings.setDomStorageEnabled(true);	
+        
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            WebView.setWebContentsDebuggingEnabled(true);
+        }
         
         Bundle b = getIntent().getExtras();
         final LoginJavaScriptHandler loginHandler = new LoginJavaScriptHandler(this, b.getString("accessToken"), b.getString("expiration"), b.getString("userId"), b.getString("hostname"));

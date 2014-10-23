@@ -47,7 +47,7 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
     @Override
 	protected Boolean doInBackground(String... params) {
 	    DeviceInformation deviceInformation = new DeviceInformation(context);
-		String completeURL = StaticHelper.generateUrlForTask(context, true, context.getString(R.string.loginPath));
+		String completeURL = StaticHelper.generateUrlForTask(context, true, context.getString(R.string.loginPath), null);
 	    StringBuilder sb = new StringBuilder();
 	
 	    String username, password;
@@ -71,7 +71,7 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
 		nameValuePairs.add(new BasicNameValuePair("client_password", "5d"));
 		nameValuePairs.add(new BasicNameValuePair("password", password));
 		nameValuePairs.add(new BasicNameValuePair("grant_type", "password"));
-		nameValuePairs.add(new BasicNameValuePair("scope", ""));
+		nameValuePairs.add(new BasicNameValuePair("scope", "5dentity payment"));
 		if (!restoreAccount) {
 			nameValuePairs.add(new BasicNameValuePair("username", username));
 		} else {

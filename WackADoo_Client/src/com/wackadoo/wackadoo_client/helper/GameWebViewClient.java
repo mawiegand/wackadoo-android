@@ -89,17 +89,4 @@ public class GameWebViewClient extends WebViewClient {
 		handler.proceed();
 	}
 	
-	// test: rescale window after page is loaded
-	@Override
-	public void onPageFinished(WebView view, String url) {
-		super.onPageFinished(view, url);
-//	    webView.loadUrl("javascript:var scale = " + width + " / document.body.scrollWidth; document.body.style.zoom = scale;");
-	}
-	
-	// test for scaling viewport
-	public void onScaleChanged(WebView view, float oldScale, float newScale) {
-		super.onScaleChanged(view, oldScale, newScale);
-//		Log.d(TAG, "Scale changed!");
-	}
-	
 }

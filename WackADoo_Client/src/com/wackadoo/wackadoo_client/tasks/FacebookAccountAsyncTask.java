@@ -55,13 +55,13 @@ public class FacebookAccountAsyncTask extends AsyncTask<String, Integer, Respons
 	    	//**********************************************//	
 			//*****  check if fb id is already used  *****//
 	    	if (type.equals(StaticHelper.FB_ID_TASK)) {
-	    		url = StaticHelper.generateUrlForTask(context, true, context.getString(R.string.facebookIdPath)) + userCredentials.getFbPlayerId();
+	    		url = StaticHelper.generateUrlForTask(context, true, context.getString(R.string.facebookIdPath), null) + userCredentials.getFbPlayerId();
 	    		method = HttpGet.METHOD_NAME;
 	    		
 	    	//*****************************************//	
 			//*****  connect fb id and character  *****//
 	    	} else if (type.equals(StaticHelper.FB_CONNECT_TASK)) {
-	    		url = StaticHelper.generateUrlForTask(context, true, context.getString(R.string.facebookConnectPath)) + userCredentials.getFbPlayerId();
+	    		url = StaticHelper.generateUrlForTask(context, true, context.getString(R.string.facebookConnectPath), null) + userCredentials.getFbPlayerId();
 	    		method = HttpPost.METHOD_NAME;
 	    		
 	    		// generate entity of name+value pairs	    		

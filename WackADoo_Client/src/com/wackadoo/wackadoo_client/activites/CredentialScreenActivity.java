@@ -1,6 +1,8 @@
 package com.wackadoo.wackadoo_client.activites;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -218,15 +220,21 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 
     // callback interface for CreateAccountAsyncTask
 	@Override
-	public void onRegistrationCompleted(String identifier, String nickname, String accountId) {
+	public void onRegistrationCompleted(boolean success, String identifier, String nickname, String accountId) {
 		if (progressDialog.isShowing()) {
 			progressDialog.dismiss();
 		}
-		userCredentials.setIdentifier(identifier);
-		userCredentials.setUsername(nickname);
-		userCredentials.setAccountId(accountId);
-		StaticHelper.continueMusic = true;
-		finish();
+		
+		if (success) {
+			userCredentials.setIdentifier(identifier);
+			userCredentials.setUsername(nickname);
+			userCredentials.setAccountId(accountId);
+			StaticHelper.continueMusic = true;
+			finish();
+		} else {
+			Toast.makeText(this, getString(R.string.error_server_communication), Toast.LENGTH_SHORT)
+			 	 .show();
+		}
 	}
 	
 	// callback interface for login/restore account task
@@ -250,11 +258,11 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 		} else {
 			if (error.equals("invalid_grant")) {
 				Toast.makeText(this, getResources().getString(R.string.login_invalid_grant), Toast.LENGTH_LONG)
-				.show();
+					 .show();
 			
 			} else {
 				Toast.makeText(this, getResources().getString(R.string.login_failed_toast), Toast.LENGTH_LONG)
-				.show();
+					 .show();
 			}
 		}		
 	}

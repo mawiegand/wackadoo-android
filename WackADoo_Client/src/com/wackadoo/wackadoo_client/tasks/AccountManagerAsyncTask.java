@@ -52,20 +52,19 @@ public class AccountManagerAsyncTask extends AsyncTask<String, Integer, Integer>
 	@Override
 	protected Integer doInBackground(String... params) {
 		Activity parent = (Activity) listener;
-		String urlForRequest, completeURL;
-		HttpRequestBase request;
+		String completeURL;
 		String method;
 		List<NameValuePair> nameValuePairs = new ArrayList <NameValuePair>();
 		
 		// change email
 		if (type.equals("mail")) {
-			completeURL = StaticHelper.generateUrlForTask(parent, true, parent.getString(R.string.changeEmailPath) + userCredentials.getAccountId());
+			completeURL = StaticHelper.generateUrlForTask(parent, true, parent.getString(R.string.changeEmailPath) + userCredentials.getAccountId(), null);
 			method = HttpPut.METHOD_NAME;
 			nameValuePairs.add(new BasicNameValuePair("identity[email]", value)); 
 			
 		// change password
 		} else {
-			completeURL = StaticHelper.generateUrlForTask(parent, false, parent.getString(R.string.changePasswordPath));
+			completeURL = StaticHelper.generateUrlForTask(parent, false, parent.getString(R.string.changePasswordPath), userCredentials);
 			method = HttpPost.METHOD_NAME;
 			Log.d(TAG, "***** change password from '" + userCredentials.getPassword() + "' to '" + value + "'");
 			nameValuePairs.add(new BasicNameValuePair("character[password]", value));	

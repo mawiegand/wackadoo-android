@@ -5,22 +5,18 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.CoreProtocolPNames;
-import org.apache.http.params.HttpConnectionParams;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.helper.StaticHelper;
@@ -40,7 +36,7 @@ public class CreateAccountAsyncTask extends AsyncTask<String, Integer, Boolean> 
 	@Override
 	protected Boolean doInBackground(String... params) {
 		Activity parent = (Activity) listener;
-		String completeURL = StaticHelper.generateUrlForTask(parent, true, parent.getString(R.string.createAccountPath));
+		String completeURL = StaticHelper.generateUrlForTask(parent, true, parent.getString(R.string.createAccountPath), null);
 		
 		StringBuilder sb = new StringBuilder();
 		
@@ -76,19 +72,19 @@ public class CreateAccountAsyncTask extends AsyncTask<String, Integer, Boolean> 
 	@Override
 	protected void onPostExecute(Boolean result) {
 		super.onPostExecute(result);
+		String identifier = null; 
+		String username = null;
+		String accountId = null;
 		
 		if (result) {
 			try {
-				String identifier = jsonResponse.getString("identifier");
-				String username = jsonResponse.getString("nickname");
-				String accountId = jsonResponse.getString("id");
-				listener.onRegistrationCompleted(identifier, username, accountId);
-				
-			} catch(Exception e) {
+				identifier = jsonResponse.getString("identifier");
+				username = jsonResponse.getString("nickname");
+				accountId = jsonResponse.getString("id");
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
-		} else {
-		}
+		} 
+		listener.onRegistrationCompleted(result, identifier, username, accountId);
 	}
 }

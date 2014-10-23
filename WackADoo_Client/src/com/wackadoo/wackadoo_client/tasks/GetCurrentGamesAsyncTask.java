@@ -42,7 +42,7 @@ public class GetCurrentGamesAsyncTask extends AsyncTask<String, Integer, Boolean
 	@Override
 	protected Boolean doInBackground(String... params) {
 		Activity parent = (Activity) this.listener;
-		String completeURL = StaticHelper.generateUrlForTask(parent, true, parent.getString(R.string.gamesPath));
+		String completeURL = StaticHelper.generateUrlForTask(parent, true, parent.getString(R.string.gamesPath), null);
 		
 	    StringBuilder sb=new StringBuilder();
 	    
@@ -54,7 +54,7 @@ public class GetCurrentGamesAsyncTask extends AsyncTask<String, Integer, Boolean
 		    BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 		    
 		    String line = null;
-		    while((line = reader.readLine()) != null) {
+		    while ((line = reader.readLine()) != null) {
 		        sb.append(line);
 		    }
 		    Log.d(TAG, "games response: " + sb.toString());
@@ -66,18 +66,20 @@ public class GetCurrentGamesAsyncTask extends AsyncTask<String, Integer, Boolean
 	 	    
 	 	    // get hostname from game server for requesting the character
 	 	    for (int i = 0; i < jsonArray.length(); i++) {		
-	 	    	games.get(i).setServer("https://"+jsonArray.getJSONObject(i).getJSONObject("random_selected_servers").getJSONObject("game").getString("hostname"));
+	 	    	games.get(i).setServer("https://" + jsonArray.getJSONObject(i)
+	 	    			.getJSONObject("random_selected_servers").getJSONObject("game").getString("hostname"));
 	 	    }
+	 	    return true;
 			
 	    } catch (Exception e) {
     		Log.e("SocketException", e + "");
     	}
-		return null;
+		return false;
 	}
 	
 	@Override
 	protected void onPostExecute(Boolean result) {
 		super.onPostExecute(result);
-		listener.getCurrentGamesCallback(games);
+		listener.getCurrentGamesCallback(result, games);
 	}
 }

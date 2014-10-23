@@ -20,17 +20,19 @@ import android.util.Log;
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.helper.StaticHelper;
 import com.wackadoo.wackadoo_client.interfaces.BuyPlayStoreCallbackInterface;
+import com.wackadoo.wackadoo_client.model.UserCredentials;
 
 public class BuyPlayStoreAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	
 	private static final String TAG = BuyPlayStoreAsyncTask.class.getSimpleName();
 	
     private Context context;
-    private String paymentToken, accessToken, orderId, productId;
+    private String paymentToken, orderId, productId;
+	private UserCredentials userCredentials;
     
-    public BuyPlayStoreAsyncTask(Context context, String accessToken, String orderId, String paymentToken, String productId) {
+    public BuyPlayStoreAsyncTask(Context context, UserCredentials userCredentials, String orderId, String paymentToken, String productId) {
     	this.context = context;
-    	this.accessToken = accessToken;
+    	this.userCredentials = userCredentials;
     	this.orderId = orderId;
     	this.productId = productId;
     	this.paymentToken = paymentToken;
@@ -39,8 +41,7 @@ public class BuyPlayStoreAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	@Override
 	protected Boolean doInBackground(String... params) {
 		// TODO: correct url?
-		String baseURL = context.getString(R.string.baseGameServerPath);
-		String completeURL = "https://test1.wack-a-doo.de/game_server/action/shop/google_verify_order_actions";
+		String completeURL = StaticHelper.generateUrlForTask(context, false, context.getString(R.string.buyCreditsPath), userCredentials);
 		StringBuilder sb = new StringBuilder();
 		
 		List < NameValuePair > nameValuePairs = new ArrayList <NameValuePair>(3);
@@ -49,7 +50,7 @@ public class BuyPlayStoreAsyncTask extends AsyncTask<String, Integer, Boolean> {
 		nameValuePairs.add(new BasicNameValuePair("google_verify_order_action[payment_token]", paymentToken));
 
 		try {
-			HttpResponse response = StaticHelper.executeRequest(HttpPost.METHOD_NAME, completeURL, nameValuePairs, null);
+			HttpResponse response = StaticHelper.executeRequest(HttpPost.METHOD_NAME, completeURL, nameValuePairs, userCredentials.getAccessToken().getToken());
 		    
 		    String responseLine = response.getStatusLine().toString();
 		    Log.d(TAG, "response line: " + responseLine);

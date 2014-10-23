@@ -46,7 +46,7 @@ public class FacebookLoginAsyncTask extends AsyncTask<String, Integer, ResponseR
 		String statusLine = "";
 
 		try {
-    		url = StaticHelper.generateUrlForTask(context, true, context.getString(R.string.facebookLoginPath));
+    		url = StaticHelper.generateUrlForTask(context, true, context.getString(R.string.facebookLoginPath), null);
     		
     		List <NameValuePair> nameValuePairs = new ArrayList <NameValuePair>();
     		nameValuePairs.add(new BasicNameValuePair("fb_player_id", userCredentials.getFbPlayerId()));

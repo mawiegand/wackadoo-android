@@ -86,7 +86,7 @@ public class SelectGameActivity extends WackadooActivity implements CurrentGames
 				Calendar c = Calendar.getInstance();		// date today
 				
 				// game is full
-				if (clickedGame.getMaxPlayers() == clickedGame.getPresentPlayers()){
+				if (false) {//clickedGame.getMaxPlayers() == clickedGame.getPresentPlayers()){
 					toast.setText(getResources().getString(R.string.selectgame_game_full));
 					
 				// signup is disabled 	
@@ -127,11 +127,18 @@ public class SelectGameActivity extends WackadooActivity implements CurrentGames
 
 	// callback interface for GetCurrentGamesAsyncTask
 	@Override
-	public void getCurrentGamesCallback(ArrayList<GameInformation> games) {	
+	public void getCurrentGamesCallback(boolean result, ArrayList<GameInformation> games) {	
 		this.games = games;
-		for (int i = 0; i < games.size(); i++) {
-			new GetCharacterAsyncTask(this, userCredentials, games.get(i), false).execute();
+		
+		if (result) {
+			for (int i = 0; i < games.size(); i++) {
+				new GetCharacterAsyncTask(this, userCredentials, games.get(i), false).execute();
+			}
+		} else {
+			Toast.makeText(this, getResources().getString(R.string.error_server_communication), Toast.LENGTH_SHORT)
+				 .show();
 		}
+			
 	}
 
 	// callback interface for GetCharacterAsyncTask
@@ -141,7 +148,7 @@ public class SelectGameActivity extends WackadooActivity implements CurrentGames
 		listView.setAdapter(adapter);
 		StaticHelper.setListViewHeightBasedOnChildren(listView);
 		if (createNew) {
-			userCredentials.setUsername(game.getCharacter().getName());
+			//userCredentials.setUsername(game.getCharacter().getName());
 			finish();
 		}
 	}
