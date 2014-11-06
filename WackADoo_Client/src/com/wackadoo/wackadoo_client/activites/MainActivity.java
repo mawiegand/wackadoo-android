@@ -15,7 +15,6 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Typeface;
-import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,7 +27,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -644,8 +642,13 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	// callback interface for error in GameLoginAsyncTask
 	@Override
 	public void loginCallbackError(String error, boolean restoreAccount, boolean refresh) {
-		Toast.makeText(this, getString(R.string.login_failed_toast), Toast.LENGTH_SHORT)
-			 .show();
+		if (error.equals("invalid_grant")) {
+			Toast.makeText(this, getResources().getString(R.string.login_invalid_grant), Toast.LENGTH_LONG)
+				 .show();
+		} else {
+			Toast.makeText(this, getResources().getString(R.string.login_failed_toast), Toast.LENGTH_LONG)
+				 .show();
+		}
 		loggedIn = false;
 		updateUi();
 	}
@@ -675,6 +678,9 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 				updateUi();
 			}
 		} else {
+			if (progressDialog.isShowing()) {
+				progressDialog.dismiss();
+			}
 			Toast.makeText(this, getResources().getString(R.string.error_server_communication), Toast.LENGTH_SHORT)
 				 .show();
 		}

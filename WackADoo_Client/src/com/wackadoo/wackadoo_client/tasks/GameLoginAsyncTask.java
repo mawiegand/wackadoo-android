@@ -5,16 +5,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.CoreProtocolPNames;
-import org.apache.http.params.HttpConnectionParams;
 import org.json.JSONObject;
 
 import android.content.Context;
@@ -34,8 +29,7 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
     private Context context;
 	private UserCredentials userCredentials;
 	private JSONObject jsonResponse;
-	private boolean restoreAccount;
-	private boolean refresh;
+	private boolean refresh, restoreAccount;
     
     public GameLoginAsyncTask(Context context, UserCredentials userCredentials, boolean restoreAccount, boolean refresh) {
     	this.context = context;
@@ -88,8 +82,6 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
 		nameValuePairs.add(new BasicNameValuePair("vendor_token", deviceInformation.getUniqueTrackingToken()));
 
 		try {
-
-			
 			Log.d(TAG, "Login Request for " + username + " and pw " + password);
 			HttpResponse response = StaticHelper.executeRequest(HttpPost.METHOD_NAME, completeURL, nameValuePairs, null);
 
@@ -103,6 +95,10 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
 			
 			jsonResponse = new JSONObject(sb.toString());
 			Log.d(TAG, "Login Response:" + jsonResponse);
+			
+			if (jsonResponse.has("error")) {
+				return false;
+			}
 			return true;
 			
     	} catch (Exception e) {
@@ -118,16 +114,19 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
 		
 		try {
 			if (result) {
-				if (jsonResponse.has("error")) {
-					((GameLoginCallbackInterface) context).loginCallbackError(jsonResponse.getString("error"), restoreAccount, refresh);
-				
-				} else {
 					String accessToken = jsonResponse.getString("access_token");
 					String expiresIn = jsonResponse.getString("expires_in");
 					String identifier = jsonResponse.getString("user_identifer");
 					((GameLoginCallbackInterface) context).loginCallback(result.booleanValue(), accessToken, expiresIn, identifier, restoreAccount, refresh);
+				
+			} else {
+				if (jsonResponse.has("error")) {
+					((GameLoginCallbackInterface) context).loginCallbackError(jsonResponse.getString("error"), restoreAccount, refresh);
+				} else {
+					((GameLoginCallbackInterface) context).loginCallbackError(null, restoreAccount, refresh);
 				}
 			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

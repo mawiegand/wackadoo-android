@@ -80,7 +80,7 @@ public class GameWebViewClient extends WebViewClient {
 	        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // this will make such that when user returns to your app, your app is displayed, instead of the email app.
 	        ((Activity) context).startActivity(intent);
 			return false;
-		}
+		} 
 		return true;
 	}
 

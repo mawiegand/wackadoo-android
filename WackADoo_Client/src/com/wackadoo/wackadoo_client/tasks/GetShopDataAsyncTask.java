@@ -3,17 +3,12 @@ package com.wackadoo.wackadoo_client.tasks;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.CoreProtocolPNames;
-import org.apache.http.params.HttpConnectionParams;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -110,17 +105,14 @@ public class GetShopDataAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	@Override
 	protected void onPostExecute(Boolean result) {
 		super.onPostExecute(result);
-		
-		if (result) {
-			((ShopDataCallbackInterface) context).getShopDataCallback(result, rowItemList, data, shopCharacterId, offerType);
-		}
+		((ShopDataCallbackInterface) context).getShopDataCallback(result, rowItemList, data, shopCharacterId, offerType);
 	}
 	
 	// returns list of offers for given array of json products (sorted by price)
 	private List<ShopRowItem> produceRowItemList(JSONArray jsonArray) {
 		rowItemList = new ArrayList<ShopRowItem>();
 		
-		// sort by price, cheapest item first
+		// TODO: wat ist damit? sort by price, cheapest item first
 		/*Comparator<String> comparator = new Comparator<String>() {
 			@Override
 			public int compare(String itemA, String itemB) {

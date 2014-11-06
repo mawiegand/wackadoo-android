@@ -12,7 +12,7 @@ public class UserCredentials {
 	private Context context;
 	private int gameId;
 	private boolean isFbUser;
-	private String username, password, gcPlayerId, fbPlayerId, fbAccessToken, accountId, email, hostname, avatarString;
+	private String username, password, fbPlayerId, fbAccessToken, accountId, email, hostname, avatarString;
 	private Date premiumExpiration;
 	private AccessToken accessToken;
 	private ClientCredentials clientCredentials;

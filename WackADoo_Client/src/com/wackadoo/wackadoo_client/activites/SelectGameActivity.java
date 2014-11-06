@@ -131,14 +131,13 @@ public class SelectGameActivity extends WackadooActivity implements CurrentGames
 		this.games = games;
 		
 		if (result) {
-			for (int i = 0; i < games.size(); i++) {
+			for (int i=0; i<games.size(); i++) {
 				new GetCharacterAsyncTask(this, userCredentials, games.get(i), false).execute();
 			}
 		} else {
 			Toast.makeText(this, getResources().getString(R.string.error_server_communication), Toast.LENGTH_SHORT)
 				 .show();
 		}
-			
 	}
 
 	// callback interface for GetCharacterAsyncTask

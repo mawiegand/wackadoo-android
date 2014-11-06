@@ -341,7 +341,7 @@
 						  	    style="@style/customImageButtonStyle"
 						  	    android:id="@+id/loginButton"
 					  		    android:layout_width="match_parent"
-						  	    android:adjustViewBounds="true"
+					  		    android:adjustViewBounds="true"
 					  		    android:layout_weight="0.27"/>
 				 		        
 				 		</LinearLayout>

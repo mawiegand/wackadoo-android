@@ -377,6 +377,10 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 		} else {
 			Toast.makeText(this, getResources().getString(R.string.error_server_communication), Toast.LENGTH_SHORT)
 			 	 .show();
+			
+			if (progressDialog.isShowing()) {
+				progressDialog.dismiss();
+			}
 		}
 	}	
 	

@@ -8,8 +8,6 @@ import android.content.DialogInterface.OnClickListener;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -26,7 +24,6 @@ public class WackadooWebviewActivity extends Activity {
 	private static final int UPDATE_CONNECTION_TIMER = 10000;
 	
 	private WebView webView;
-	private int width;
 	private Handler mConnectionHandler;
 	
     @SuppressLint({ "NewApi", "JavascriptInterface" })
@@ -55,9 +52,8 @@ public class WackadooWebviewActivity extends Activity {
         }
         
         Bundle b = getIntent().getExtras();
-        final LoginJavaScriptHandler loginHandler = new LoginJavaScriptHandler(this, b.getString("accessToken"), b.getString("expiration"), b.getString("userId"), b.getString("hostname"));
+        final LoginJavaScriptHandler loginHandler = new LoginJavaScriptHandler(this, "accessToken", "expiration", "userId", "hostname");
         webView.addJavascriptInterface(loginHandler, "LoginHandler");
-        
         webView.loadUrl("file:///android_asset/index.html");
     }
     
@@ -71,18 +67,6 @@ public class WackadooWebviewActivity extends Activity {
     	// start automatic connection test in background
     	mConnectionHandler = new android.os.Handler();
     	mConnectionHandler.postDelayed(checkConnectionThread, UPDATE_CONNECTION_TIMER);
-    }
-    
-    // log touch events 
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent evt) {
-        float x = evt.getAxisValue(MotionEvent.AXIS_X);
-        float y = evt.getAxisValue(MotionEvent.AXIS_Y);
-        Log.i("TOUCH", "---->" + evt.getActionMasked() + ": " + x + "|" + y);
-        // 0 = ACTION_DOWN, 1 = ACTION_UP, 2 = ACTION_MOVE, 
-        // 5 = ACTION_POINTER_1_DOWN, 6 = ACTION_POINTER_1_UP
-        return super.dispatchTouchEvent(evt);
-
     }
     
     @Override
