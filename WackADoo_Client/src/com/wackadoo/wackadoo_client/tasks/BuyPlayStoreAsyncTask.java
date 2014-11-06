@@ -17,6 +17,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.android.vending.billing.Purchase;
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.helper.StaticHelper;
 import com.wackadoo.wackadoo_client.interfaces.BuyPlayStoreCallbackInterface;
@@ -27,15 +28,13 @@ public class BuyPlayStoreAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	private static final String TAG = BuyPlayStoreAsyncTask.class.getSimpleName();
 	
     private Context context;
-    private String paymentToken, orderId, productId;
 	private UserCredentials userCredentials;
+	private Purchase purchase;
     
-    public BuyPlayStoreAsyncTask(Context context, UserCredentials userCredentials, String orderId, String paymentToken, String productId) {
+    public BuyPlayStoreAsyncTask(Context context, UserCredentials userCredentials, Purchase purchase) {
     	this.context = context;
     	this.userCredentials = userCredentials;
-    	this.orderId = orderId;
-    	this.productId = productId;
-    	this.paymentToken = paymentToken;
+    	this.purchase = purchase;
     }
 	
 	@Override
@@ -45,9 +44,9 @@ public class BuyPlayStoreAsyncTask extends AsyncTask<String, Integer, Boolean> {
 		StringBuilder sb = new StringBuilder();
 		
 		List < NameValuePair > nameValuePairs = new ArrayList <NameValuePair>(3);
-		nameValuePairs.add(new BasicNameValuePair("google_verify_order_action[order_id]", orderId));
-		nameValuePairs.add(new BasicNameValuePair("google_verify_order_action[product_id]", productId));
-		nameValuePairs.add(new BasicNameValuePair("google_verify_order_action[payment_token]", paymentToken));
+		nameValuePairs.add(new BasicNameValuePair("google_verify_order_action[order_id]", purchase.getOrderId()));
+		nameValuePairs.add(new BasicNameValuePair("google_verify_order_action[product_id]", purchase.getSku()));
+		nameValuePairs.add(new BasicNameValuePair("google_verify_order_action[payment_token]", purchase.getToken()));
 
 		try {
 			HttpResponse response = StaticHelper.executeRequest(HttpPost.METHOD_NAME, completeURL, nameValuePairs, userCredentials.getAccessToken().getToken());
@@ -71,6 +70,6 @@ public class BuyPlayStoreAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	@Override
 	protected void onPostExecute(Boolean result) {
 		super.onPostExecute(result);
-		((BuyPlayStoreCallbackInterface) context).buyPlayStoreCallback(result, null);
+		((BuyPlayStoreCallbackInterface) context).buyPlayStoreCallback(result, purchase, null);
 	}
 }

@@ -73,13 +73,13 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
 		}
 		
 		// tracking data
-		nameValuePairs.add(new BasicNameValuePair("operating_system", deviceInformation.getOs()));
-		nameValuePairs.add(new BasicNameValuePair("app_token", deviceInformation.getUniqueTrackingToken()));
-		nameValuePairs.add(new BasicNameValuePair("hardware_string", deviceInformation.getHardware()));
-		nameValuePairs.add(new BasicNameValuePair("hardware_token", deviceInformation.getBundleBuild()));
-		nameValuePairs.add(new BasicNameValuePair("version", deviceInformation.getBundleVersion()));
+		nameValuePairs.add(new BasicNameValuePair("[device_information][operating_system]", deviceInformation.getOs()));
+		nameValuePairs.add(new BasicNameValuePair("[device_information][app_token]", deviceInformation.getUniqueTrackingToken()));
+		nameValuePairs.add(new BasicNameValuePair("[device_information][hardware_string]", deviceInformation.getHardware()));
+		nameValuePairs.add(new BasicNameValuePair("[device_information][hardware_token]", deviceInformation.getBundleBuild()));
+		nameValuePairs.add(new BasicNameValuePair("[device_information][version]", deviceInformation.getBundleVersion()));
 		nameValuePairs.add(new BasicNameValuePair("[device_information][device_token]", deviceInformation.getUniqueTrackingToken()));
-		nameValuePairs.add(new BasicNameValuePair("vendor_token", deviceInformation.getUniqueTrackingToken()));
+		nameValuePairs.add(new BasicNameValuePair("[device_information][vendor_token]", deviceInformation.getUniqueTrackingToken()));
 
 		try {
 			Log.d(TAG, "Login Request for " + username + " and pw " + password);

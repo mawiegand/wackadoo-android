@@ -5,9 +5,11 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Display;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -47,12 +49,16 @@ public class WackadooWebviewActivity extends Activity {
         webSettings.setUseWideViewPort(true);
         webSettings.setDomStorageEnabled(true);	
         
+        
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             WebView.setWebContentsDebuggingEnabled(true);
         }
         
         Bundle b = getIntent().getExtras();
-        final LoginJavaScriptHandler loginHandler = new LoginJavaScriptHandler(this, "accessToken", "expiration", "userId", "hostname");
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        final LoginJavaScriptHandler loginHandler = new LoginJavaScriptHandler(this, b.getString("accessToken"), b.getString("expiration"), b.getString("userId"), b.getString("hostname"), size.x,size.y);
         webView.addJavascriptInterface(loginHandler, "LoginHandler");
         webView.loadUrl("file:///android_asset/index.html");
     }

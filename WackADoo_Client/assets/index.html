@@ -6,8 +6,10 @@
 			var expiration = LoginHandler.getExpiration();
 			var hostname = LoginHandler.getHostname();
 			var countryCode = LoginHandler.getCountryCode();
+			var width = LoginHandler.getWidth();
+			var height = LoginHandler.getHeight();
 
-			window.name = "{\"accessToken\":\"" + accessToken + "\"  ,\"expiration\":\"" + expiration + "\",\"locale\":\"" + countryCode + "\",\"playerInvitation\":null,\"allianceInvitation\":null,\"client_id\":\"Bla\"}";
+			window.name = "{\"accessToken\":\"" + accessToken + "\"  ,\"expiration\":\"" + expiration + "\",\"locale\":\"" + countryCode + "\",\"playerInvitation\":null,\"allianceInvitation\":null,\"client_id\":\"Bla\",\"width\":\""+width+"\",\"height\":\""+height+"\"}";
 			window.open(hostname+"/client?t=" + userId);
 		</script>
 	</head>

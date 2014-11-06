@@ -17,9 +17,10 @@ import com.android.vending.billing.IabHelper.QueryInventoryFinishedListener;
 import com.android.vending.billing.IabResult;
 import com.android.vending.billing.Inventory;
 import com.android.vending.billing.Purchase;
+import com.wackadoo.wackadoo_client.activites.ShopActivity;
 import com.wackadoo.wackadoo_client.interfaces.CreditsFragmentCallbackInterface;
 
-public class CustomIabHelper extends IabHelper implements QueryInventoryFinishedListener, OnConsumeMultiFinishedListener, OnIabPurchaseFinishedListener {
+public class CustomIabHelper extends IabHelper implements QueryInventoryFinishedListener {
 	
 	private static final String TAG = CustomIabHelper.class.getSimpleName();
 	private Context mContext;
@@ -47,7 +48,6 @@ public class CustomIabHelper extends IabHelper implements QueryInventoryFinished
 	
     // get platinum credit products from play store
     public void getProductsAsyncInternal(final CreditsFragmentCallbackInterface callback) {
-    	final Handler handler = new Handler();
         checkNotDisposed();
         checkSetupDone("getProducts");
         flagStartAsync("getProducts");
@@ -70,40 +70,10 @@ public class CustomIabHelper extends IabHelper implements QueryInventoryFinished
     
     // handles response with purchased items
     public void onQueryInventoryFinished(IabResult result, Inventory inv) {
-		if (inv != null) {
-			// consume already purchased items
-        	handleUnconsumedItems(inv, CustomIabHelper.this);
-        	
-		} else {
-            // get platinum credit packages from play store
-			getProductsAsyncInternal((CreditsFragmentCallbackInterface) mContext);
-		}
-	}
-    
-    // consumes all purchased items
-    public void handleUnconsumedItems(Inventory inv, OnConsumeMultiFinishedListener listener){
-    	List<Purchase> purchases = inv.getAllPurchases();
-    	consumeAsync(purchases, listener);
-    }
+        ((ShopActivity)mContext).handleUnconsumedItems(inv);
 
-	// callback interface for finshed multiple consumptions
-	public void onConsumeMultiFinished(List<Purchase> purchases, List<IabResult> results) {
-		// get platinum credit packages from play store
-		Log.d(TAG, "---> multi finished aufgerufen!");
+        // get platinum credit packages from play store
 		getProductsAsyncInternal((CreditsFragmentCallbackInterface) mContext);
-	}
-
-	 // consume items after being purchased
-	@Override
-	public void onIabPurchaseFinished(IabResult result, Purchase info) {
-		// code 0 = success, code 7 = already purchased
-		if(result.getResponse() == 0 || result.getResponse() == 7) {
-    		consumeAsync(info, (OnConsumeFinishedListener) mContext);
-		}
-	}
-	
-	public void launchPurchaseFlow(Activity act, String sku, int requestCode) {
-		launchPurchaseFlow(act, sku, requestCode, this);
 	}
 	
     // stores IDs of all available items on google play store

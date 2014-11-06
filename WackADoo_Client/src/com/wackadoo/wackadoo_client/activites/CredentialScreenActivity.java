@@ -211,7 +211,7 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 		} 
 	}
 	
-    // facebook: handles result for login 
+    // facebook: handles result for login
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

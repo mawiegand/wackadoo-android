@@ -12,14 +12,17 @@ public class LoginJavaScriptHandler {
 	private Context context;
 	private String accessToken, expiration, userId, hostname, country;
 	private String[] serverSupportedLanguageCodes = {"en","de"};
+	private int width, height;
 	
-	public LoginJavaScriptHandler (Context context, String accessToken, String expiration, String userId, String hostname) {
+	public LoginJavaScriptHandler (Context context, String accessToken, String expiration, String userId, String hostname, int width, int height) {
     	this.context = context;
 		this.accessToken = accessToken;
     	this.expiration = expiration;
     	this.userId = userId;
     	this.hostname = hostname;
     	this.country = getCountry();
+    	this.width = width;
+    	this.height = height;
     }
     
 	private String getCountry() {
@@ -62,6 +65,20 @@ public class LoginJavaScriptHandler {
 	    return country;
 	}
 	
+	@JavascriptInterface
+	public int getWidth() {
+		return width;
+	}
+
+
+	@JavascriptInterface
+
+	public int getHeight() {
+		return height;
+	}
+
+
+
 	@JavascriptInterface
 	public void doEchoTest(String echo){
 	        Toast toast = Toast.makeText(context, echo, Toast.LENGTH_SHORT);

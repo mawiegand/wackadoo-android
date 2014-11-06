@@ -106,6 +106,7 @@
 	<string name="buy_item_success">You buyed this item</string>
 	<string name="buy_credits_fail">Not able to communicate with server. Please try again later.</string>
     <string name="buy_credits_success">The platinum credits were buyed successful</string>
+    <string name="shop_special_text">Starter Package</string>
     
     <!-- Shop Info -->
     <string name="shopinfo_topbar_heading">Info Store</string>
@@ -125,7 +126,16 @@
     <string name="shopInfoText_bonus">More Resources? Everyone needs more resources!</string>
     <string name="shopInfoHeadingText_bonus">Production Bonus</string>
     <string name="shopInfoDescText_bonus" formatted="false">The production bonus is valid across your total production of the chosen resource.\n\n15% global production bonus for fur production.\n\n15% global production bonus for stone production.\n\n15% global production bonus for wood production.</string>
+    <string name="shopInfoText_special">Dies ist ein spezielles Paket, das nur für neue Spieler verfügbar ist.</string>
+    <string name="shopInfoHeadingText_special">Starter packet</string>
+    <string name="shopInfoDescText_special" formatted="false">The starter packet contains: \n1500 resources \n300 golden frogs \nA camp close to your home settlement with the following extensions: 
+        									\nA level 5 haunt \nAn altar \nHunter gatherers with a production level of 150 resources per hour \nFor 4 days you get these additional bonuses:  \nA 15% global resource production bonus \n100% extra constuction speed (halved construction time)</string>
     <string name="shop_expires_in">Expires on:&#160;</string>
+    <string name="special_offer_1"></string>
+    <string name="special_offer_2">1500 Resources \n150 Recources per hour \n15% Production Bonus</string>
+    <string name="special_offer_3">300 Golden Frogs</string>
+    <string name="special_offer_4">Halved Construction Time for 4 Days</string>
+    <string name="special_offer_buy">Buy Now!</string>
     
      <!-- Info Screen -->
     <string name="infoscreen_support_btn">Support</string>

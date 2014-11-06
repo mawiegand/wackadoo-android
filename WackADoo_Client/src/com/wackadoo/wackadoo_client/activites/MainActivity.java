@@ -98,7 +98,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		Sample.setAppToken("wad-rt82-fhjk-18");
 		AutoPing.getInstance().startAutoPing();
 	}
-
+	
 	@Override
 	public void onResume() {
         super.onResume();
@@ -246,28 +246,27 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 						if (loggedIn) {
 							AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
 							builder.setTitle(R.string.fb_connect_title)
-							.setMessage(R.string.fb_connect_message)
-							.setPositiveButton(R.string.alert_quit_yes, new OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog, int which) {
-									tryConnect = true;
-									Session session = Session.getActiveSession();
-									if (session == null) { 
-										session = new Session(MainActivity.this);
-									}
-									Session.OpenRequest openRequest = new Session.OpenRequest(MainActivity.this);
-									openRequest.setPermissions(Arrays.asList("email"));
-									openRequest.setLoginBehavior(SessionLoginBehavior.SUPPRESS_SSO);
-									session.openForRead(openRequest);
-								}
-							})
-							.setNegativeButton(R.string.alert_quit_no, null);
+								   .setMessage(R.string.fb_connect_message)
+								   .setPositiveButton(R.string.alert_quit_yes, new OnClickListener() {
+										@Override
+										public void onClick(DialogInterface dialog, int which) {
+											tryConnect = true;
+
+											Session session = new Session(MainActivity.this);
+											
+											Session.OpenRequest openRequest = new Session.OpenRequest(MainActivity.this);
+											openRequest.setPermissions(Arrays.asList("email"));
+											openRequest.setLoginBehavior(SessionLoginBehavior.SUPPRESS_SSO);
+											session.openForRead(openRequest);
+										}
+								    })
+								   .setNegativeButton(R.string.alert_quit_no, null);
 							AlertDialog dialog = builder.create();
 							dialog.show();
 							StaticHelper.styleDialog(MainActivity.this, dialog);
 							
 						} else {
-							Session session = Session.getActiveSession();
+							Session session = new Session(MainActivity.this);
 							Session.OpenRequest openRequest = new Session.OpenRequest(MainActivity.this);
 							openRequest.setPermissions(Arrays.asList("email"));
 							openRequest.setLoginBehavior(SessionLoginBehavior.SUPPRESS_SSO);
@@ -556,7 +555,9 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 			if (userCredentials.isPasswordGenerated()) {
 				tryConnect = true;		// TODO: was = false - correct?
 			} else {
-				loggedIn = false;
+				session.closeAndClearTokenInformation();	
+				session.close();
+				Session.setActiveSession(null);
 			}
 			updateUi();
 		}

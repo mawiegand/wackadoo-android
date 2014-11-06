@@ -11,6 +11,7 @@ public class ShopRowItem implements Comparable<ShopRowItem> {
 	private int id; 
     private int iconImageId;
     private String title;
+    private int price;
     private int optionalIconImageId;
 	private int bonus;
 	@SerializedName("finished_at") 
@@ -22,13 +23,14 @@ public class ShopRowItem implements Comparable<ShopRowItem> {
         this.optionalIconImageId = optionalImageId;
     }
     
-    public ShopRowItem(int id, int iconImageId, String title, int optionalImageId, int bonus, Date expiresIn) {
+    public ShopRowItem(int id, int iconImageId, String title, int optionalImageId, int bonus, int price, Date expiresIn) {
     	this.id = id;
     	this.iconImageId = iconImageId;
     	this.title = title;
     	this.optionalIconImageId = optionalImageId;
     	this.setExpiresIn(expiresIn);
     	this.setBonus(bonus);
+    	this.price = price;
     }
     
     public int getId() {
@@ -71,6 +73,14 @@ public class ShopRowItem implements Comparable<ShopRowItem> {
 	}
 	public void setExpiresIn(Date expiresIn) {
 		this.expiresIn = expiresIn;
+	}
+
+	public int getPrice() {
+		return price;
+	}
+
+	public void setPrice(int price) {
+		this.price = price;
 	}
 
 	public boolean isNotExpired() {
