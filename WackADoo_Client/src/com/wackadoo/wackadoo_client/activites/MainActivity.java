@@ -97,7 +97,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		tokenHandler = new Handler();
 		tokenHandler.post(this);
 	}
-
+	
 	@Override
 	public void onResume() {
         super.onResume();
@@ -242,10 +242,9 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 										@Override
 										public void onClick(DialogInterface dialog, int which) {
 											tryConnect = true;
-											Session session = Session.getActiveSession();
-											if (session == null) { 
-												session = new Session(MainActivity.this);
-											}
+
+											Session session = new Session(MainActivity.this);
+											
 											Session.OpenRequest openRequest = new Session.OpenRequest(MainActivity.this);
 											openRequest.setPermissions(Arrays.asList("email"));
 											openRequest.setLoginBehavior(SessionLoginBehavior.SUPPRESS_SSO);
@@ -258,7 +257,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 						    StaticHelper.styleDialog(MainActivity.this, dialog);
 							
 						} else {
-							Session session = Session.getActiveSession();
+							Session session = new Session(MainActivity.this);
 							Session.OpenRequest openRequest = new Session.OpenRequest(MainActivity.this);
 							openRequest.setPermissions(Arrays.asList("email"));
 							openRequest.setLoginBehavior(SessionLoginBehavior.SUPPRESS_SSO);
@@ -526,7 +525,9 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 			if (userCredentials.isPasswordGenerated()) {
 				tryConnect = true;		// TODO: was = false - correct?
 			} else {
-				loggedIn = false;
+				session.closeAndClearTokenInformation();	
+				session.close();
+				Session.setActiveSession(null);
 			}
 			updateUi();
 		}
@@ -619,6 +620,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	// callback interface for GetCurrentGamesAsyncTask
 	@Override
 	public void getCurrentGamesCallback(ArrayList<GameInformation> games) {
+		//TODO Remove lines before publishing
 		//games.add(new GameInformation());
 		//games.get(0).setDefaultGame(true);
 		//games.get(0).setServer("https://192.168.178.94");

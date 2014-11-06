@@ -81,6 +81,12 @@ public class ShopInfoFragment extends Fragment {
 			ressourceArray[2] = R.string.shopInfoDescText_account;
 			ressourceArray[3] = R.drawable.head_chef_colored_small;
 			
+		} else if (type.equals("special")) {
+			ressourceArray[0] = R.string.shopInfoText_special;
+			ressourceArray[1] = R.string.shopInfoHeadingText_special;
+			ressourceArray[2] = R.string.shopInfoDescText_special;
+			ressourceArray[3] = R.drawable.head_girl_colored_small;
+			
 		} else {
 			ressourceArray[0] = R.string.shopInfoText_bonus;
 			ressourceArray[1] = R.string.shopInfoHeadingText_bonus;

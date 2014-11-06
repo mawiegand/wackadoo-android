@@ -105,6 +105,7 @@
     <string name="buy_item_success">Du hast dieses Item erfolgreich gekauft</string>
     <string name="buy_credits_fail">Da ist beim Kauf wohl was schiefgegangen</string>
     <string name="buy_credits_success">Die Platin Credits wurden erforlgreich gekauft</string>
+    <string name="shop_special_text">Starter Packet</string>
 
     <!-- Shop Info -->
    	<string name="shopinfo_topbar_heading">Info Store</string>
@@ -124,7 +125,16 @@
     <string name="shopInfoText_bonus">Mehr Ressourcen? Jeder braucht mehr Ressourcen!</string>
     <string name="shopInfoHeadingText_bonus">Produktionsbonus</string>
     <string name="shopInfoDescText_bonus" formatted="false">Der Produktionsbonus gilt für deine gesamte Produktion der ausgewählten Ressource.\n\n15% globaler Bonus für die Produktion von Fell.\n\n15% globaler Bonus für die Produktion von Stein.\n\n15% globaler Bonus für die Produktion von Holz.</string>
+    <string name="shopInfoText_special">Dies ist ein spezielles Paket, das nur für neue Spieler verfügbar ist.</string>
+    <string name="shopInfoHeadingText_special">Starter Paket</string>
+    <string name="shopInfoDescText_special" formatted="false">Das Starter Paket enthält: \n1500 Ressourcen \n300 goldene Frösche \nEine Siedlung in der nähe der Hauptsiedlung mit den folgenden Erweiterungen: 
+        									\nEine Level 5 Hütte \nEinen Altar \nJäger und Sammler haben eine Produktionsgeschwindigkeit von 150 Ressourcen pro Stunde \nFür vier Tage bekommst du diese Zusätzlichen Verbesserungen: \nEinen globalen 15% Produktionsbonus \n100% Produktionsgeschwindigkeit zusätzlich (halbierte Produktionszeit)</string>
     <string name="shop_expires_in">Läuft aus am:&#160;</string>
+    <string name="special_offer_1">SecondSettlement:\nCamp</string>
+    <string name="special_offer_2">1500 Ressourcen \n150 Ressourcen pro Stunde \n15% Produktionsbonus</string>
+    <string name="special_offer_3">300 Goldene Frösche</string>
+    <string name="special_offer_4">Halbierte Bauzeit für 4 Tage</string>
+    <string name="special_offer_buy">Jetzt Kaufen!</string>
     
     <!-- Info Screen -->
     <string name="infoscreen_support_btn">Support</string>
