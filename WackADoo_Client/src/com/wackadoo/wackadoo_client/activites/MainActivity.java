@@ -539,13 +539,10 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	// facebook: handles login/logout state of session
 	private void onSessionStateChange(Session session, SessionState state, Exception exception) {
 		if (session.isOpened()) {
-			Log.d(TAG, "Facebook Session opened!");
 			loggedIn = true;
 			userCredentials.setFbUser(true);
-			fetchFbData(session);
 			
 		} else if (state.isClosed()) {
-			Log.d(TAG, "Facebook Session closed!");
 			if (session != null) {
 				session.closeAndClearTokenInformation();	
 				session.close();
@@ -556,10 +553,13 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 			if (userCredentials.isPasswordGenerated()) {
 				tryConnect = true;		// TODO: was = false - correct?
 			} else {
-				loggedIn = false;
+				session.closeAndClearTokenInformation();	
+				session.close();
+				Session.setActiveSession(null);
 			}
-			updateUi();
+			//updateUi();
 		}
+		updateUi();
 	}
 
 	// facebook: start async request for user data

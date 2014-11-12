@@ -81,6 +81,7 @@ public class GameWebViewClient extends WebViewClient {
 	        ((Activity) context).startActivity(intent);
 			return false;
 		} 
+		view.loadUrl(url);
 		return true;
 	}
 
