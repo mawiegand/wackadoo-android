@@ -75,16 +75,18 @@ public class CreateAccountAsyncTask extends AsyncTask<String, Integer, Boolean> 
 		String identifier = null; 
 		String username = null;
 		String accountId = null;
+		String email = null;
 		
 		if (result) {
 			try {
 				identifier = jsonResponse.getString("identifier");
 				username = jsonResponse.getString("nickname");
 				accountId = jsonResponse.getString("id");
+				email = jsonResponse.getString("email");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		} 
-		listener.onRegistrationCompleted(result, identifier, username, accountId);
+		listener.onRegistrationCompleted(result, identifier, username, accountId, email);
 	}
 }

@@ -5,9 +5,11 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Display;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -47,12 +49,16 @@ public class WackadooWebviewActivity extends Activity {
         webSettings.setUseWideViewPort(true);
         webSettings.setDomStorageEnabled(true);	
         
+        
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             WebView.setWebContentsDebuggingEnabled(true);
         }
         
         Bundle b = getIntent().getExtras();
-        final LoginJavaScriptHandler loginHandler = new LoginJavaScriptHandler(this, "accessToken", "expiration", "userId", "hostname");
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        final LoginJavaScriptHandler loginHandler = new LoginJavaScriptHandler(this, b.getString("accessToken"), b.getString("expiration"), b.getString("userId"), b.getString("hostname"), size.x,size.y);
         webView.addJavascriptInterface(loginHandler, "LoginHandler");
         webView.loadUrl("file:///android_asset/index.html");
     }
@@ -75,26 +81,21 @@ public class WackadooWebviewActivity extends Activity {
         mConnectionHandler.removeCallbacks(checkConnectionThread);
     }
     
-    // use device backbutton to go back one page in webview
+    // use device backbutton to leave game if user wants to
     @Override
     public void onBackPressed() {
-		if (webView.canGoBack()) {
-			webView.goBack();
-			
-		} else {
-			AlertDialog.Builder builder = new AlertDialog.Builder(WackadooWebviewActivity.this);
-			builder.setMessage(getString(R.string.dialog_return_startscreen_text))
-				   .setPositiveButton(R.string.alert_quit_yes, new OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							finish();									
-						}
-					})
-				   .setNegativeButton(R.string.alert_quit_no, null);
-			AlertDialog dialog = builder.create();
-		    dialog.show();
-		    StaticHelper.styleDialog(WackadooWebviewActivity.this, dialog);
-		}
+		AlertDialog.Builder builder = new AlertDialog.Builder(WackadooWebviewActivity.this);
+		builder.setMessage(getString(R.string.dialog_return_startscreen_text))
+			   .setPositiveButton(R.string.alert_quit_yes, new OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						finish();									
+					}
+				})
+			   .setNegativeButton(R.string.alert_quit_no, null);
+		AlertDialog dialog = builder.create();
+	    dialog.show();
+	    StaticHelper.styleDialog(WackadooWebviewActivity.this, dialog);
     }
     
     // runs the scale animation repeatedly

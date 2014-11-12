@@ -145,7 +145,7 @@ public class GetShopDataAsyncTask extends AsyncTask<String, Integer, Boolean> {
 						int id = jsonObject.getInt("id");
 						String title = context.getString(R.string.list_gold_text);
 						title = String.format(title, jsonObject.getInt("amount"), jsonObject.getInt("price"));
-						ShopRowItem item = new ShopRowItem(id, R.drawable.goldkroete_big, title, 0, 0, null);
+						ShopRowItem item = new ShopRowItem(id, R.drawable.goldkroete_big, title, 0, 0, jsonObject.getInt("price"), null);
 						rowItemList.add(item);
 					}
 					break;
@@ -159,7 +159,7 @@ public class GetShopDataAsyncTask extends AsyncTask<String, Integer, Boolean> {
 						int price = jsonObject.getInt("price");
 						String title = context.getString(R.string.list_platinum_account_text);
 						title = String.format(title, hours, price);
-						ShopRowItem item = new ShopRowItem(id, 0, title, 0, 0, userCredentials.getPremiumExpiration());
+						ShopRowItem item = new ShopRowItem(id, 0, title, 0, 0, price, userCredentials.getPremiumExpiration());
 						rowItemList.add(item);
 					}
 					break;
@@ -179,7 +179,7 @@ public class GetShopDataAsyncTask extends AsyncTask<String, Integer, Boolean> {
 						title = String.format(title, bonus, hours, price);
 			
 						Date expiresIn = jsonObject.isNull("resource_effect") ? null : gson.fromJson(JSONObject.quote(jsonObject.getJSONObject("resource_effect").getString("finished_at")), Date.class);
-						ShopRowItem item = new ShopRowItem(id, resourceId, title, currency, bonus, expiresIn);
+						ShopRowItem item = new ShopRowItem(id, resourceId, title, currency, bonus, price, expiresIn);
 						rowItemList.add(item);
 					}
 					break;
@@ -191,7 +191,7 @@ public class GetShopDataAsyncTask extends AsyncTask<String, Integer, Boolean> {
 						int id = jsonObject.getInt("id");
 						int price = jsonObject.getInt("price"); 
 						String title = jsonObject.getString("title"); 
-						ShopRowItem item = new ShopRowItem(id, 0, title, 0, 0, null);
+						ShopRowItem item = new ShopRowItem(id, 0, title, 0, 0, price, null);
 						rowItemList.add(item);
 					}
 					break;	
