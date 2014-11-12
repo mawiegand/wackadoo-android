@@ -3,21 +3,19 @@ package com.wackadoo.wackadoo_client.activites;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.content.WakefulBroadcastReceiver;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.adapter.GamesListViewAdapter;
+import com.wackadoo.wackadoo_client.helper.SoundManager;
 import com.wackadoo.wackadoo_client.helper.StaticHelper;
 import com.wackadoo.wackadoo_client.helper.WackadooActivity;
 import com.wackadoo.wackadoo_client.interfaces.CharacterCallbackInterface;
@@ -65,7 +63,7 @@ public class SelectGameActivity extends WackadooActivity implements CurrentGames
 						
 					case MotionEvent.ACTION_UP:
 						doneBtn.setTextColor(getResources().getColor(R.color.textbox_orange));
-						StaticHelper.continueMusic = true;
+						SoundManager.continueMusic = true;
 						finish();
 						break;
 				}

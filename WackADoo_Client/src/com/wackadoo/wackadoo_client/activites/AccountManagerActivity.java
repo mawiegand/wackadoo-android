@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import com.facebook.Session;
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.helper.CustomProgressDialog;
+import com.wackadoo.wackadoo_client.helper.SoundManager;
 import com.wackadoo.wackadoo_client.helper.StaticHelper;
 import com.wackadoo.wackadoo_client.helper.WackadooActivity;
 import com.wackadoo.wackadoo_client.interfaces.AccountManagerCallbackInterface;
@@ -40,6 +42,7 @@ public class AccountManagerActivity extends WackadooActivity implements AccountM
         super.onCreate(savedInstanceState, R.layout.activity_accountmanager);
 	    
 	    userCredentials = new UserCredentials(getApplicationContext());
+	    Log.d(TAG, " ---> Mail: " + userCredentials.getEmail() + " | BOOL: " + userCredentials.isEmailGenerated());
 	    
 	    setUpUi();
 	    setUpButtons();
@@ -76,6 +79,7 @@ public class AccountManagerActivity extends WackadooActivity implements AccountM
 			
 		} else {
 			if (!userCredentials.isEmailGenerated()) { 
+				Log.d("ACCOUNT", "EMAIL GENERATED = FALSE");
 				setEmailButton.setVisibility(View.GONE);
 				emailTextView.setVisibility(View.VISIBLE);
 				emailTextView.setText(userCredentials.getEmail());
@@ -114,7 +118,7 @@ public class AccountManagerActivity extends WackadooActivity implements AccountM
 						
 						switch (v.getId()) {
 							case R.id.accountTopbarBack:
-								StaticHelper.continueMusic = true;
+								SoundManager.continueMusic = true;
 								finish();
 								break;
 								
@@ -187,7 +191,8 @@ public class AccountManagerActivity extends WackadooActivity implements AccountM
     		
     	} else {
     		String email = userCredentials.getEmail();
-    		if (!email.isEmpty()) {
+    		if (!userCredentials.isEmailGenerated()) {
+    			emailTextView.setText(email);
     		}
     	}
 	}
@@ -251,8 +256,8 @@ public class AccountManagerActivity extends WackadooActivity implements AccountM
 		userCredentials.clearAllCredentials();
 		userCredentials = new UserCredentials(getApplicationContext());
 		
-		String identifier = this.userCredentials.getIdentifier();
-		String email = this.userCredentials.getEmail();
+		String identifier = userCredentials.getIdentifier();
+		String email = userCredentials.getEmail();
 	
 		// closes facebook session and clears cache
 		Session session = Session.getActiveSession();
@@ -266,7 +271,7 @@ public class AccountManagerActivity extends WackadooActivity implements AccountM
 	    if ((identifier.length() <= 0) && (email.length() <= 0)) {
 			Intent intent = new Intent(AccountManagerActivity.this, CredentialScreenActivity.class);
 			startActivity(intent);
-			StaticHelper.continueMusic = true;
+			SoundManager.continueMusic = true;
 			finish();
 		}
 	}

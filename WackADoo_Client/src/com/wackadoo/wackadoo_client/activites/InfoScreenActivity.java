@@ -10,6 +10,7 @@ import android.view.View.OnTouchListener;
 import android.widget.TextView;
 
 import com.wackadoo.wackadoo_client.R;
+import com.wackadoo.wackadoo_client.helper.SoundManager;
 import com.wackadoo.wackadoo_client.helper.StaticHelper;
 import com.wackadoo.wackadoo_client.helper.WackadooActivity;
 
@@ -67,7 +68,7 @@ public class InfoScreenActivity extends WackadooActivity {
 							break;
 							
 						case R.id.infoscreenTopbarBack:
-			    			StaticHelper.continueMusic = true;
+							SoundManager.continueMusic = true;
 			    			finish();
 							break;
 					}

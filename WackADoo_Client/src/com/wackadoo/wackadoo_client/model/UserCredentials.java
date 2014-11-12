@@ -4,6 +4,7 @@ import java.util.Date;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 public class UserCredentials {
 	
@@ -39,7 +40,8 @@ public class UserCredentials {
 	}
 	public void setEmail(String email) {
 		this.email = email;
-		if (email.equals("")) {
+		if ((email.contains("generic") && email.contains("5dlab.com")) || 
+				email.equals("")) {
 			generatedEmail = true;
 		} else {
 			generatedEmail = false;
@@ -162,8 +164,10 @@ public class UserCredentials {
 	}
 	public void setFbUser(boolean fbUser) {
 		this.isFbUser = fbUser;
-		generatedEmail = false;
-		generatedPassword = false;
+		if (fbUser) {
+			generatedEmail = false;
+			generatedPassword = false;
+		}
 		persistCredentials();
 	}
 	

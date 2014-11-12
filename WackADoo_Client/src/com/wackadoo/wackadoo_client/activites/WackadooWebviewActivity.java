@@ -88,26 +88,21 @@ public class WackadooWebviewActivity extends Activity {
         mConnectionHandler.removeCallbacks(checkConnectionThread);
     }
     
-    // use device backbutton to go back one page in webview
+    // use device backbutton to leave game if user wants to
     @Override
     public void onBackPressed() {
-		if (webView.canGoBack()) {
-			webView.goBack();
-			
-		} else {
-			AlertDialog.Builder builder = new AlertDialog.Builder(WackadooWebviewActivity.this);
-			builder.setMessage(getString(R.string.dialog_return_startscreen_text))
-				   .setPositiveButton(R.string.alert_quit_yes, new OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							finish();									
-						}
-					})
-				   .setNegativeButton(R.string.alert_quit_no, null);
-			AlertDialog dialog = builder.create();
-		    dialog.show();
-		    StaticHelper.styleDialog(WackadooWebviewActivity.this, dialog);
-		}
+		AlertDialog.Builder builder = new AlertDialog.Builder(WackadooWebviewActivity.this);
+		builder.setMessage(getString(R.string.dialog_return_startscreen_text))
+			   .setPositiveButton(R.string.alert_quit_yes, new OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						finish();									
+					}
+				})
+			   .setNegativeButton(R.string.alert_quit_no, null);
+		AlertDialog dialog = builder.create();
+	    dialog.show();
+	    StaticHelper.styleDialog(WackadooWebviewActivity.this, dialog);
     }
     
     // runs the scale animation repeatedly

@@ -1,8 +1,6 @@
 package com.wackadoo.wackadoo_client.activites;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -21,6 +19,7 @@ import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.helper.CustomProgressDialog;
+import com.wackadoo.wackadoo_client.helper.SoundManager;
 import com.wackadoo.wackadoo_client.helper.StaticHelper;
 import com.wackadoo.wackadoo_client.helper.WackadooActivity;
 import com.wackadoo.wackadoo_client.interfaces.CreateAccountCallbackInterface;
@@ -116,7 +115,7 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 							break;
 							
 						case R.id.credentialscreenTopbarBack:
-							StaticHelper.continueMusic = true;
+							SoundManager.continueMusic = true;
 							finish();
 							break;
 					}
@@ -148,7 +147,7 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
     		   .setPositiveButton(getResources().getString(R.string.alert_ok_button), new DialogInterface.OnClickListener() { 
 		    	    @Override
 		    	    public void onClick(DialogInterface dialog, int which) { 
-						StaticHelper.continueMusic = true;
+		    	    	SoundManager.continueMusic = true;
 		    	    	finish(); 
 		    	    }
 		    	})
@@ -156,6 +155,7 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 		    	    @Override
 		    	    public void onClick(DialogInterface dialog, int which) {
 		    	        dialog.cancel();
+		    	        userCredentials.clearAllCredentials();		// clear data of false account again
 		    	        
 		    	        Intent intent = new Intent(Intent.ACTION_SENDTO); 
 		    	        intent.setType("text/plain");
@@ -164,7 +164,7 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 		    	        intent.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.credentials_lost_access_mail));
 		    	        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // this will make such that when user returns to your app, your app is displayed, instead of the email app.
 		    	        startActivity(intent);
-		    	        finish();
+//		    	        finish();7
 		    	    }
 		    	});
 		
@@ -220,7 +220,7 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 
     // callback interface for CreateAccountAsyncTask
 	@Override
-	public void onRegistrationCompleted(boolean success, String identifier, String nickname, String accountId) {
+	public void onRegistrationCompleted(boolean success, String identifier, String nickname, String accountId, String email) {
 		if (progressDialog.isShowing()) {
 			progressDialog.dismiss();
 		}
@@ -229,7 +229,8 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 			userCredentials.setIdentifier(identifier);
 			userCredentials.setUsername(nickname);
 			userCredentials.setAccountId(accountId);
-			StaticHelper.continueMusic = true;
+			userCredentials.setEmail(email);
+			SoundManager.continueMusic = true;
 			finish();
 		} else {
 			Toast.makeText(this, getString(R.string.error_server_communication), Toast.LENGTH_SHORT)
@@ -281,7 +282,7 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 		if (restoreAccount) {
 			showRestoreAccountDialog(true);
 		} else {
-			StaticHelper.continueMusic = true;
+			SoundManager.continueMusic = true;
 			finish();
 		}		
 	}

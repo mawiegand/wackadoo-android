@@ -44,6 +44,7 @@ import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.analytics.AutoPing;
 import com.wackadoo.wackadoo_client.helper.Avatar;
 import com.wackadoo.wackadoo_client.helper.CustomProgressDialog;
+import com.wackadoo.wackadoo_client.helper.SoundManager;
 import com.wackadoo.wackadoo_client.helper.StaticHelper;
 import com.wackadoo.wackadoo_client.interfaces.CharacterCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.CurrentGamesCallbackInterface;
@@ -83,7 +84,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		uiHelper.onCreate(savedInstanceState);
         
 	    // create set up player for background music
-	    StaticHelper.setUpPlayer(this);
+		SoundManager.setUpPlayer(this);
 	    
 	    setUpUi();
 	    setUpButtons();
@@ -128,9 +129,9 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		}
 		
 		// start background music, if its enabled
-		StaticHelper.continueMusic = false;
-		if (StaticHelper.soundOn && !StaticHelper.backgroundMusicPlayer.isPlaying()) {
-			StaticHelper.backgroundMusicPlayer.start();
+		SoundManager.continueMusic = false;
+		if (SoundManager.soundOn && !SoundManager.backgroundMusicPlayer.isPlaying()) {
+			SoundManager.backgroundMusicPlayer.start();
 		}
 		
 		// restart threads
@@ -144,8 +145,8 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	    mAnimationHandler.removeCallbacks(updateAnimationThread);
 	    mTokenHandler.removeCallbacks(updateTokenThread);
 	    
-	    if (!StaticHelper.continueMusic && StaticHelper.backgroundMusicPlayer.isPlaying()) {
-	    	StaticHelper.backgroundMusicPlayer.pause();
+	    if (!SoundManager.continueMusic && SoundManager.backgroundMusicPlayer.isPlaying()) {
+	    	SoundManager.backgroundMusicPlayer.pause();
 	    }
     }
     @Override
@@ -173,7 +174,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		tryConnect = false;
 		
 	    // sound is on by default
-	    StaticHelper.soundOn = true;
+		SoundManager.soundOn = true;
 	    
 	    // user logged out by default
 	    loggedIn = false;
@@ -251,8 +252,11 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 										@Override
 										public void onClick(DialogInterface dialog, int which) {
 											tryConnect = true;
-
-											Session session = new Session(MainActivity.this);
+											
+											Session session = Session.getActiveSession();
+											if (session == null) { 
+												session = new Session(MainActivity.this);
+											}
 											
 											Session.OpenRequest openRequest = new Session.OpenRequest(MainActivity.this);
 											openRequest.setPermissions(Arrays.asList("email"));
@@ -266,7 +270,10 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 							StaticHelper.styleDialog(MainActivity.this, dialog);
 							
 						} else {
-							Session session = new Session(MainActivity.this);
+							Session session = Session.getActiveSession();
+							if (session == null) { 
+								session = new Session(MainActivity.this);
+							}
 							Session.OpenRequest openRequest = new Session.OpenRequest(MainActivity.this);
 							openRequest.setPermissions(Arrays.asList("email"));
 							openRequest.setLoginBehavior(SessionLoginBehavior.SUPPRESS_SSO);
@@ -327,7 +334,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 
 				case MotionEvent.ACTION_UP:
 					shopBtn.setImageResource(R.drawable.title_shop_button);
-					StaticHelper.continueMusic = true;
+					SoundManager.continueMusic = true;
 					Intent intent = new Intent(MainActivity.this, ShopActivity.class);
 					startActivity(intent);
 					break;
@@ -345,18 +352,18 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		soundBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (StaticHelper.soundOn) {
+				if (SoundManager.soundOn) {
 					soundBtn.setImageResource(R.drawable.title_sound_off);
-					StaticHelper.backgroundMusicPlayer.stop();
-					StaticHelper.soundOn = false;
+					SoundManager.backgroundMusicPlayer.stop();
+					SoundManager.soundOn = false;
 
 				} else {
 					soundBtn.setImageResource(R.drawable.title_sound_on);
-				    StaticHelper.backgroundMusicPlayer = MediaPlayer.create(MainActivity.this, R.raw.themesong);
-				    StaticHelper.backgroundMusicPlayer.setLooping(true);
-				    StaticHelper.backgroundMusicPlayer.setVolume(100, 100);
-					StaticHelper.backgroundMusicPlayer.start();
-					StaticHelper.soundOn = true;
+					SoundManager.backgroundMusicPlayer = MediaPlayer.create(MainActivity.this, R.raw.themesong);
+					SoundManager.backgroundMusicPlayer.setLooping(true);
+					SoundManager.backgroundMusicPlayer.setVolume(100, 100);
+					SoundManager.backgroundMusicPlayer.start();
+					SoundManager.soundOn = true;
 				}
 			}
 		});
@@ -375,7 +382,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 
 				case MotionEvent.ACTION_UP:
 					infoBtn.setImageResource(R.drawable.title_info_button);
-					StaticHelper.continueMusic = true;
+					SoundManager.continueMusic = true;
 					Intent intent = new Intent(MainActivity.this, InfoScreenActivity.class);
 					startActivity(intent);
 					break;
@@ -399,7 +406,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 
 				case MotionEvent.ACTION_UP:
 					accountmanagerBtn.setImageResource(R.drawable.title_change_button);
-					StaticHelper.continueMusic = true;
+					SoundManager.continueMusic = true;
 					Intent intent = new Intent(MainActivity.this, AccountManagerActivity.class);
 					startActivity(intent);
 					break;
@@ -443,7 +450,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 						} else {
 							selectGameBtn.setImageResource(R.drawable.title_changegame_warn_button);
 						}
-						StaticHelper.continueMusic = true;
+						SoundManager.continueMusic = true;
 						Intent intent = new Intent(MainActivity.this, SelectGameActivity.class);
 						startActivity(intent);
 						break;
@@ -475,7 +482,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 					} else {
 						intent = new Intent(MainActivity.this, CredentialScreenActivity.class);
 					}
-					StaticHelper.continueMusic = true;
+					SoundManager.continueMusic = true;
 					startActivity(intent);
 					break;
 				}
@@ -507,11 +514,15 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 					progressDialog.show();
 				}
 			}			
-		} else if (userCredentials.isEmailGenerated()) {
+		} else if (!userCredentials.getUsername().equals("")) {
 			progressDialog.show();
 			new GameLoginAsyncTask(this, userCredentials, false, false).execute();
+			
 		} 
-		updateUi();
+		else {
+			loggedIn = false;
+			updateUi();
+		}
 	}
 	
     // facebook: handles result for login 
@@ -536,14 +547,13 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	
 	// facebook: handles login/logout state of session
 	private void onSessionStateChange(Session session, SessionState state, Exception exception) {
+		Log.d(TAG, "---> session state changed");
 		if (session.isOpened()) {
-			Log.d(TAG, "Facebook Session opened!");
 			loggedIn = true;
 			userCredentials.setFbUser(true);
 			fetchFbData(session);
 			
 		} else if (state.isClosed()) {
-			Log.d(TAG, "Facebook Session closed!");
 			if (session != null) {
 				session.closeAndClearTokenInformation();	
 				session.close();
@@ -558,8 +568,9 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 				session.close();
 				Session.setActiveSession(null);
 			}
-			updateUi();
+//			updateUi();
 		}
+		updateUi();
 	}
 
 	// facebook: start async request for user data
@@ -716,7 +727,6 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		if (progressDialog.isShowing()) {
 			progressDialog.dismiss();
 		}
-
 		if (loggedIn) {
 			setUpAccountmanagerBtn();
 			setUpSelectgameBtn();
@@ -782,11 +792,16 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 						session.close();
 						Session.setActiveSession(null);
 					}
+					// remove email because accounts couldn't be connected
 					userCredentials.setEmail("");
+					
 					switch (responseCode) {
 						case 403: Toast.makeText(this, R.string.fb_character_already_connected, Toast.LENGTH_LONG).show(); break;
 						case 409: Toast.makeText(this, R.string.fb_user_already_connected, Toast.LENGTH_LONG).show(); break;
-						default: Toast.makeText(this, String.format(getString(R.string.fb_connect_error), responseCode), Toast.LENGTH_LONG).show(); break;
+						default: 
+							Toast.makeText(this, String.format(getString(R.string.fb_connect_error), responseCode), Toast.LENGTH_LONG)
+								 .show(); 
+							break;
 					}
 				}
 				
@@ -810,6 +825,13 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		} else {
 			Toast.makeText(this, getString(R.string.fb_task_failure), Toast.LENGTH_SHORT)
 				 .show();
+			// close possible facebook session
+			Session session = Session.getActiveSession();
+			if (session != null) {
+				session.closeAndClearTokenInformation();	
+				session.close();
+				Session.setActiveSession(null);
+			}
 		}
 	}
 

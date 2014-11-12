@@ -19,7 +19,7 @@ public class WackadooActivity extends Activity {
 	
 	@Override
 	public void onBackPressed() {
-		StaticHelper.continueMusic = true;
+		SoundManager.continueMusic = true;
 		finish();
 	}
 	
@@ -28,10 +28,10 @@ public class WackadooActivity extends Activity {
 		super.onResume();
 		
 		// continue music, if its not currently playing
-		StaticHelper.continueMusic = false;
-		if (!StaticHelper.backgroundMusicPlayer.isPlaying() && StaticHelper.soundOn) {
-			StaticHelper.setUpPlayer(this);
-			StaticHelper.backgroundMusicPlayer.start();
+		SoundManager.continueMusic = false;
+		if (!SoundManager.backgroundMusicPlayer.isPlaying() && SoundManager.soundOn) {
+			SoundManager.setUpPlayer(this);
+			SoundManager.backgroundMusicPlayer.start();
 		}
 		
 		// warning if no internet connection
@@ -46,8 +46,8 @@ public class WackadooActivity extends Activity {
 		super.onPause();
 		
 		// stop music, if not another activity is started
-		if (!StaticHelper.continueMusic && StaticHelper.backgroundMusicPlayer.isPlaying()) {
-			StaticHelper.backgroundMusicPlayer.stop();
+		if (!SoundManager.continueMusic && SoundManager.backgroundMusicPlayer.isPlaying()) {
+			SoundManager.backgroundMusicPlayer.stop();
 		}
 	}
 	

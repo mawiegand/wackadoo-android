@@ -42,6 +42,7 @@ import com.wackadoo.wackadoo_client.fragments.ShopCreditsFragment;
 import com.wackadoo.wackadoo_client.fragments.ShopInfoFragment;
 import com.wackadoo.wackadoo_client.helper.CustomIabHelper;
 import com.wackadoo.wackadoo_client.helper.CustomProgressDialog;
+import com.wackadoo.wackadoo_client.helper.SoundManager;
 import com.wackadoo.wackadoo_client.helper.StaticHelper;
 import com.wackadoo.wackadoo_client.helper.WackadooActivity;
 import com.wackadoo.wackadoo_client.interfaces.BuyPlayStoreCallbackInterface;
@@ -129,7 +130,7 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 	
 		    		case MotionEvent.ACTION_UP: 
 		    			doneBtn.setTextColor(getResources().getColor(R.color.textbox_orange));
-		    			StaticHelper.continueMusic = true;
+		    			SoundManager.continueMusic = true;
 		    			finish();
 		    			break;
 				}
@@ -514,10 +515,10 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 		billingHelper.handleActivityResult(requestCode, resultCode, data);
 		
 		// play store dialog stops background music
-		StaticHelper.backgroundMusicPlayer = MediaPlayer.create(this, R.raw.themesong);
-		StaticHelper.backgroundMusicPlayer.setLooping(true);
-		StaticHelper.backgroundMusicPlayer.setVolume(100, 100);
-		StaticHelper.backgroundMusicPlayer.start();
+		SoundManager.backgroundMusicPlayer = MediaPlayer.create(this, R.raw.themesong);
+		SoundManager.backgroundMusicPlayer.setLooping(true);
+		SoundManager.backgroundMusicPlayer.setVolume(100, 100);
+		SoundManager.backgroundMusicPlayer.start();
 	}
 	
 	// play store: callback interface for billingHelper.getProductsAsyncInternal
