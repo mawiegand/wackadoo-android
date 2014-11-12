@@ -487,7 +487,6 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	// handle current credentials, decide how to login and start progress
 	private void handleLogin() {
 		String identifier = userCredentials.getIdentifier();		
-		String accessToken = userCredentials.getAccessToken().getToken();
 		String email = userCredentials.getEmail();
 		final ImageView view = (ImageView) findViewById(R.id.characterFrameImageView);
 		view.post(new Runnable() {
@@ -496,7 +495,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 			  }
 		});
 		
-		if (!identifier.equals("") && !accessToken.equals("") || !email.equals("")) { 
+		if (!identifier.equals("") || !email.equals("")) { 
 			if (userCredentials.getAccessToken().isExpired()) {
 				progressDialog.show();
 				new GameLoginAsyncTask(this, userCredentials, false, false).execute();
@@ -507,12 +506,12 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 					new GetCurrentGamesAsyncTask(this, userCredentials).execute();
 					progressDialog.show();
 				}
-			}
-			
+			}			
 		} else if (userCredentials.isEmailGenerated()) {
 			progressDialog.show();
 			new GameLoginAsyncTask(this, userCredentials, false, false).execute();
 		} 
+		updateUi();
 	}
 	
     // facebook: handles result for login 
@@ -658,9 +657,9 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	@Override
 	public void getCurrentGamesCallback(boolean result, ArrayList<GameInformation> games) {
 		// TODO: remove before release
-//		games.add(new GameInformation());
-//		games.get(0).setDefaultGame(true);
-//		games.get(0).setServer(getString(R.string.basePath));
+		//games.add(new GameInformation());
+		//games.get(0).setDefaultGame(true);
+		//games.get(0).setServer(getString(R.string.basePath));
 		
 		if (result) {
 			if (userCredentials.getHostname() == "" || !isGameOnline(games, userCredentials.getGameId())) {

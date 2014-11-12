@@ -36,7 +36,7 @@ public class GameWebViewClient extends WebViewClient {
 		// ---------- open activity ----------
 		if (url.startsWith(ACTIVITY_SCHEME)) {
 			// stop loading of web view in order to stay on the current page
-			view.stopLoading();
+			//view.stopLoading();
 			
 //			if (url.contains("shop_activity")) {
 			if (url.equals(ACTIVITY_SCHEME_SHOP)) {
@@ -48,7 +48,7 @@ public class GameWebViewClient extends WebViewClient {
 		// ---------------------------------------
 		// ----------- play sound file -----------
 		} else if (url.startsWith(SOUND_SCHEME)) {
-			view.stopLoading();
+			//view.stopLoading();
 			
 			// play click sound
 			if (url.contains("clicksound")) {
@@ -66,7 +66,7 @@ public class GameWebViewClient extends WebViewClient {
 		// ---------------------------------------
 		// ------------- send mail  -------------- 
 		} else if (url.startsWith(MAIL_SCHEME)) {
-			view.stopLoading();
+			//view.stopLoading();
 			
 			// get url arguments of mailto link
 			MailTo mt = MailTo.parse(url);
@@ -81,6 +81,7 @@ public class GameWebViewClient extends WebViewClient {
 	        ((Activity) context).startActivity(intent);
 			return false;
 		} 
+		view.loadUrl(url);
 		return true;
 	}
 
