@@ -62,14 +62,13 @@ public class FacebookAccountAsyncTask extends AsyncTask<String, Integer, Respons
 			//*****  connect fb id and character  *****//
 	    	} else if (type.equals(StaticHelper.FB_CONNECT_TASK)) {
 	    		url = StaticHelper.generateUrlForTask(context, true, context.getString(R.string.facebookConnectPath), null) + userCredentials.getFbPlayerId();
-	    		method = HttpPost.METHOD_NAME;
+	    		method = HttpPut.METHOD_NAME;
 	    		
 	    		// generate entity of name+value pairs	    		
 	    		nameValuePairs.add(new BasicNameValuePair("id", userCredentials.getFbPlayerId()));
-	    		nameValuePairs.add(new BasicNameValuePair("facebook[access_token]", userCredentials.getFbAccessToken()));
+	    		nameValuePairs.add(new BasicNameValuePair("facebook[access_token]", userCredentials.getAccessToken().getFbToken()));
 	    	}
 			
-			Log.d(TAG, "---> Facebook request for " + userCredentials.getEmail() + " | " + userCredentials.getFbPlayerId() + " | " + userCredentials.getFbAccessToken());
 			HttpResponse response = StaticHelper.executeRequest(method, url, nameValuePairs, userCredentials.getAccessToken().getToken());
 			
 			// validate response

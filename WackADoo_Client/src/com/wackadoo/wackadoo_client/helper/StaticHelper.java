@@ -131,7 +131,7 @@ public class StaticHelper {
 		}
 		
 		String locale = Locale.getDefault().getCountry().toLowerCase();
-		if (locale != "en" && locale != "de") {
+		if (!locale.equals("en") && locale.equals("de")) {
 			locale = "en";
 		}
 		completeUrl = baseUrl + String.format(urlForRequest, locale);

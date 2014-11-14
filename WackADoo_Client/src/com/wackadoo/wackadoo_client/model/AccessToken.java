@@ -2,6 +2,8 @@ package com.wackadoo.wackadoo_client.model;
 
 import java.util.Date;
 
+import android.util.Log;
+
 public class AccessToken {
 	
 	private String token, fbToken, identifier, expireCode;
@@ -17,7 +19,7 @@ public class AccessToken {
 	}
 	
 	public String getExpireCode() {
-		return this.expireCode;
+		return expireCode;
 	}
 	public void setExpireCode(String expireCode) {
 		this.expireCode = expireCode;
@@ -45,19 +47,16 @@ public class AccessToken {
 	}
 	
 	public boolean isValid() {
-		return (this.token != null) && !this.isExpired();
+		return (token != null) && !isExpired();
 	}
 	public boolean isExpired() {
-		return this.isExpiredAt(new Date());
+		return isExpiredAt();
 	}
 	
-	public boolean isExpiredAt(Date date) {
-		double tokenExpiration = 1000 * 60 * 60 * 5.0; // 1000 milliseconds * 60 seconds * 60 = minutes * 5 hours
+	public boolean isExpiredAt() {
+		long tokenExpiration = 1000 * 60 * 60 * 5; // 1000 milliseconds * 60 seconds * 60 = minutes * 5 hours
 		Date actualTime = new Date();
-		return (this.createdAt != null) && ((actualTime.getTime() - this.createdAt.getTime()) > tokenExpiration);
-	}
-	public void restoreExpireDate(Date date) {
-		this.createdAt = date;
+		return (createdAt != null) && ((actualTime.getTime() - createdAt.getTime()) > tokenExpiration);
 	}
 
 	public void setCreatedAt(Date createdAt) {

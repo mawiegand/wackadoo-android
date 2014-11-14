@@ -347,7 +347,8 @@
 						  	    android:id="@+id/loginButton"
 					  		    android:layout_width="match_parent"
 						  	    android:adjustViewBounds="true"
-					  		    android:layout_weight="0.27"/>
+					  		    android:layout_weight="0.27"
+					  		    android:src="@drawable/title_play_button_anim0"/>
 				 		        
 				 		</LinearLayout>
 			 		</LinearLayout>

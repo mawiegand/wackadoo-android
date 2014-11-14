@@ -42,7 +42,6 @@ public class AccountManagerActivity extends WackadooActivity implements AccountM
         super.onCreate(savedInstanceState, R.layout.activity_accountmanager);
 	    
 	    userCredentials = new UserCredentials(getApplicationContext());
-	    Log.d(TAG, " ---> Mail: " + userCredentials.getEmail() + " | BOOL: " + userCredentials.isEmailGenerated());
 	    
 	    setUpUi();
 	    setUpButtons();
@@ -70,16 +69,17 @@ public class AccountManagerActivity extends WackadooActivity implements AccountM
 		if (userCredentials.isFbUser()) {
 			characterLockedTextView.setVisibility(View.VISIBLE);
 			characterLockedTextView.setText(R.string.account_character_connected_fb);
+			RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) characterLockedTextView.getLayoutParams();	// remove gap before characterLockedTextView
+			params.addRule(RelativeLayout.BELOW, R.id.signOutButton);
 			emailTextView.setVisibility(View.GONE);
 			setEmailButton.setVisibility(View.GONE);
 			passwordButton.setVisibility(View.GONE);
 			provideEmailTextView.setVisibility(View.GONE);
 			makeCharacterPortableTextView.setVisibility(View.GONE);
-			emailAccountCheckedImage.setVisibility(View.INVISIBLE);
+			emailAccountCheckedImage.setVisibility(View.GONE);
 			
 		} else {
-			if (!userCredentials.isEmailGenerated()) { 
-				Log.d("ACCOUNT", "EMAIL GENERATED = FALSE");
+			if (!userCredentials.isGeneratedEmail()) { 
 				setEmailButton.setVisibility(View.GONE);
 				emailTextView.setVisibility(View.VISIBLE);
 				emailTextView.setText(userCredentials.getEmail());
@@ -88,7 +88,7 @@ public class AccountManagerActivity extends WackadooActivity implements AccountM
 				provideEmailTextView.setVisibility(View.GONE);
 				
 			} 
-			if (!userCredentials.isPasswordGenerated()) {
+			if (!userCredentials.isGeneratedPassword()) {
 				passwordButton.setText(getResources().getString(R.string.account_change_password));
 				makeCharacterPortableTextView.setVisibility(View.GONE);
 				RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) passwordButton.getLayoutParams();	// because characterPortable is GONE
@@ -142,7 +142,7 @@ public class AccountManagerActivity extends WackadooActivity implements AccountM
 		backBtn.setOnTouchListener(touchListener);
 		signOutButton.setOnTouchListener(touchListener);
 		
-		if (userCredentials.isEmailGenerated()) {
+		if (userCredentials.isGeneratedEmail()) {
 			setEmailButton.setVisibility(View.VISIBLE);
 			setEmailButton.setOnTouchListener(touchListener);
 		}
@@ -168,7 +168,7 @@ public class AccountManagerActivity extends WackadooActivity implements AccountM
     		   .setNegativeButton(getResources().getString(R.string.alert_cancel_button), dialogClickListener);
     		 
     	// user without mail wants to log out
-    	if (userCredentials.getPassword().equals("")) {
+    	if (userCredentials.getPassword().equals("") && !userCredentials.isFbUser()) {
     		builder.setTitle(getResources().getString(R.string.account_really_sign_out))
     			   .setMessage(getResources().getString(R.string.account_character_lost_when_signout));
     	} else {
@@ -191,7 +191,7 @@ public class AccountManagerActivity extends WackadooActivity implements AccountM
     		
     	} else {
     		String email = userCredentials.getEmail();
-    		if (!userCredentials.isEmailGenerated()) {
+    		if (!userCredentials.isGeneratedEmail()) {
     			emailTextView.setText(email);
     		}
     	}

@@ -29,9 +29,8 @@ public class WackadooActivity extends Activity {
 		
 		// continue music, if its not currently playing
 		SoundManager.continueMusic = false;
-		if (!SoundManager.backgroundMusicPlayer.isPlaying() && SoundManager.soundOn) {
+		if (SoundManager.shouldPlayerStart()) {
 			SoundManager.setUpPlayer(this);
-			SoundManager.backgroundMusicPlayer.start();
 		}
 		
 		// warning if no internet connection
@@ -46,8 +45,8 @@ public class WackadooActivity extends Activity {
 		super.onPause();
 		
 		// stop music, if not another activity is started
-		if (!SoundManager.continueMusic && SoundManager.backgroundMusicPlayer.isPlaying()) {
-			SoundManager.backgroundMusicPlayer.stop();
+		if (SoundManager.shouldPlayerStop()) {
+			SoundManager.stop();
 		}
 	}
 	

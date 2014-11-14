@@ -78,12 +78,19 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
         
         userCredentials = new UserCredentials(this);
 
-        Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/obelix.ttf");
-        ((TextView)findViewById(R.id.subheadingSpecial)).setTypeface(tf);
-        ((TextView)findViewById(R.id.shopSpecialOfferButton)).setTypeface(tf);
         setUpUi();
         setUpButtons();
         loadShopOffersFromServer(); 
+	}
+	
+	// remove displayed fragment and progressdialog to avoid NullpointerException when activity is resumed
+	@Override
+	protected void onPause() {
+		super.onPause();
+		if (progressDialog.isShowing()) {
+			progressDialog.dismiss();
+		}
+		getFragmentManager().popBackStack();
 	}
 	
 	@Override
@@ -185,7 +192,6 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 	//set up special offer button
 	private void setUpSpecialOfferButton(final List<ShopRowItem> offers) {
 		if (!offers.isEmpty()) {
-
 			findViewById(R.id.shopSpecialOfferButton).setVisibility(View.VISIBLE);
 			findViewById(R.id.specialInfoBtn).setVisibility(View.VISIBLE);
 			findViewById(R.id.specialImage).setVisibility(View.VISIBLE);
@@ -193,6 +199,11 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 			RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) findViewById(R.id.subheadingGold).getLayoutParams();
 			params.addRule(RelativeLayout.BELOW, R.id.shopSpecialOfferButton);
 			findViewById(R.id.subheadingGold).setLayoutParams(params);
+			
+	        // set custom font to special offer elements
+	        Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/obelix.ttf");
+	        ((TextView)findViewById(R.id.subheadingSpecial)).setTypeface(tf);
+	        ((TextView)findViewById(R.id.shopSpecialOfferButton)).setTypeface(tf);
 			
 			TextView shopCreditsBtn = (TextView) findViewById(R.id.shopSpecialOfferButton);
 			shopCreditsBtn.setOnTouchListener(new View.OnTouchListener() {
@@ -249,6 +260,7 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 					return true;
 				}
 			});
+	
 		} else {
 			findViewById(R.id.shopSpecialOfferButton).setVisibility(View.GONE);
 			findViewById(R.id.specialInfoBtn).setVisibility(View.GONE);
@@ -270,9 +282,11 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 		    	if (action == (MotionEvent.ACTION_DOWN)) {
 		    		v.setBackgroundColor(getResources().getColor(R.color.shop_listitem_active));
 		    		return true;
+		    		
 		    	} else if (action == MotionEvent.ACTION_CANCEL) {
 		    		v.setBackgroundColor(getResources().getColor(R.color.white));
 		    		return true;
+		    		
 		    	} else if (action == MotionEvent.ACTION_UP) {
 		    		v.setBackgroundColor(getResources().getColor(R.color.white));
 		    		setUpBilling();
@@ -327,8 +341,7 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 	public void creditsFragmentCallback(int clickedPackage) {
 		try {
 			JSONObject jsonItem = new JSONObject(stringProductList.get(clickedPackage));
-			Log.d(TAG, "Play Store Step 1/5: Launch Purchase");
-			billingHelper.launchPurchaseFlow(ShopActivity.this, jsonItem.getString("productId"), 1337, this); 
+			billingHelper.launchPurchaseFlow(ShopActivity.this, jsonItem.getString("productId"), 1337, this); 	// requestCode 1337 is not used, so this number is not important
 			
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -443,10 +456,9 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 		}
 		
 		if (result) {
-			Toast.makeText(this, getString(R.string.buy_item_success), Toast.LENGTH_LONG)
-			.show();
-			//TODO Should the shop be reloaded?
-			loadShopOffersFromServer();
+			Toast.makeText(this, getString(R.string.buy_item_success), Toast.LENGTH_SHORT)
+				 .show();
+			loadShopOffersFromServer();		//TODO: Should the shop be reloaded?
 			
 		} else {
 			Toast.makeText(this, getString(R.string.buy_item_fail), Toast.LENGTH_LONG)
@@ -458,46 +470,51 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 	// callback interface for purchase of play store item
 	@Override
 	public void onIabPurchaseFinished(IabResult result, Purchase purchase) {
-		Log.d(TAG, "Play Store Step 2/5: Purchase finished");
-		// code 0 = success, code 7 = already purchased
+		// code 0 = successful purchase
 		if(result.getResponse() == 0) {
-			Log.d(TAG, "Play Store Step 3/5: Add the platinum credits");
 			new BuyPlayStoreAsyncTask(this, userCredentials, purchase).execute();
-		} else {
-			Log.d(TAG, "Play Store Step 2/5: Purchase Error");
-			Toast.makeText(this, getString(R.string.buy_credits_fail), Toast.LENGTH_LONG)
-			 .show();
-		}
+		
+		// code 7 = already purchased
+		} else if (result.getResponse() == 7){
+			Toast.makeText(this, getString(R.string.buy_credits_fail), Toast.LENGTH_SHORT)
+				 .show();
+		} 
 	}
 	
+	// check for every unconsumed item if its already validated by server and consume it afterwards
 	public void handleUnconsumedItems(Inventory inv) {
-		for (Purchase purchase:  inv.getAllPurchases()) {
+		for (Purchase purchase : inv.getAllPurchases()) {
 			new BuyPlayStoreAsyncTask(this, userCredentials, purchase).execute();
 		}
 	}
 	
 	// callback interface for communication with backend after successful play store purchase
 	@Override
-	public void buyPlayStoreCallback(boolean result, Purchase purchase, String message) {
-		if (result) {
-			Log.d(TAG, "Play Store Step 4/5: Patinum credits added. Consume the play store pruduct");
+	public void buyPlayStoreCallback(int responseCode, Purchase purchase, String message) {
+		if (responseCode == 200) {
 			billingHelper.consumeAsync(purchase, this);
-			Toast.makeText(this, getString(R.string.buy_credits_success), Toast.LENGTH_LONG)
+			Toast.makeText(this, getString(R.string.buy_credits_success), Toast.LENGTH_SHORT)
 			     .show();
+			
 			// get character new credit amount
 			new GetShopDataAsyncTask(this, userCredentials, 5, "").execute();	
+			
 			// remove credit fragment and shop shop again
 			getFragmentManager().popBackStack();		
-			
-		} else {
-			Log.d(TAG, "Play Store Step 4/5: Patinum credits not added, error");
+		
+		// product already validated by server -> consume
+		} else if (responseCode == 403){
+			billingHelper.consumeAsync(purchase, ShopActivity.this);
+
+		// 400 = missing parameters in request | 422 = technical server error 
+		} else if (responseCode == 400 || responseCode == 422){
 			Toast.makeText(this, getString(R.string.buy_credits_fail), Toast.LENGTH_LONG)
 				 .show();
 		}
 	}
 	
 	// play store: set up in app billing
-	private void setUpBilling(){
+	private void setUpBilling() {
 		progressDialog.show();
 		
 		// establish connection to play store
@@ -581,13 +598,11 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 		}
 		return rowItemList;
 	}
-
 	
 	// play store: callback interface for consume finished
 	@Override
 	public void onConsumeFinished(Purchase purchase, IabResult result) {
-		Log.d(TAG, "Play Store Step 5/5: Play store product consumed");
-		
+		Log.d(TAG, "Play Store product consumed -> purchase successful");
 	}
 
 }

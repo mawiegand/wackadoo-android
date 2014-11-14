@@ -1,17 +1,12 @@
 package com.wackadoo.wackadoo_client.tasks;
 
-import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.CoreProtocolPNames;
-import org.apache.http.params.HttpConnectionParams;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -23,7 +18,7 @@ import com.wackadoo.wackadoo_client.helper.StaticHelper;
 import com.wackadoo.wackadoo_client.interfaces.BuyPlayStoreCallbackInterface;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
 
-public class BuyPlayStoreAsyncTask extends AsyncTask<String, Integer, Boolean> {
+public class BuyPlayStoreAsyncTask extends AsyncTask<String, Integer, Integer> {
 	
 	private static final String TAG = BuyPlayStoreAsyncTask.class.getSimpleName();
 	
@@ -38,7 +33,7 @@ public class BuyPlayStoreAsyncTask extends AsyncTask<String, Integer, Boolean> {
     }
 	
 	@Override
-	protected Boolean doInBackground(String... params) {
+	protected Integer doInBackground(String... params) {
 		// TODO: correct url?
 		String completeURL = StaticHelper.generateUrlForTask(context, false, context.getString(R.string.buyCreditsPath), userCredentials);
 		StringBuilder sb = new StringBuilder();
@@ -55,21 +50,28 @@ public class BuyPlayStoreAsyncTask extends AsyncTask<String, Integer, Boolean> {
 		    Log.d(TAG, "response line: " + responseLine);
 		    
 		    if(responseLine.contains("200 OK")) {
-		    	return true;
-		    } else if(responseLine.contains("403 Forbidden")) {
-		    	// not enough credits
-		    	return false;
-		    }
+		    	return 200; 
+		    	
+		    // not enough credits
+		    } else if(responseLine.contains("403 Forbidden")) { 
+		    	return 403; 
+		    	
+		    // wrong parameters in request
+		    } else if(responseLine.contains("400 Bad Request")) { 
+		    	return 400; 
+		    }	    	
 	    	
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
-		return false;
+		// technical problem = 422
+		return 422;			
 	}
 	
 	@Override
-	protected void onPostExecute(Boolean result) {
+	protected void onPostExecute(Integer result) {
 		super.onPostExecute(result);
 		((BuyPlayStoreCallbackInterface) context).buyPlayStoreCallback(result, purchase, null);
 	}
+
 }

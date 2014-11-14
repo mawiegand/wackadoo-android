@@ -13,7 +13,8 @@ public class UserCredentials {
 	private Context context;
 	private int gameId;
 	private boolean isFbUser;
-	private String username, password, fbPlayerId, fbAccessToken, accountId, email, hostname, avatarString;
+	private String username, password, fbPlayerId, accountId, email, hostname, avatarString;
+//	private String username, password, fbPlayerId, fbAccessToken, accountId, email, hostname, avatarString;
 	private Date premiumExpiration;
 	private AccessToken accessToken;
 	private ClientCredentials clientCredentials;
@@ -38,6 +39,7 @@ public class UserCredentials {
 	public String getEmail() {
 		return email;
 	}
+	// set email and generatedEmail in one step!
 	public void setEmail(String email) {
 		this.email = email;
 		if ((email.contains("generic") && email.contains("5dlab.com")) || 
@@ -83,11 +85,12 @@ public class UserCredentials {
 	private void loadCredentials() {
 		SharedPreferences myPrefs = context.getSharedPreferences(WAD_PREFS_NAME, Context.MODE_PRIVATE);
 		accessToken.setIdentifier(myPrefs.getString("identifier", ""));
-		accessToken.setExpireCode(myPrefs.getString("expire_code", ""));
 		accessToken.setToken(myPrefs.getString("accesstoken", ""));
-		accessToken.restoreExpireDate(new Date(myPrefs.getLong("expire_date", 0)));
+		accessToken.setCreatedAt(new Date(myPrefs.getLong("created_at", 13)));
+		accessToken.setExpireCode(myPrefs.getString("expire_code", ""));
+		accessToken.setFbToken(myPrefs.getString("fb_token", ""));
+//		fbAccessToken = myPrefs.getString("fb_access_token", "");
 		fbPlayerId = myPrefs.getString("fb_player_id", "");
-		fbAccessToken = myPrefs.getString("fb_access_token", "");
 		isFbUser = myPrefs.getBoolean("is_fb_user", false);
 		accountId = myPrefs.getString("account_id", "");
 		username = myPrefs.getString("username", "");
@@ -101,14 +104,16 @@ public class UserCredentials {
 		premiumExpiration.setTime(myPrefs.getLong("premiumExpiration", 0));
 		avatarString = myPrefs.getString("avatarString", "");
 	}
-	
 	private void persistCredentials() {
 		SharedPreferences myPrefs = context.getSharedPreferences(WAD_PREFS_NAME, Context.MODE_PRIVATE);
 		SharedPreferences.Editor e = myPrefs.edit();
 		e.putString("identifier", accessToken.getIdentifier());
-		e.putLong("expire_date", accessToken.getCreatedAt().getTime());
+		e.putString("accesstoken", accessToken.getToken());
+		e.putLong("created_at", accessToken.getCreatedAt().getTime());
+		e.putString("expire_code", accessToken.getExpireCode());
+		e.putString("fb_token", accessToken.getFbToken());
 		e.putString("fb_player_id", fbPlayerId);
-		e.putString("fb_access_token", fbAccessToken);
+//		e.putString("fb_access_token", fbAccessToken);
 		e.putBoolean("is_fb_user", isFbUser);
 		e.putString("account_id", accountId);
 		e.putString("username", username);
@@ -116,8 +121,6 @@ public class UserCredentials {
 		e.putString("password", password);
 		e.putBoolean("generatedPassword", generatedPassword);
 		e.putBoolean("generatedEmail", generatedEmail);
-		e.putString("accesstoken", accessToken.getToken());
-		e.putString("expire_code", accessToken.getExpireCode());
 		e.putString("hostname", hostname);
 		e.putInt("gameId", gameId);
 		if (premiumExpiration != null) {
@@ -151,17 +154,18 @@ public class UserCredentials {
 		persistCredentials();
 	}
 	
-	public String getFbAccessToken() {
-		return fbAccessToken;
-	}
-	public void setFbAccessToken(String fbAccessToken) {
-		this.fbAccessToken = fbAccessToken;
-		persistCredentials();
-	}
+//	public String getFbAccessToken() {
+//		return fbAccessToken;
+//	}
+//	public void setFbAccessToken(String fbAccessToken) {
+//		this.fbAccessToken = fbAccessToken;
+//		persistCredentials();
+//	}
 
 	public boolean isFbUser() {
 		return isFbUser;
 	}
+	// set fbUser and generatedEmail/generatedPassword in one step
 	public void setFbUser(boolean fbUser) {
 		this.isFbUser = fbUser;
 		if (fbUser) {
@@ -203,11 +207,18 @@ public class UserCredentials {
 		persistCredentials();
 	}
 	
-	public boolean isEmailGenerated() {
+	public boolean isGeneratedEmail() {
 		return generatedEmail;
 	}
-	public boolean isPasswordGenerated() {
+	public void setGeneratedEmail(boolean generatedEmail) {
+		this.generatedEmail = generatedEmail;
+	}
+
+	public boolean isGeneratedPassword() {
 		return generatedPassword;
+	}
+	public void setGeneratedPassword(boolean generatedPassword) {
+		this.generatedPassword = generatedPassword;
 	}
 
 	public void clearAllCredentials() {

@@ -22,8 +22,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -63,7 +61,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		CurrentGamesCallbackInterface, CharacterCallbackInterface, StatusCallback {
 
 	private static final String TAG = MainActivity.class.getSimpleName();
-	private static final int UPDATE_ANIMATION_TIMER = 6400;
+//	private static final int UPDATE_ANIMATION_TIMER = 6400;
 	private static final int UPDATE_TOKEN_TIMER = 10000;
 	
 	private ImageButton playBtn, accountmanagerBtn, selectGameBtn, facebookBtn, shopBtn, soundBtn, infoBtn;
@@ -71,7 +69,8 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	private boolean lastWorldAccessible, loggedIn, tryConnect;
 	private UserCredentials userCredentials;
 	private CustomProgressDialog progressDialog;
-	private Handler mAnimationHandler, mTokenHandler;
+//	private Handler mAnimationHandler	removed playBtn animation because of memory issues
+	private Handler mTokenHandler;
 	private UiLifecycleHelper uiHelper;		
 	
 	@Override
@@ -90,7 +89,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	    setUpButtons();
 	   
 	    // set up handlers
-	    mAnimationHandler = new android.os.Handler();
+//	    mAnimationHandler = new android.os.Handler();
 		mTokenHandler = new android.os.Handler();
 
 		// start tracking
@@ -122,7 +121,6 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 				if (session != null && (session.isOpened() || session.isClosed())) {
 					onSessionStateChange(session, session.getState(), null);
 				}
-				
 			} else {
 				handleLogin();
 			}
@@ -135,19 +133,24 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		}
 		
 		// restart threads
-		mAnimationHandler.postDelayed(updateAnimationThread, UPDATE_ANIMATION_TIMER);
+//		mAnimationHandler.postDelayed(updateAnimationThread, UPDATE_ANIMATION_TIMER);
 		mTokenHandler.postDelayed(updateTokenThread, UPDATE_TOKEN_TIMER);
+		SoundManager.fadeOut();
     }
     @Override
     public void onPause() {
         super.onPause();
 	    uiHelper.onPause();		
-	    mAnimationHandler.removeCallbacks(updateAnimationThread);
+//	    mAnimationHandler.removeCallbacks(updateAnimationThread);
 	    mTokenHandler.removeCallbacks(updateTokenThread);
 	    
 	    if (!SoundManager.continueMusic && SoundManager.backgroundMusicPlayer.isPlaying()) {
 	    	SoundManager.backgroundMusicPlayer.pause();
 	    }
+	    
+	    if (progressDialog.isShowing()) {
+			progressDialog.dismiss();
+		}
     }
     @Override
     public void onDestroy() {
@@ -191,17 +194,17 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
     }
     
 	//  thread for scale animation
-	private Runnable updateAnimationThread = new Runnable() {
-		public void run() {	
-			Log.d(TAG, "Animation Thread");
-			// run scale animation
-			Animation scaleAnimation = AnimationUtils.loadAnimation(
-				MainActivity.this, R.anim.scale_loginbutton);
-			playBtn.startAnimation(scaleAnimation);
-			
-			mAnimationHandler.postDelayed(this, UPDATE_ANIMATION_TIMER);
-		}
-	};
+//	private Runnable updateAnimationThread = new Runnable() {
+//		public void run() {	
+//			Log.d(TAG, "Animation Thread");
+//			// run scale animation
+//			Animation scaleAnimation = AnimationUtils.loadAnimation(
+//				MainActivity.this, R.anim.scale_loginbutton);
+//			playBtn.startAnimation(scaleAnimation);
+//			
+//			mAnimationHandler.postDelayed(this, UPDATE_ANIMATION_TIMER);
+//		}
+//	};
 	
 	//  thread for automatic token refresh
 	private Runnable updateTokenThread = new Runnable() {
@@ -256,6 +259,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 											Session session = Session.getActiveSession();
 											if (session == null) { 
 												session = new Session(MainActivity.this);
+												Session.setActiveSession(session);
 											}
 											
 											Session.OpenRequest openRequest = new Session.OpenRequest(MainActivity.this);
@@ -273,6 +277,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 							Session session = Session.getActiveSession();
 							if (session == null) { 
 								session = new Session(MainActivity.this);
+								Session.setActiveSession(session);
 							}
 							Session.OpenRequest openRequest = new Session.OpenRequest(MainActivity.this);
 							openRequest.setPermissions(Arrays.asList("email"));
@@ -293,8 +298,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	// set up touchlistener for play button
 	private void setUpPlayBtn() {
 		// start animation of glance
-		playBtn.setImageResource(R.anim.animationlist_loginbutton);
-				
+//		playBtn.setImageResource(R.anim.animationlist_loginbutton);
 		playBtn.setOnTouchListener(new View.OnTouchListener() {
 			@SuppressLint("NewApi")
 			@Override
@@ -302,12 +306,12 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:
 					playBtn.setImageResource(R.drawable.title_play_button_active);
-					mAnimationHandler.removeCallbacks(updateAnimationThread);
+//					mAnimationHandler.removeCallbacks(updateAnimationThread);
 					break;
 
 				case MotionEvent.ACTION_UP:
-					playBtn.setImageResource(R.anim.animationlist_loginbutton);
-					mAnimationHandler.postDelayed(updateAnimationThread, UPDATE_ANIMATION_TIMER);
+					playBtn.setImageResource(R.drawable.title_play_button_anim0);
+//					mAnimationHandler.postDelayed(updateAnimationThread, UPDATE_ANIMATION_TIMER);
 					if (loggedIn) {
 						triggerPlayGame();
 					} else {
@@ -354,16 +358,11 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 			public void onClick(View v) {
 				if (SoundManager.soundOn) {
 					soundBtn.setImageResource(R.drawable.title_sound_off);
-					SoundManager.backgroundMusicPlayer.stop();
-					SoundManager.soundOn = false;
+					SoundManager.stop();
 
 				} else {
 					soundBtn.setImageResource(R.drawable.title_sound_on);
-					SoundManager.backgroundMusicPlayer = MediaPlayer.create(MainActivity.this, R.raw.themesong);
-					SoundManager.backgroundMusicPlayer.setLooping(true);
-					SoundManager.backgroundMusicPlayer.setVolume(100, 100);
-					SoundManager.backgroundMusicPlayer.start();
-					SoundManager.soundOn = true;
+					SoundManager.setUpPlayer(MainActivity.this);
 				}
 			}
 		});
@@ -502,7 +501,8 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 			  }
 		});
 		
-		if (!identifier.equals("") || !email.equals("")) { 
+		// just portable account, we don't want a second task for fb users (their GamesTask is started in onSessionStateChange)
+		if (!identifier.equals("") || !email.equals("") && !userCredentials.isFbUser()) { 
 			if (userCredentials.getAccessToken().isExpired()) {
 				progressDialog.show();
 				new GameLoginAsyncTask(this, userCredentials, false, false).execute();
@@ -513,7 +513,9 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 					new GetCurrentGamesAsyncTask(this, userCredentials).execute();
 					progressDialog.show();
 				}
-			}			
+			}
+			
+		// local account
 		} else if (!userCredentials.getUsername().equals("")) {
 			progressDialog.show();
 			new GameLoginAsyncTask(this, userCredentials, false, false).execute();
@@ -547,11 +549,32 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	
 	// facebook: handles login/logout state of session
 	private void onSessionStateChange(Session session, SessionState state, Exception exception) {
-		Log.d(TAG, "---> session state changed");
-		if (session.isOpened()) {
+		if (state.isOpened()) {
 			loggedIn = true;
 			userCredentials.setFbUser(true);
-			fetchFbData(session);
+			
+			// get new accesstoken if expired or attempt to connect was made
+			if (userCredentials.getAccessToken().isExpired() || tryConnect) {
+				fetchFbData(session);
+			
+			// get games and character if there not already on device
+			} else if (userCredentials.getAvatarString() == null || userCredentials.getAvatarString() == "") {
+				new GetCurrentGamesAsyncTask(this, userCredentials).execute();
+				progressDialog.show();
+				
+			// set character picture to imageview
+			} else {
+				final ImageView view = (ImageView) findViewById(R.id.characterFrameImageView);
+				view.post(new Runnable() {
+					@Override public void run() {
+						view.setImageBitmap(Avatar.getAvatar(
+								userCredentials.getAvatarString(), 
+								view.getWidth(), 
+								view.getHeight(), 
+								getResources()));
+					}
+				});
+			}
 			
 		} else if (state.isClosed()) {
 			if (session != null) {
@@ -560,15 +583,14 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 				Session.setActiveSession(null);
 			}
 			userCredentials.setFbUser(false);
-			// password generated = attempt to connect fb account to local character failed = dont log out
-			if (userCredentials.isPasswordGenerated()) {
-				tryConnect = true;		// TODO: was = false - correct?
+			// attempt to connect fb account to local character failed = dont log out
+			if (tryConnect = true) {
+				tryConnect = false;		
 			} else {
 				session.closeAndClearTokenInformation();	
 				session.close();
 				Session.setActiveSession(null);
 			}
-//			updateUi();
 		}
 		updateUi();
 	}
@@ -583,13 +605,13 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
                     if (user != null) {
                     	userCredentials.setFbPlayerId(user.getId());	
                     	userCredentials.setEmail(user.getProperty("email").toString());
-                    	userCredentials.setFbAccessToken(session.getAccessToken());
+                    	userCredentials.getAccessToken().setFbToken(session.getAccessToken());
                     }
-                    
                     // try to connect character with facebook account
                     if (tryConnect) {
                     	new FacebookAccountAsyncTask(MainActivity.this, userCredentials, StaticHelper.FB_CONNECT_TASK).execute();
-                   	// check if current facebook id is not used
+                   	
+                    // check if current facebook id is not used
                     } else {
                     	new FacebookAccountAsyncTask(MainActivity.this, userCredentials, StaticHelper.FB_ID_TASK).execute();
                     }
@@ -668,9 +690,13 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	@Override
 	public void getCurrentGamesCallback(boolean result, ArrayList<GameInformation> games) {
 		// TODO: remove before release
-		//games.add(new GameInformation());
-		//games.get(0).setDefaultGame(true);
-		//games.get(0).setServer(getString(R.string.basePath));
+//		games = new ArrayList<GameInformation>();
+//		games.add(new GameInformation());
+//		games.get(0).setDefaultGame(true);
+//		games.get(0).setServer(getString(R.string.basePath));
+//		userCredentials.setHostname(games.get(0).getServer());
+//		userCredentials.setGameId(games.get(0).getId());
+//		new GetCharacterAsyncTask(this, userCredentials, games.get(), true).execute();
 		
 		if (result) {
 			if (userCredentials.getHostname() == "" || !isGameOnline(games, userCredentials.getGameId())) {
@@ -787,13 +813,18 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 					progressDialog.dismiss();
 					// close facebook session again, if connect accounts was not successful
 					Session session = Session.getActiveSession();	
-					if (session.isOpened()) {
-						session.closeAndClearTokenInformation();	
-						session.close();
-						Session.setActiveSession(null);
+					if (session != null) {
+						if (session.isOpened()) {
+							session.closeAndClearTokenInformation();	
+							session.close();
+							Session.setActiveSession(null);
+						}
 					}
-					// remove email because accounts couldn't be connected
+					// set credentials to local account again, because fb account couldn't be connected
 					userCredentials.setEmail("");
+					userCredentials.setFbUser(false);
+					userCredentials.setGeneratedEmail(true);
+					userCredentials.setGeneratedPassword(true);
 					
 					switch (responseCode) {
 						case 403: Toast.makeText(this, R.string.fb_character_already_connected, Toast.LENGTH_LONG).show(); break;

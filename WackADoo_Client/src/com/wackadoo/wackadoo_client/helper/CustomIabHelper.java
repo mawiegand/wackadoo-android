@@ -70,7 +70,7 @@ public class CustomIabHelper extends IabHelper implements QueryInventoryFinished
     
     // handles response with purchased items
     public void onQueryInventoryFinished(IabResult result, Inventory inv) {
-        ((ShopActivity)mContext).handleUnconsumedItems(inv);
+        ((ShopActivity) mContext).handleUnconsumedItems(inv);
 
         // get platinum credit packages from play store
 		getProductsAsyncInternal((CreditsFragmentCallbackInterface) mContext);
@@ -90,4 +90,3 @@ public class CustomIabHelper extends IabHelper implements QueryInventoryFinished
     }
 
 }
-

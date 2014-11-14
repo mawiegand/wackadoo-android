@@ -64,6 +64,10 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
     public void onPause() {
         super.onPause();
 	    uiHelper.onPause();
+	    
+	    if (progressDialog.isShowing()) {
+			progressDialog.dismiss();
+		}
     }
     @Override
     public void onDestroy() {
