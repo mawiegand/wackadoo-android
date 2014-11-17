@@ -10,7 +10,7 @@
 	    android:layout_width="match_parent">
 	    
 	 	<ImageView 
-		    android:src="@drawable/table_background"
+		    android:src="@drawable/bg_table"
 		    android:layout_width="match_parent"
 		    android:layout_height="match_parent"
 		    android:scaleType="centerCrop"
@@ -77,7 +77,7 @@
 				        style="@style/customImageButtonStyle"
 				        android:layout_alignBottom="@+id/subheadingPlatinumCredits"
 				        android:layout_alignParentRight="true"
-				        android:src="@drawable/title_info_button"/>
+				        android:src="@drawable/btn_info"/>
 			        
 			        <RelativeLayout
 			            android:id="@+id/shopCreditsButton"
@@ -93,7 +93,7 @@
 					        android:paddingLeft="10dp"
 					        android:paddingRight="0dp"
 					        android:scaleType="fitCenter"
-					        android:src="@drawable/platinum_big" />
+					        android:src="@drawable/resource_platinum_big" />
 						
 						<TextView
 						    android:id="@+id/shopCreditsText"
@@ -139,7 +139,7 @@
 			            style="@style/customImageButtonStyle"
 			            android:layout_alignParentRight="true"
 			            android:layout_alignBottom="@+id/subheadingSpecial"
-			            android:src="@drawable/title_info_button" />
+			            android:src="@drawable/btn_info" />
 
 			        <TextView
 					    android:id="@+id/shopSpecialOfferButton"
@@ -168,7 +168,7 @@
 			            style="@style/customImageButtonStyle"
 			            android:layout_alignParentRight="true"
 			            android:layout_alignBottom="@+id/subheadingGold"
-			            android:src="@drawable/title_info_button" />
+			            android:src="@drawable/btn_info" />
 
 			        <ListView
 			            android:id="@+id/listGold"
@@ -196,7 +196,7 @@
 			            style="@style/customImageButtonStyle"
 			            android:layout_alignParentRight="true"
 			            android:layout_alignBottom="@+id/subheadingPlatinumAccount"
-			            android:src="@drawable/title_info_button" />
+			            android:src="@drawable/btn_info" />
 
 			        <ListView
 			            android:id="@+id/listPlatinumAccount"
@@ -216,7 +216,7 @@
 				        style="@style/customImageButtonStyle"
 				        android:layout_alignBottom="@+id/subheadingBonus"
 				        android:layout_alignParentRight="true"
-				        android:src="@drawable/title_info_button"/>
+				        android:src="@drawable/btn_info"/>
 
 			        <ListView
 			            android:id="@+id/listBonus"

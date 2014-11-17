@@ -11,15 +11,20 @@ import com.wackadoo.wackadoo_client.activites.MainActivity;
 // custom activity subclass, to handle background music
 public class WackadooActivity extends Activity {
 
+	protected SoundManager soundManager;
+	
 	protected void onCreate(Bundle savedInstanceState, int layoutId) {
 		super.onCreate(savedInstanceState);
 		setContentView(layoutId);
 		StaticHelper.overrideFonts(this, findViewById(R.id.activityContainer));
+		
+	    // create and set up player for background music
+		soundManager = SoundManager.getInstance(this);
 	}
 	
 	@Override
 	public void onBackPressed() {
-		SoundManager.continueMusic = true;
+		soundManager.setContinueMusic(true);
 		finish();
 	}
 	
@@ -28,9 +33,9 @@ public class WackadooActivity extends Activity {
 		super.onResume();
 		
 		// continue music, if its not currently playing
-		SoundManager.continueMusic = false;
-		if (SoundManager.shouldPlayerStart()) {
-			SoundManager.setUpPlayer(this);
+		soundManager.setContinueMusic(false);
+		if (soundManager.shouldPlayerStart()) {
+			soundManager.start();
 		}
 		
 		// warning if no internet connection
@@ -45,8 +50,8 @@ public class WackadooActivity extends Activity {
 		super.onPause();
 		
 		// stop music, if not another activity is started
-		if (SoundManager.shouldPlayerStop()) {
-			SoundManager.stop();
+		if (soundManager.shouldPlayerStop()) {
+			soundManager.stop();
 		}
 	}
 	

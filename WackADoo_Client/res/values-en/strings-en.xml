@@ -96,7 +96,7 @@
     <string name="fragment_platinum_credits_footer" formatted="false">Purchases will be credited to the user \'%s\'.</string>
     <string name="subheading_platinum_credits_text">Platinum-Credits</string>
     <string name="list_gold_text" formatted="false">%d Goldfrogs for %d Credits</string>
-    <string name="subheading_gold_text">Get Golden Frogs</string>
+    <string name="subheading_gold_text">Golden Frogs</string>
     <string name="list_bonus_text" formatted="false">+%d%% %dh for %d </string>
     <string name="subheading_bonus_text">Production Boost</string>
     <string name="shop_headline_text">Buy Credits and purchase Comfortfunctions and Accellerators</string>

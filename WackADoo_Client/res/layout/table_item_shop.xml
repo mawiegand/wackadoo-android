@@ -27,8 +27,8 @@
         android:id="@+id/shopListViewItemOptionalImage"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
 	    android:layout_toRightOf="@id/shopListViewItemText"
 	    android:layout_centerVertical="true"
 	    android:scaleType="fitCenter" />

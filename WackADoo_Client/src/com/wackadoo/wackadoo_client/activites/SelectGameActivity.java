@@ -63,7 +63,7 @@ public class SelectGameActivity extends WackadooActivity implements CurrentGames
 						
 					case MotionEvent.ACTION_UP:
 						doneBtn.setTextColor(getResources().getColor(R.color.textbox_orange));
-						SoundManager.continueMusic = true;
+						soundManager.setContinueMusic(true);
 						finish();
 						break;
 				}

@@ -60,7 +60,7 @@ public class GamesListViewAdapter extends ArrayAdapter<GameInformation> implemen
         // game icon
         String avatarString = rowItem.getCharacter() == null ? "" : rowItem.getCharacter().getAvatarString();
         if (avatarString.isEmpty()) {
-        	holder.worldItemIcon.setImageResource(R.drawable.check_marked_box);
+        	holder.worldItemIcon.setImageResource(R.drawable.ic_check_marked_box);
         } else {
         	holder.worldItemIcon.setImageBitmap(Avatar.getAvatar(avatarString, holder.worldItemIcon.getLayoutParams().height, holder.worldItemIcon.getLayoutParams().height, parent.getResources()));
         }
@@ -69,8 +69,9 @@ public class GamesListViewAdapter extends ArrayAdapter<GameInformation> implemen
         holder.worldItemNameText.setText(rowItem.getName());	
         
         // game player
-        String playerText = rowItem.getPresentPlayers() + "/" + rowItem.getMaxPlayers();	
-        holder.worldItemPlayerCount.setText(playerText);
+        // TODO: removed because of iOS version
+        //String playerText = rowItem.getPresentPlayers() + "/" + rowItem.getMaxPlayers();	
+        holder.worldItemPlayerCount.setText(" - ");
         
         // game scope
         holder.worldItemScopeText.setText(rowItem.getScope());	

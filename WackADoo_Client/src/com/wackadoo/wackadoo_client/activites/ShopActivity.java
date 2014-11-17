@@ -137,7 +137,7 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 	
 		    		case MotionEvent.ACTION_UP: 
 		    			doneBtn.setTextColor(getResources().getColor(R.color.textbox_orange));
-		    			SoundManager.continueMusic = true;
+		    			soundManager.setContinueMusic(true);
 		    			finish();
 		    			break;
 				}
@@ -154,13 +154,13 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 				int action = e.getActionMasked(); 
 				
 				if (action == MotionEvent.ACTION_DOWN) {
-					((ImageView) v).setImageResource(R.drawable.title_info_button_active);
+					((ImageView) v).setImageResource(R.drawable.btn_info_active);
 					
 				} else if (action == MotionEvent.ACTION_CANCEL) {
-					((ImageView) v).setImageResource(R.drawable.title_info_button);
+					((ImageView) v).setImageResource(R.drawable.btn_info);
 					
 				} else if ((action == MotionEvent.ACTION_UP)) {
-					((ImageView) v).setImageResource(R.drawable.title_info_button);
+					((ImageView) v).setImageResource(R.drawable.btn_info);
 					switch(v.getId()) {
 		    			case R.id.platinumCreditsInfoBtn:
 		    				openShopInfoFragment("platinumCredits");
@@ -531,11 +531,8 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 		super.onActivityResult(requestCode, resultCode, data);
 		billingHelper.handleActivityResult(requestCode, resultCode, data);
 		
-		// play store dialog stops background music
-		SoundManager.backgroundMusicPlayer = MediaPlayer.create(this, R.raw.themesong);
-		SoundManager.backgroundMusicPlayer.setLooping(true);
-		SoundManager.backgroundMusicPlayer.setVolume(100, 100);
-		SoundManager.backgroundMusicPlayer.start();
+		// play store dialog stops background music, so prepare to start again
+		soundManager.prepare();
 	}
 	
 	// play store: callback interface for billingHelper.getProductsAsyncInternal
@@ -589,7 +586,7 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 				JSONObject jsonObject = new JSONObject(stringProduct);
 				String title = jsonObject.getString("title");
 				title = title.replace("(Wackadoo)", "/ " + jsonObject.getString("price"));
-				ShopRowItem item = new ShopRowItem(R.drawable.platinum_big, title, 0);
+				ShopRowItem item = new ShopRowItem(R.drawable.resource_platinum_big, title, 0);
 				rowItemList.add(item);
 			}
 			

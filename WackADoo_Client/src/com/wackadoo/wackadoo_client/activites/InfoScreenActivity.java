@@ -68,7 +68,7 @@ public class InfoScreenActivity extends WackadooActivity {
 							break;
 							
 						case R.id.infoscreenTopbarBack:
-							SoundManager.continueMusic = true;
+							soundManager.setContinueMusic(true);
 			    			finish();
 							break;
 					}

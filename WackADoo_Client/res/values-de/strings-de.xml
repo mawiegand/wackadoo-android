@@ -95,7 +95,7 @@
     <string name="fragment_platinum_credits_heading" formatted="false">Du hast %d Credits. Kauf dir zusätzliche, um deinen Stamm zu unterstützen.</string>
     <string name="fragment_platinum_credits_footer" formatted="false">Einkäufe werden dem User \'%s\' zugeordnet.</string>
     <string name="list_gold_text" formatted="false">%d Goldkröten für %d Credits</string>
-    <string name="subheading_gold_text">Kauf Goldene Frösche</string>
+    <string name="subheading_gold_text">Goldene Frösche</string>
     <string name="list_bonus_text" formatted="false">+%d%% %dh für %d </string>
     <string name="subheading_bonus_text">Produktions Boost</string>
     <string name="subheading_special_text">Spezialangebote</string>
@@ -112,24 +112,19 @@
    	<string name="shopinfo_topbar_heading">Info Store</string>
     <string name="shopInfoText_credits">Hol\' dir ein paar Credits um den Spielspaß zu verbessern.</string>
     <string name="shopInfoHeadingText_credits">Platinum Credits</string>
-    <string name="shopInfoDescText_credits">Mit 5D Platinum Credits kannst du den Platinum Account freischalten oder einen Produktionsbonus erhalten.\n\nDu kannst Platinum Credits gegen goldene Frösche eintauschen.\n\n
-           									Mit goldenen Fröschen kannst du den Bau von Gebäuden abschließen, das Rekrutieren von Einheiten beschleunigen oder du handelst sie mit dem reisenden Händler.</string>
+    <string name="shopInfoDescText_credits">Mit 5D Platinum Credits kannst du den Platinum Account freischalten oder einen Produktionsbonus erhalten.\n\nDu kannst Platinum Credits gegen goldene Frösche eintauschen.\n\nMit goldenen Fröschen kannst du den Bau von Gebäuden abschließen, das Rekrutieren von Einheiten beschleunigen oder du handelst sie mit dem reisenden Händler.</string>
     <string name="shopInfoText_gold">Na los, hol\' dir ein paar goldene Frösche und gib mir eine Armee!</string>
     <string name="shopInfoHeadingText_gold">Goldene Frösche</string>
-    <string name="shopInfoDescText_gold">Du kannst Platinum Credits gegen goldene Frösche eintauschen um den Bau von Gebäuden abzuschließen, das Rekrutieren von Einheiten zu beschleunigen oder um sie mit dem reisenden Händler zu handeln.\n\n15 goldene Frösche kosten nur 8 Platinum Credits.\n\n
-        								 50 goldene Frösche kosten nur 24 Platinum Credits.\n\n120 goldene Frösche kosten nur 47 Platinum Credits.</string>
+    <string name="shopInfoDescText_gold">Du kannst Platinum Credits gegen goldene Frösche eintauschen um den Bau von Gebäuden abzuschließen, das Rekrutieren von Einheiten zu beschleunigen oder um sie mit dem reisenden Händler zu handeln.\n\n15 goldene Frösche kosten nur 8 Platinum Credits.\n\n50 goldene Frösche kosten nur 24 Platinum Credits.\n\n120 goldene Frösche kosten nur 47 Platinum Credits.</string>
     <string name="shopInfoText_account">Auf was wartest du? Mit einem Platinum Account werden wir unsere Macht noch weiter vergrößeren können.</string>
     <string name="shopInfoHeadingText_account">Platinum Account</string>
-    <string name="shopInfoDescText_account">Bau Warteschlange: Mit einem Platinum Account erweitert sich deine Bau Warteschlange um drei Plätze. Die Liste wird auch weiter abgearbeitet, wenn du nicht eingeloggt bist - falls du genügend Ressourcen hast, um den Auftrag abzuschließen.\n\n
-    									Training Warteschlange: Deine Training Warteschlange wird um drei Plätze erweitert, wenn du einen Platinum Account hast. Das bedeutet, dass du die Möglichkeit hast, weitere Aufträge an derselben Trainingsstätte zu akzeptieren, nachdem der erste beendet ist.\n\n
-    									Schlacht Benachrichtigung per E-Mail: Mit einem aktivierten Platinum Account wirst du umgehend per E-Mail über Attacken auf deine Kolonien, Festungen oder Armeen informiert - auch wenn du nicht aktiv im Spiel bist. So kannst du also, auch wenn du nicht spielst, direkt reagieren. Du kannst weitere Armeen zur Unterstützung senden oder deine Allianz um Hilfe bitten.</string>
+    <string name="shopInfoDescText_account">Bau Warteschlange: Mit einem Platinum Account erweitert sich deine Bau Warteschlange um drei Plätze. Die Liste wird auch weiter abgearbeitet, wenn du nicht eingeloggt bist - falls du genügend Ressourcen hast, um den Auftrag abzuschließen.\n\nTraining Warteschlange: Deine Training Warteschlange wird um drei Plätze erweitert, wenn du einen Platinum Account hast. Das bedeutet, dass du die Möglichkeit hast, weitere Aufträge an derselben Trainingsstätte zu akzeptieren, nachdem der erste beendet ist.\n\nSchlacht Benachrichtigung per E-Mail: Mit einem aktivierten Platinum Account wirst du umgehend per E-Mail über Attacken auf deine Kolonien, Festungen oder Armeen informiert - auch wenn du nicht aktiv im Spiel bist. So kannst du also, auch wenn du nicht spielst, direkt reagieren. Du kannst weitere Armeen zur Unterstützung senden oder deine Allianz um Hilfe bitten.</string>
     <string name="shopInfoText_bonus">Mehr Ressourcen? Jeder braucht mehr Ressourcen!</string>
     <string name="shopInfoHeadingText_bonus">Produktionsbonus</string>
     <string name="shopInfoDescText_bonus" formatted="false">Der Produktionsbonus gilt für deine gesamte Produktion der ausgewählten Ressource.\n\n15% globaler Bonus für die Produktion von Fell.\n\n15% globaler Bonus für die Produktion von Stein.\n\n15% globaler Bonus für die Produktion von Holz.</string>
     <string name="shopInfoText_special">Dies ist ein spezielles Paket, das nur für neue Spieler verfügbar ist.</string>
     <string name="shopInfoHeadingText_special">Starter Paket</string>
-    <string name="shopInfoDescText_special" formatted="false">Das Starter Paket enthält: \n1500 Ressourcen \n300 goldene Frösche \nEine Siedlung in der nähe der Hauptsiedlung mit den folgenden Erweiterungen: 
-        									\nEine Level 5 Hütte \nEinen Altar \nJäger und Sammler haben eine Produktionsgeschwindigkeit von 150 Ressourcen pro Stunde \nFür vier Tage bekommst du diese Zusätzlichen Verbesserungen: \nEinen globalen 15% Produktionsbonus \n100% Produktionsgeschwindigkeit zusätzlich (halbierte Produktionszeit)</string>
+    <string name="shopInfoDescText_special" formatted="false">Das Starter Paket enthält: \n1500 Ressourcen \n300 goldene Frösche \nEine Siedlung in der nähe der Hauptsiedlung mit den folgenden Erweiterungen:\nEine Level 5 Hütte \nEinen Altar \nJäger und Sammler haben eine Produktionsgeschwindigkeit von 150 Ressourcen pro Stunde \nFür vier Tage bekommst du diese Zusätzlichen Verbesserungen: \nEinen globalen 15% Produktionsbonus \n100% Produktionsgeschwindigkeit zusätzlich (halbierte Produktionszeit)</string>
     <string name="shop_expires_in">Läuft aus am:&#160;</string>
     <string name="special_offer_1">SecondSettlement:\nCamp</string>
     <string name="special_offer_2">1500 Ressourcen \n150 Ressourcen pro Stunde \n15% Produktionsbonus</string>

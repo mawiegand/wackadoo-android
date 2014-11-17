@@ -119,7 +119,7 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 							break;
 							
 						case R.id.credentialscreenTopbarBack:
-							SoundManager.continueMusic = true;
+							soundManager.setContinueMusic(true);
 							finish();
 							break;
 					}
@@ -151,7 +151,7 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
     		   .setPositiveButton(getResources().getString(R.string.alert_ok_button), new DialogInterface.OnClickListener() { 
 		    	    @Override
 		    	    public void onClick(DialogInterface dialog, int which) { 
-		    	    	SoundManager.continueMusic = true;
+		    	    	soundManager.setContinueMusic(true);
 		    	    	finish(); 
 		    	    }
 		    	})
@@ -234,7 +234,7 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 			userCredentials.setUsername(nickname);
 			userCredentials.setAccountId(accountId);
 			userCredentials.setEmail(email);
-			SoundManager.continueMusic = true;
+			soundManager.setContinueMusic(true);
 			finish();
 		} else {
 			Toast.makeText(this, getString(R.string.error_server_communication), Toast.LENGTH_SHORT)
@@ -286,7 +286,7 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 		if (restoreAccount) {
 			showRestoreAccountDialog(true);
 		} else {
-			SoundManager.continueMusic = true;
+			soundManager.setContinueMusic(true);
 			finish();
 		}		
 	}

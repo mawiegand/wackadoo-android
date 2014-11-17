@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         android:alpha="0.7"
-        android:src="@drawable/title_bg" />
+        android:src="@drawable/bg_title" />
     
     
     <!-- ............... HEADER ............... -->
@@ -72,7 +72,7 @@
 		    			    android:id="@+id/shopButton"
 		    			    style="@style/customImageButtonStyle"
 		    			    android:layout_marginLeft="30dp"
-		    			    android:src="@drawable/title_shop_button" />
+		    			    android:src="@drawable/btn_shop" />
 		    			
 	    			</RelativeLayout>
 	    		</LinearLayout>
@@ -103,7 +103,7 @@
 	   		        android:layout_gravity="right"
 	   		        android:layout_marginRight="70dp"
 	   		        android:scaleType="fitCenter"
-	   		        android:src="@drawable/title_sound_on" />
+	   		        android:src="@drawable/ic_sound_on" />
 	   		    
 	    		<ImageButton
 	    		    android:id="@+id/title_info_button"
@@ -116,7 +116,7 @@
 	    		    android:layout_marginRight="10dp"
 	    		    android:cropToPadding="true"
 	    		    android:scaleType="fitCenter"
-	    		    android:src="@drawable/title_info_button" />
+	    		    android:src="@drawable/btn_info" />
 				
 	   		</RelativeLayout>    		
 	    </LinearLayout>
@@ -142,7 +142,7 @@
 	    	    android:layout_height="wrap_content"
 	    	    android:adjustViewBounds="true"
 	    	    android:scaleType="fitCenter"
-	    	    android:src="@drawable/title_logo" />
+	    	    android:src="@drawable/logo_title" />
 	  	</RelativeLayout>
   	</LinearLayout>
   	
@@ -224,7 +224,7 @@
 	 	              	        android:id="@+id/characterFrame"
 	 	              	        android:layout_width="124dp"
 	 	              	        android:layout_height="153dp"
-	 	              	        android:background="@drawable/title_character_frame"
+	 	              	        android:background="@drawable/btn_character_frame"
 	 	              	        android:text="@string/credentials_headline"
 	 	              	        android:textColor="@color/white"
 	 	              	        android:textSize="20sp" />
@@ -271,7 +271,7 @@
 			 	        		    android:layout_alignParentTop="true"
 			 	        		    android:layout_centerHorizontal="true"
 			 	        		    android:scaleType="fitStart"
-			 	        		    android:src="@drawable/title_change_button" />
+			 	        		    android:src="@drawable/btn_change" />
 
 				 	   		</RelativeLayout>
 				 	 	</LinearLayout>    
@@ -304,7 +304,7 @@
 		 	        		    android:layout_alignParentLeft="true"
 		 	        		    android:layout_alignParentTop="true"
 		 	        		    android:scaleType="fitStart"
-		 	        		    android:src="@drawable/title_changegame_button" />
+		 	        		    android:src="@drawable/btn_changegame" />
 		 	        		
 			 	   		</RelativeLayout>
 			 	   	</LinearLayout> 
@@ -352,7 +352,7 @@
 					  		    android:layout_width="match_parent"
 						  	    android:adjustViewBounds="true"
 					  		    android:layout_weight="0.27"
-					  		    android:src="@drawable/title_play_button_anim0"/>
+					  		    android:src="@drawable/btn_play"/>
 				 		        
 				 		</LinearLayout>
 			 		</LinearLayout>
@@ -390,7 +390,7 @@
 				 		    		    android:id="@+id/facebookButton"
 				 		    		    style="@style/customImageButtonStyle"
 				 		    		    android:layout_alignParentTop="true"
-				 		    		    android:src="@drawable/title_facebook_button" />
+				 		    		    android:src="@drawable/btn_facebook" />
 
 				 		    </RelativeLayout>
 				 		</LinearLayout>

@@ -28,7 +28,7 @@
 	    android:layout_alignLeft="@+id/worldItemNameText"
 	    android:layout_alignBottom="@+id/worldItemIcon"
 	    android:scaleType="fitCenter" 
-	    android:src="@drawable/heads_black"/>
+	    android:src="@drawable/ic_heads_black"/>
 	
 	<TextView
 	    android:id="@+id/worldItemPlayerCount"

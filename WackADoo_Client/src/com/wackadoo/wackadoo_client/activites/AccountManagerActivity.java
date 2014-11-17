@@ -118,7 +118,7 @@ public class AccountManagerActivity extends WackadooActivity implements AccountM
 						
 						switch (v.getId()) {
 							case R.id.accountTopbarBack:
-								SoundManager.continueMusic = true;
+								soundManager.setContinueMusic(true);
 								finish();
 								break;
 								
@@ -271,7 +271,7 @@ public class AccountManagerActivity extends WackadooActivity implements AccountM
 	    if ((identifier.length() <= 0) && (email.length() <= 0)) {
 			Intent intent = new Intent(AccountManagerActivity.this, CredentialScreenActivity.class);
 			startActivity(intent);
-			SoundManager.continueMusic = true;
+			soundManager.setContinueMusic(true);
 			finish();
 		}
 	}

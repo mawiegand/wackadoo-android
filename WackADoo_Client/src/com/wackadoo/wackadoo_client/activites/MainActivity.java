@@ -15,7 +15,6 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Typeface;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -61,7 +60,6 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		CurrentGamesCallbackInterface, CharacterCallbackInterface, StatusCallback {
 
 	private static final String TAG = MainActivity.class.getSimpleName();
-//	private static final int UPDATE_ANIMATION_TIMER = 6400;
 	private static final int UPDATE_TOKEN_TIMER = 10000;
 	
 	private ImageButton playBtn, accountmanagerBtn, selectGameBtn, facebookBtn, shopBtn, soundBtn, infoBtn;
@@ -69,9 +67,9 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	private boolean lastWorldAccessible, loggedIn, tryConnect;
 	private UserCredentials userCredentials;
 	private CustomProgressDialog progressDialog;
-//	private Handler mAnimationHandler	removed playBtn animation because of memory issues
 	private Handler mTokenHandler;
 	private UiLifecycleHelper uiHelper;		
+	private SoundManager soundManager;
 	
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,14 +80,13 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	    uiHelper = new UiLifecycleHelper(this, this);
 		uiHelper.onCreate(savedInstanceState);
         
-	    // create set up player for background music
-		SoundManager.setUpPlayer(this);
+	    // create and set up player for background music
+		soundManager = SoundManager.getInstance(this);
 	    
 	    setUpUi();
 	    setUpButtons();
 	   
 	    // set up handlers
-//	    mAnimationHandler = new android.os.Handler();
 		mTokenHandler = new android.os.Handler();
 
 		// start tracking
@@ -127,15 +124,13 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		}
 		
 		// start background music, if its enabled
-		SoundManager.continueMusic = false;
-		if (SoundManager.soundOn && !SoundManager.backgroundMusicPlayer.isPlaying()) {
-			SoundManager.backgroundMusicPlayer.start();
+		soundManager.setContinueMusic(false);
+		if (soundManager.isSoundOn() && !soundManager.isPlaying()) {
+			soundManager.start();
 		}
 		
 		// restart threads
-//		mAnimationHandler.postDelayed(updateAnimationThread, UPDATE_ANIMATION_TIMER);
 		mTokenHandler.postDelayed(updateTokenThread, UPDATE_TOKEN_TIMER);
-		SoundManager.fadeOut();
     }
     @Override
     public void onPause() {
@@ -144,8 +139,8 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 //	    mAnimationHandler.removeCallbacks(updateAnimationThread);
 	    mTokenHandler.removeCallbacks(updateTokenThread);
 	    
-	    if (!SoundManager.continueMusic && SoundManager.backgroundMusicPlayer.isPlaying()) {
-	    	SoundManager.backgroundMusicPlayer.pause();
+	    if (!soundManager.isContinueMusic() && soundManager.isPlaying()) {
+	    	soundManager.pause();
 	    }
 	    
 	    if (progressDialog.isShowing()) {
@@ -177,7 +172,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		tryConnect = false;
 		
 	    // sound is on by default
-		SoundManager.soundOn = true;
+		soundManager.setSoundOn(true);
 	    
 	    // user logged out by default
 	    loggedIn = false;
@@ -193,19 +188,6 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		} 
     }
     
-	//  thread for scale animation
-//	private Runnable updateAnimationThread = new Runnable() {
-//		public void run() {	
-//			Log.d(TAG, "Animation Thread");
-//			// run scale animation
-//			Animation scaleAnimation = AnimationUtils.loadAnimation(
-//				MainActivity.this, R.anim.scale_loginbutton);
-//			playBtn.startAnimation(scaleAnimation);
-//			
-//			mAnimationHandler.postDelayed(this, UPDATE_ANIMATION_TIMER);
-//		}
-//	};
-	
 	//  thread for automatic token refresh
 	private Runnable updateTokenThread = new Runnable() {
 		public void run() {	
@@ -237,11 +219,11 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 			public boolean onTouch(View v, MotionEvent e) {
 				switch (e.getAction()) {
 				case MotionEvent.ACTION_DOWN:
-					facebookBtn.setImageResource(R.drawable.title_facebook_button_active);
+					facebookBtn.setImageResource(R.drawable.btn_facebook_active);
 					break;
 
 				case MotionEvent.ACTION_UP:
-					facebookBtn.setImageResource(R.drawable.title_facebook_button);
+					facebookBtn.setImageResource(R.drawable.btn_facebook);
 					
 					// warning if no internet connection
 					if (!StaticHelper.isOnline(MainActivity.this)) {
@@ -298,20 +280,17 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	// set up touchlistener for play button
 	private void setUpPlayBtn() {
 		// start animation of glance
-//		playBtn.setImageResource(R.anim.animationlist_loginbutton);
 		playBtn.setOnTouchListener(new View.OnTouchListener() {
 			@SuppressLint("NewApi")
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:
-					playBtn.setImageResource(R.drawable.title_play_button_active);
-//					mAnimationHandler.removeCallbacks(updateAnimationThread);
+					playBtn.setImageResource(R.drawable.btn_play_active);
 					break;
 
 				case MotionEvent.ACTION_UP:
-					playBtn.setImageResource(R.drawable.title_play_button_anim0);
-//					mAnimationHandler.postDelayed(updateAnimationThread, UPDATE_ANIMATION_TIMER);
+					playBtn.setImageResource(R.drawable.btn_play);
 					if (loggedIn) {
 						triggerPlayGame();
 					} else {
@@ -333,12 +312,12 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 			public boolean onTouch(View v, MotionEvent event) {
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:
-					shopBtn.setImageResource(R.drawable.title_shop_button_active);
+					shopBtn.setImageResource(R.drawable.btn_shop_active);
 					break;
 
 				case MotionEvent.ACTION_UP:
-					shopBtn.setImageResource(R.drawable.title_shop_button);
-					SoundManager.continueMusic = true;
+					shopBtn.setImageResource(R.drawable.btn_shop);
+					soundManager.setContinueMusic(true);
 					Intent intent = new Intent(MainActivity.this, ShopActivity.class);
 					startActivity(intent);
 					break;
@@ -356,13 +335,13 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		soundBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (SoundManager.soundOn) {
-					soundBtn.setImageResource(R.drawable.title_sound_off);
-					SoundManager.stop();
+				if (soundManager.isSoundOn()) {
+					soundBtn.setImageResource(R.drawable.ic_sound_off);
+					soundManager.pause();
 
 				} else {
-					soundBtn.setImageResource(R.drawable.title_sound_on);
-					SoundManager.setUpPlayer(MainActivity.this);
+					soundBtn.setImageResource(R.drawable.ic_sound_on);
+					soundManager.start();
 				}
 			}
 		});
@@ -376,12 +355,12 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 			public boolean onTouch(View v, MotionEvent event) {
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:
-					infoBtn.setImageResource(R.drawable.title_info_button_active);
+					infoBtn.setImageResource(R.drawable.btn_info_active);
 					break;
 
 				case MotionEvent.ACTION_UP:
-					infoBtn.setImageResource(R.drawable.title_info_button);
-					SoundManager.continueMusic = true;
+					infoBtn.setImageResource(R.drawable.btn_info);
+					soundManager.setContinueMusic(true);
 					Intent intent = new Intent(MainActivity.this, InfoScreenActivity.class);
 					startActivity(intent);
 					break;
@@ -400,12 +379,12 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 			public boolean onTouch(View v, MotionEvent event) {
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:
-					accountmanagerBtn.setImageResource(R.drawable.title_change_button_active);
+					accountmanagerBtn.setImageResource(R.drawable.btn_change_active);
 					break;
 
 				case MotionEvent.ACTION_UP:
-					accountmanagerBtn.setImageResource(R.drawable.title_change_button);
-					SoundManager.continueMusic = true;
+					accountmanagerBtn.setImageResource(R.drawable.btn_change);
+					soundManager.setContinueMusic(true);
 					Intent intent = new Intent(MainActivity.this, AccountManagerActivity.class);
 					startActivity(intent);
 					break;
@@ -425,9 +404,9 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		lastWorldAccessible = true;
 		
 		if (lastWorldAccessible) {
-			selectGameBtn.setImageResource(R.drawable.title_changegame_button);
+			selectGameBtn.setImageResource(R.drawable.btn_changegame);
 		} else {
-			selectGameBtn.setImageResource(R.drawable.title_changegame_warn_button);
+			selectGameBtn.setImageResource(R.drawable.btn_changegame_warn);
 		}
 		
 		OnTouchListener touchListener = new View.OnTouchListener() {
@@ -437,19 +416,19 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 				switch (event.getAction()) {
 					case MotionEvent.ACTION_DOWN: 
 						if (lastWorldAccessible) {
-							selectGameBtn.setImageResource(R.drawable.title_changegame_button_active);
+							selectGameBtn.setImageResource(R.drawable.btn_changegame_active);
 						} else {
-							selectGameBtn.setImageResource(R.drawable.title_changegame_warn_button_active);
+							selectGameBtn.setImageResource(R.drawable.btn_changegame_warn_active);
 						}
 						break;
 						
 					case MotionEvent.ACTION_UP: 
 						if (lastWorldAccessible) {
-							selectGameBtn.setImageResource(R.drawable.title_changegame_button);
+							selectGameBtn.setImageResource(R.drawable.btn_changegame);
 						} else {
-							selectGameBtn.setImageResource(R.drawable.title_changegame_warn_button);
+							selectGameBtn.setImageResource(R.drawable.btn_changegame_warn);
 						}
-						SoundManager.continueMusic = true;
+						soundManager.setContinueMusic(true);
 						Intent intent = new Intent(MainActivity.this, SelectGameActivity.class);
 						startActivity(intent);
 						break;
@@ -470,18 +449,18 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 			public boolean onTouch(View v, MotionEvent event) {
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN: 
-					characterFrame.setBackgroundResource(R.drawable.title_character_frame_active);
+					characterFrame.setBackgroundResource(R.drawable.btn_character_frame_active);
 					break;
 					
 				case MotionEvent.ACTION_UP: 
-					characterFrame.setBackgroundResource(R.drawable.title_character_frame);
+					characterFrame.setBackgroundResource(R.drawable.btn_character_frame);
 					Intent intent = null;
 					if (loggedIn) {
 						intent = new Intent(MainActivity.this, AccountManagerActivity.class);
 					} else {
 						intent = new Intent(MainActivity.this, CredentialScreenActivity.class);
 					}
-					SoundManager.continueMusic = true;
+					soundManager.setContinueMusic(true);
 					startActivity(intent);
 					break;
 				}
@@ -532,6 +511,9 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         uiHelper.onActivityResult(requestCode, resultCode, data);
+        
+        // play store dialog stops background music, so prepare to start again
+     	soundManager.prepare();
     }
     
     // facebook: login handling
