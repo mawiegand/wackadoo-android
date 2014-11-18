@@ -267,12 +267,7 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 	public void loginCallback(boolean result, String accessToken, String expiration, String userIdentifier, boolean restoreAccount, boolean refresh) {
 		userCredentials.generateNewAccessToken(accessToken, expiration);
 		userCredentials.setIdentifier(userIdentifier);
-		
-		// PSIORI track sign_in
-		SampleHelper helper = SampleHelper.getInstance();
-		helper.setUserId(userIdentifier);
-		helper.track("sign_in", "account", null);
-		
+
 		// fetch account data to show in imterface
 		new GetAccountAsyncTask(this, userCredentials, restoreAccount).execute();
 	}
