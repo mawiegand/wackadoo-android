@@ -18,6 +18,7 @@ import com.facebook.Session.StatusCallback;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.wackadoo.wackadoo_client.R;
+import com.wackadoo.wackadoo_client.analytics.SampleHelper;
 import com.wackadoo.wackadoo_client.helper.CustomProgressDialog;
 import com.wackadoo.wackadoo_client.helper.SoundManager;
 import com.wackadoo.wackadoo_client.helper.StaticHelper;
@@ -211,6 +212,18 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 	public void call(Session session, SessionState state, Exception exception) {
 		if (state.isOpened()) {
 			userCredentials.setFbUser(true);
+			
+			// PSIORI track sign_in
+			String userId = userCredentials.getIdentifier();
+			String fbId = userCredentials.getFbPlayerId();
+
+			// PSIORI track sign_in
+			SampleHelper helper = SampleHelper.getInstance();
+			helper.setFacebookId(fbId);
+			helper.setUserId(userId);
+			helper.track("sign_in", "account", null);
+
+			
 			finish();
 		} 
 	}
@@ -235,6 +248,13 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 			userCredentials.setAccountId(accountId);
 			userCredentials.setEmail(email);
 			soundManager.setContinueMusic(true);
+			
+			// PSIORI track register
+			SampleHelper helper = SampleHelper.getInstance();
+			helper.setUserId(identifier);
+			helper.track("registration", "account", null);
+			helper.track("sign_in", "account", null);
+			
 			finish();
 		} else {
 			Toast.makeText(this, getString(R.string.error_server_communication), Toast.LENGTH_SHORT)
@@ -247,6 +267,7 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 	public void loginCallback(boolean result, String accessToken, String expiration, String userIdentifier, boolean restoreAccount, boolean refresh) {
 		userCredentials.generateNewAccessToken(accessToken, expiration);
 		userCredentials.setIdentifier(userIdentifier);
+
 		// fetch account data to show in imterface
 		new GetAccountAsyncTask(this, userCredentials, restoreAccount).execute();
 	}
@@ -281,6 +302,15 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 		
 		userCredentials.setUsername(nickname);
 		userCredentials.setAccountId(accountId);
+		
+		String fbId = userCredentials.getFbPlayerId();
+		String userId = userCredentials.getIdentifier();
+		
+		// PSIORI track sign in
+		SampleHelper helper = SampleHelper.getInstance();
+		helper.setUserId(userId);
+		helper.setFacebookId(fbId);
+		helper.track("sign_in", "account", null);
 		
 		// if async task called to restore locale account, show dialog
 		if (restoreAccount) {

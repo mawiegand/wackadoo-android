@@ -1,6 +1,5 @@
 package com.wackadoo.wackadoo_client.activites;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -10,6 +9,7 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
@@ -37,9 +37,8 @@ import com.facebook.SessionLoginBehavior;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphUser;
-import com.fivedlab.sample.sample_java.Sample;
 import com.wackadoo.wackadoo_client.R;
-import com.wackadoo.wackadoo_client.analytics.AutoPing;
+import com.wackadoo.wackadoo_client.analytics.SampleHelper;
 import com.wackadoo.wackadoo_client.helper.Avatar;
 import com.wackadoo.wackadoo_client.helper.CustomProgressDialog;
 import com.wackadoo.wackadoo_client.helper.SoundManager;
@@ -90,13 +89,14 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	    // set up handlers
 		mTokenHandler = new android.os.Handler();
 
-		// start tracking
-		Sample.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.ZZZZZ"));
-		Sample.setServerSide(false);
-		Sample.setAppToken("wad-rt82-fhjk-18");
-		AutoPing.getInstance().startAutoPing();
+		Context context = getApplicationContext();
+		SampleHelper.context = context;
 		
-		// adjust.io tracking (= startup)
+		// start tracking
+		SampleHelper sHelper = SampleHelper.getInstance();
+		sHelper.setServerSide(false);
+		sHelper.setAppToken("wad-rt82-fhjk-18");
+		sHelper.startAutoPing();
 	}
 	
 	@Override
@@ -156,7 +156,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
     public void onDestroy() {
         super.onDestroy();
 	    uiHelper.onDestroy();					
-	    AutoPing.getInstance().stopAutoPing();	// tracking
+	    SampleHelper.getInstance().stopAutoPing();	// tracking
     }
 
 	// set up interface elements
@@ -635,6 +635,9 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		bundle.putString("hostname", userCredentials.getHostname());
 		intent.putExtras(bundle);
 		startActivity(intent);
+		
+		// PSIORI track enter game
+		SampleHelper.getInstance().track("session_update", "session", null);
 	}
 
 	// callback interface for GameLoginAsyncTask
@@ -651,6 +654,14 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 			loggedIn = true;
 			new GetCurrentGamesAsyncTask(this, userCredentials).execute();	
 			progressDialog.show();	
+			
+			String fbId = userCredentials.getFbPlayerId();
+			
+			SampleHelper helper = SampleHelper.getInstance();
+			helper.setFacebookId(fbId);
+			helper.setUserId(identifier);
+			helper.track("sign_in", "account", null);
+			
 		} else {
 			Toast.makeText(this, getResources().getString(R.string.login_failed_toast), Toast.LENGTH_LONG)
 			     .show();
@@ -831,6 +842,16 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 					userCredentials.generateNewAccessToken(jsonResponse.getString("access_token"), jsonResponse.getString("expires_in"));
 					userCredentials.setIdentifier(jsonResponse.getString("user_identifer"));	
 					loggedIn = true;
+					
+					String userId = userCredentials.getIdentifier();
+					String fbId = userCredentials.getFbPlayerId();
+
+					// PSIORI track sign_in
+					SampleHelper helper = SampleHelper.getInstance();
+					helper.setFacebookId(fbId);
+					helper.setUserId(userId);
+					helper.track("sign_in", "account", null);
+					
 					new GetCurrentGamesAsyncTask(this, userCredentials).execute();	
 					
 				} catch (JSONException e) {
