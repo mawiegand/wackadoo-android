@@ -30,6 +30,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.adjust.sdk.Adjust;
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
@@ -103,7 +104,8 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	@Override
 	public void onResume() {
         super.onResume();
-        uiHelper.onResume();	
+        uiHelper.onResume();
+        Adjust.onResume(this);
         
         // get updated userCredentials
         userCredentials = new UserCredentials(getApplicationContext());
@@ -140,7 +142,8 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
     public void onPause() {
         super.onPause();
 	    uiHelper.onPause();		
-//	    mAnimationHandler.removeCallbacks(updateAnimationThread);
+	    Adjust.onPause();
+	    
 	    mTokenHandler.removeCallbacks(updateTokenThread);
 	    
 	    if (!soundManager.isContinueMusic() && soundManager.isPlaying()) {

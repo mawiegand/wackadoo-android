@@ -3,23 +3,16 @@ package com.wackadoo.wackadoo_client.activites;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.graphics.Point;
-import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Display;
-import android.view.WindowManager;
-import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import com.wackadoo.wackadoo_client.R;
@@ -43,7 +36,7 @@ public class WackadooWebviewActivity extends Activity {
         
         webView = (WebView) findViewById(R.id.main_webView);
         if (savedInstanceState != null) {
-            webView.restoreState(savedInstanceState);
+        	webView.restoreState(savedInstanceState);
         }
         
         webView.setWebViewClient(new GameWebViewClient(this));
@@ -56,7 +49,6 @@ public class WackadooWebviewActivity extends Activity {
         webSettings.setUseWideViewPort(true);
         webSettings.setDomStorageEnabled(true);	
         
-        
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             WebView.setWebContentsDebuggingEnabled(true);
         }
@@ -66,6 +58,7 @@ public class WackadooWebviewActivity extends Activity {
         Point size = new Point();
         display.getSize(size);
         final LoginJavaScriptHandler loginHandler = new LoginJavaScriptHandler(this, b.getString("accessToken"), b.getString("expiration"), b.getString("userId"), b.getString("hostname"), size.x,size.y);
+        
         webView.addJavascriptInterface(loginHandler, "LoginHandler");
         webView.loadUrl("file:///android_asset/index.html");
     }

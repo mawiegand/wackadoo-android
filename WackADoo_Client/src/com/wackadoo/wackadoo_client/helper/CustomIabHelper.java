@@ -1,22 +1,19 @@
 package com.wackadoo.wackadoo_client.helper;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import android.app.Activity;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.RemoteException;
 import android.util.Log;
 
 import com.android.vending.billing.IabHelper;
-import com.android.vending.billing.IabHelper.OnConsumeMultiFinishedListener;
-import com.android.vending.billing.IabHelper.OnIabPurchaseFinishedListener;
 import com.android.vending.billing.IabHelper.QueryInventoryFinishedListener;
 import com.android.vending.billing.IabResult;
 import com.android.vending.billing.Inventory;
-import com.android.vending.billing.Purchase;
 import com.wackadoo.wackadoo_client.activites.ShopActivity;
 import com.wackadoo.wackadoo_client.interfaces.CreditsFragmentCallbackInterface;
 
@@ -24,6 +21,7 @@ public class CustomIabHelper extends IabHelper implements QueryInventoryFinished
 	
 	private static final String TAG = CustomIabHelper.class.getSimpleName();
 	private Context mContext;
+	private ArrayList<InAppProduct> inAppProducts;
 	
 	public CustomIabHelper(Context ctx, String base64PublicKey) {
 		super(ctx, base64PublicKey);
@@ -37,9 +35,6 @@ public class CustomIabHelper extends IabHelper implements QueryInventoryFinished
 					Log.d(TAG, "Error: " + result.getMessage());
 					return;
 				}
-				// IAB is fully set up 
-				Log.d(TAG, "Setup successful");
-				
 				// error handling: get purchased items, if consumption was not successful when shop was used the last time
 				queryInventoryAsync(false, null, CustomIabHelper.this);
 			}
@@ -58,7 +53,6 @@ public class CustomIabHelper extends IabHelper implements QueryInventoryFinished
         		try {
 					Bundle skuDetails = mService.getSkuDetails(3, mContext.getPackageName(), "inapp", querySkus);
 					flagEndAsync();
-					Log.d(TAG, "---> vor callback!");
 					callback.getProductsCallback(skuDetails);
 					
 				} catch (RemoteException e) {
@@ -68,7 +62,7 @@ public class CustomIabHelper extends IabHelper implements QueryInventoryFinished
         })).start();
     }
     
-    // handles response with purchased items
+    // handle response with purchased items
     public void onQueryInventoryFinished(IabResult result, Inventory inv) {
         ((ShopActivity) mContext).handleUnconsumedItems(inv);
 
@@ -76,7 +70,7 @@ public class CustomIabHelper extends IabHelper implements QueryInventoryFinished
 		getProductsAsyncInternal((CreditsFragmentCallbackInterface) mContext);
 	}
 	
-    // stores IDs of all available items on google play store
+    // store IDs of all available items on google play store
     private ArrayList<String> setUpSkuList() {
     	ArrayList<String> skuList = new ArrayList<String>();
     	skuList.add("platinum_credits_13");			// product id of 13 credits product
@@ -89,4 +83,30 @@ public class CustomIabHelper extends IabHelper implements QueryInventoryFinished
     	return skuList;
     }
 
+    // tracking:save sku details for tracking issues
+    public void saveSkuDetails(ArrayList<String> stringProductList) {
+    	inAppProducts = new ArrayList<InAppProduct>();
+    	
+    	try {
+    		for (String temp : stringProductList) {
+    			JSONObject jsonObj;
+    			jsonObj = new JSONObject(temp);
+    			inAppProducts.add(new InAppProduct(jsonObj.getString("price"), jsonObj.getString("productId")));
+    		}
+    	} catch (JSONException e) {
+			e.printStackTrace();
+		}
+    }
+    
+    public double getRevenue(String sku) {
+    	for (InAppProduct temp : inAppProducts) {
+    		if (temp.getProductId().equals(sku)) {
+    			String result = temp.getPrice().replace(",", "");
+    			result = result.substring(0, result.length()-2);
+    			return Double.parseDouble(result);
+    		}
+    	}
+    	return 0;
+    }
+    
 }

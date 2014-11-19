@@ -175,30 +175,22 @@ public class SoundManager {
 	public void fadeOut() {
 		final Timer timer = new Timer(true);
     	TimerTask timerTask = new TimerTask() {
-            @Override
             public void run() {
-            	Log.i(TAG, "fadeOut: " + volume);
-            	
             	if (volume == 0.0) {
-            		// completely faded out
                 	timer.cancel();
-                	timer.purge();
                 	fadeIn();
                 	
                 } else {
                 	if (volume > 0.1) {
-                		// fade out by 10%
                 		volume -= 0.1f;
-                		
                 	} else {
-                		// last step
                 		volume = 0.0f;
                 	}
                 	backgroundMusicPlayer.setVolume(volume, volume);
                 }
             }
         };
-        timer.schedule(timerTask, 0, FADE_STEP_MS);
+        timer.schedule(timerTask, 0, 300);
 	}
 	
 }
