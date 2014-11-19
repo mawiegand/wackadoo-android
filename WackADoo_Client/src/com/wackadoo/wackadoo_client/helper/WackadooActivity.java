@@ -1,5 +1,6 @@
 package com.wackadoo.wackadoo_client.helper;
 
+import com.adjust.sdk.Adjust;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -31,6 +32,7 @@ public class WackadooActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		Adjust.onResume(this);
 		
 		// continue music, if its not currently playing
 		soundManager.setContinueMusic(false);
@@ -48,6 +50,7 @@ public class WackadooActivity extends Activity {
 	@Override
 	protected void onPause() {
 		super.onPause();
+		Adjust.onPause();
 		
 		// stop music, if not another activity is started
 		if (soundManager.shouldPlayerStop()) {

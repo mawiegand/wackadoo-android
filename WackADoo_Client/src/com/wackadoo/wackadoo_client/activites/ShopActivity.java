@@ -3,8 +3,9 @@ package com.wackadoo.wackadoo_client.activites;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,12 +14,10 @@ import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -31,6 +30,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.adjust.sdk.Adjust;
 import com.android.vending.billing.IabHelper.OnConsumeFinishedListener;
 import com.android.vending.billing.IabHelper.OnIabPurchaseFinishedListener;
 import com.android.vending.billing.IabResult;
@@ -42,7 +42,6 @@ import com.wackadoo.wackadoo_client.fragments.ShopCreditsFragment;
 import com.wackadoo.wackadoo_client.fragments.ShopInfoFragment;
 import com.wackadoo.wackadoo_client.helper.CustomIabHelper;
 import com.wackadoo.wackadoo_client.helper.CustomProgressDialog;
-import com.wackadoo.wackadoo_client.helper.SoundManager;
 import com.wackadoo.wackadoo_client.helper.StaticHelper;
 import com.wackadoo.wackadoo_client.helper.WackadooActivity;
 import com.wackadoo.wackadoo_client.interfaces.BuyPlayStoreCallbackInterface;
@@ -464,7 +463,6 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 			Toast.makeText(this, getString(R.string.buy_item_fail), Toast.LENGTH_LONG)
 				 .show();
 		}
-		
 	}
 	
 	// callback interface for purchase of play store item
@@ -502,6 +500,13 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 			// remove credit fragment and shop shop again
 			getFragmentManager().popBackStack();		
 		
+			// Adjust.io tracking (= purchase)
+			Log.d(TAG, "order Id " + purchase.getOrderId() + " | revenue " + billingHelper.getRevenue(purchase.getSku()));
+			
+			Map<String, String> parameters = new HashMap<String, String>();
+			parameters.put("receipt_id", purchase.getOrderId());
+			Adjust.trackRevenue(billingHelper.getRevenue(purchase.getSku()), "8evsek", parameters);
+			
 		// product already validated by server -> consume
 		} else if (responseCode == 403){
 			billingHelper.consumeAsync(purchase, ShopActivity.this);
@@ -539,7 +544,6 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 	@Override
 	public void getProductsCallback(Bundle skuDetails){
 		int response = skuDetails.getInt("RESPONSE_CODE");
-		Log.d(TAG, "---> response: " + response);
 		
 		if (response == 0) {
 			if (progressDialog.isShowing()) {
@@ -548,6 +552,10 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 			Log.d(TAG, "skuDetails: " + skuDetails.toString());
 			
 			stringProductList = skuDetails.getStringArrayList("DETAILS_LIST");
+			
+			// save skuDetails for tracking issues in billingHelper
+			billingHelper.saveSkuDetails(stringProductList);
+			
 			ArrayList<ShopRowItem> rowItems = produceRowItemList();
 			openCreditsFragment(rowItems);
 		}
