@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
@@ -87,6 +88,9 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	    // set up handlers
 		mTokenHandler = new android.os.Handler();
 
+		Context context = getApplicationContext();
+		SampleHelper.context = context;
+		
 		// start tracking
 		SampleHelper sHelper = SampleHelper.getInstance();
 		sHelper.setServerSide(false);

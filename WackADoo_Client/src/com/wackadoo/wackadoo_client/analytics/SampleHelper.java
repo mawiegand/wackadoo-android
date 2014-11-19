@@ -6,6 +6,9 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 import com.fivedlab.sample.sample_java.Sample;
 
 /**
@@ -15,6 +18,8 @@ import com.fivedlab.sample.sample_java.Sample;
  */
 public class SampleHelper {
 
+	private static final String WAD_PREFS_ANALYITCS = "wad_preferences_analytics";
+	
 	private Timer autoPing;
 
 	private static SampleHelper instance = null;
@@ -33,6 +38,7 @@ public class SampleHelper {
 	private String userId;
 	private String facebookId;
 	
+	public static Context context;
 	
 	protected SampleHelper() {
 		// Exists only to defeat instantiation.
@@ -41,8 +47,18 @@ public class SampleHelper {
 	public static SampleHelper getInstance() {
 		if (instance == null) {
 			instance = new SampleHelper();
+			SharedPreferences myPrefs = context.getSharedPreferences(WAD_PREFS_ANALYITCS, Context.MODE_PRIVATE);
+			String installToken = myPrefs.getString("install_token", null);
+			
+			if (installToken == null) {
+				SharedPreferences.Editor e = myPrefs.edit();
+				installToken = instance.randomToken(24);
+				e.putString("install_token", installToken);
+				e.commit();
+			}
+
+			instance.setInstallToken(installToken);
 			instance.setSessionToken(instance.randomToken(32));
-			instance.setInstallToken(instance.randomToken(24));
 		}
 		return instance;
 	}

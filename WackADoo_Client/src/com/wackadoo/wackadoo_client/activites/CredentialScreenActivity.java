@@ -303,6 +303,15 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 		userCredentials.setUsername(nickname);
 		userCredentials.setAccountId(accountId);
 		
+		String fbId = userCredentials.getFbPlayerId();
+		String userId = userCredentials.getIdentifier();
+		
+		// PSIORI track sign in
+		SampleHelper helper = SampleHelper.getInstance();
+		helper.setUserId(userId);
+		helper.setFacebookId(fbId);
+		helper.track("sign_in", "account", null);
+		
 		// if async task called to restore locale account, show dialog
 		if (restoreAccount) {
 			showRestoreAccountDialog(true);
