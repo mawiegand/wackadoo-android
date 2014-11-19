@@ -1,6 +1,7 @@
 package com.wackadoo.wackadoo_client.analytics;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Timer;
@@ -12,7 +13,12 @@ import android.content.SharedPreferences;
 import com.fivedlab.sample.sample_java.Sample;
 
 /**
- * Use this Helper class to track PSIORI events
+ * Use this Helper class to track PSIORI events.
+ * Use the methods track(String,String) or track(String,String,Map) to send events.
+ * If you want to top the tracking call stopTracking but don´t forget to call resumeTracking we you want to restart it.
+ * 
+ * Each event will be send asynchronously to the server so it won´t block your MainThread.
+ * 
  * @author danielband
  *
  */
@@ -21,7 +27,9 @@ public class SampleHelper {
 	private static final String WAD_PREFS_ANALYITCS = "wad_preferences_analytics";
 	
 	private Timer autoPing;
-
+	private LinkedList<Event> queue;
+	private Timer connector;
+	
 	private static SampleHelper instance = null;
 	
 	private String sessionToken;
@@ -41,7 +49,7 @@ public class SampleHelper {
 	public static Context context;
 	
 	protected SampleHelper() {
-		// Exists only to defeat instantiation.
+		queue = new LinkedList<Event>();
 	}
 
 	public static SampleHelper getInstance() {
@@ -59,8 +67,39 @@ public class SampleHelper {
 
 			instance.setInstallToken(installToken);
 			instance.setSessionToken(instance.randomToken(32));
+			
+			instance.resumeTracking();
 		}
 		return instance;
+	}
+	
+	public void resumeTracking() {
+		TimerTask connectorTask = new TimerTask() {
+
+			@Override
+			public void run() {
+				sendNext();
+			}
+		};
+		
+		connector = new Timer();
+		connector.scheduleAtFixedRate(connectorTask, 0, 1000);
+	}
+	
+	public void stopTracking() {
+		connector.cancel();
+		autoPing.cancel();
+	}
+	
+	private void sendNext() {
+		if (queue.isEmpty()) {
+			return;
+		}
+		
+		synchronized(queue) {
+			Event nextEvent = queue.removeFirst();
+			Sample.track(nextEvent.getEventName(), nextEvent.getEventCategory(), nextEvent.getBody());
+		}
 	}
 
 	public void startAutoPing() {
@@ -100,9 +139,19 @@ public class SampleHelper {
 	}
 	
 	@SuppressWarnings("rawtypes")
-	public void track(String event_name, String event_category, Map args) {
-		Map params = mergeParams(event_name, event_category, args);
-		Sample.track(event_name, event_category, params);
+	public void track(String eventName, String eventCategory) {
+		Map params = mergeParams(eventName, eventCategory, null);
+		synchronized(queue) {
+			queue.add(new Event(eventName, eventCategory, params));
+		}
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public void track(String eventName, String eventCategory, Map args) {
+		Map params = mergeParams(eventName, eventCategory, args);
+		synchronized(queue) {
+			queue.add(new Event(eventName, eventCategory, params));
+		}
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -271,5 +320,47 @@ public class SampleHelper {
 
 	public void setServerSide(boolean setServerSide) {
 		this.serverSide = setServerSide;
+	}
+	
+	/**
+	 * Container class for each event. Better than putting each event in a map.
+	 * @author danielband
+	 *
+	 */
+	private class Event {
+		private String eventName;
+		private String eventCategory;
+		@SuppressWarnings("rawtypes")
+		private Map body;
+		
+		public Event(String eventName, String eventCategory, Map body) {
+			this.eventName = eventName;
+			this.eventCategory = eventCategory;
+			this.body = body;
+		}
+
+		public String getEventName() {
+			return eventName;
+		}
+
+		public void setEventName(String eventName) {
+			this.eventName = eventName;
+		}
+
+		public String getEventCategory() {
+			return eventCategory;
+		}
+
+		public void setEventCategory(String eventCategory) {
+			this.eventCategory = eventCategory;
+		}
+
+		public Map getBody() {
+			return body;
+		}
+
+		public void setBody(Map body) {
+			this.body = body;
+		}
 	}
 }

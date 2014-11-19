@@ -2,6 +2,8 @@ package com.wackadoo.wackadoo_client.activites;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -152,8 +154,11 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
     @Override
     public void onDestroy() {
         super.onDestroy();
-	    uiHelper.onDestroy();					
-	    SampleHelper.getInstance().stopAutoPing();	// tracking
+	    uiHelper.onDestroy();	
+	    
+	    // PSIORI Stops tracking to free ressources
+	    // Stops the autoPing timer as well
+	    SampleHelper.getInstance().stopTracking();	
     }
 
 	// set up interface elements
@@ -634,7 +639,9 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		startActivity(intent);
 		
 		// PSIORI track enter game
-		SampleHelper.getInstance().track("session_update", "session", null);
+		SampleHelper sHelper = SampleHelper.getInstance();
+		sHelper.setModule(String.valueOf(userCredentials.getGameId()));
+		sHelper.track("session_update", "session", null);
 	}
 
 	// callback interface for GameLoginAsyncTask
