@@ -213,17 +213,6 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 		if (state.isOpened()) {
 			userCredentials.setFbUser(true);
 			
-			// PSIORI track sign_in
-			String userId = userCredentials.getIdentifier();
-			String fbId = userCredentials.getFbPlayerId();
-
-			// PSIORI track sign_in
-			SampleHelper helper = SampleHelper.getInstance();
-			helper.setFacebookId(fbId);
-			helper.setUserId(userId);
-			helper.track("sign_in", "account", null);
-
-			
 			finish();
 		} 
 	}
