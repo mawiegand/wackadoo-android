@@ -503,9 +503,8 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 			// Adjust.io tracking (= purchase)
 			Log.d(TAG, "order Id " + purchase.getOrderId() + " | revenue " + billingHelper.getRevenue(purchase.getSku()));
 			
-			Map<String, String> parameters = new HashMap<String, String>();
-			parameters.put("receipt_id", purchase.getOrderId());
-			Adjust.trackRevenue(billingHelper.getRevenue(purchase.getSku()), "8evsek", parameters);
+			// adjust.io track revenue
+			Adjust.trackRevenue(billingHelper.getRevenue(purchase.getSku()));
 			
 		// product already validated by server -> consume
 		} else if (responseCode == 403){
