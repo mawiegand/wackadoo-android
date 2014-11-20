@@ -39,7 +39,6 @@ public class BuyShopOfferAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	
 	@Override
 	protected Boolean doInBackground(String... params) {
-		// TODO: correct url?
 		String completeURL = StaticHelper.generateUrlForTask(context, false, context.getString(R.string.buyShopItemPath), userCredentials);
 		
 		List <NameValuePair> nameValuePairs = new ArrayList <NameValuePair>(3);

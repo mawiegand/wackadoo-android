@@ -111,29 +111,6 @@ public class GetShopDataAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	private List<ShopRowItem> produceRowItemList(JSONArray jsonArray) {
 		rowItemList = new ArrayList<ShopRowItem>();
 		
-		// TODO: wat ist damit? sort by price, cheapest item first
-		/*Comparator<String> comparator = new Comparator<String>() {
-			@Override
-			public int compare(String itemA, String itemB) {
-				try {
-					// compare and sort by price in micro-format
-					int priceA = Integer.valueOf(new JSONObject(itemA).getString("price_amount_micros"));
-					int priceB = Integer.valueOf(new JSONObject(itemB).getString("price_amount_micros"));
-				
-					if (priceA > priceB) {
-						return 1;
-					} else if (priceA < priceB) {
-						return -1;
-					} 
-					
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				return 0;
-			}
-		};
-		Collections.sort(jsonR, comparator);*/
-		
 		// create list of ShopRowItem out of Strings
 		try {
 			switch(offerType) {

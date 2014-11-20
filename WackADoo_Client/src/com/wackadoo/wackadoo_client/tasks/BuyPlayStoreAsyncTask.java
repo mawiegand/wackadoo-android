@@ -34,7 +34,6 @@ public class BuyPlayStoreAsyncTask extends AsyncTask<String, Integer, Integer> {
 	
 	@Override
 	protected Integer doInBackground(String... params) {
-		// TODO: correct url?
 		String completeURL = StaticHelper.generateUrlForTask(context, false, context.getString(R.string.buyCreditsPath), userCredentials);
 		StringBuilder sb = new StringBuilder();
 		

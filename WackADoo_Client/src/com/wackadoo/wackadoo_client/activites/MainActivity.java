@@ -410,8 +410,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	// set up touchlistener for selectgame button
 	private void setUpSelectgameBtn() {
 		selectGameBtn.setVisibility(View.VISIBLE);
-		// TODO: is last world accessible?
-		lastWorldAccessible = true;
+		lastWorldAccessible = true;		// TODO: is last world accessible?
 		
 		if (lastWorldAccessible) {
 			selectGameBtn.setImageResource(R.drawable.btn_changegame);

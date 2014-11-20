@@ -83,12 +83,14 @@ public class SelectGameActivity extends WackadooActivity implements CurrentGames
 				Toast toast = Toast.makeText(SelectGameActivity.this, "", Toast.LENGTH_SHORT);
 				Calendar c = Calendar.getInstance();		// date today
 				
-				// game is full
-				if (false) {//clickedGame.getMaxPlayers() == clickedGame.getPresentPlayers()){
-					toast.setText(getResources().getString(R.string.selectgame_game_full));
-					
+		/*		TODO: ignore current/maxPlayers because not necessary right now
+ 		 *		// game is full
+		 *		if (clickedGame.getMaxPlayers() == clickedGame.getPresentPlayers()) { 
+		 *			toast.setText(getResources().getString(R.string.selectgame_game_full));
+		 *		} else 
+		 */	
 				// signup is disabled 	
-				} else if (!clickedGame.isJoined() && !clickedGame.isSignupEnabled()) {
+				if (!clickedGame.isJoined() && !clickedGame.isSignupEnabled()) {
 					toast.setText(getResources().getString(R.string.selectgame_signup_disabled));
 					
 				// signin is disabled 	
@@ -109,6 +111,7 @@ public class SelectGameActivity extends WackadooActivity implements CurrentGames
 					userCredentials.setHostname(clickedGame.getServer());
 					if (clickedGame.isJoined()) {
 						toast.setText(getResources().getString(R.string.selectgame_game_login) + clickedGame.getName());
+						soundManager.setContinueMusic(true);
 						finish();
 					
 					} else {
@@ -146,6 +149,7 @@ public class SelectGameActivity extends WackadooActivity implements CurrentGames
 		StaticHelper.setListViewHeightBasedOnChildren(listView);
 		if (createNew) {
 			//userCredentials.setUsername(game.getCharacter().getName());
+			soundManager.setContinueMusic(true);
 			finish();
 		}
 	}

@@ -64,7 +64,7 @@ public class GetCurrentGamesAsyncTask extends AsyncTask<String, Integer, Boolean
 	 	    JSONArray jsonArray = new JSONArray(sb.toString());
 	 	    
 	 	    // get hostname from game server for requesting the character
-	 	    for (int i = 0; i < jsonArray.length(); i++) {		
+	 	    for (int i=0; i<games.size(); i++) {		
 	 	    	games.get(i).setServer("https://" + jsonArray.getJSONObject(i)
 	 	    			.getJSONObject("random_selected_servers").getJSONObject("game").getString("hostname"));
 	 	    }
