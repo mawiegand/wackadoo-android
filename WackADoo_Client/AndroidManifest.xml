@@ -36,7 +36,7 @@
         <!-- Adjust.io SDK -->
        	<meta-data android:name="AdjustAppToken" android:value="jbbalmmgkl8p"/>
 		<meta-data android:name="AdjustLogLevel" android:value="debug"/>
-		<meta-data android:name="AdjustEnvironment" android:value="sandbox"/> <!-- TODO: change to 'production' -->
+		<meta-data android:name="AdjustEnvironment" android:value="production"/>
  	    <receiver
 		    android:name="com.adjust.sdk.ReferrerReceiver"
 		    android:exported="true" >
