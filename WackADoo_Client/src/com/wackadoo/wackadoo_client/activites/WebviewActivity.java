@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Display;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.analytics.SampleHelper;
+import com.wackadoo.wackadoo_client.helper.CustomWebView;
 import com.wackadoo.wackadoo_client.helper.GameWebViewClient;
 import com.wackadoo.wackadoo_client.helper.StaticHelper;
 import com.wackadoo.wackadoo_client.helper.WackadooActivity;
@@ -31,7 +33,7 @@ public class WebviewActivity extends WackadooActivity {
 	private static final String TAG = WebviewActivity.class.getSimpleName();
 	private static final int UPDATE_CONNECTION_TIMER = 10000;
 	
-	private WebView webView;
+	private CustomWebView webView;
 	private Handler mConnectionHandler;
 	private ImageView reloadBtn;
 	
@@ -71,7 +73,7 @@ public class WebviewActivity extends WackadooActivity {
 	
     // set up the webview
     private void setUpWebview() {
-    	  webView = (WebView) findViewById(R.id.main_webView);
+    	  webView = (CustomWebView) findViewById(R.id.main_webView);
     	  
     	  webView.setWebViewClient(new GameWebViewClient(this));
           webView.setWebChromeClient(new WebChromeClient());
@@ -82,6 +84,7 @@ public class WebviewActivity extends WackadooActivity {
           webSettings.setLoadWithOverviewMode(true);
           webSettings.setUseWideViewPort(true);
           webSettings.setDomStorageEnabled(true);	
+          webSettings.setSupportZoom(false);
           
           if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
               WebView.setWebContentsDebuggingEnabled(true);
@@ -156,4 +159,5 @@ public class WebviewActivity extends WackadooActivity {
  			mConnectionHandler.postDelayed(this, UPDATE_CONNECTION_TIMER);
  		}
  	}; 
+
 }

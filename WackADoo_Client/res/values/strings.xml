@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- General -->
+    <string name="app_name">Wackadoo</string>
+    <string name="action_settings">Settings</string>
+    <string name="done">Done</string>
+    <string name="back">Back</string>
+    <string name="login_failed_toast">Unable to login</string> 
+    <string name="login_success_toast">Login successful</string>
+    <string name="login_necessary">First log in!</string>
+    <string name="login_invalid_grant">Email and/or Password wrong!</string>
+    <string name="server_communication">Connecting to server</string>
+    <string name="please_wait">Please wait&#8230;</string>
+    <string name="no_connection">Please activate your internet connection, it\'s necessary for playing Wack-a-Doo</string>
+    <string name="error_server_communication">Error while communicating with server. Please try again</string>
+    
+    <!-- Facebook -->
+    <string name="fb_task_failure">Error while connection to facebook. Please try again or contact the support.</string>
+    <string name="fb_connect_title">Connect with Facebook</string>
+    <string name="fb_connect_message">Would you like to connect your Account with Facebook?</string>
+    <string name="fb_character_already_connected">Character already connected! Please contact the support.</string>
+    <string name="fb_user_already_connected">Facebook User already connected! Please contact the support.</string>
+    <string name="fb_connect_error">Error Code %s while connecting Accounts. Please contact Support.</string>
+    
+    <!-- WebView -->
+    <string name="dialog_return_startscreen_text">Do you want to return to den Start Screen?</string>
+    
+    <!-- SelectGame -->
+    <string name="selectgame_heading">Ongoing Rounds</string>
+    <string name="selectgame_topbar_heading">Select Round</string>
+    <string name="selectgame_item_days">Day: %d</string>
+    <string name="selectgame_item_days_today">Starts today!</string>
+    <string name="selectgame_item_days_till_start">to start in %d days</string>
+    <string name="selectgame_item_days_finished">Game already finished</string>
+    <string name="selectgame_game_full">Game is full</string>
+    <string name="selectgame_signup_disabled">You can\'t sign up at the moment!</string>
+    <string name="selectgame_signin_disabled">You can\'t sign in at the moment!</string>
+    <string name="selectgame_game_not_startet">The game has not startet yet</string>
+    <string name="selectgame_game_finished">The game is already over</string>
+    <string name="selectgame_game_login">Log in in world </string>
+    <string name="selectgame_create_account">Create new account in world </string>
+    
+    <!-- AccountManager -->
+    <string name="account_change_password">Change Password</string>
+    <string name="alert_change_password">Change Password</string>
+    <string name="alert_change_password_success">Password successfully changed.</string>
+    <string name="alert_change_password_error">Your password was NOT accepted by the server. Please try again or contact the support.</string>
+    <string name="alert_email_change">Set E-Mail</string>
+    <string name="alert_email_change_success">Email successfully changed.</string>
+    <string name="alert_email_change_error">Your email was NOT accepted by the server. Please try again or contact the support.</string>
+    <string name="alert_email_change_error_403">You are not allowed to change the email address again. Please contact support, if you think this is an error.</string>
+    <string name="alert_email_change_error_409">This email address is either invalid or already registered with another existing account. Please contact support, if you think this is an error.</string>
+    <string name="alert_ok_button">OK</string>
+    <string name="alert_cancel_button">Cancel</string>
+    <string name="alert_quit">Are you sure?</string>
+    <string name="alert_quit_yes">Yes</string>
+    <string name="alert_quit_no">No</string>
+    <string name="your_account_headline">Your 5D Games Account</string>
+    <string name="account_sign_out_button">Sign Out</string>
+    <string name="account_email_information">Email can be used to sign in at wack-a-doo.com or to retrieve a new password</string>
+    <string name="account_set_email">Set Email</string>
+    <string name="account_provide_email">Provide an email to be used in password retrieval, and to recive ingame events.</string>
+    <string name="account_character_locked">Your character is presently locked to this particular device!</string>
+    <string name="account_character_connected_fb">Your character is presently connected to your Facebook account.</string>
+    <string name="account_character_portable">You have these options to make your character &quot;portable&quot;</string>
+    <string name="account_set_password">Set A Password</string>
+    <string name="account_userName_unknown_fallbackText">Unknown User</string>
+    <string name="account_really_sign_out">Really Sign Out?</string>
+    <string name="account_character_lost_when_signout">The present user will be lost in case you sign out now. To be able to access this user again, make it portable.</string>
+    <string name="account_character_restore_success">Restored access to your account %s. If this is not the account you wanted to restore, please contact support.</string>
+    <string name="account_character_restore_failed">Restore Failed</string>
+    <string name="account_character_restore_failure_message">There was no account that could be restored. Please contact support.</string>
+    
+    <!-- CredentialScreen -->
+    <string name="invalid_credential_toast">Enter valid Credentials</string>
+    <string name="credentials_headline">Sign In</string>
+    <string name="credentials_sign_in_button">Sign In</string>
+    <string name="credentials_username_hint">Username or Email</string>
+    <string name="credentials_password_hint">Password</string>
+    <string name="credentials_use_facebook">Use your Facebook Account?</string>
+    <string name="credentials_no_account">Dont have an account, yet?</string>
+    <string name="credentials_new_account">Create New Account</string>
+    <string name="credentials_lost_account">Lost access to your account?</string>
+    <string name="credentials_restore_account">Restore A Non-Portable Account</string>
+    <string name="credentials_email_not_valid">Email is not valid</string>
+    <string name="credentials_password_too_short">The password must consist of at least 6 characters</string>
+    <string name="credentials_lost_access_mail_subject">Lost access to your Wack-A-Doo account</string>
+    <string name="credentials_lost_access_mail" >I\'ve lost access to my account [PLEASE INSERT YOUR ACCOUNT NAME HERE].\nCould you please help?\n\nVendor Token:\nDevice Token: \nApp Version: \n(the above information will help us to find your account)</string>
+    
+    <!-- Shop -->
+    <string name="list_platinum_account_text" formatted="false">%d days for %d Credits</string>
+    <string name="subheading_platinum_account_text">Platinum Account</string>
+    <string name="list_platinum_credits_text" formatted="false">Platinum Credits</string>
+    <string name="fragment_platinum_credits_heading" formatted="false">You have %d Credits. Buy more to help your tribe prosper.</string>
+    <string name="fragment_platinum_credits_footer" formatted="false">Purchases will be credited to the user \'%s\'.</string>
+    <string name="subheading_platinum_credits_text">Platinum-Credits</string>
+    <string name="list_gold_text" formatted="false">%d Goldfrogs for %d Credits</string>
+    <string name="subheading_gold_text">Golden Frogs</string>
+    <string name="list_bonus_text" formatted="false">+%d%% %dh for %d </string>
+    <string name="subheading_bonus_text">Production Boost</string>
+    <string name="shop_headline_text">Buy Credits and purchase Comfortfunctions and Accellerators</string>
+	<string name="current_frog_text">Current Golden Frog Amount: %d</string>
+	<string name="current_credit_text">Current Platinum Credit Amount: %d</string>
+	<string name="buy_item_fail">Not able to communicate with server. Please try again later.</string>
+	<string name="buy_item_success">You buyed this item</string>
+	<string name="buy_credits_fail">Not able to communicate with server. Please try again later.</string>
+    <string name="buy_credits_success">The platinum credits were buyed successful</string>
+    <string name="shop_special_text">Starter Package</string>
+    
+    <!-- Shop Info -->
+    <string name="shopinfo_topbar_heading">Info Store</string>
+    <string name="shopInfoText_credits">Get some credits to improve your game experience</string>
+    <string name="shopInfoHeadingText_credits">Platinum Credits</string>
+    <string name="shopInfoDescText_credits">With 5D Platinum Credits you can unlock the Platinum Account and the production bonus.\n\nYou can trade Platinum Credits for Golden Frogs.\n\n
+        									With Golden Frogs you can finish building tasks, speed up the recruitment of units or trade with the traveling merchant.</string>
+    <string name="shopInfoText_gold">Come on, get some Golden Frogs and give me an army!</string>
+    <string name="shopInfoHeadingText_gold">Golden Frogs</string>
+    <string name="shopInfoDescText_gold">Trade your Platinum Credits for Golden Frogs to finish building tasks, to speed up the recruitment of units or to trade with the traveling merchant.\n\n15 Golden Frogs cost only 8 Platinum Credits.\n\n
+        								 50 Golden Frogs cost only 24 Platinum Credits.\n\n120 Golden Frogs cost only 47 Platinum Credits.</string>
+    <string name="shopInfoText_account">What you are waiting for? With a Platinum Account, we will be able to expand our power even more.</string>
+    <string name="shopInfoHeadingText_account">Platinum Account</string>
+    <string name="shopInfoDescText_account">Construction Queue: having a Platinum Account increases your available construction queue by three slots. Construction jobs are processed even when you\'re not logged into the game, provided that you have enough resources to finish the work.\n\n
+        									Training Loop: Your training queue increases by three slots when you have a Platinum Account, which means you will have the opportunity to accept further training contracts in the same training construction, after the first contract is over.\n\n
+        									Combat notification by email: With an enabled Platinum Account you will be immediately notified by email of attacks on your colonies, fortresses or armies, even when you are not active in the game. So even when you are not currently playing, you can immediately react to your opponents. You can send for further armies to assist you or ask your alliance for help.</string>
+    <string name="shopInfoText_bonus">More Resources? Everyone needs more resources!</string>
+    <string name="shopInfoHeadingText_bonus">Production Bonus</string>
+    <string name="shopInfoDescText_bonus" formatted="false">The production bonus is valid across your total production of the chosen resource.\n\n15% global production bonus for fur production.\n\n15% global production bonus for stone production.\n\n15% global production bonus for wood production.</string>
+    <string name="shopInfoText_special">Dies ist ein spezielles Paket, das nur für neue Spieler verfügbar ist.</string>
+    <string name="shopInfoHeadingText_special">Starter packet</string>
+    <string name="shopInfoDescText_special" formatted="false">The starter packet contains: \n1500 resources \n300 golden frogs \nA camp close to your home settlement with the following extensions: 
+        									\nA level 5 haunt \nAn altar \nHunter gatherers with a production level of 150 resources per hour \nFor 4 days you get these additional bonuses:  \nA 15% global resource production bonus \n100% extra constuction speed (halved construction time)</string>
+    <string name="shop_expires_in">Expires on:&#160;</string>
+    <string name="special_offer_1"></string>
+    <string name="special_offer_2">1500 Resources \n150 Recources per hour \n15% Production Bonus</string>
+    <string name="special_offer_3">300 Golden Frogs</string>
+    <string name="special_offer_4">Halved Construction Time for 4 Days</string>
+    <string name="special_offer_buy">Buy Now!</string>
+    
+     <!-- Info Screen -->
+    <string name="infoscreen_support_btn">Support</string>
+    <string name="infoscreen_website_btn">Visit Website</string>
+    <string name="infoscreen_wiki_btn">Open Wiki Manual</string>
+    <string name="infoscreen_copyright_btn">Copyright Notice</string>
+    <string name="infoscreen_supported">Supported by</string>
+   	<string name="infoscreen_contributors">Contributors: Anand, Jan-Niklas Bartholomäus, Max Buck, Christian Seidel, Matteo Bottin, David Canela, Patrick Fox, Maggie Jaglo, Jan Hendrik Kegel, Sascha Lange, Stefan Mattern, Thomas Mohr, Arno Möller, Christiane Lange, Hai Pham, Pikomi, Hajo Runne, Julian Schmid, Susan Tackenberg, Christian Wansart, Jupp Wegner, Marcel Wiegand </string>
+   	<string name="infoscreen_copyright">Copyright 2013 5D Lab GmbH. All rights reserved.\n\nThe app makes use of following 3rd party libraries:\nGson Library &#169; 2008&#8211;2011\nJoda Time &#169; 2002&#8211;2013\n\nOur servers are powered by the Augmented Worlds Engine &#169; 2011&#8211;2013 5D Lab GmbH and built upon Ruby on Rails.</string>
+    <string name="infoscreen_support_subject">Support question</string>
+   	
+</resources>

@@ -79,10 +79,7 @@ public class GameWebViewClient extends WebViewClient {
 	        ((Activity) context).startActivity(intent);
 			return false;
 			
-		}  else if (url.contains(LOGOUT_SCHEME)) {
-			Toast.makeText(context, "LOGOUT, BITCH!", Toast.LENGTH_SHORT)
-				 .show();
-		}
+		}  
 		view.loadUrl(url);
 		return true;
 	}

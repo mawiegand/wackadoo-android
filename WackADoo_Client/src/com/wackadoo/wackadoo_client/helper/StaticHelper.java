@@ -159,7 +159,8 @@ public class StaticHelper {
 		}
 		request.setHeader("Accept", "application/json");
 
-		DefaultHttpClient httpClient = getNewHttpClient();
+//		DefaultHttpClient httpClient = getNewHttpClient();
+		DefaultHttpClient httpClient = new DefaultHttpClient();
 		HttpConnectionParams.setSoTimeout(httpClient.getParams(), 10*1000); 
 		HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 10*1000); 
 

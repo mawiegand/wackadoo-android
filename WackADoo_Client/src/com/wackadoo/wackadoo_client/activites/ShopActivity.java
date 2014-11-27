@@ -522,7 +522,7 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 		String base64PublicKey = getResources().getString(R.string.playstorePublicKey); 	
 		billingHelper = new CustomIabHelper(this, base64PublicKey);
 		
-		billingHelper.enableDebugLogging(true);		// TODO: remove before publishing
+//		billingHelper.enableDebugLogging(true);		// TODO: remove before publishing
 		billingHelper.startUp();
 	}
 	

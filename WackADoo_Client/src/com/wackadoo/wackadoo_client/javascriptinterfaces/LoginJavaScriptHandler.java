@@ -6,7 +6,6 @@ import java.util.Locale;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 
@@ -34,18 +33,29 @@ public class LoginJavaScriptHandler {
     }
     
 	private String getCountry() {
-		String country;
-		String temp = Locale.getDefault().getLanguage(); 
-		if (temp.length() == 2 && Arrays.asList(serverSupportedLanguageCodes).contains(temp)) {
-			country = temp + "_";
-			temp = Locale.getDefault().getCountry();
-			if (temp.length() == 2) {
-				country += temp;
-				return country;
+		String countryCode = Locale.getDefault().getLanguage(); 
+		if (countryCode.length() == 2 && Arrays.asList(serverSupportedLanguageCodes).contains(countryCode)) {
+			if (countryCode.equals(serverSupportedLanguageCodes[1])) {
+				countryCode += "_DE";
+				return countryCode;
+			} else if(countryCode.equals(serverSupportedLanguageCodes[0])) {
+				countryCode += "_US";
+				return countryCode;
 			}
 		}
-		//return default country code
 		return serverSupportedLanguageCodes[0] + "_US";
+//		String country;
+//		String temp = Locale.getDefault().getLanguage(); 
+//		if (temp.length() == 2 && Arrays.asList(serverSupportedLanguageCodes).contains(temp)) {
+//			country = temp + "_";
+//			temp = Locale.getDefault().getCountry();
+//			if (temp.length() == 2) {
+//				country += temp;
+//				return country;
+//			}
+//		}
+//		return serverSupportedLanguageCodes[0] + "_US";
+		
 	}
 	
 	@JavascriptInterface
