@@ -1,0 +1,24 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activityContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.wackadoo.wackadoo_client.activites.WebviewActivity"
+    tools:ignore="MergeRootFrame">
+
+	<WebView
+    	android:id="@+id/main_webView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/> 
+        
+	<ImageView
+	    android:id="@+id/reloadBtn"
+	    android:layout_width="50dp"
+	    android:layout_height="50dp"
+	    android:layout_alignParentTop="true"
+	    android:layout_alignParentRight="true"
+	    android:paddingBottom="10dp"
+	    android:paddingLeft="10dp"
+	    android:src="@drawable/ic_refresh"/>
+     
+</RelativeLayout>

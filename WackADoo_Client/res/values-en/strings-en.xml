@@ -2,7 +2,7 @@
 <resources>
 
     <!-- General -->
-    <string name="app_name">Wack-A-Doo</string>
+    <string name="app_name">Wackadoo</string>
     <string name="action_settings">Settings</string>
     <string name="done">Done</string>
     <string name="back">Back</string>

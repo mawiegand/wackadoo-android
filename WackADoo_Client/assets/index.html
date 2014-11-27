@@ -8,9 +8,12 @@
 			var countryCode = LoginHandler.getCountryCode();
 			var width = LoginHandler.getWidth();
 			var height = LoginHandler.getHeight();
+			var psioriSessionToken = LoginHandler.getPsioriSessionToken();
+			var psioriInstallToken = LoginHandler.getPsioriInstallToken();
 
-			window.name = "{\"accessToken\":\"" + accessToken + "\"  ,\"expiration\":\"" + expiration + "\",\"locale\":\"" + countryCode + "\",\"playerInvitation\":null,\"allianceInvitation\":null,\"client_id\":\"Bla\",\"width\":\""+width+"\",\"height\":\""+height+"\"}";
-			window.open(hostname+"/client?t=" + userId);
+			window.name = "{\"accessToken\":\"" + accessToken + "\",\"expiration\":\"" + expiration + "\",\"locale\":\"" + countryCode + "\",\"playerInvitation\":null,\"allianceInvitation\":null,\"client_id\":\"Bla\",\"width\":\""+width+"\",\"height\":\""+height+"\",\"platform\":\"android+\",\"session_token\":\""+psioriSessionToken+"\",\"install_token\":\""+psioriInstallToken+"\"}";
+			var rdmString = Math.random().toString(36).substring(1,6);
+			window.open(hostname + "/client?t=" + rdmString);
 		</script>
 	</head>
 	

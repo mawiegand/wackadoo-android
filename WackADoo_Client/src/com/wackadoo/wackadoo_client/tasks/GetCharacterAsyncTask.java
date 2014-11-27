@@ -3,17 +3,23 @@ package com.wackadoo.wackadoo_client.tasks;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpConnectionParams;
+
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.util.Log;
+
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -44,15 +50,17 @@ public class GetCharacterAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	
 	@Override
 	protected Boolean doInBackground(String... params) {
-		if (game.getServer() == null) return false;
+		if (game.getGameHost() == null) return false;
 		Activity parent = (Activity) this.listener;
 		String urlForRequest = String.format(parent.getString(R.string.characterPath), Locale.getDefault().getCountry().toLowerCase(Locale.getDefault()));
-		if (createNew) {
-			urlForRequest += "create_if_new=true";
-		}
-		String completeURL = game.getServer() + "/" + urlForRequest;
 		
-	    StringBuilder sb=new StringBuilder();
+		if (createNew) {
+			urlForRequest += "create_if_new=true&referer=http://play.google.com";
+		} else {
+			urlForRequest += "referer=http://play.google.com";
+		}
+		String completeURL = game.getGameHost() + "/" + urlForRequest;
+	    StringBuilder sb = new StringBuilder();
 	    
 	    try {
 	    	HttpResponse response = StaticHelper.executeRequest(HttpGet.METHOD_NAME, completeURL, null, accessToken);

@@ -2,8 +2,6 @@ package com.wackadoo.wackadoo_client.activites;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -105,6 +103,8 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	public void onResume() {
         super.onResume();
         uiHelper.onResume();
+        
+        // adjust tracking
         Adjust.onResume(this);
         
         // get updated userCredentials
@@ -594,9 +594,18 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
             	progressDialog.show();
                 if (session == Session.getActiveSession()) {
                     if (user != null) {
-                    	userCredentials.setFbPlayerId(user.getId());	
-                    	userCredentials.setEmail(user.getProperty("email").toString());
-                    	userCredentials.getAccessToken().setFbToken(session.getAccessToken());
+                    	try {
+	                    	userCredentials.setEmail(user.getProperty("email").toString());
+	                    	userCredentials.setFbPlayerId(user.getId());	
+	                    	userCredentials.getAccessToken().setFbToken(session.getAccessToken());
+                    	} catch (Exception e) {
+                    		if (progressDialog.isShowing()) {
+                    			progressDialog.dismiss();
+                    		}
+                    		Toast.makeText(MainActivity.this, getString(R.string.error_server_communication), Toast.LENGTH_SHORT)
+                    			 .show();
+                    		return;
+                    	}
                     }
                     // try to connect character with facebook account
                     if (tryConnect) {
@@ -629,15 +638,19 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		}
 	}
 
-	// start webview activity to play game with necessary data
+	// start webview activity with necessary data
 	private void startGame(String accessToken, String expiration, String userId) {
-		Intent intent = new Intent(MainActivity.this, WackadooWebviewActivity.class);
+		soundManager.setContinueMusic(true);
+		
+		Intent intent = new Intent(MainActivity.this, WebviewActivity.class);
 		Bundle bundle = new Bundle();
 		bundle.putString("accessToken", accessToken);
 		bundle.putString("expiration", expiration);
 		bundle.putString("userId", userId);
-		bundle.putString("hostname", userCredentials.getHostname());
+		bundle.putString("hostname", userCredentials.getHtmlHost());
+		bundle.putString("uniqueTrackingToken", userCredentials.getClientCredentials().getDeviceInformation().getUniqueTrackingToken());
 		intent.putExtras(bundle);
+		
 		startActivity(intent);
 		
 		// PSIORI track enter game
@@ -661,9 +674,9 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 			new GetCurrentGamesAsyncTask(this, userCredentials).execute();	
 			progressDialog.show();	
 			
-			String fbId = userCredentials.getFbPlayerId();
-			
+			// sample tracking
 			SampleHelper helper = SampleHelper.getInstance();
+			String fbId = userCredentials.getFbPlayerId();
 			helper.setFacebookId(fbId);
 			helper.setUserId(identifier);
 			helper.track("sign_in", "account", null);
@@ -697,16 +710,19 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 //		games = new ArrayList<GameInformation>();
 //		games.add(new GameInformation());
 //		games.get(0).setDefaultGame(true);
-//		games.get(0).setServer(getString(R.string.basePath));
-//		userCredentials.setHostname(games.get(0).getServer());
+//		games.get(0).setGameHost(getString(R.string.basePath));
+//		games.get(0).setHtmlHost(getString(R.string.basePath));
+//		userCredentials.setHtmlHost(games.get(0).getHtmlHost());
+//		userCredentials.setGameHost(games.get(0).getGameHost());
 //		userCredentials.setGameId(games.get(0).getId());
-//		new GetCharacterAsyncTask(this, userCredentials, games.get(), true).execute();
+//		new GetCharacterAsyncTask(this, userCredentials, games.get(0), true).execute();
 		
 		if (result) {
-			if (userCredentials.getHostname() == "" || !isGameOnline(games, userCredentials.getGameId())) {
+			if (userCredentials.getGameHost() == "" || !isGameOnline(games, userCredentials.getGameId())) {
 				for (int i = 0; i < games.size(); i++) {
 					if (games.get(i).isDefaultGame()) {
-						userCredentials.setHostname(games.get(i).getServer());
+						userCredentials.setGameHost(games.get(i).getGameHost());
+						userCredentials.setHtmlHost(games.get(i).getHtmlHost());
 						userCredentials.setGameId(games.get(i).getId());
 						new GetCharacterAsyncTask(this, userCredentials, games.get(i), true).execute();
 					}

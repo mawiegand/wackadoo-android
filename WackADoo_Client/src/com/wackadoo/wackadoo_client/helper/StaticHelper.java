@@ -58,6 +58,8 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.adjust.sdk.OnFinishedListener;
+import com.adjust.sdk.ResponseData;
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
 
@@ -127,11 +129,11 @@ public class StaticHelper {
 		if (basePath) {	// www  
 			baseUrl = context.getString(R.string.basePath);		
 		} else {		// gs06 
-			baseUrl = userCredentials.getHostname();
+			baseUrl = userCredentials.getGameHost();
 		}
 		
 		String locale = Locale.getDefault().getCountry().toLowerCase();
-		if (!locale.equals("en") && locale.equals("de")) {
+		if (!locale.equals("en") && !locale.equals("de")) {
 			locale = "en";
 		}
 		completeUrl = baseUrl + String.format(urlForRequest, locale);
@@ -161,6 +163,7 @@ public class StaticHelper {
 		HttpConnectionParams.setSoTimeout(httpClient.getParams(), 10*1000); 
 		HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 10*1000); 
 
+		// make sure that just POST/PUT-requests get entity
 		if (request instanceof HttpEntityEnclosingRequestBase) {
 			UrlEncodedFormEntity entity = new UrlEncodedFormEntity(values);
 			entity.setContentType("application/x-www-form-urlencoded;charset=UTF-8");

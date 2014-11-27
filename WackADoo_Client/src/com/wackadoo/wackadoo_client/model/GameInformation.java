@@ -8,7 +8,7 @@ public class GameInformation {
 	
 	private CharacterInformation character;
 	private int id, presentPlayers, maxPlayers;
-	private String name, scope, server;
+	private String name, scope, gameHost, htmlHost;
 	private Date startedAt, endedAt, availableSince;
 	private boolean signupEnabled, signinEnabled;
 	@SerializedName("has_player_joined?") 
@@ -93,11 +93,18 @@ public class GameInformation {
 		this.joined = joined;
 	}
 	
-	public String getServer() {
-		return server;
+	public String getGameHost() {
+		return gameHost;
 	}
-	public void setServer(String server) {
-		this.server = server;
+	public void setGameHost(String gameHost) {
+		this.gameHost = gameHost;
+	}
+	
+	public String getHtmlHost() {
+		return htmlHost;
+	}
+	public void setHtmlHost(String htmlHost) {
+		this.htmlHost = htmlHost;
 	}
 	
 	public boolean isDefaultGame() {

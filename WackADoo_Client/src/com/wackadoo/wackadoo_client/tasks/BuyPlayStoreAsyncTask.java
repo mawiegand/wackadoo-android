@@ -51,7 +51,7 @@ public class BuyPlayStoreAsyncTask extends AsyncTask<String, Integer, Integer> {
 		    if(responseLine.contains("200 OK")) {
 		    	return 200; 
 		    	
-		    // not enough credits
+		    // product already validated by server 
 		    } else if(responseLine.contains("403 Forbidden")) { 
 		    	return 403; 
 		    	

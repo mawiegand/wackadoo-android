@@ -1,13 +1,18 @@
 package com.wackadoo.wackadoo_client.helper;
 
 import com.adjust.sdk.Adjust;
+import com.adjust.sdk.OnFinishedListener;
+import com.adjust.sdk.ResponseData;
+
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.Toast;
 
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.activites.MainActivity;
+import com.wackadoo.wackadoo_client.model.UserCredentials;
 
 // custom activity subclass, to handle background music
 public class WackadooActivity extends Activity {
@@ -32,6 +37,8 @@ public class WackadooActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		
+		// adjust tracking
 		Adjust.onResume(this);
 		
 		// continue music, if its not currently playing

@@ -500,9 +500,6 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 			// remove credit fragment and shop shop again
 			getFragmentManager().popBackStack();		
 		
-			// Adjust.io tracking (= purchase)
-			Log.d(TAG, "order Id " + purchase.getOrderId() + " | revenue " + billingHelper.getRevenue(purchase.getSku()));
-			
 			// adjust.io track revenue
 			Adjust.trackRevenue(billingHelper.getRevenue(purchase.getSku()));
 			

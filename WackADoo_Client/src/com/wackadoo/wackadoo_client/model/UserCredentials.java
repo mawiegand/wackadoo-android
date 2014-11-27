@@ -13,8 +13,7 @@ public class UserCredentials {
 	private Context context;
 	private int gameId;
 	private boolean isFbUser;
-	private String username, password, fbPlayerId, accountId, email, hostname, avatarString;
-//	private String username, password, fbPlayerId, fbAccessToken, accountId, email, hostname, avatarString;
+	private String username, password, fbPlayerId, accountId, email, gameHost, htmlHost, avatarString;
 	private Date premiumExpiration;
 	private AccessToken accessToken;
 	private ClientCredentials clientCredentials;
@@ -89,7 +88,6 @@ public class UserCredentials {
 		accessToken.setCreatedAt(new Date(myPrefs.getLong("created_at", 13)));
 		accessToken.setExpireCode(myPrefs.getString("expire_code", ""));
 		accessToken.setFbToken(myPrefs.getString("fb_token", ""));
-//		fbAccessToken = myPrefs.getString("fb_access_token", "");
 		fbPlayerId = myPrefs.getString("fb_player_id", "");
 		isFbUser = myPrefs.getBoolean("is_fb_user", false);
 		accountId = myPrefs.getString("account_id", "");
@@ -98,7 +96,8 @@ public class UserCredentials {
 		password = myPrefs.getString("password", "");
 		generatedPassword = myPrefs.getBoolean("generatedPassword", true);
 		generatedEmail = myPrefs.getBoolean("generatedEmail", true);
-		hostname = myPrefs.getString("hostname", "");
+		gameHost = myPrefs.getString("gameHost", "");
+		htmlHost = myPrefs.getString("htmlHost", "");
 		gameId = myPrefs.getInt("gameId", 0);
 		premiumExpiration = new Date();
 		premiumExpiration.setTime(myPrefs.getLong("premiumExpiration", 0));
@@ -113,7 +112,6 @@ public class UserCredentials {
 		e.putString("expire_code", accessToken.getExpireCode());
 		e.putString("fb_token", accessToken.getFbToken());
 		e.putString("fb_player_id", fbPlayerId);
-//		e.putString("fb_access_token", fbAccessToken);
 		e.putBoolean("is_fb_user", isFbUser);
 		e.putString("account_id", accountId);
 		e.putString("username", username);
@@ -121,7 +119,8 @@ public class UserCredentials {
 		e.putString("password", password);
 		e.putBoolean("generatedPassword", generatedPassword);
 		e.putBoolean("generatedEmail", generatedEmail);
-		e.putString("hostname", hostname);
+		e.putString("gameHost", gameHost);
+		e.putString("htmlHost", htmlHost);
 		e.putInt("gameId", gameId);
 		if (premiumExpiration != null) {
 			e.putLong("premiumExpiration", premiumExpiration.getTime());
@@ -130,13 +129,6 @@ public class UserCredentials {
 		e.commit();
 	}
 
-	public String getHostname() {
-		return hostname;
-	}
-	public void setHostname(String hostname) {
-		this.hostname = hostname;
-		persistCredentials();
-	}
 
 	public int getGameId() {
 		return gameId;
@@ -154,14 +146,6 @@ public class UserCredentials {
 		persistCredentials();
 	}
 	
-//	public String getFbAccessToken() {
-//		return fbAccessToken;
-//	}
-//	public void setFbAccessToken(String fbAccessToken) {
-//		this.fbAccessToken = fbAccessToken;
-//		persistCredentials();
-//	}
-
 	public boolean isFbUser() {
 		return isFbUser;
 	}
@@ -212,6 +196,7 @@ public class UserCredentials {
 	}
 	public void setGeneratedEmail(boolean generatedEmail) {
 		this.generatedEmail = generatedEmail;
+		persistCredentials();
 	}
 
 	public boolean isGeneratedPassword() {
@@ -226,6 +211,26 @@ public class UserCredentials {
 		SharedPreferences.Editor e = myPrefs.edit();
 		e.clear();
 		e.commit();
+	}
+
+	
+	public String getGameHost() {
+		return gameHost;
+	}
+
+	public void setGameHost(String gameHost) {
+		this.gameHost = gameHost;
+		persistCredentials();
+	}
+	
+
+	public String getHtmlHost() {
+		return htmlHost;
+	}
+
+	public void setHtmlHost(String htmlHost) {
+		this.htmlHost = htmlHost;
+		persistCredentials();
 	}
 }
 

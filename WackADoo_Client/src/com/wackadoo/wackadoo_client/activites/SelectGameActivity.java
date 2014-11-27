@@ -108,7 +108,8 @@ public class SelectGameActivity extends WackadooActivity implements CurrentGames
 				// join world	
 				} else {
 					userCredentials.setGameId(clickedGame.getId());
-					userCredentials.setHostname(clickedGame.getServer());
+					userCredentials.setGameHost(clickedGame.getGameHost());
+					userCredentials.setHtmlHost(clickedGame.getHtmlHost());
 					if (clickedGame.isJoined()) {
 						toast.setText(getResources().getString(R.string.selectgame_game_login) + clickedGame.getName());
 						soundManager.setContinueMusic(true);

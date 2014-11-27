@@ -3,18 +3,24 @@ package com.wackadoo.wackadoo_client.javascriptinterfaces;
 import java.util.Arrays;
 import java.util.Locale;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
+
+import com.wackadoo.wackadoo_client.activites.ShopActivity;
+import com.wackadoo.wackadoo_client.model.UserCredentials;
 
 public class LoginJavaScriptHandler {
 
 	private Context context;
-	private String accessToken, expiration, userId, hostname, country;
+	private String accessToken, expiration, userId, hostname, country, psioriSessionToken, psioriInstallToken;
 	private String[] serverSupportedLanguageCodes = {"en","de"};
 	private int width, height;
 	
-	public LoginJavaScriptHandler (Context context, String accessToken, String expiration, String userId, String hostname, int width, int height) {
+	public LoginJavaScriptHandler (Context context, String accessToken, String expiration, String userId, String hostname, int width, int height, String psioriSessionToken, String psioriInstallToken) {
     	this.context = context;
 		this.accessToken = accessToken;
     	this.expiration = expiration;
@@ -23,6 +29,8 @@ public class LoginJavaScriptHandler {
     	this.country = getCountry();
     	this.width = width;
     	this.height = height;
+    	this.psioriSessionToken = psioriSessionToken;
+    	this.psioriInstallToken = psioriInstallToken;
     }
     
 	private String getCountry() {
@@ -70,19 +78,36 @@ public class LoginJavaScriptHandler {
 		return width;
 	}
 
-
 	@JavascriptInterface
-
 	public int getHeight() {
 		return height;
 	}
 
-
+	@JavascriptInterface
+	public String getPsioriSessionToken() {
+		return psioriSessionToken;
+	}
+	
+	@JavascriptInterface
+	public String getPsioriInstallToken() {
+		return psioriInstallToken;
+	}
 
 	@JavascriptInterface
-	public void doEchoTest(String echo){
+	public void doEchoTest(String echo) {
 	        Toast toast = Toast.makeText(context, echo, Toast.LENGTH_SHORT);
 	        toast.show();
-	    }
-
+	}
+	
+	@JavascriptInterface
+	public void logout() {
+		((Activity) context).finish();
+		new UserCredentials(context).clearAllCredentials();
+	}
+	
+	@JavascriptInterface
+	public void openShop() {
+		Intent intent = new Intent(context, ShopActivity.class);
+		((Activity) context).startActivity(intent);
+	}
 }

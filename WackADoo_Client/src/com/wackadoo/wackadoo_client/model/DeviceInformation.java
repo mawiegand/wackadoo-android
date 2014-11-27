@@ -2,35 +2,36 @@ package com.wackadoo.wackadoo_client.model;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 public class DeviceInformation {
 	
 	private String os, bundleVersion, bundleBuild, hardware, uniqueTrackingToken;
-	private int platformId;
 	private Context context;
 	
 	public DeviceInformation(Context context) {
 		this.context = context;
-		this.loadAppToken();
-		this.collectDeviceInformation();
+		loadAppToken();
+		collectDeviceInformation();
 	}
 	
 	private void loadAppToken() {
 		SharedPreferences myPrefs = context.getSharedPreferences("myPrefs", 0);
-		this.uniqueTrackingToken = myPrefs.getString("uniquetrackingtoken", "");
-		if (this.uniqueTrackingToken.length() <= 0)
-		{
-			this.createAppToken();
-			this.saveAppToken();
+		uniqueTrackingToken = myPrefs.getString("uniquetrackingtoken", "");
+		if (uniqueTrackingToken.length() <= 0) {
+			createAppToken();
+			saveAppToken();
 		}
 	}
 	@SuppressLint("TrulyRandom")
 	private void createAppToken() {
 		SecureRandom random = new SecureRandom();
-		this.uniqueTrackingToken = new BigInteger(80, random).toString(16);
+		uniqueTrackingToken = new BigInteger(80, random).toString(16);
+		Log.i("CREATE TOKEN", "unique: " + uniqueTrackingToken);
 	}
 	private void saveAppToken() {
 		SharedPreferences myPrefs = context.getSharedPreferences("myPrefs", 0);
@@ -40,10 +41,10 @@ public class DeviceInformation {
 	}
 	
 	private void collectDeviceInformation() { 
-		this.bundleVersion = android.os.Build.VERSION.RELEASE;
-		this.os = "Android" + this.bundleVersion;
-		this.bundleBuild = android.os.Build.FINGERPRINT.toString();
-		this.hardware = android.os.Build.MANUFACTURER + " " + android.os.Build.MODEL;
+		bundleVersion = android.os.Build.VERSION.RELEASE;
+		os = "Android " + this.bundleVersion;
+		bundleBuild = android.os.Build.FINGERPRINT.toString();
+		hardware = android.os.Build.MANUFACTURER + " " + android.os.Build.MODEL;
 	}
 	
 	public String getOs() {
@@ -65,5 +66,4 @@ public class DeviceInformation {
 	public String getUniqueTrackingToken() {
 		return uniqueTrackingToken;
 	}
-
 }

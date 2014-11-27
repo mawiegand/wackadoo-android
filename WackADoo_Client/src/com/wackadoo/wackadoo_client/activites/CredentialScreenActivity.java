@@ -1,5 +1,7 @@
 package com.wackadoo.wackadoo_client.activites;
 
+import java.util.Arrays;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,10 +19,10 @@ import com.facebook.Session;
 import com.facebook.Session.StatusCallback;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
+import com.facebook.widget.LoginButton;
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.analytics.SampleHelper;
 import com.wackadoo.wackadoo_client.helper.CustomProgressDialog;
-import com.wackadoo.wackadoo_client.helper.SoundManager;
 import com.wackadoo.wackadoo_client.helper.StaticHelper;
 import com.wackadoo.wackadoo_client.helper.WackadooActivity;
 import com.wackadoo.wackadoo_client.interfaces.CreateAccountCallbackInterface;
@@ -51,6 +53,7 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 		//facebook lifecycleHelper to keep track of the session
 		uiHelper = new UiLifecycleHelper(this, this);
 		uiHelper.onCreate(savedInstanceState);
+		((LoginButton) findViewById(R.id.facebookButton)).setReadPermissions(Arrays.asList("email"));
 
 	    setUpUi();
 	    setUpButtons();
