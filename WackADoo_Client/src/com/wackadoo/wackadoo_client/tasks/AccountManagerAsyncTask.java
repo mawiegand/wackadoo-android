@@ -66,7 +66,7 @@ public class AccountManagerAsyncTask extends AsyncTask<String, Integer, Integer>
 		} else {
 			completeURL = StaticHelper.generateUrlForTask(parent, false, parent.getString(R.string.changePasswordPath), userCredentials);
 			method = HttpPost.METHOD_NAME;
-			Log.d(TAG, "***** change password from '" + userCredentials.getPassword() + "' to '" + value + "'");
+			Log.d(TAG, "change password from '" + userCredentials.getPassword() + "' to '" + value + "'");
 			nameValuePairs.add(new BasicNameValuePair("character[password]", value));	
 		}
 
@@ -76,7 +76,10 @@ public class AccountManagerAsyncTask extends AsyncTask<String, Integer, Integer>
 			HttpResponse response = StaticHelper.executeRequest(method, completeURL, nameValuePairs, userCredentials.getAccessToken().getToken());
 		
 		    String responseLine = response.getStatusLine().toString();
-		    Log.d(TAG, "response line: " + responseLine);
+		    
+		    if (StaticHelper.debugEnabled) {
+		    	Log.d(TAG, "responseline: " + responseLine);
+		    }
 		    
 		    if (responseLine.contains("200 OK")) {
 		    	InputStream in = response.getEntity().getContent();
@@ -86,7 +89,6 @@ public class AccountManagerAsyncTask extends AsyncTask<String, Integer, Integer>
 		    		sb.append(line);
 		    	}
 		    	jsonResponse = new JSONObject(sb.toString());
-		    	Log.d(TAG, "Account Manager Response: " + jsonResponse);
 		    	return 200;
 		    
 		    } else if (responseLine.contains("403 Forbidden")) {

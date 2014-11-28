@@ -65,7 +65,6 @@ public class FacebookLoginAsyncTask extends AsyncTask<String, Integer, ResponseR
     		nameValuePairs.add(new BasicNameValuePair("[device_information][device_token]", deviceInformation.getUniqueTrackingToken()));
     		nameValuePairs.add(new BasicNameValuePair("vendor_token", deviceInformation.getUniqueTrackingToken()));
     		
-			Log.d(TAG, "---> Facebook request for " + userCredentials.getEmail() + " | " + userCredentials.getFbPlayerId());
 			HttpResponse response = StaticHelper.executeRequest(HttpPost.METHOD_NAME, url, nameValuePairs, userCredentials.getAccessToken().getToken());
 			
 			// validate response
@@ -78,8 +77,11 @@ public class FacebookLoginAsyncTask extends AsyncTask<String, Integer, ResponseR
 			}
 			
 			statusLine = String.valueOf(response.getStatusLine());
-			Log.d(TAG, "---> Facebook responseline: " + response.getStatusLine());
-			Log.d(TAG, "---> json response: " + sb.toString());
+			
+			if (StaticHelper.debugEnabled) {
+				Log.d(TAG, "request for " + userCredentials.getEmail() + " | " + userCredentials.getFbPlayerId());
+				Log.d(TAG, "responseline: " + response.getStatusLine());
+			}
 			return new ResponseResult(StaticHelper.FB_LOGIN_TASK, true, statusLine, sb.toString());
 				
     	} catch (Exception e) {

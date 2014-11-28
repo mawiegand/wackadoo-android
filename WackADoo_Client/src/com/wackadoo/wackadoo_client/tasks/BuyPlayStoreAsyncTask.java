@@ -46,7 +46,10 @@ public class BuyPlayStoreAsyncTask extends AsyncTask<String, Integer, Integer> {
 			HttpResponse response = StaticHelper.executeRequest(HttpPost.METHOD_NAME, completeURL, nameValuePairs, userCredentials.getAccessToken().getToken());
 		    
 		    String responseLine = response.getStatusLine().toString();
-		    Log.d(TAG, "response line: " + responseLine);
+		    
+		    if (StaticHelper.debugEnabled) {
+		    	Log.d(TAG, "responseline: " + responseLine);
+		    }
 		    
 		    if(responseLine.contains("200 OK")) {
 		    	return 200; 

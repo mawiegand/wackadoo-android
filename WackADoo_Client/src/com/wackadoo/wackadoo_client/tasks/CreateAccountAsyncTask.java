@@ -49,7 +49,6 @@ public class CreateAccountAsyncTask extends AsyncTask<String, Integer, Boolean> 
 		nameValuePairs.add(new BasicNameValuePair("password_confirmation", "egjzdsgt"));
 
 		try {
-			Log.d(TAG, "Create Account Request");
 			HttpResponse response = StaticHelper.executeRequest(HttpPost.METHOD_NAME, completeURL, nameValuePairs, null);
 		
 		    InputStream in = response.getEntity().getContent();
@@ -60,7 +59,10 @@ public class CreateAccountAsyncTask extends AsyncTask<String, Integer, Boolean> 
 		    }
 		    
 		    jsonResponse = new JSONObject(sb.toString());
-		    Log.d(TAG, "Create Account Response:" + jsonResponse);
+		    
+		    if (StaticHelper.debugEnabled) {
+		    	Log.d(TAG, "response:" + jsonResponse);
+		    }
 		    return true;
 			
 		} catch (Exception e) {

@@ -48,7 +48,6 @@ public class GetAccountAsyncTask extends AsyncTask<String, Integer, Boolean> {
 		StringBuilder sb = new StringBuilder();
 		
 		try {	    
-		    Log.d(TAG, "Get Account Request");
 		    HttpResponse response = StaticHelper.executeRequest(HttpGet.METHOD_NAME, completeURL, null, accessToken);
 		
 		    InputStream in = response.getEntity().getContent();
@@ -59,7 +58,10 @@ public class GetAccountAsyncTask extends AsyncTask<String, Integer, Boolean> {
 		    }
 		    
 		    jsonResponse = new JSONObject(sb.toString());
-		    Log.d(TAG, "Get Account Response:" + jsonResponse);
+		    
+		    if (StaticHelper.debugEnabled) {
+		    	Log.d(TAG, "response:" + jsonResponse);
+		    }
 		    return true;
 			
 		} catch (Exception e) {

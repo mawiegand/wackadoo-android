@@ -56,7 +56,9 @@ public class GetCurrentGamesAsyncTask extends AsyncTask<String, Integer, Boolean
 		    while ((line = reader.readLine()) != null) {
 		        sb.append(line);
 		    }
-		    Log.d(TAG, "games response: " + sb.toString());
+		    if (StaticHelper.debugEnabled) {
+		    	Log.d(TAG, "response: " + sb.toString());
+		    }
 		    
 		    // get the game information objects from the string with gson
 	 	    Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();

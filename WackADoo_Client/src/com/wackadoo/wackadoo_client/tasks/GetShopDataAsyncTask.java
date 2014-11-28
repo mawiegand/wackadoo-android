@@ -78,7 +78,9 @@ public class GetShopDataAsyncTask extends AsyncTask<String, Integer, Boolean> {
 		    while((line = reader.readLine()) != null){
 		        sb.append(line);
 		    }
-		    Log.d(TAG, "response: " + sb);
+		    if (StaticHelper.debugEnabled) {
+		    	Log.d(TAG, "response: " + sb);
+		    }
 		    
 		    // product asynctask
  			if(offerType < 5) {

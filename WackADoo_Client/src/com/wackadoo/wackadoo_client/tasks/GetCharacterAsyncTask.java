@@ -72,8 +72,10 @@ public class GetCharacterAsyncTask extends AsyncTask<String, Integer, Boolean> {
 		    while((line = reader.readLine()) != null) {
 		        sb.append(line);
 		    }
-		    Log.d(TAG, "character response: " + sb.toString());
-		  		    
+		    if (StaticHelper.debugEnabled) {
+		    	Log.d(TAG, "response: " + sb.toString());
+		    }
+		    
 		    //Get the character information object from the string with gson
 	 	    Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
 	 	    character = gson.fromJson(sb.toString(), CharacterInformation.class);

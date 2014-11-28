@@ -81,10 +81,13 @@ public class FacebookAccountAsyncTask extends AsyncTask<String, Integer, Respons
 			}
 			
 			statusLine = String.valueOf(response.getStatusLine());
-			Log.d(TAG, "---> Facebook responseline: " + response.getStatusLine());
+			
+			if (StaticHelper.debugEnabled) {
+				Log.d(TAG, "responseline: " + response.getStatusLine());
+			}
+			
 			try {
 				JSONObject jsonResponse = new JSONObject(sb.toString());
-				Log.d(TAG, "---> json response: " + jsonResponse);
 			} catch (JSONException e) {}
 			return new ResponseResult(type, true, statusLine);
 			

@@ -32,7 +32,9 @@ public class CustomIabHelper extends IabHelper implements QueryInventoryFinished
 		startSetup(new IabHelper.OnIabSetupFinishedListener() {
 			public void onIabSetupFinished(IabResult result) {
 				if (!result.isSuccess()) {
-					Log.d(TAG, "Error: " + result.getMessage());
+					if (StaticHelper.debugEnabled) {
+						Log.d(TAG, "error: " + result.getMessage());
+					}
 					return;
 				}
 				// error handling: get purchased items, if consumption was not successful when shop was used the last time
@@ -79,7 +81,7 @@ public class CustomIabHelper extends IabHelper implements QueryInventoryFinished
     	skuList.add("platinum_credits_250");		// product id of 250 credits product
     	skuList.add("platinum_credits_600");		// product id of 600 credits product
     	skuList.add("platinum_credits_1600");		// product id of 1600 credits product
-    	skuList.add("platinum_credits_4000");		// product id of 4000 credits product
+//    	skuList.add("platinum_credits_4000");		// product id of 4000 credits product
     	return skuList;
     }
 

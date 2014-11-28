@@ -3,7 +3,10 @@
     <string name="playstorePublicKey">MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAiCkHBa4e6dXarsF+jHJRxY6VYnwFaq4ITesm1WK8sp8Lrr+XNMxaxCGWInQO8ZPmwfgR/wK+w5J9KqQN/X7RsTyGWoAtGfFn9duFI65UsAU5hkybaCFc2Sw2H3e735scEPDLE3ZNK/0zFTBM2MZVJp759oOqm+4rKsS0U3sTmJAUBA7bSyK3Xux6KSnR0E7QloR3qs7tYG5icCnU9jYaNj0G9T+KYX9Ck4Gn7ko76n5ziz25tN0kI2WMW5b4O90JCS1AiouVr15bYKTQyNGAkYfkkItSnZMfN5WHYZXZfOOpKoT4Y/UyTff7QvT6hJ05PAgDOgRE9RXdS5o0Z8IQPQIDAQAB</string>
     <string name="facebookAppId">127037377498922</string>
     
+    <!-- Server for live and local testings -->
 	<string name="basePath">https://wack-a-doo.de</string>    
+	<string name="localTestPath">https://192.168.178.22</string>  
+	  
     <!-- Create Account -->
     <string name="createAccountPath">/identity_provider/%s/identities</string>
     <!-- Get Account -->

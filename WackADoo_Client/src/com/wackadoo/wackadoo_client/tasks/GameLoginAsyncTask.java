@@ -67,7 +67,8 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	    }
 	    
 	    List <NameValuePair> nameValuePairs = new ArrayList <NameValuePair>();
-		nameValuePairs.add(new BasicNameValuePair("client_id", "WACKADOO-ANDROID"));
+		nameValuePairs.add(new BasicNameValuePair("client_id", "WACKADOO-IOS"));
+//		nameValuePairs.add(new BasicNameValuePair("client_id", "WACKADOO-ANDROID"));
 		nameValuePairs.add(new BasicNameValuePair("client_password", "5d"));
 		nameValuePairs.add(new BasicNameValuePair("grant_type", "password"));
 		nameValuePairs.add(new BasicNameValuePair("scope", "5dentity payment"));
@@ -95,12 +96,13 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
 		nameValuePairs.add(new BasicNameValuePair("[device_information][vendor_token]", deviceInformation.getUniqueTrackingToken())); 
 		nameValuePairs.add(new BasicNameValuePair("[device_information][advertiser_token]", deviceInformation.getUniqueTrackingToken())); 	// adjust trackerToken
 		
-		for (NameValuePair nvp : nameValuePairs) {
-			Log.i(TAG, nvp.getName() + ": " + nvp.getValue());
+		if (StaticHelper.debugEnabled) {
+			for (NameValuePair nvp : nameValuePairs) {
+				Log.d(TAG, nvp.getName() + ": " + nvp.getValue());
+			}
 		}
 		
 		try {
-			Log.d(TAG, "Login Request for " + username + " and pw " + password);
 			HttpResponse response = StaticHelper.executeRequest(HttpPost.METHOD_NAME, completeURL, nameValuePairs, null);
 
 			InputStream in = response.getEntity().getContent();
@@ -112,7 +114,11 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
 			}
 			
 			jsonResponse = new JSONObject(sb.toString());
-			Log.d(TAG, "Login Response:" + jsonResponse);
+			
+			if (StaticHelper.debugEnabled) {
+				Log.d(TAG, "request for " + username + " and pw " + password);
+				Log.d(TAG, "response:" + jsonResponse);
+			}
 			
 			if (jsonResponse.has("error")) {
 				return false;

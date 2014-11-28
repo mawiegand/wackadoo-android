@@ -69,6 +69,9 @@ public class StaticHelper {
 	public static final String FB_ID_TASK = "facebook_id_task";
 	public static final String FB_CONNECT_TASK = "facebook_connect_task";
 	public static final String FB_LOGIN_TASK = "facebook_login_task";
+	
+	public static boolean debugEnabled = false;			// true = all debuging is enabled; if false no debug messages will be shown
+	public static boolean localTest = false;			// true = test on local server, if false the live server is used
 
 	// workaround for dynamic height of the ListView. fixes issue of not showing every item in listviews when in a scrollview 
 	public static void setListViewHeightBasedOnChildren(ListView listView) {
@@ -116,7 +119,9 @@ public class StaticHelper {
 			InetAddress.getAllByName(hostname);
 			return true;
 		} catch(Exception e) {
-			Log.d("Server", "Host " + hostname + " is not available");
+			if (StaticHelper.debugEnabled) {
+				Log.d("Server", "Host " + hostname + " is not available");
+			}
 			e.printStackTrace();
 			return false;
 		}		
@@ -127,7 +132,12 @@ public class StaticHelper {
 		String baseUrl = "", completeUrl = ""; 
 		
 		if (basePath) {	// www  
-			baseUrl = context.getString(R.string.basePath);		
+			if (StaticHelper.localTest) {
+				baseUrl = context.getString(R.string.localTestPath);		
+				
+			} else {
+				baseUrl = context.getString(R.string.basePath);		
+			}
 		} else {		// gs06 
 			baseUrl = userCredentials.getGameHost();
 		}
@@ -141,7 +151,9 @@ public class StaticHelper {
 	}
 	
 	public static HttpResponse executeRequest(String method, String url, List<NameValuePair> values, String accessToken) throws ClientProtocolException, IOException {
-		Log.d(TAG, "completeURL: " + url);
+		if (StaticHelper.debugEnabled) {
+			Log.d(TAG, "completeURL: " + url);
+		}
 		HttpResponse response = null;
 		HttpRequestBase request = null;
 		if (method.equals(HttpGet.METHOD_NAME)) {
@@ -159,8 +171,12 @@ public class StaticHelper {
 		}
 		request.setHeader("Accept", "application/json");
 
-//		DefaultHttpClient httpClient = getNewHttpClient();
-		DefaultHttpClient httpClient = new DefaultHttpClient();
+		DefaultHttpClient httpClient;
+		if (StaticHelper.localTest) {
+			httpClient = getNewHttpClient();
+		} else {
+			httpClient = new DefaultHttpClient();
+		}
 		HttpConnectionParams.setSoTimeout(httpClient.getParams(), 10*1000); 
 		HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 10*1000); 
 
@@ -170,12 +186,11 @@ public class StaticHelper {
 			entity.setContentType("application/x-www-form-urlencoded;charset=UTF-8");
 			((HttpEntityEnclosingRequestBase) request).setEntity(entity);  
 		}
-
 		response = httpClient.execute(request);		
 		return response;
 	}
 	
-	//TODO Remove before publish
+	// used for testing on local server
 	public static class MySSLSocketFactory extends SSLSocketFactory {
 	    SSLContext sslContext = SSLContext.getInstance("TLS");
 
@@ -208,7 +223,7 @@ public class StaticHelper {
 	    }
 	}
 	
-	//TODO Remove before publish
+	// used for testing on local server
 	public static DefaultHttpClient getNewHttpClient() {
 	    try {
 	        KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());

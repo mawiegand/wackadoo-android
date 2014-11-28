@@ -201,7 +201,6 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	//  thread for automatic token refresh
 	private Runnable updateTokenThread = new Runnable() {
 		public void run() {	
-			Log.d(TAG, "Token Thread");
 			if (userCredentials.getAccessToken().isExpired() && 
 					(userCredentials.getUsername().length() > 0 || userCredentials.getEmail().length() > 0)) {
 				new GameLoginAsyncTask(MainActivity.this, userCredentials, false, true).execute();
@@ -617,7 +616,9 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
                     }
                 }
                 if (response.getError() != null) {
-                	Log.d(TAG, "response error: " + response.getError().toString());
+                	if (StaticHelper.debugEnabled) {
+                		Log.d(TAG, "facebook fetchData error: " + response.getError().toString());
+                	}
                 }
             }
         });
@@ -706,16 +707,17 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	// callback interface for GetCurrentGamesAsyncTask
 	@Override
 	public void getCurrentGamesCallback(boolean result, ArrayList<GameInformation> games) {
-		// TODO: remove before release
-//		games = new ArrayList<GameInformation>();
-//		games.add(new GameInformation());
-//		games.get(0).setDefaultGame(true);
-//		games.get(0).setGameHost(getString(R.string.basePath));
-//		games.get(0).setHtmlHost(getString(R.string.basePath));
-//		userCredentials.setHtmlHost(games.get(0).getHtmlHost());
-//		userCredentials.setGameHost(games.get(0).getGameHost());
-//		userCredentials.setGameId(games.get(0).getId());
-//		new GetCharacterAsyncTask(this, userCredentials, games.get(0), true).execute();
+		if (StaticHelper.localTest) {
+			games = new ArrayList<GameInformation>();
+			games.add(new GameInformation());
+			games.get(0).setDefaultGame(true);
+			games.get(0).setGameHost(getString(R.string.localTestPath));
+			games.get(0).setHtmlHost(getString(R.string.localTestPath));
+			userCredentials.setHtmlHost(games.get(0).getHtmlHost());
+			userCredentials.setGameHost(games.get(0).getGameHost());
+			userCredentials.setGameId(games.get(0).getId());
+			new GetCharacterAsyncTask(this, userCredentials, games.get(0), true).execute();
+		}
 		
 		if (result) {
 			if (userCredentials.getGameHost() == "" || !isGameOnline(games, userCredentials.getGameId())) {
@@ -810,23 +812,33 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 				switch (responseCode) {
 					case 200:
 					case 304: 
-						Log.d(TAG, "FACEBOOK ID - FOUND" + responseCode); 
+						if (StaticHelper.debugEnabled) {
+							Log.d(TAG, "FACEBOOK ID - FOUND" + responseCode); 
+						}
 						new FacebookLoginAsyncTask(this, userCredentials).execute();
 						break;
 						
 					case 404:
-						Log.d(TAG, "FACEBOOK ID - FREE TO USE" + responseCode);
+						if (StaticHelper.debugEnabled) {
+							Log.d(TAG, "FACEBOOK ID - FREE TO USE" + responseCode);
+						}
 						new FacebookLoginAsyncTask(this, userCredentials).execute();
 						break;
 						
-					default: Log.d(TAG, "FACEBOOK ID - ERROR CODE: " + responseCode); progressDialog.dismiss(); break;
+					default: 
+						if (StaticHelper.debugEnabled) {
+							Log.d(TAG, "FACEBOOK ID - ERROR CODE: " + responseCode); progressDialog.dismiss();
+							break;
+						}
 				}
 				
 			// if attempt to connect facebook account to character
 			} else if (type.equals(StaticHelper.FB_CONNECT_TASK)) {
 				tryConnect = false;
 				if (responseCode == 200) {
-					Log.d(TAG, "FACEBOOK CONNECT - SUCCESS" + responseCode);
+					if (StaticHelper.debugEnabled) {
+						Log.d(TAG, "FACEBOOK CONNECT - SUCCESS" + responseCode);
+					}
 					new FacebookLoginAsyncTask(this, userCredentials).execute();
 					
 				} else {

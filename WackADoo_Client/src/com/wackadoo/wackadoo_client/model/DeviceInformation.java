@@ -31,7 +31,6 @@ public class DeviceInformation {
 	private void createAppToken() {
 		SecureRandom random = new SecureRandom();
 		uniqueTrackingToken = new BigInteger(80, random).toString(16);
-		Log.i("CREATE TOKEN", "unique: " + uniqueTrackingToken);
 	}
 	private void saveAppToken() {
 		SharedPreferences myPrefs = context.getSharedPreferences("myPrefs", 0);

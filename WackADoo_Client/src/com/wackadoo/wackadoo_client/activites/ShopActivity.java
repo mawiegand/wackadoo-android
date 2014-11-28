@@ -3,9 +3,7 @@ package com.wackadoo.wackadoo_client.activites;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -246,7 +244,7 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 											new BuyShopOfferAsyncTask(
 													ShopActivity.this,
 													userCredentials, offerId,
-													shopCharacterId, "special")
+													shopCharacterId, "special_offer")
 													.execute();
 											return true;
 										}
@@ -522,7 +520,9 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 		String base64PublicKey = getResources().getString(R.string.playstorePublicKey); 	
 		billingHelper = new CustomIabHelper(this, base64PublicKey);
 		
-//		billingHelper.enableDebugLogging(true);		// TODO: remove before publishing
+		if (StaticHelper.debugEnabled) {
+			billingHelper.enableDebugLogging(true);		
+		} 
 		billingHelper.startUp();
 	}
 	
@@ -545,7 +545,10 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 			if (progressDialog.isShowing()) {
 				progressDialog.dismiss();
 			}
-			Log.d(TAG, "skuDetails: " + skuDetails.toString());
+			
+			if (StaticHelper.debugEnabled) {
+				Log.d(TAG, "products skuDetails: " + skuDetails.toString());
+			}
 			
 			stringProductList = skuDetails.getStringArrayList("DETAILS_LIST");
 			
@@ -603,7 +606,9 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 	// play store: callback interface for consume finished
 	@Override
 	public void onConsumeFinished(Purchase purchase, IabResult result) {
-		Log.d(TAG, "Play Store product consumed -> purchase successful");
-	}
+		if (StaticHelper.debugEnabled) {
+			Log.d(TAG, "Play Store product consumed -> purchase successful");
+		}
+	}		
 
 }
