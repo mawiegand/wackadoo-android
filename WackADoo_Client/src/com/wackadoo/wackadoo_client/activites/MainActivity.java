@@ -171,7 +171,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	    selectGameBtn = (ImageButton) findViewById(R.id.chooseworldButton);
 	    shopBtn = (ImageButton) findViewById(R.id.shopButton);
 	    facebookBtn = (ImageButton) findViewById(R.id.facebookButton);
-	    soundBtn = (ImageButton) findViewById(com.wackadoo.wackadoo_client.R.id.title_sound_button);
+	    soundBtn = (ImageButton) findViewById(R.id.title_sound_button);
 	    infoBtn = (ImageButton) findViewById(R.id.title_info_button);
 	    characterFrame = (Button) findViewById(R.id.characterFrame);
 	    
