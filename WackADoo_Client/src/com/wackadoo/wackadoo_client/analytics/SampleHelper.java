@@ -239,9 +239,7 @@ public class SampleHelper {
 	}
 
 	public void setPlatform(String platform) {
-		if (platform == null || platform.length() > 0) {
-			this.platform = platform;
-		}
+		this.platform = platform;
 	}
 
 	public String getFacebookId() {
@@ -249,9 +247,7 @@ public class SampleHelper {
 	}
 
 	public void setFacebookId(String facebookId) {
-		if (facebookId == null || facebookId.length() > 0) {
-			this.facebookId = facebookId;
-		}
+		this.facebookId = facebookId;
 	}
 
 	public String getSessionToken() {
@@ -275,9 +271,7 @@ public class SampleHelper {
 	}
 
 	public void setAppToken(String appToken) {
-		if (appToken == null || appToken.length() > 0) {
-			this.appToken = appToken;
-		}
+		this.appToken = appToken;
 	}
 
 	public boolean isDebug() {
@@ -293,9 +287,7 @@ public class SampleHelper {
 	}
 
 	public void setClient(String client) {
-		if (client == null || client.length() > 0) {
-			this.client = client;
-		}
+		this.client = client;
 	}
 
 	public String getClientVersion() {
@@ -303,9 +295,7 @@ public class SampleHelper {
 	}
 
 	public void setClientVersion(String clientVersion) {
-		if (clientVersion == null || clientVersion.length() > 0) {
-			this.clientVersion = clientVersion;
-		}
+		this.clientVersion = clientVersion;
 	}
 
 	public String getModule() {
@@ -313,9 +303,7 @@ public class SampleHelper {
 	}
 
 	public void setModule(String module) {
-		if (module == null || module.length() > 0) {
-			this.module = module;
-		}
+		this.module = module;
 	}
 
 	public String getUserId() {
@@ -323,9 +311,7 @@ public class SampleHelper {
 	}
 
 	public void setUserId(String userId) {
-		if (userId == null || userId.length() > 0) {
-			this.userId = userId;
-		}
+		this.userId = userId;
 	}
 
 	public boolean isServerSide() {
