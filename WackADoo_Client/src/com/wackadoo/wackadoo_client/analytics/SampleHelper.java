@@ -188,7 +188,7 @@ public class SampleHelper {
 		boolean isSessionEvent = event_name.equals("session_start") || event_name.equals("session_update");
 		if (isSessionEvent || event_category.equals("account")) {
 			
-			boolean hasfbIdInArgs = args != null && args.containsKey("facebook_id");
+			boolean hasfbIdInArgs = ( args != null && args.containsKey("facebook_id") );
 			String fbId = hasfbIdInArgs ? (String)args.get("facebook_id") : getFacebookId();
 			addKey("facebook_id", fbId, ret);
 		}
@@ -239,7 +239,9 @@ public class SampleHelper {
 	}
 
 	public void setPlatform(String platform) {
-		this.platform = platform;
+		if (platform == null || platform.length() > 0) {
+			this.platform = platform;
+		}
 	}
 
 	public String getFacebookId() {
@@ -273,7 +275,9 @@ public class SampleHelper {
 	}
 
 	public void setAppToken(String appToken) {
-		this.appToken = appToken;
+		if (appToken == null || appToken.length() > 0) {
+			this.appToken = appToken;
+		}
 	}
 
 	public boolean isDebug() {
@@ -289,7 +293,9 @@ public class SampleHelper {
 	}
 
 	public void setClient(String client) {
-		this.client = client;
+		if (client == null || client.length() > 0) {
+			this.client = client;
+		}
 	}
 
 	public String getClientVersion() {
@@ -297,7 +303,9 @@ public class SampleHelper {
 	}
 
 	public void setClientVersion(String clientVersion) {
-		this.clientVersion = clientVersion;
+		if (clientVersion == null || clientVersion.length() > 0) {
+			this.clientVersion = clientVersion;
+		}
 	}
 
 	public String getModule() {
@@ -305,7 +313,9 @@ public class SampleHelper {
 	}
 
 	public void setModule(String module) {
-		this.module = module;
+		if (module == null || module.length() > 0) {
+			this.module = module;
+		}
 	}
 
 	public String getUserId() {
@@ -313,7 +323,9 @@ public class SampleHelper {
 	}
 
 	public void setUserId(String userId) {
-		this.userId = userId;
+		if (userId == null || userId.length() > 0) {
+			this.userId = userId;
+		}
 	}
 
 	public boolean isServerSide() {
