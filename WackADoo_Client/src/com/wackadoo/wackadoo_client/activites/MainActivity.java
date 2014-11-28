@@ -653,6 +653,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		intent.putExtras(bundle);
 		
 		startActivity(intent);
+		finish();
 		
 		// PSIORI track enter game
 		SampleHelper sHelper = SampleHelper.getInstance();

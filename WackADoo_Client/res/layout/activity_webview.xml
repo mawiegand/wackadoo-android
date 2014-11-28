@@ -6,10 +6,10 @@
     tools:context="com.wackadoo.wackadoo_client.activites.WebviewActivity"
     tools:ignore="MergeRootFrame">
 
-	<com.wackadoo.wackadoo_client.helper.CustomWebView
-    	android:id="@+id/main_webView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/> 
+	<org.xwalk.core.XWalkView
+		android:id="@+id/main_webView"
+		android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
         
 	<ImageView
 	    android:id="@+id/reloadBtn"

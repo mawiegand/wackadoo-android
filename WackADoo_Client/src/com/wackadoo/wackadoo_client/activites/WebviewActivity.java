@@ -1,39 +1,38 @@
 package com.wackadoo.wackadoo_client.activites;
 
+import org.xwalk.core.XWalkPreferences;
+import org.xwalk.core.XWalkView;
+import org.xwalk.core.internal.XWalkSettings;
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Display;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
-import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.analytics.SampleHelper;
-import com.wackadoo.wackadoo_client.helper.CustomWebView;
-import com.wackadoo.wackadoo_client.helper.GameWebViewClient;
+import com.wackadoo.wackadoo_client.helper.SoundManager;
 import com.wackadoo.wackadoo_client.helper.StaticHelper;
 import com.wackadoo.wackadoo_client.helper.WackadooActivity;
-import com.wackadoo.wackadoo_client.javascriptinterfaces.LoginJavaScriptHandler;
+import com.wackadoo.wackadoo_client.javascriptinterfaces.JavaScriptHandler;
 
 public class WebviewActivity extends WackadooActivity {	
 
 	private static final String TAG = WebviewActivity.class.getSimpleName();
 	private static final int UPDATE_CONNECTION_TIMER = 10000;
 	
-	private CustomWebView webView;
+	private XWalkView xWalkView;
 	private Handler mConnectionHandler;
 	private ImageView reloadBtn;
 	
@@ -47,14 +46,14 @@ public class WebviewActivity extends WackadooActivity {
         setUpJavaScriptInterface(getIntent().getExtras());
       
         if (savedInstanceState != null) {
-        	webView.restoreState(savedInstanceState);
+        	xWalkView.restoreState(savedInstanceState);
         }
      
-        webView.loadUrl("file:///android_asset/index.html");
+        xWalkView.load("file:///android_asset/index.html", null);
     }
     
     protected void onSaveInstanceState(Bundle outState) {
-    	webView.saveState(outState);
+    	xWalkView.saveState(outState);
     }
     
     @Override
@@ -73,22 +72,15 @@ public class WebviewActivity extends WackadooActivity {
 	
     // set up the webview
     private void setUpWebview() {
-    	  webView = (CustomWebView) findViewById(R.id.main_webView);
-    	  
-    	  webView.setWebViewClient(new GameWebViewClient(this));
-          webView.setWebChromeClient(new WebChromeClient());
+    	  xWalkView = (XWalkView) findViewById(R.id.main_webView);
+
+          XWalkSettings xWalkSettings = xWalkView.getSettings();
+          xWalkSettings.setJavaScriptEnabled(true);
+          xWalkSettings.setJavaScriptCanOpenWindowsAutomatically(true);
+          xWalkSettings.setUseWideViewPort(true);
+          xWalkSettings.setDomStorageEnabled(true);	
           
-          WebSettings webSettings = webView.getSettings();
-          webSettings.setJavaScriptEnabled(true);
-          webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
-          webSettings.setLoadWithOverviewMode(true);
-          webSettings.setUseWideViewPort(true);
-          webSettings.setDomStorageEnabled(true);	
-          webSettings.setSupportZoom(false);
-          
-          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-              WebView.setWebContentsDebuggingEnabled(true);
-          }
+          XWalkPreferences.setValue(XWalkPreferences.REMOTE_DEBUGGING, true);
     }
     
     private void setUpJavaScriptInterface(Bundle b) {
@@ -101,10 +93,10 @@ public class WebviewActivity extends WackadooActivity {
         String psioriSessionToken = SampleHelper.getInstance().getSessionToken();
         String psioriInstallToken = SampleHelper.getInstance().getInstallToken();
         
-        final LoginJavaScriptHandler loginHandler = new LoginJavaScriptHandler(this, 
+        final JavaScriptHandler jsHandler = new JavaScriptHandler(this, 
         		b.getString("accessToken"), b.getString("expiration"), b.getString("userId"), b.getString("hostname"), size.x,size.y, psioriSessionToken, psioriInstallToken);
            
-        webView.addJavascriptInterface(loginHandler, "LoginHandler");
+        xWalkView.addJavascriptInterface(jsHandler, "LoginHandler");
     }
     
     // set up native reloadBtn
@@ -120,8 +112,7 @@ public class WebviewActivity extends WackadooActivity {
 					
 				} else if (action == MotionEvent.ACTION_UP) {
 					reloadBtn.setColorFilter(null);
-//					webView.reload();
-					webView.loadUrl("javascript:WACKADOO.reload()");
+					xWalkView.load("javascript:WACKADOO.reload()", null);
 					Toast.makeText(WebviewActivity.this, "Reload", Toast.LENGTH_SHORT)
 						 .show();
 				}
@@ -139,6 +130,8 @@ public class WebviewActivity extends WackadooActivity {
 			   .setPositiveButton(R.string.alert_quit_yes, new OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
+						soundManager.setContinueMusic(true);
+						startActivity(new Intent(WebviewActivity.this, MainActivity.class));
 						finish();									
 					}
 				})
