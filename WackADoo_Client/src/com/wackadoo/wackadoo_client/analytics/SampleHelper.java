@@ -188,7 +188,7 @@ public class SampleHelper {
 		boolean isSessionEvent = event_name.equals("session_start") || event_name.equals("session_update");
 		if (isSessionEvent || event_category.equals("account")) {
 			
-			boolean hasfbIdInArgs = (args != null && args.containsKey("facebook_id")) == true;
+			boolean hasfbIdInArgs = args != null && args.containsKey("facebook_id");
 			String fbId = hasfbIdInArgs ? (String)args.get("facebook_id") : getFacebookId();
 			addKey("facebook_id", fbId, ret);
 		}
@@ -247,7 +247,9 @@ public class SampleHelper {
 	}
 
 	public void setFacebookId(String facebookId) {
-		this.facebookId = facebookId;
+		if (facebookId == null || facebookId.length() > 0) {
+			this.facebookId = facebookId;
+		}
 	}
 
 	public String getSessionToken() {
