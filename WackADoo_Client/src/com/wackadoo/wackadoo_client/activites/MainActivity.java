@@ -674,7 +674,10 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		if (result) {
 			loggedIn = true;
 			new GetCurrentGamesAsyncTask(this, userCredentials).execute();	
-			progressDialog.show();	
+			
+			if (!progressDialog.isShowing()) {
+				progressDialog.show();	
+			}
 			
 			// sample tracking
 			SampleHelper helper = SampleHelper.getInstance();
@@ -843,7 +846,9 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 					new FacebookLoginAsyncTask(this, userCredentials).execute();
 					
 				} else {
-					progressDialog.dismiss();
+					if (progressDialog.isShowing()) {
+						progressDialog.dismiss();
+					}
 					// close facebook session again, if connect accounts was not successful
 					Session session = Session.getActiveSession();	
 					if (session != null) {

@@ -108,7 +108,7 @@ public class WebviewActivity extends WackadooActivity {
 				int action = evt.getActionMasked();
 				
 				if (action == MotionEvent.ACTION_DOWN) {
-					reloadBtn.setColorFilter(Color.parseColor("#50000000"));
+					reloadBtn.setColorFilter(Color.parseColor("#748073"));
 					
 				} else if (action == MotionEvent.ACTION_UP) {
 					reloadBtn.setColorFilter(null);

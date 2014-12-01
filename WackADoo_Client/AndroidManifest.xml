@@ -5,16 +5,13 @@
     android:versionName="1.5">
 
     <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="19"/>
+    
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="com.android.vending.BILLING"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
 	<uses-permission android:name="android.permission.CAMERA"/>
-	<uses-permission android:name="android.permission.INTERNET"/>
 	<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
 	<uses-permission android:name="android.permission.RECORD_AUDIO"/>
 	<uses-permission android:name="android.permission.WAKE_LOCK"/>
@@ -33,6 +30,9 @@
         <!-- Facebook SDK -->
  	    <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebookAppId"/>
  	    
+ 	    <!-- Crashlytics -->
+        <meta-data android:name="com.crashlytics.ApiKey" android:value="1b1b0e8e4e281413e001858ea153234292801c6c"/>
+        
         <!-- Adjust.io SDK -->
        	<meta-data android:name="AdjustAppToken" android:value="jbbalmmgkl8p"/>
 		<meta-data android:name="AdjustLogLevel" android:value="debug"/>
