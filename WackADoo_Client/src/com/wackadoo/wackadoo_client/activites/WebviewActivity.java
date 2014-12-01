@@ -53,7 +53,14 @@ public class WebviewActivity extends WackadooActivity {
     }
     
     protected void onSaveInstanceState(Bundle outState) {
+    	super.onSaveInstanceState(outState);
     	xWalkView.saveState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    	super.onRestoreInstanceState(savedInstanceState);
+    	xWalkView.restoreState(savedInstanceState);
     }
     
     @Override
