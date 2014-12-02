@@ -171,7 +171,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	    selectGameBtn = (ImageButton) findViewById(R.id.chooseworldButton);
 	    shopBtn = (ImageButton) findViewById(R.id.shopButton);
 	    facebookBtn = (ImageButton) findViewById(R.id.facebookButton);
-	    soundBtn = (ImageButton) findViewById(com.wackadoo.wackadoo_client.R.id.title_sound_button);
+	    soundBtn = (ImageButton) findViewById(R.id.title_sound_button);
 	    infoBtn = (ImageButton) findViewById(R.id.title_info_button);
 	    characterFrame = (Button) findViewById(R.id.characterFrame);
 	    
@@ -653,6 +653,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		intent.putExtras(bundle);
 		
 		startActivity(intent);
+		finish();
 		
 		// PSIORI track enter game
 		SampleHelper sHelper = SampleHelper.getInstance();
@@ -673,7 +674,10 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		if (result) {
 			loggedIn = true;
 			new GetCurrentGamesAsyncTask(this, userCredentials).execute();	
-			progressDialog.show();	
+			
+			if (!progressDialog.isShowing()) {
+				progressDialog.show();	
+			}
 			
 			// sample tracking
 			SampleHelper helper = SampleHelper.getInstance();
@@ -842,7 +846,9 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 					new FacebookLoginAsyncTask(this, userCredentials).execute();
 					
 				} else {
-					progressDialog.dismiss();
+					if (progressDialog.isShowing()) {
+						progressDialog.dismiss();
+					}
 					// close facebook session again, if connect accounts was not successful
 					Session session = Session.getActiveSession();	
 					if (session != null) {

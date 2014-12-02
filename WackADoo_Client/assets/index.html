@@ -13,7 +13,7 @@
 
 			window.name = "{\"accessToken\":\"" + accessToken + "\",\"expiration\":\"" + expiration + "\",\"locale\":\"" + countryCode + "\",\"playerInvitation\":null,\"allianceInvitation\":null,\"client_id\":\"Bla\",\"width\":\""+width+"\",\"height\":\""+height+"\",\"platform\":\"android+\",\"session_token\":\""+psioriSessionToken+"\",\"install_token\":\""+psioriInstallToken+"\"}";
 			var rdmString = Math.random().toString(36).substring(1,6);
-			window.open(hostname + "/client?t=" + rdmString);
+			this.document.location.href = (hostname + "/client?t=" + rdmString);
 		</script>
 	</head>
 	
