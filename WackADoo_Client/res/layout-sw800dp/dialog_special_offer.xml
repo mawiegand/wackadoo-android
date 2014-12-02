@@ -2,8 +2,8 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    android:layout_marginTop="10dp"
-    android:layout_marginBottom="10dp"
+    android:layout_marginTop="100dp"
+    android:layout_marginBottom="100dp"
     android:orientation="vertical" >
  
     <ImageView
@@ -79,7 +79,7 @@
                         android:gravity="center_vertical"
                         android:text="@string/special_offer_1"
                         android:textColor="@color/white"
-                        android:textSize="7sp" />
+                        android:textSize="10sp" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -88,7 +88,7 @@
                         android:gravity="center_vertical"
                         android:text="@string/special_offer_2"
                         android:textColor="@color/white"
-                        android:textSize="8sp" />
+                        android:textSize="12sp" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -97,7 +97,7 @@
                         android:gravity="center_vertical"
                         android:text="@string/special_offer_3"
                         android:textColor="@color/white"
-                        android:textSize="8sp" />
+                        android:textSize="12sp" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -106,7 +106,7 @@
                         android:gravity="center_vertical"
                         android:text="@string/special_offer_4"
                         android:textColor="@color/white"
-                        android:textSize="8sp" />
+                        android:textSize="12sp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -123,7 +123,7 @@
                 android:gravity="center"
                 android:text="@string/special_offer_buy"
                 android:textColor="@color/white"
-                android:textSize="10sp" />
+                android:textSize="12sp" />
 
             <Space
                 android:layout_width="match_parent"

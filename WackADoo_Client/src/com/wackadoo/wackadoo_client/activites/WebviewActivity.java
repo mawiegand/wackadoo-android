@@ -72,7 +72,7 @@ public class WebviewActivity extends WackadooActivity {
     }
 	
     // set up the webview
-    private void setUpWebview() {
+    @SuppressLint("NewApi") private void setUpWebview() {
     	  webView = (CustomWebView) findViewById(R.id.main_webView);
     	  
     	  webView.setWebViewClient(new GameWebViewClient(this));

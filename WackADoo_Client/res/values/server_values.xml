@@ -5,7 +5,7 @@
     
     <!-- Server for live and local testings -->
 	<string name="basePath">https://wack-a-doo.de</string>    
-	<string name="localTestPath">https://192.168.178.22</string>  
+	<string name="localTestPath">https://192.168.178.94</string>  
 	  
     <!-- Create Account -->
     <string name="createAccountPath">/identity_provider/%s/identities</string>

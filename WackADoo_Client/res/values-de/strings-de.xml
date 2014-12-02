@@ -98,7 +98,7 @@
     <string name="subheading_gold_text">Goldene Frösche</string>
     <string name="list_bonus_text" formatted="false">+%d%% %dh für %d </string>
     <string name="subheading_bonus_text">Produktions Boost</string>
-    <string name="subheading_special_text">Spezialangebote</string>
+    <string name="subheading_special_text">Exklusiv zum Start</string>
     <string name="shop_headline_text">Erwirb Credits und tausche sie gegen Komfortfunktionen und Beschleunigungen</string>
     <string name="current_frog_text">Derzeitiger Vorrat an Gold Fröschen: %d</string>
     <string name="current_credit_text">Derzeitiger Vorrat an Platin Credits: %d</string>

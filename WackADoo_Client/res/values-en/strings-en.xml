@@ -99,6 +99,7 @@
     <string name="subheading_gold_text">Golden Frogs</string>
     <string name="list_bonus_text" formatted="false">+%d%% %dh for %d </string>
     <string name="subheading_bonus_text">Production Boost</string>
+    <string name="subheading_special_text">Exclusive for your start</string>
     <string name="shop_headline_text">Buy Credits and purchase Comfortfunctions and Accellerators</string>
 	<string name="current_frog_text">Current Golden Frog Amount: %d</string>
 	<string name="current_credit_text">Current Platinum Credit Amount: %d</string>
@@ -131,7 +132,7 @@
     <string name="shopInfoDescText_special" formatted="false">The starter packet contains: \n1500 resources \n300 golden frogs \nA camp close to your home settlement with the following extensions: 
         									\nA level 5 haunt \nAn altar \nHunter gatherers with a production level of 150 resources per hour \nFor 4 days you get these additional bonuses:  \nA 15% global resource production bonus \n100% extra constuction speed (halved construction time)</string>
     <string name="shop_expires_in">Expires on:&#160;</string>
-    <string name="special_offer_1"></string>
+    <string name="special_offer_1">SecondSettlement:\nCamp</string>
     <string name="special_offer_2">1500 Resources \n150 Recources per hour \n15% Production Bonus</string>
     <string name="special_offer_3">300 Golden Frogs</string>
     <string name="special_offer_4">Halved Construction Time for 4 Days</string>

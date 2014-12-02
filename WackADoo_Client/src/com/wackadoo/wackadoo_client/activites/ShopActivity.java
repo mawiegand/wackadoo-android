@@ -12,12 +12,15 @@ import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageButton;
@@ -221,6 +224,11 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 						final Dialog dialog = new Dialog(ShopActivity.this);
 						dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 						dialog.setContentView(R.layout.dialog_special_offer);
+						dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
+					    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+						dialog.getWindow().setFlags(
+							    WindowManager.LayoutParams.FLAG_FULLSCREEN, 
+							    WindowManager.LayoutParams.FLAG_FULLSCREEN);
 						((TextView) dialog.findViewById(R.id.price))
 								.setText(offers.get(0).getPrice() + " Credits");
 						((TextView) dialog.findViewById(R.id.price))
