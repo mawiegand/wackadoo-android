@@ -88,12 +88,9 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	   
 	    // set up handlers
 		mTokenHandler = new android.os.Handler();
-
-		Context context = getApplicationContext();
-		SampleHelper.context = context;
-		
+	
 		// start tracking
-		SampleHelper sHelper = SampleHelper.getInstance();
+		SampleHelper sHelper = SampleHelper.getInstance(getApplicationContext());
 		sHelper.setServerSide(false);
 		sHelper.setAppToken("wad-rt82-fhjk-18");
 		sHelper.startAutoPing();
@@ -161,7 +158,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	    
 	    // PSIORI Stops tracking to free ressources
 	    // Stops the autoPing timer as well
-	    SampleHelper.getInstance().stopTracking();	
+	    SampleHelper.getInstance(getApplicationContext()).stopTracking();	
     }
 
 	// set up interface elements
@@ -555,15 +552,16 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 			// set character picture to imageview
 			} else {
 				final ImageView view = (ImageView) findViewById(R.id.characterFrameImageView);
-				view.post(new Runnable() {
+				view.postDelayed(new Runnable() {
 					@Override public void run() {
+						if (view.getWidth() == 0 || view.getHeight() == 0) return;
 						view.setImageBitmap(Avatar.getAvatar(
 								userCredentials.getAvatarString(), 
 								view.getWidth(), 
 								view.getHeight(), 
 								getResources()));
 					}
-				});
+				}, 50);
 			}
 			
 		} else if (state.isClosed()) {
@@ -656,7 +654,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		finish();
 		
 		// PSIORI track enter game
-		SampleHelper sHelper = SampleHelper.getInstance();
+		SampleHelper sHelper = SampleHelper.getInstance(getApplicationContext());
 		sHelper.setModule(String.valueOf(userCredentials.getGameId()));
 		sHelper.track("session_update", "session", null);
 	}
@@ -680,7 +678,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 			}
 			
 			// sample tracking
-			SampleHelper helper = SampleHelper.getInstance();
+			SampleHelper helper = SampleHelper.getInstance(getApplicationContext());
 			String fbId = userCredentials.getFbPlayerId();
 			helper.setFacebookId(fbId);
 			helper.setUserId(identifier);
@@ -887,7 +885,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 					String fbId = userCredentials.getFbPlayerId();
 
 					// PSIORI track sign_in
-					SampleHelper helper = SampleHelper.getInstance();
+					SampleHelper helper = SampleHelper.getInstance(getApplicationContext());
 					helper.setFacebookId(fbId);
 					helper.setUserId(userId);
 					helper.track("sign_in", "account", null);

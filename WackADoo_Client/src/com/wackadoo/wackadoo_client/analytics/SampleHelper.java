@@ -24,7 +24,7 @@ import com.fivedlab.sample.sample_java.Sample;
  */
 public class SampleHelper {
 
-	private static final String WAD_PREFS_ANALYITCS = "wad_preferences_analytics";
+	private static final String WAD_PREFS_ANALYTICS = "wad_preferences_analytics";
 	
 	private Timer autoPing;
 	private LinkedList<Event> queue;
@@ -46,16 +46,14 @@ public class SampleHelper {
 	private String userId;
 	private String facebookId;
 	
-	public static Context context;
-	
 	protected SampleHelper() {
 		queue = new LinkedList<Event>();
 	}
 
-	public static SampleHelper getInstance() {
+	public static SampleHelper getInstance(Context context) {
 		if (instance == null) {
 			instance = new SampleHelper();
-			SharedPreferences myPrefs = context.getSharedPreferences(WAD_PREFS_ANALYITCS, Context.MODE_PRIVATE);
+			SharedPreferences myPrefs = context.getSharedPreferences(WAD_PREFS_ANALYTICS, Context.MODE_PRIVATE);
 			String installToken = myPrefs.getString("install_token", null);
 			
 			if (installToken == null) {

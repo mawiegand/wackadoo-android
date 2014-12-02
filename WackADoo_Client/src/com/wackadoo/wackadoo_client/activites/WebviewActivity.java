@@ -98,8 +98,8 @@ public class WebviewActivity extends WackadooActivity {
         display.getSize(size);
         
         // create javascript interface with necessary values
-        String psioriSessionToken = SampleHelper.getInstance().getSessionToken();
-        String psioriInstallToken = SampleHelper.getInstance().getInstallToken();
+        String psioriSessionToken = SampleHelper.getInstance(getApplicationContext()).getSessionToken();
+        String psioriInstallToken = SampleHelper.getInstance(getApplicationContext()).getInstallToken();
         
         final JavaScriptHandler jsHandler = new JavaScriptHandler(this, 
         		b.getString("accessToken"), b.getString("expiration"), b.getString("userId"), b.getString("hostname"), size.x,size.y, psioriSessionToken, psioriInstallToken);

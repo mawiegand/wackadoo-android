@@ -242,7 +242,7 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 			soundManager.setContinueMusic(true);
 			
 			// PSIORI track register
-			SampleHelper helper = SampleHelper.getInstance();
+			SampleHelper helper = SampleHelper.getInstance(getApplicationContext());
 			helper.setUserId(identifier);
 			helper.track("registration", "account", null);
 			helper.track("sign_in", "account", null);
@@ -299,7 +299,7 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 		String userId = userCredentials.getIdentifier();
 		
 		// PSIORI track sign in
-		SampleHelper helper = SampleHelper.getInstance();
+		SampleHelper helper = SampleHelper.getInstance(getApplicationContext());
 		helper.setUserId(userId);
 		helper.setFacebookId(fbId);
 		helper.track("sign_in", "account", null);
