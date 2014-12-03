@@ -217,7 +217,13 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 			userCredentials.setFbUser(true);
 			
 			finish();
-		} 
+		} else if (state.isClosed()) {	
+			if (session != null) {
+				session.closeAndClearTokenInformation();	
+				session.close();
+				Session.setActiveSession(null);
+			}
+		}
 	}
 	
     // facebook: handles result for login

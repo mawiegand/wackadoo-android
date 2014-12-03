@@ -67,8 +67,8 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	    }
 	    
 	    List <NameValuePair> nameValuePairs = new ArrayList <NameValuePair>();
-		nameValuePairs.add(new BasicNameValuePair("client_id", "WACKADOO-IOS"));
-//		nameValuePairs.add(new BasicNameValuePair("client_id", "WACKADOO-ANDROID"));
+//		nameValuePairs.add(new BasicNameValuePair("client_id", "WACKADOO-IOS"));
+		nameValuePairs.add(new BasicNameValuePair("client_id", "WACKADOO-ANDROID"));
 		nameValuePairs.add(new BasicNameValuePair("client_password", "5d"));
 		nameValuePairs.add(new BasicNameValuePair("grant_type", "password"));
 		nameValuePairs.add(new BasicNameValuePair("scope", "5dentity payment"));

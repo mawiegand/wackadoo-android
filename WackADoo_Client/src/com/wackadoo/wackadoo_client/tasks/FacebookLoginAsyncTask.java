@@ -17,6 +17,8 @@ import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpConnectionParams;
 
 import android.content.Context;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -57,15 +59,22 @@ public class FacebookLoginAsyncTask extends AsyncTask<String, Integer, ResponseR
     		
     		// tracking data
     		DeviceInformation deviceInformation = new DeviceInformation(context);
-    		nameValuePairs.add(new BasicNameValuePair("operating_system", deviceInformation.getOs()));
-    		nameValuePairs.add(new BasicNameValuePair("app_token", deviceInformation.getUniqueTrackingToken()));
-    		nameValuePairs.add(new BasicNameValuePair("hardware_string", deviceInformation.getHardware()));
-    		nameValuePairs.add(new BasicNameValuePair("hardware_token", deviceInformation.getBundleBuild()));
-    		nameValuePairs.add(new BasicNameValuePair("version", deviceInformation.getBundleVersion()));
-    		nameValuePairs.add(new BasicNameValuePair("[device_information][device_token]", deviceInformation.getUniqueTrackingToken()));
-    		nameValuePairs.add(new BasicNameValuePair("vendor_token", deviceInformation.getUniqueTrackingToken()));
+    		nameValuePairs.add(new BasicNameValuePair("[device_information][operating_system]", deviceInformation.getOs()));					// e.g. Android 4.4.4	
+    		nameValuePairs.add(new BasicNameValuePair("[device_information][app_token]", deviceInformation.getUniqueTrackingToken()));		 
+    		nameValuePairs.add(new BasicNameValuePair("[device_information][hardware_string]", deviceInformation.getHardware()));				// e.g. LGE Nexus 4
+    		nameValuePairs.add(new BasicNameValuePair("[device_information][hardware_token]", String.valueOf(									// hash encoded MAC adress of device
+    				(((WifiManager) context.getSystemService(Context.WIFI_SERVICE)).getConnectionInfo().getMacAddress().hashCode()))));			
+    		try {
+    			nameValuePairs.add(new BasicNameValuePair("[device_information][version]", 														// game version
+    					context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName));		
+    		} catch (NameNotFoundException e) {
+    			e.printStackTrace(); 
+    		} 
+    						
+    		nameValuePairs.add(new BasicNameValuePair("[device_information][vendor_token]", deviceInformation.getUniqueTrackingToken())); 
+    		nameValuePairs.add(new BasicNameValuePair("[device_information][advertiser_token]", deviceInformation.getUniqueTrackingToken()));
     		
-			HttpResponse response = StaticHelper.executeRequest(HttpPost.METHOD_NAME, url, nameValuePairs, userCredentials.getAccessToken().getToken());
+			HttpResponse response = StaticHelper.executeRequest(HttpPost.METHOD_NAME, url, nameValuePairs, null);
 			
 			// validate response
 			InputStream in = response.getEntity().getContent();
