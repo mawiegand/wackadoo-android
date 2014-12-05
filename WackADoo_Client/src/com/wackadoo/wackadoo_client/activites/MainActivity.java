@@ -343,10 +343,12 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 			public void onClick(View v) {
 				if (soundManager.isSoundOn()) {
 					soundBtn.setImageResource(R.drawable.ic_sound_off);
+					soundManager.setSoundOn(false);
 					soundManager.pause();
 
 				} else {
 					soundBtn.setImageResource(R.drawable.ic_sound_on);
+					soundManager.setSoundOn(true);
 					soundManager.start();
 				}
 			}

@@ -41,6 +41,7 @@ public class WackadooActivity extends Activity {
 		// adjust tracking
 		Adjust.onResume(this);
 		
+		
 		// continue music, if its not currently playing
 		soundManager.setContinueMusic(false);
 		if (soundManager.shouldPlayerStart()) {
@@ -61,7 +62,7 @@ public class WackadooActivity extends Activity {
 		
 		// stop music, if not another activity is started
 		if (soundManager.shouldPlayerStop()) {
-			soundManager.stop();
+			soundManager.pause();
 		}
 	}
 	

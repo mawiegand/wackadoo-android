@@ -69,15 +69,12 @@ public class SoundManager {
 	// start, pause or stop backgroundMusicPlayer
 	public void start() {
 		backgroundMusicPlayer.start();
-		soundOn = true;
 	}
 	public void pause() {
 		backgroundMusicPlayer.pause();
-		soundOn = false;
 	}
 	public void stop() {
 		backgroundMusicPlayer.stop();
-		soundOn = false;
 	}
 	
 	// prepare backgroundMusicPlayer again, after fragment stopped it 
