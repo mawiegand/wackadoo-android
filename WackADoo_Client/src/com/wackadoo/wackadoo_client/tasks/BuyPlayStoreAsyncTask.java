@@ -47,9 +47,6 @@ public class BuyPlayStoreAsyncTask extends AsyncTask<String, Integer, Integer> {
 		nameValuePairs.add(new BasicNameValuePair("google_verify_order_action[payment_token]", purchase.getToken()));
 		nameValuePairs.add(new BasicNameValuePair("google_verify_order_action[price]", price));
 		nameValuePairs.add(new BasicNameValuePair("google_verify_order_action[price_currency_code]", priceCurrencyCode));
-
-		Log.w(TAG, "----- price: " + price);
-		Log.w(TAG, "----- priceCurrencyCode: " + priceCurrencyCode);
 		
 		try {
 			HttpResponse response = StaticHelper.executeRequest(HttpPost.METHOD_NAME, completeURL, nameValuePairs, userCredentials.getAccessToken().getToken());

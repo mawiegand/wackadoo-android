@@ -25,19 +25,17 @@ public class InAppProduct {
 	public void setProductId(String productId) {
 		this.productId = productId;
 	}
-
 	
 	public String getPriceCurrencyCode() {
 		return priceCurrencyCode;
 	}
-
 	public void setPriceCurrencyCode(String priceCurrencyCode) {
 		this.priceCurrencyCode = priceCurrencyCode;
 	}
 
 	public String getPriceAsNumber() {
-		String result = price;
-		result = result.substring(0, result.length()-2); // remove currency
+		String[] parts = price.split("\\s+");
+		String result = parts[0].replace(",", ".");
 		return result;
 	}
 }

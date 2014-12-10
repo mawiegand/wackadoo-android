@@ -3,7 +3,9 @@ package com.wackadoo.wackadoo_client.activites;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,6 +41,7 @@ import com.android.vending.billing.Inventory;
 import com.android.vending.billing.Purchase;
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.adapter.ShopListViewAdapter;
+import com.wackadoo.wackadoo_client.analytics.SampleHelper;
 import com.wackadoo.wackadoo_client.fragments.ShopCreditsFragment;
 import com.wackadoo.wackadoo_client.fragments.ShopInfoFragment;
 import com.wackadoo.wackadoo_client.helper.CustomIabHelper;
@@ -79,6 +82,12 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
         
         userCredentials = new UserCredentials(this);
 
+        String test = "9,99 €";
+        convertPriceToCents(test);
+        test = "9,99 US¢";
+        convertPriceToCents(test);
+        
+        
         setUpUi();
         setUpButtons();
         loadShopOffersFromServer(); 
@@ -509,9 +518,28 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 			// remove credit fragment and shop shop again
 			getFragmentManager().popBackStack();		
 		
-			// adjust.io track revenue
-			Adjust.trackRevenue(billingHelper.getRevenue(purchase.getSku()));
+			String price = billingHelper.getPrice(purchase.getSku());
+
+			// Only track if there is a product
+			if (price.length() > 0) { 
+				// adjust.io track gross revenue
+				Adjust.trackRevenue(convertPriceToCents(price));
 			
+				SampleHelper sh = SampleHelper.getInstance(getApplicationContext());
+				sh.setUserId(userCredentials.getIdentifier());
+				Map<String, String> params = new HashMap<String, String>();
+				
+				// format price
+				price = price.replace(",", ".");
+				String[] parts = price.split("\\s+");
+				price = parts[0];
+				params.put("pur_gross", price);
+
+				// get country currency code
+				params.put("pur_currency", billingHelper.getInAppProduct(purchase.getSku()).getPriceCurrencyCode());
+//				params.put("pur_country", "");
+				sh.track("purchase", "revenue", params);
+			}
 		// product already validated by server -> consume
 		} else if (responseCode == 403){
 			billingHelper.consumeAsync(purchase, ShopActivity.this);
@@ -521,6 +549,12 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 			Toast.makeText(this, getString(R.string.buy_credits_fail), Toast.LENGTH_LONG)
 				 .show();
 		}
+	}
+	
+	public double convertPriceToCents(String price) {
+		String result = price.replace(",", "");
+		String[] parts = result.split("\\s+");
+		return Double.parseDouble(parts[0]);
 	}
 	
 	// play store: set up in app billing

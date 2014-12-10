@@ -152,6 +152,7 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
 			}
 			
 		} catch (Exception e) {
+			((GameLoginCallbackInterface) context).loginCallbackError(null, restoreAccount, refresh);
 			e.printStackTrace();
 		}
 	}

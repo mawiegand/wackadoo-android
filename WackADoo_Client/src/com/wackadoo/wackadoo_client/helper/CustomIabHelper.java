@@ -100,16 +100,13 @@ public class CustomIabHelper extends IabHelper implements QueryInventoryFinished
 		}
     }
     
-    // returns revenue of given sku from list inAppProducts
-    public double getRevenue(String sku) {
+    public String getPrice(String sku) {
     	for (InAppProduct temp : inAppProducts) {
     		if (temp.getProductId().equals(sku)) {
-    			String result = temp.getPrice().replace(",", "");
-    			result = result.substring(0, result.length()-2);
-    			return Double.parseDouble(result);
+    			return temp.getPrice();
     		}
     	}
-    	return 0;
+    	return "";
     }
 
     // returns revenue of given sku from list inAppProducts
