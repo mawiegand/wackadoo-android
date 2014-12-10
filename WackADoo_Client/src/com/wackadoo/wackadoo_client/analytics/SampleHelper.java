@@ -7,8 +7,12 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import android.content.BroadcastReceiver;
+import android.content.ComponentCallbacks2;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 
 import com.fivedlab.sample.sample_java.Sample;
 
@@ -22,9 +26,11 @@ import com.fivedlab.sample.sample_java.Sample;
  * @author danielband
  *
  */
-public class SampleHelper {
+public class SampleHelper extends BroadcastReceiver implements ComponentCallbacks2 {
 
 	private static final String WAD_PREFS_ANALYTICS = "wad_preferences_analytics";
+	
+	private boolean trackingStoped = true;
 	
 	private Timer autoPing;
 	private LinkedList<Event> queue;
@@ -65,13 +71,15 @@ public class SampleHelper {
 
 			instance.setInstallToken(installToken);
 			instance.setSessionToken(instance.randomToken(32));
-			
-			instance.resumeTracking();
 		}
 		return instance;
 	}
 	
-	public void resumeTracking() {
+	public void startTracking() {
+		if (isTrackingStoped() == false) {
+			return;
+		}
+		
 		TimerTask connectorTask = new TimerTask() {
 
 			@Override
@@ -80,13 +88,16 @@ public class SampleHelper {
 			}
 		};
 		
+		setTrackingStoped(false);
 		connector = new Timer();
 		connector.scheduleAtFixedRate(connectorTask, 0, 1000);
 	}
 	
 	public void stopTracking() {
+		stopAutoPing();
 		connector.cancel();
-		autoPing.cancel();
+		connector.purge();
+		setTrackingStoped(true);
 	}
 	
 	private void sendNext() {
@@ -106,6 +117,7 @@ public class SampleHelper {
 
 			@Override
 			public void run() {
+				System.out.println(new java.util.Date().getTime());
 				track("ping", "session", null);
 			}
 		};
@@ -137,19 +149,15 @@ public class SampleHelper {
 	}
 	
 	@SuppressWarnings("rawtypes")
-	public void track(String eventName, String eventCategory) {
+	public synchronized void track(String eventName, String eventCategory) {
 		Map params = mergeParams(eventName, eventCategory, null);
-		synchronized(queue) {
-			queue.add(new Event(eventName, eventCategory, params));
-		}
+		queue.add(new Event(eventName, eventCategory, params));
 	}
 	
 	@SuppressWarnings("rawtypes")
-	public void track(String eventName, String eventCategory, Map args) {
+	public synchronized void track(String eventName, String eventCategory, Map args) {
 		Map params = mergeParams(eventName, eventCategory, args);
-		synchronized(queue) {
-			queue.add(new Event(eventName, eventCategory, params));
-		}
+		queue.add(new Event(eventName, eventCategory, params));
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -320,6 +328,16 @@ public class SampleHelper {
 		this.serverSide = setServerSide;
 	}
 	
+	public boolean isTrackingStoped() {
+		return trackingStoped;
+	}
+
+	private void setTrackingStoped(boolean trackingStoped) {
+		this.trackingStoped = trackingStoped;
+	}
+
+
+
 	/**
 	 * Container class for each event. Better than putting each event in a map.
 	 * @author danielband
@@ -360,5 +378,32 @@ public class SampleHelper {
 		public void setBody(Map body) {
 			this.body = body;
 		}
+	}
+
+	
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onLowMemory() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onTrimMemory(int level) {
+		if (level == ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN) {
+			stopTracking();
+		}
+	}
+
+	@Override
+	public void onReceive(Context context, Intent intent) {
+		if(intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
+			stopTracking();
+		} 
 	}
 }

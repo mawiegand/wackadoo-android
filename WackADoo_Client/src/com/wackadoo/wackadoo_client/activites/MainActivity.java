@@ -13,6 +13,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -71,6 +72,8 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	private UiLifecycleHelper uiHelper;		
 	private SoundManager soundManager;
 	
+	private SampleHelper sample;
+	
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,11 +92,13 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	    // set up handlers
 		mTokenHandler = new android.os.Handler();
 	
-		// start tracking
-		SampleHelper sHelper = SampleHelper.getInstance(getApplicationContext());
-		sHelper.setServerSide(false);
-		sHelper.setAppToken("wad-rt82-fhjk-18");
-		sHelper.startAutoPing();
+		// Setup Tracking
+		sample = SampleHelper.getInstance(getApplicationContext());
+		final IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_OFF);
+		registerReceiver(sample, filter);
+		registerComponentCallbacks(sample);
+		sample.setServerSide(false);
+		sample.setAppToken("wad-rt82-fhjk-18");
 	}
 	
 	@Override
@@ -103,6 +108,13 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
         
         // adjust tracking
         Adjust.onResume(this);
+        
+        sample = SampleHelper.getInstance(getApplicationContext());
+        if (sample.isTrackingStoped()) {
+    		sample.startTracking();
+    		sample.track("session_start", "session");
+        	sample.startAutoPing();
+        }
         
         // get updated userCredentials
         userCredentials = new UserCredentials(getApplicationContext());
@@ -135,6 +147,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		// restart threads
 		mTokenHandler.postDelayed(updateTokenThread, UPDATE_TOKEN_TIMER);
     }
+	
     @Override
     public void onPause() {
         super.onPause();
@@ -158,7 +171,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	    
 	    // PSIORI Stops tracking to free ressources
 	    // Stops the autoPing timer as well
-	    SampleHelper.getInstance(getApplicationContext()).stopTracking();	
+	    sample.stopTracking();	
     }
 
 	// set up interface elements
@@ -658,6 +671,8 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		// PSIORI track enter game
 		SampleHelper sHelper = SampleHelper.getInstance(getApplicationContext());
 		sHelper.setModule(String.valueOf(userCredentials.getGameId()));
+		sHelper.setUserId(userId);
+		sHelper.setFacebookId(userCredentials.getFbPlayerId());
 		sHelper.track("session_update", "session", null);
 	}
 
