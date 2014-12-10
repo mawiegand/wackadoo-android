@@ -14,6 +14,7 @@ import android.util.Log;
 
 import com.android.vending.billing.Purchase;
 import com.wackadoo.wackadoo_client.R;
+import com.wackadoo.wackadoo_client.helper.InAppProduct;
 import com.wackadoo.wackadoo_client.helper.StaticHelper;
 import com.wackadoo.wackadoo_client.interfaces.BuyPlayStoreCallbackInterface;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
@@ -25,11 +26,14 @@ public class BuyPlayStoreAsyncTask extends AsyncTask<String, Integer, Integer> {
     private Context context;
 	private UserCredentials userCredentials;
 	private Purchase purchase;
+	private String price, priceCurrencyCode;
     
-    public BuyPlayStoreAsyncTask(Context context, UserCredentials userCredentials, Purchase purchase) {
+    public BuyPlayStoreAsyncTask(Context context, UserCredentials userCredentials, Purchase purchase, InAppProduct inAppProductData) {
     	this.context = context;
     	this.userCredentials = userCredentials;
     	this.purchase = purchase;
+    	price = inAppProductData.getPriceAsNumber();
+    	priceCurrencyCode = inAppProductData.getPriceCurrencyCode();
     }
 	
 	@Override
@@ -41,7 +45,12 @@ public class BuyPlayStoreAsyncTask extends AsyncTask<String, Integer, Integer> {
 		nameValuePairs.add(new BasicNameValuePair("google_verify_order_action[order_id]", purchase.getOrderId()));
 		nameValuePairs.add(new BasicNameValuePair("google_verify_order_action[product_id]", purchase.getSku()));
 		nameValuePairs.add(new BasicNameValuePair("google_verify_order_action[payment_token]", purchase.getToken()));
+		nameValuePairs.add(new BasicNameValuePair("google_verify_order_action[price]", price));
+		nameValuePairs.add(new BasicNameValuePair("google_verify_order_action[price_currency_code]", priceCurrencyCode));
 
+		Log.w(TAG, "----- price: " + price);
+		Log.w(TAG, "----- priceCurrencyCode: " + priceCurrencyCode);
+		
 		try {
 			HttpResponse response = StaticHelper.executeRequest(HttpPost.METHOD_NAME, completeURL, nameValuePairs, userCredentials.getAccessToken().getToken());
 		    

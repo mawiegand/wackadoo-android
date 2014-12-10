@@ -93,13 +93,14 @@ public class CustomIabHelper extends IabHelper implements QueryInventoryFinished
     		for (String temp : stringProductList) {
     			JSONObject jsonObj;
     			jsonObj = new JSONObject(temp);
-    			inAppProducts.add(new InAppProduct(jsonObj.getString("price"), jsonObj.getString("productId")));
+    			inAppProducts.add(new InAppProduct(jsonObj.getString("price"), jsonObj.getString("productId"), jsonObj.getString("price_currency_code")));
     		}
     	} catch (JSONException e) {
 			e.printStackTrace();
 		}
     }
     
+    // returns revenue of given sku from list inAppProducts
     public double getRevenue(String sku) {
     	for (InAppProduct temp : inAppProducts) {
     		if (temp.getProductId().equals(sku)) {
@@ -110,5 +111,14 @@ public class CustomIabHelper extends IabHelper implements QueryInventoryFinished
     	}
     	return 0;
     }
-    
+
+    // returns revenue of given sku from list inAppProducts
+    public InAppProduct getInAppProduct(String sku) {
+    	for (InAppProduct temp : inAppProducts) {
+    		if (temp.getProductId().equals(sku)) {
+    			return temp;
+    		}
+    	}
+    	return null;
+    }
 }

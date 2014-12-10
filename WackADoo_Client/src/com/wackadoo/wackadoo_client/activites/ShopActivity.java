@@ -43,6 +43,7 @@ import com.wackadoo.wackadoo_client.fragments.ShopCreditsFragment;
 import com.wackadoo.wackadoo_client.fragments.ShopInfoFragment;
 import com.wackadoo.wackadoo_client.helper.CustomIabHelper;
 import com.wackadoo.wackadoo_client.helper.CustomProgressDialog;
+import com.wackadoo.wackadoo_client.helper.InAppProduct;
 import com.wackadoo.wackadoo_client.helper.StaticHelper;
 import com.wackadoo.wackadoo_client.helper.WackadooActivity;
 import com.wackadoo.wackadoo_client.interfaces.BuyPlayStoreCallbackInterface;
@@ -476,7 +477,8 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 	public void onIabPurchaseFinished(IabResult result, Purchase purchase) {
 		// code 0 = successful purchase
 		if(result.getResponse() == 0) {
-			new BuyPlayStoreAsyncTask(this, userCredentials, purchase).execute();
+			InAppProduct inAppProductData = billingHelper.getInAppProduct(purchase.getSku());
+			new BuyPlayStoreAsyncTask(this, userCredentials, purchase, inAppProductData).execute();
 		
 		// code 7 = already purchased
 		} else if (result.getResponse() == 7){
@@ -488,7 +490,8 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 	// check for every unconsumed item if its already validated by server and consume it afterwards
 	public void handleUnconsumedItems(Inventory inv) {
 		for (Purchase purchase : inv.getAllPurchases()) {
-			new BuyPlayStoreAsyncTask(this, userCredentials, purchase).execute();
+			InAppProduct inAppProductData = billingHelper.getInAppProduct(purchase.getSku());
+			new BuyPlayStoreAsyncTask(this, userCredentials, purchase, inAppProductData).execute();
 		}
 	}
 	
