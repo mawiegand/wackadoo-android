@@ -39,6 +39,7 @@ import com.android.vending.billing.Inventory;
 import com.android.vending.billing.Purchase;
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.adapter.ShopListViewAdapter;
+import com.wackadoo.wackadoo_client.analytics.SampleHelper;
 import com.wackadoo.wackadoo_client.fragments.ShopCreditsFragment;
 import com.wackadoo.wackadoo_client.fragments.ShopInfoFragment;
 import com.wackadoo.wackadoo_client.helper.CustomIabHelper;
@@ -506,9 +507,20 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 			// remove credit fragment and shop shop again
 			getFragmentManager().popBackStack();		
 		
-			// adjust.io track revenue
-			Adjust.trackRevenue(billingHelper.getRevenue(purchase.getSku()));
+			String price = billingHelper.getPrice(purchase.getSku());
+			// Only track if there is a product
+			if (price.length() > 0) { 
+				// adjust.io track gross revenue
+				Adjust.trackRevenue(convertPriceToCents(price));
 			
+				SampleHelper sh = SampleHelper.getInstance(getApplicationContext());
+				sh.setUserId(userCredentials.getIdentifier());
+				//Map params = new HashMap();
+				//params.put("pur_gross", price);
+				//params.put("pur_currency", "");
+				//params.put("pur_country", "");
+				//sh.track("purchase", "revenue", params);
+			}
 		// product already validated by server -> consume
 		} else if (responseCode == 403){
 			billingHelper.consumeAsync(purchase, ShopActivity.this);
@@ -518,6 +530,13 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 			Toast.makeText(this, getString(R.string.buy_credits_fail), Toast.LENGTH_LONG)
 				 .show();
 		}
+	}
+	
+	public double convertPriceToCents(String price) {
+		String result = price.replace(",", "");
+		result = result.substring(0, result.length()-2);
+		
+		return Double.parseDouble(result);
 	}
 	
 	// play store: set up in app billing

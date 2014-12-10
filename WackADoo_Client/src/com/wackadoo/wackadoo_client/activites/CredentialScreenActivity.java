@@ -251,7 +251,6 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 			SampleHelper helper = SampleHelper.getInstance(getApplicationContext());
 			helper.setUserId(identifier);
 			helper.track("registration", "account", null);
-			helper.track("sign_in", "account", null);
 			
 			finish();
 		} else {
