@@ -10,13 +10,12 @@ import android.view.View.OnTouchListener;
 import android.widget.TextView;
 
 import com.wackadoo.wackadoo_client.R;
-import com.wackadoo.wackadoo_client.helper.SoundManager;
 import com.wackadoo.wackadoo_client.helper.StaticHelper;
-import com.wackadoo.wackadoo_client.helper.WackadooActivity;
 
 public class InfoScreenActivity extends WackadooActivity {
 
 	private TextView backBtn, supportBtn, wikiBtn, copyrightBtn, websiteBtn;
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +24,7 @@ public class InfoScreenActivity extends WackadooActivity {
 		setUpUi();
 		setUpButtons();
 	}
-	
+
 	// set up interface elements
 	private void setUpUi() {
 		supportBtn = (TextView) findViewById(R.id.infoscreen_supportbtn);

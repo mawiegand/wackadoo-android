@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -45,11 +46,11 @@ import com.wackadoo.wackadoo_client.fragments.ShopInfoFragment;
 import com.wackadoo.wackadoo_client.helper.CustomIabHelper;
 import com.wackadoo.wackadoo_client.helper.CustomProgressDialog;
 import com.wackadoo.wackadoo_client.helper.StaticHelper;
-import com.wackadoo.wackadoo_client.helper.WackadooActivity;
 import com.wackadoo.wackadoo_client.interfaces.BuyPlayStoreCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.BuyShopOfferCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.CreditsFragmentCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.ShopDataCallbackInterface;
+import com.wackadoo.wackadoo_client.model.AdjustProperties;
 import com.wackadoo.wackadoo_client.model.ShopRowItem;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
 import com.wackadoo.wackadoo_client.tasks.BuyPlayStoreAsyncTask;
@@ -88,6 +89,7 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 	@Override
 	protected void onPause() {
 		super.onPause();
+		
 		if (progressDialog.isShowing()) {
 			progressDialog.dismiss();
 		}

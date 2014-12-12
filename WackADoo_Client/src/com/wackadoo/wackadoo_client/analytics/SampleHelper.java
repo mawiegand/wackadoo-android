@@ -117,7 +117,6 @@ public class SampleHelper extends BroadcastReceiver implements ComponentCallback
 
 			@Override
 			public void run() {
-				System.out.println(new java.util.Date().getTime());
 				track("ping", "session", null);
 			}
 		};

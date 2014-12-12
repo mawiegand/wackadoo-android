@@ -48,6 +48,7 @@ import com.wackadoo.wackadoo_client.interfaces.CharacterCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.CurrentGamesCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.FacebookTaskCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.GameLoginCallbackInterface;
+import com.wackadoo.wackadoo_client.model.AdjustProperties;
 import com.wackadoo.wackadoo_client.model.GameInformation;
 import com.wackadoo.wackadoo_client.model.ResponseResult;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
@@ -94,8 +95,6 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	
 		// Setup Tracking
 		sample = SampleHelper.getInstance(getApplicationContext());
-		final IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_OFF);
-		registerReceiver(sample, filter);
 		registerComponentCallbacks(sample);
 		sample.setServerSide(false);
 		sample.setAppToken("wad-rt82-fhjk-18");
@@ -105,19 +104,38 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	public void onResume() {
         super.onResume();
         uiHelper.onResume();
+        sample = SampleHelper.getInstance(getApplicationContext());
+        final IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_OFF);
+        registerReceiver(sample, filter);
         
         // adjust tracking
         Adjust.onResume(this);
         
+        // get updated userCredentials
+        userCredentials = new UserCredentials(getApplicationContext());
+        
+        String userId = userCredentials.getIdentifier();
+        
         sample = SampleHelper.getInstance(getApplicationContext());
         if (sample.isTrackingStoped()) {
     		sample.startTracking();
+    		sample.setUserId(userId);
+    		sample.setFacebookId(userCredentials.getFbPlayerId());
     		sample.track("session_start", "session");
         	sample.startAutoPing();
+        	
+			if (userId.isEmpty() == false) {
+				AdjustProperties adjustProps = AdjustProperties
+						.getInstance(getApplicationContext());
+				int logins = adjustProps.loginsForUser(userId);
+				if (logins < 2) {
+					adjustProps.incrementLoginCountForUser(userId);
+					if (adjustProps.loginsForUser(userId) >= 2) {
+						Adjust.trackEvent("ikc6km");
+					}
+				}
+			}
         }
-        
-        // get updated userCredentials
-        userCredentials = new UserCredentials(getApplicationContext());
         
         // warning if no internet connection
 		if (!StaticHelper.isOnline(this)) {
@@ -153,7 +171,8 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
         super.onPause();
 	    uiHelper.onPause();		
 	    Adjust.onPause();
-	    
+	   
+	    unregisterReceiver(sample);
 	    mTokenHandler.removeCallbacks(updateTokenThread);
 	    
 	    if (!soundManager.isContinueMusic() && soundManager.isPlaying()) {
@@ -507,6 +526,13 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 				new GameLoginAsyncTask(this, userCredentials, false, false).execute();
 			} else {
 				loggedIn = true;
+				
+				// PSIORI track sign_in
+				SampleHelper helper = SampleHelper.getInstance(getApplicationContext());
+				helper.setFacebookId(userCredentials.getFbPlayerId());
+				helper.setUserId(identifier);
+				helper.track("sign_in", "account", null);
+				
 				updateUi();
 				if (userCredentials.getAvatarString() == null || userCredentials.getAvatarString() == "") {
 					new GetCurrentGamesAsyncTask(this, userCredentials).execute();

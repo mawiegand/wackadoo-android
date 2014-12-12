@@ -1,15 +1,15 @@
 <html>
 	<head>
 		<script type="text/javascript">
-			var accessToken = LoginHandler.getAccessToken();
-			var userId = LoginHandler.getUserId();
-			var expiration = LoginHandler.getExpiration();
-			var hostname = LoginHandler.getHostname();
-			var countryCode = LoginHandler.getCountryCode();
-			var width = LoginHandler.getWidth();
-			var height = LoginHandler.getHeight();
-			var psioriSessionToken = LoginHandler.getPsioriSessionToken();
-			var psioriInstallToken = LoginHandler.getPsioriInstallToken();
+			var accessToken = AndroidDelegate.getAccessToken();
+			var userId = AndroidDelegate.getUserId();
+			var expiration = AndroidDelegate.getExpiration();
+			var hostname = AndroidDelegate.getHostname();
+			var countryCode = AndroidDelegate.getCountryCode();
+			var width = AndroidDelegate.getWidth();
+			var height = AndroidDelegate.getHeight();
+			var psioriSessionToken = AndroidDelegate.getPsioriSessionToken();
+			var psioriInstallToken = AndroidDelegate.getPsioriInstallToken();
 
 			window.name = "{\"accessToken\":\"" + accessToken + "\",\"expiration\":\"" + expiration + "\",\"locale\":\"" + countryCode + "\",\"playerInvitation\":null,\"allianceInvitation\":null,\"client_id\":\"Bla\",\"width\":\""+width+"\",\"height\":\""+height+"\",\"platform\":\"android+\",\"session_token\":\""+psioriSessionToken+"\",\"install_token\":\""+psioriInstallToken+"\"}";
 			var rdmString = Math.random().toString(36).substring(1,6);

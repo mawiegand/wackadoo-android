@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.adjust.sdk.Adjust;
 import com.facebook.Session;
 import com.facebook.Session.StatusCallback;
 import com.facebook.SessionState;
@@ -24,7 +25,6 @@ import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.analytics.SampleHelper;
 import com.wackadoo.wackadoo_client.helper.CustomProgressDialog;
 import com.wackadoo.wackadoo_client.helper.StaticHelper;
-import com.wackadoo.wackadoo_client.helper.WackadooActivity;
 import com.wackadoo.wackadoo_client.interfaces.CreateAccountCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.GameLoginCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.GetAccountCallbackInterface;
@@ -64,10 +64,12 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
         super.onResume();
 	    uiHelper.onResume();
     }
+	
     @Override
     public void onPause() {
         super.onPause();
-	    uiHelper.onPause();
+        
+        uiHelper.onPause();
 	    
 	    if (progressDialog.isShowing()) {
 			progressDialog.dismiss();
@@ -248,9 +250,11 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 			soundManager.setContinueMusic(true);
 			
 			// PSIORI track register
-			SampleHelper helper = SampleHelper.getInstance(getApplicationContext());
-			helper.setUserId(identifier);
-			helper.track("registration", "account", null);
+			SampleHelper sample = SampleHelper.getInstance(getApplicationContext());
+			sample.setUserId(identifier);
+			sample.track("registration", "account", null);
+			
+			Adjust.trackEvent("e2q363");
 			
 			finish();
 		} else {

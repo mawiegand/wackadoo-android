@@ -10,10 +10,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
+import com.adjust.sdk.Adjust;
 import com.wackadoo.wackadoo_client.activites.MainActivity;
 import com.wackadoo.wackadoo_client.activites.ShopActivity;
-import com.wackadoo.wackadoo_client.activites.WebviewActivity;
 import com.wackadoo.wackadoo_client.helper.SoundManager;
+import com.wackadoo.wackadoo_client.model.AdjustProperties;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
 
 public class JavaScriptHandler {
@@ -22,8 +23,9 @@ public class JavaScriptHandler {
 	private String accessToken, expiration, userId, hostname, country, psioriSessionToken, psioriInstallToken;
 	private String[] serverSupportedLanguageCodes = {"en","de"};
 	private int width, height;
+	private AdjustProperties adjustProperties;
 	
-	public JavaScriptHandler (Context context, String accessToken, String expiration, String userId, String hostname, int width, int height, String psioriSessionToken, String psioriInstallToken) {
+	public JavaScriptHandler (Context context, String accessToken, String expiration, String userId, String hostname, int width, int height, String psioriSessionToken, String psioriInstallToken, Context applicationContext) {
     	this.context = context;
 		this.accessToken = accessToken;
     	this.expiration = expiration;
@@ -34,6 +36,8 @@ public class JavaScriptHandler {
     	this.height = height;
     	this.psioriSessionToken = psioriSessionToken;
     	this.psioriInstallToken = psioriInstallToken;
+    	
+    	this.adjustProperties = AdjustProperties.getInstance(applicationContext);
     }
     
 	private String getCountry() {
@@ -115,5 +119,21 @@ public class JavaScriptHandler {
 		SoundManager.getInstance(context).setContinueMusic(true);
 		Intent intent = new Intent(context, ShopActivity.class);
 		((Activity) context).startActivity(intent);
+	}
+	
+	@JavascriptInterface
+	public void mundaneRankIncreased() {
+		if (adjustProperties.didUserReachedRangTwo(userId) == false) {
+			adjustProperties.setUserReachedRangTwo(userId);
+			Adjust.trackEvent("r0bxe1");
+		}
+	}
+	
+	@JavascriptInterface
+	public void tutorialCompleted() {
+		if (adjustProperties.DidUserCompleteTutorial(userId) == false) {
+			adjustProperties.setUserDidCompleteTutorial(userId);
+			Adjust.trackEvent("p3lbv0");
+		}
 	}
 }

@@ -13,7 +13,6 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,36 +20,49 @@ import android.view.View.OnTouchListener;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.adjust.sdk.Adjust;
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.analytics.SampleHelper;
-import com.wackadoo.wackadoo_client.helper.SoundManager;
 import com.wackadoo.wackadoo_client.helper.StaticHelper;
-import com.wackadoo.wackadoo_client.helper.WackadooActivity;
 import com.wackadoo.wackadoo_client.javascriptinterfaces.JavaScriptHandler;
-
+import com.wackadoo.wackadoo_client.model.AdjustProperties;
 public class WebviewActivity extends WackadooActivity {	
 
 	private static final String TAG = WebviewActivity.class.getSimpleName();
 	private static final int UPDATE_CONNECTION_TIMER = 10000;
+	private static final int UPDATE_PLAYTIME_TIME = 30000;
+	
+	private static long currentPlayTime = 0;
 	
 	private XWalkView xWalkView;
 	private Handler mConnectionHandler;
 	private ImageView reloadBtn;
+	
+	private SampleHelper sample;
+	private Handler playtimeHandler;
+	private AdjustProperties adjustProperties;
+	
+	private String userId;
 	
     @SuppressLint({ "NewApi", "JavascriptInterface" })
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState, R.layout.activity_webview);
         
+        Bundle bundle = getIntent().getExtras();
+        this.userId = bundle.getString("userId");
+        
         setUpReloadBtn();
         setUpWebview();
-        setUpJavaScriptInterface(getIntent().getExtras());
+        setUpJavaScriptInterface(bundle);
       
         if (savedInstanceState != null) {
         	xWalkView.restoreState(savedInstanceState);
         }
      
         xWalkView.load("file:///android_asset/index.html", null);
+        
+        this.adjustProperties = AdjustProperties.getInstance(getApplicationContext());
     }
     
     protected void onSaveInstanceState(Bundle outState) {
@@ -67,15 +79,28 @@ public class WebviewActivity extends WackadooActivity {
     @Override
     protected void onResume() {
     	super.onResume();
+    	
     	// start automatic connection test in background
     	mConnectionHandler = new android.os.Handler();
     	mConnectionHandler.postDelayed(checkConnectionThread, UPDATE_CONNECTION_TIMER);
+    	
+    	if (adjustProperties.IsUserFiveMinutesIngame(userId) == false) {
+    		currentPlayTime = adjustProperties.getPlayTimeForUser(userId);
+        	playtimeHandler = new android.os.Handler();
+        	playtimeHandler.postDelayed(playtimeThread, UPDATE_CONNECTION_TIMER);
+    	}
     }
     
     @Override
     protected void onPause() {
     	super.onPause();
+    	
         mConnectionHandler.removeCallbacks(checkConnectionThread);
+        playtimeHandler.removeCallbacks(playtimeThread);
+        
+        if (adjustProperties.IsUserFiveMinutesIngame(userId) == false) {
+        	adjustProperties.setPlayTimeForUser(userId, currentPlayTime);
+        }
     }
 	
     // set up the webview
@@ -103,9 +128,12 @@ public class WebviewActivity extends WackadooActivity {
         String psioriInstallToken = SampleHelper.getInstance(getApplicationContext()).getInstallToken();
         
         final JavaScriptHandler jsHandler = new JavaScriptHandler(this, 
-        		b.getString("accessToken"), b.getString("expiration"), b.getString("userId"), b.getString("hostname"), size.x,size.y, psioriSessionToken, psioriInstallToken);
+        		b.getString("accessToken"), b.getString("expiration"), 
+        		b.getString("userId"), b.getString("hostname"), size.x,size.y,
+        		psioriSessionToken, psioriInstallToken, getApplicationContext());
            
-        xWalkView.addJavascriptInterface(jsHandler, "LoginHandler");
+        xWalkView.addJavascriptInterface(jsHandler, "AndroidDelegate");
+        
     }
     
     // set up native reloadBtn
@@ -161,5 +189,18 @@ public class WebviewActivity extends WackadooActivity {
  			mConnectionHandler.postDelayed(this, UPDATE_CONNECTION_TIMER);
  		}
  	}; 
-
+ 	
+ 	 // compute play time
+ 	private Runnable playtimeThread = new Runnable() {
+ 		public void run() {		
+ 			if (currentPlayTime < AdjustProperties.FIVE_MINUTES) {
+ 	 			currentPlayTime += UPDATE_PLAYTIME_TIME;		
+ 			} else if (StaticHelper.isOnline(WebviewActivity.this) && adjustProperties.IsUserFiveMinutesIngame(userId) == false) {
+ 	 			adjustProperties.setPlayTimeForUser(userId, currentPlayTime);
+ 				adjustProperties.setUserPlayedForFiveMinutes(userId);
+ 				Adjust.trackEvent("2n21b7");
+ 				playtimeHandler.removeCallbacks(playtimeThread);
+ 			}
+ 		}
+ 	}; 
 }
