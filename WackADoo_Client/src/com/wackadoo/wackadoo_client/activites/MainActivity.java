@@ -123,18 +123,6 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
     		sample.setFacebookId(userCredentials.getFbPlayerId());
     		sample.track("session_start", "session");
         	sample.startAutoPing();
-        	
-			if (userId.isEmpty() == false) {
-				AdjustProperties adjustProps = AdjustProperties
-						.getInstance(getApplicationContext());
-				int logins = adjustProps.loginsForUser(userId);
-				if (logins < 2) {
-					adjustProps.incrementLoginCountForUser(userId);
-					if (adjustProps.loginsForUser(userId) >= 2) {
-						Adjust.trackEvent("ikc6km");
-					}
-				}
-			}
         }
         
         // warning if no internet connection
@@ -532,7 +520,17 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 				helper.setFacebookId(userCredentials.getFbPlayerId());
 				helper.setUserId(identifier);
 				helper.track("sign_in", "account", null);
-				
+
+				AdjustProperties adjustProps = AdjustProperties
+						.getInstance(getApplicationContext());
+				int logins = adjustProps.loginsForUser(identifier);
+				if (logins < 2) {
+					adjustProps.incrementLoginCountForUser(identifier);
+					if (adjustProps.loginsForUser(identifier) >= 2) {
+						Adjust.trackEvent("ikc6km");
+					}
+				}
+
 				updateUi();
 				if (userCredentials.getAvatarString() == null || userCredentials.getAvatarString() == "") {
 					new GetCurrentGamesAsyncTask(this, userCredentials).execute();
@@ -726,6 +724,16 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 			helper.setFacebookId(fbId);
 			helper.setUserId(identifier);
 			helper.track("sign_in", "account", null);
+			
+			AdjustProperties adjustProps = AdjustProperties
+					.getInstance(getApplicationContext());
+			int logins = adjustProps.loginsForUser(identifier);
+			if (logins < 2) {
+				adjustProps.incrementLoginCountForUser(identifier);
+				if (adjustProps.loginsForUser(identifier) >= 2) {
+					Adjust.trackEvent("ikc6km");
+				}
+			}
 			
 		} else {
 			Toast.makeText(this, getResources().getString(R.string.login_failed_toast), Toast.LENGTH_LONG)

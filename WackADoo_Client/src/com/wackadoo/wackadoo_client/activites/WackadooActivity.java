@@ -19,7 +19,12 @@ import com.wackadoo.wackadoo_client.helper.StaticHelper;
 import com.wackadoo.wackadoo_client.model.AdjustProperties;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
 
-// custom activity subclass, to handle background music
+/**
+ * Base custom activity subclass, to handle background music
+ * Common tasks that are shared by all Activities should be implemented here
+ * @author Kevin Steinle
+ *
+ */
 public class WackadooActivity extends Activity {
 
 	protected SoundManager soundManager;
