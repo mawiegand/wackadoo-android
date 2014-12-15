@@ -3,7 +3,9 @@ package com.wackadoo.wackadoo_client.activites;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,6 +47,7 @@ import com.wackadoo.wackadoo_client.fragments.ShopCreditsFragment;
 import com.wackadoo.wackadoo_client.fragments.ShopInfoFragment;
 import com.wackadoo.wackadoo_client.helper.CustomIabHelper;
 import com.wackadoo.wackadoo_client.helper.CustomProgressDialog;
+import com.wackadoo.wackadoo_client.helper.InAppProduct;
 import com.wackadoo.wackadoo_client.helper.StaticHelper;
 import com.wackadoo.wackadoo_client.interfaces.BuyPlayStoreCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.BuyShopOfferCallbackInterface;
@@ -80,6 +83,12 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
         
         userCredentials = new UserCredentials(this);
 
+        String test = "9,99 €";
+        convertPriceToCents(test);
+        test = "9,99 US¢";
+        convertPriceToCents(test);
+        
+        
         setUpUi();
         setUpButtons();
         loadShopOffersFromServer(); 
@@ -479,7 +488,8 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 	public void onIabPurchaseFinished(IabResult result, Purchase purchase) {
 		// code 0 = successful purchase
 		if(result.getResponse() == 0) {
-			new BuyPlayStoreAsyncTask(this, userCredentials, purchase).execute();
+			InAppProduct inAppProductData = billingHelper.getInAppProduct(purchase.getSku());
+			new BuyPlayStoreAsyncTask(this, userCredentials, purchase, inAppProductData).execute();
 		
 		// code 7 = already purchased
 		} else if (result.getResponse() == 7){
@@ -491,7 +501,8 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 	// check for every unconsumed item if its already validated by server and consume it afterwards
 	public void handleUnconsumedItems(Inventory inv) {
 		for (Purchase purchase : inv.getAllPurchases()) {
-			new BuyPlayStoreAsyncTask(this, userCredentials, purchase).execute();
+			InAppProduct inAppProductData = billingHelper.getInAppProduct(purchase.getSku());
+			new BuyPlayStoreAsyncTask(this, userCredentials, purchase, inAppProductData).execute();
 		}
 	}
 	
@@ -510,6 +521,7 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 			getFragmentManager().popBackStack();		
 		
 			String price = billingHelper.getPrice(purchase.getSku());
+
 			// Only track if there is a product
 			if (price.length() > 0) { 
 				// adjust.io track gross revenue
@@ -517,11 +529,18 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 			
 				SampleHelper sh = SampleHelper.getInstance(getApplicationContext());
 				sh.setUserId(userCredentials.getIdentifier());
-				//Map params = new HashMap();
-				//params.put("pur_gross", price);
-				//params.put("pur_currency", "");
-				//params.put("pur_country", "");
-				//sh.track("purchase", "revenue", params);
+				Map<String, String> params = new HashMap<String, String>();
+				
+				// format price
+				price = price.replace(",", ".");
+				String[] parts = price.split("\\s+");
+				price = parts[0];
+				params.put("pur_gross", price);
+
+				// get country currency code
+				params.put("pur_currency", billingHelper.getInAppProduct(purchase.getSku()).getPriceCurrencyCode());
+//				params.put("pur_country", "");
+				sh.track("purchase", "revenue", params);
 			}
 		// product already validated by server -> consume
 		} else if (responseCode == 403){
@@ -536,9 +555,8 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 	
 	public double convertPriceToCents(String price) {
 		String result = price.replace(",", "");
-		result = result.substring(0, result.length()-2);
-		
-		return Double.parseDouble(result);
+		String[] parts = result.split("\\s+");
+		return Double.parseDouble(parts[0]);
 	}
 	
 	// play store: set up in app billing
