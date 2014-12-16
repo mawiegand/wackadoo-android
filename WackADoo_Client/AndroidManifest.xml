@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.wackadoo.wackadoo_client"
-    android:versionCode="6"
-    android:versionName="1.55">
+    android:versionCode="10"
+    android:versionName="1.60">
 
     <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="19"/>
     
@@ -37,6 +37,24 @@
        	<meta-data android:name="AdjustAppToken" android:value="jbbalmmgkl8p"/>
 		<meta-data android:name="AdjustLogLevel" android:value="debug"/>
 		<meta-data android:name="AdjustEnvironment" android:value="production"/>
+ 	    <receiver 
+ 	        android:name="com.appsflyer.MultipleInstallBroadcastReceiver" android:exported="true">
+ 			<intent-filter>
+ 				<action android:name="com.android.vending.INSTALL_REFERRER" />
+ 			</intent-filter>
+		</receiver>
+		<receiver 
+		    android:name="com.google.android.apps.analytics.AnalyticsReceiver" android:exported="true">
+ 			<intent-filter>
+ 				<action android:name="com.android.vending.INSTALL_REFERRER" />
+ 			</intent-filter>support@appsflyer.com | US: +1-800-660-2818 | UK: +44-20-3318-8649 | IL: +972-9-768-1949 | www.appsflyer.com
+		</receiver>
+		<receiver 
+		    android:name="com.admob.android.ads.analytics.InstallReceiver" android:exported="true">
+			 <intent-filter>
+ 				<action android:name="com.android.vending.INSTALL_REFERRER" />
+			 </intent-filter>
+		</receiver>
  	    <receiver
 		    android:name="com.adjust.sdk.ReferrerReceiver"
 		    android:exported="true" >

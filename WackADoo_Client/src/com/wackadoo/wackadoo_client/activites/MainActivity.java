@@ -30,6 +30,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.adjust.sdk.Adjust;
+import com.appsflyer.AppsFlyerLib;
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
@@ -93,6 +94,10 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	    // set up handlers
 		mTokenHandler = new android.os.Handler();
 	
+		// AppFlyerTracking
+		AppsFlyerLib.setAppsFlyerKey("Ae798en4RBTasyaLWeXo5i");
+		AppsFlyerLib.sendTracking(getApplicationContext());
+		
 		// Setup Tracking
 		sample = SampleHelper.getInstance(getApplicationContext());
 		registerComponentCallbacks(sample);
