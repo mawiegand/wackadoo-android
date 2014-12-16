@@ -96,7 +96,6 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	
 		// AppFlyerTracking
 		AppsFlyerLib.setAppsFlyerKey("Ae798en4RBTasyaLWeXo5i");
-		AppsFlyerLib.sendTracking(getApplicationContext());
 		
 		// Setup Tracking
 		sample = SampleHelper.getInstance(getApplicationContext());
@@ -128,6 +127,9 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
     		sample.setFacebookId(userCredentials.getFbPlayerId());
     		sample.track("session_start", "session");
         	sample.startAutoPing();
+        	
+    		AppsFlyerLib.setAppUserId(userId);
+    		AppsFlyerLib.sendTracking(getApplicationContext());
         }
         
         // warning if no internet connection
