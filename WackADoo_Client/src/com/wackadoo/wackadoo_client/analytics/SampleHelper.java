@@ -70,7 +70,6 @@ public class SampleHelper extends BroadcastReceiver implements ComponentCallback
 			}
 
 			instance.setInstallToken(installToken);
-			instance.setSessionToken(instance.randomToken(32));
 		}
 		return instance;
 	}
@@ -79,6 +78,8 @@ public class SampleHelper extends BroadcastReceiver implements ComponentCallback
 		if (isTrackingStoped() == false) {
 			return;
 		}
+		
+		instance.setSessionToken(instance.randomToken(32));
 		
 		TimerTask connectorTask = new TimerTask() {
 

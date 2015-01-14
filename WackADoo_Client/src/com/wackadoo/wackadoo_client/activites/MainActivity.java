@@ -96,12 +96,11 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	
 		// AppFlyerTracking
 		AppsFlyerLib.setAppsFlyerKey("Ae798en4RBTasyaLWeXo5i");
-		
 		// Setup Tracking
 		sample = SampleHelper.getInstance(getApplicationContext());
 		registerComponentCallbacks(sample);
 		sample.setServerSide(false);
-		sample.setAppToken("wad-rt82-fhjk-18");
+		sample.setAppToken("fsRrapvL");
 	}
 	
 	@Override

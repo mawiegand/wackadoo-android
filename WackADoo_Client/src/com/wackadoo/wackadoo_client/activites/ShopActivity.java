@@ -536,10 +536,9 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 				String[] parts = price.split("\\s+");
 				price = parts[0];
 				params.put("pur_gross", price);
-
-				// get country currency code
+				params.put("pur_earnings", String.valueOf(Double.valueOf(price)*0.81));
 				params.put("pur_currency", billingHelper.getInAppProduct(purchase.getSku()).getPriceCurrencyCode());
-//				params.put("pur_country", "");
+				params.put("pur_receipt_identifier", purchase.getToken());
 				sh.track("purchase", "revenue", params);
 			}
 		// product already validated by server -> consume
