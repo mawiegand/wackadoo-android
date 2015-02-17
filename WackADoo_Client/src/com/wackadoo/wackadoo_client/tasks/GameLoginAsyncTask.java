@@ -17,6 +17,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
+import android.provider.Settings.Secure;
 import android.util.Log;
 
 import com.adjust.sdk.ActivityKind;
@@ -93,7 +94,7 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
 		} 
 						
 		nameValuePairs.add(new BasicNameValuePair("[device_information][vendor_token]", deviceInformation.getUniqueTrackingToken())); 
-		nameValuePairs.add(new BasicNameValuePair("[device_information][advertiser_token]", deviceInformation.getUniqueTrackingToken())); 	// adjust trackerToken
+		nameValuePairs.add(new BasicNameValuePair("[device_information][advertiser_token]", Secure.getString(context.getContentResolver(), Secure.ANDROID_ID))); 	// adjust trackerToken
 		
 		if (StaticHelper.debugEnabled) {
 			for (NameValuePair nvp : nameValuePairs) {
