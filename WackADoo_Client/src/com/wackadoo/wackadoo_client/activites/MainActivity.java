@@ -126,9 +126,6 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
     		sample.setFacebookId(userCredentials.getFbPlayerId());
     		sample.track("session_start", "session");
         	sample.startAutoPing();
-        	
-    		AppsFlyerLib.setAppUserId(userId);
-    		AppsFlyerLib.sendTracking(getApplicationContext());
         }
         
         // warning if no internet connection
@@ -526,6 +523,9 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 				helper.setFacebookId(userCredentials.getFbPlayerId());
 				helper.setUserId(identifier);
 				helper.track("sign_in", "account", null);
+				
+	    		AppsFlyerLib.setAppUserId(identifier);
+	    		AppsFlyerLib.sendTracking(getApplicationContext());
 
 				AdjustProperties adjustProps = AdjustProperties
 						.getInstance(getApplicationContext());
@@ -640,6 +640,9 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	                    	userCredentials.setEmail(user.getProperty("email").toString());
 	                    	userCredentials.setFbPlayerId(user.getId());	
 	                    	userCredentials.getAccessToken().setFbToken(session.getAccessToken());
+	                    	
+	                    	sample.setFacebookId(user.getId());
+	                    	
                     	} catch (Exception e) {
                     		if (progressDialog.isShowing()) {
                     			progressDialog.dismiss();

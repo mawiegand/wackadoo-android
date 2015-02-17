@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.adjust.sdk.Adjust;
+import com.appsflyer.AppsFlyerLib;
 import com.facebook.Session;
 import com.facebook.Session.StatusCallback;
 import com.facebook.SessionState;
@@ -255,6 +256,9 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 			sample.track("registration", "account", null);
 			
 			Adjust.trackEvent("e2q363");
+			
+    		AppsFlyerLib.setAppUserId(identifier);
+    		AppsFlyerLib.sendTracking(getApplicationContext());
 			
 			finish();
 		} else {
