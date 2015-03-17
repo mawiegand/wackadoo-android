@@ -107,7 +107,6 @@ public class JavaScriptHandler {
 	
 	@JavascriptInterface
 	public void logout() {
-		new UserCredentials(context).clearAllCredentials();
 		SoundManager.getInstance(context).setContinueMusic(true);
 		context.startActivity(new Intent(((Activity) context), MainActivity.class));
 		((Activity) context).finish();
