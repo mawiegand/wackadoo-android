@@ -55,9 +55,9 @@ public class GetCharacterAsyncTask extends AsyncTask<String, Integer, Boolean> {
 		String urlForRequest = String.format(parent.getString(R.string.characterPath), Locale.getDefault().getCountry().toLowerCase(Locale.getDefault()));
 		
 		if (createNew) {
-			urlForRequest += "create_if_new=true&referer=http://play.google.com";
+			urlForRequest += "no_login=true&create_if_new=true&referer=http://play.google.com";
 		} else {
-			urlForRequest += "referer=http://play.google.com";
+			urlForRequest += "no_login=true&referer=http://play.google.com";
 		}
 		String completeURL = game.getGameHost() + "/" + urlForRequest;
 	    StringBuilder sb = new StringBuilder();
