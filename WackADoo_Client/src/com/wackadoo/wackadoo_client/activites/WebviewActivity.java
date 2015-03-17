@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.adjust.sdk.Adjust;
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.analytics.SampleHelper;
+import com.wackadoo.wackadoo_client.helper.AndroidBug5497Workaround;
 import com.wackadoo.wackadoo_client.helper.StaticHelper;
 import com.wackadoo.wackadoo_client.javascriptinterfaces.JavaScriptHandler;
 import com.wackadoo.wackadoo_client.model.AdjustProperties;
@@ -61,7 +62,7 @@ public class WebviewActivity extends WackadooActivity {
         }
      
         xWalkView.load("file:///android_asset/index.html", null);
-        
+        AndroidBug5497Workaround.assistActivity(this);
         this.adjustProperties = AdjustProperties.getInstance(getApplicationContext());
     }
     
