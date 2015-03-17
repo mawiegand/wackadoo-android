@@ -147,12 +147,12 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
 				if (jsonResponse.has("error")) {
 					((GameLoginCallbackInterface) context).loginCallbackError(jsonResponse.getString("error"), restoreAccount, refresh);
 				} else {
-					((GameLoginCallbackInterface) context).loginCallbackError(null, restoreAccount, refresh);
+					((GameLoginCallbackInterface) context).loginCallbackError("unknown_error", restoreAccount, refresh);
 				}
 			}
 			
 		} catch (Exception e) {
-			((GameLoginCallbackInterface) context).loginCallbackError(null, restoreAccount, refresh);
+			((GameLoginCallbackInterface) context).loginCallbackError("unknown_error", restoreAccount, refresh);
 			e.printStackTrace();
 		}
 	}

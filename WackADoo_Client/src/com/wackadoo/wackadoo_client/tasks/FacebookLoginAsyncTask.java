@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
+import android.provider.Settings.Secure;
 import android.util.Log;
 
 import com.wackadoo.wackadoo_client.R;
@@ -52,7 +53,7 @@ public class FacebookLoginAsyncTask extends AsyncTask<String, Integer, ResponseR
     		
     		List <NameValuePair> nameValuePairs = new ArrayList <NameValuePair>();
     		nameValuePairs.add(new BasicNameValuePair("fb_player_id", userCredentials.getFbPlayerId()));
-    		nameValuePairs.add(new BasicNameValuePair("client_id", "WACKADOO-FBCANVAS"));
+    		nameValuePairs.add(new BasicNameValuePair("client_id", "WACKADOO-ANDROID"));
     		nameValuePairs.add(new BasicNameValuePair("client_password", "5d"));
     		nameValuePairs.add(new BasicNameValuePair("grant_type", "fb-player-id"));
     		nameValuePairs.add(new BasicNameValuePair("scope", "5dentity"));
@@ -72,7 +73,7 @@ public class FacebookLoginAsyncTask extends AsyncTask<String, Integer, ResponseR
     		} 
     						
     		nameValuePairs.add(new BasicNameValuePair("[device_information][vendor_token]", deviceInformation.getUniqueTrackingToken())); 
-    		nameValuePairs.add(new BasicNameValuePair("[device_information][advertiser_token]", deviceInformation.getUniqueTrackingToken()));
+    		nameValuePairs.add(new BasicNameValuePair("[device_information][advertiser_token]", Secure.getString(context.getContentResolver(), Secure.ANDROID_ID)));
     		
 			HttpResponse response = StaticHelper.executeRequest(HttpPost.METHOD_NAME, url, nameValuePairs, null);
 			
