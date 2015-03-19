@@ -69,10 +69,13 @@ public class StaticHelper {
 	public static final String FB_ID_TASK = "facebook_id_task";
 	public static final String FB_CONNECT_TASK = "facebook_connect_task";
 	public static final String FB_LOGIN_TASK = "facebook_login_task";
+	public static final int MAX_LOGIN_ERRORS = 3;
 	
-	public static boolean debugEnabled = false;			// true = all debuging is enabled; if false no debug messages will be shown
+	public static boolean debugEnabled = true;			// true = all debuging is enabled; if false no debug messages will be shown
 	public static boolean localTest = false;			// true = test on local server, if false the live server is used
 
+	public static int loginErrorCount = 0;
+	
 	// workaround for dynamic height of the ListView. fixes issue of not showing every item in listviews when in a scrollview 
 	public static void setListViewHeightBasedOnChildren(ListView listView) {
 	    ListAdapter listAdapter = listView.getAdapter();
@@ -94,6 +97,14 @@ public class StaticHelper {
 	    params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
 	    listView.setLayoutParams(params);
 	    listView.requestLayout();
+	}
+	
+	public static boolean maxLoginErrorsReached() {
+		return loginErrorCount >= MAX_LOGIN_ERRORS;
+	}
+	
+	public static void resetLoginErrorCount() {
+		loginErrorCount = 0;
 	}
 
 	// check if string is valid mail adress

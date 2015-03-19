@@ -213,6 +213,11 @@ public class UserCredentials {
 		e.commit();
 	}
 
+	public void clearCurrentNonFbUser() {
+		setEmail("");
+		setIdentifier("");
+		setUsername("");
+	}
 	
 	public String getGameHost() {
 		return gameHost;

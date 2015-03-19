@@ -43,7 +43,10 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 	private EditText userNameEditText, passwordEditText;
 	private TextView backBtn;
 	private CustomProgressDialog progressDialog;
-	private UiLifecycleHelper uiHelper;		
+	private UiLifecycleHelper uiHelper;	
+	
+	public static final int RESULT_USER_LOGED_IN = 1;
+	public static final String RESULT_USER_LOGED_IN_KEY = "result_user_loged_in";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -219,6 +222,9 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 		if (state.isOpened()) {
 			userCredentials.setFbUser(true);
 			
+			Intent output = new Intent();
+			output.putExtra(RESULT_USER_LOGED_IN_KEY, true);
+			setResult(RESULT_OK, output);
 			finish();
 		} else if (state.isClosed()) {	
 			if (session != null) {
@@ -260,6 +266,9 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
     		AppsFlyerLib.setAppUserId(identifier);
     		AppsFlyerLib.sendTracking(getApplicationContext());
 			
+    		Intent output = new Intent();
+			output.putExtra(RESULT_USER_LOGED_IN_KEY, true);
+			setResult(RESULT_OK, output);
 			finish();
 		} else {
 			Toast.makeText(this, getString(R.string.error_server_communication), Toast.LENGTH_SHORT)
@@ -270,10 +279,12 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 	// callback interface for login/restore account task
 	@Override
 	public void loginCallback(boolean result, String accessToken, String expiration, String userIdentifier, boolean restoreAccount, boolean refresh) {
+		StaticHelper.resetLoginErrorCount();
+		
 		userCredentials.generateNewAccessToken(accessToken, expiration);
 		userCredentials.setIdentifier(userIdentifier);
 
-		// fetch account data to show in imterface
+		// fetch account data to show in interface
 		new GetAccountAsyncTask(this, userCredentials, restoreAccount).execute();
 	}
 	
@@ -287,6 +298,7 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 		if (restoreAccount) {
 			showRestoreAccountDialog(false);
 		} else {
+			handleUserCredentialsOnLoginError();
 			if (error.equals("invalid_grant")) {
 				Toast.makeText(this, getResources().getString(R.string.login_invalid_grant), Toast.LENGTH_LONG)
 					 .show();
@@ -322,7 +334,19 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 			showRestoreAccountDialog(true);
 		} else {
 			soundManager.setContinueMusic(true);
+			
+			// Pass the login success back to the parent
+			Intent output = new Intent();
+			output.putExtra(RESULT_USER_LOGED_IN_KEY, true);
+			setResult(RESULT_OK, output);
 			finish();
 		}		
+	}
+	
+	public void handleUserCredentialsOnLoginError() {
+		StaticHelper.loginErrorCount++;
+		if (StaticHelper.maxLoginErrorsReached()) {
+			userCredentials.clearCurrentNonFbUser();
+		}
 	}
 }

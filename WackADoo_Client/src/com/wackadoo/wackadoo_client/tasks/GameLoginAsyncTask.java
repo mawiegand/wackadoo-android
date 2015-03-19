@@ -23,9 +23,11 @@ import android.util.Log;
 import com.adjust.sdk.ActivityKind;
 import com.adjust.sdk.Adjust;
 import com.adjust.sdk.ResponseData;
+import com.appsflyer.AppsFlyerLib;
 import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.helper.StaticHelper;
 import com.wackadoo.wackadoo_client.interfaces.GameLoginCallbackInterface;
+import com.wackadoo.wackadoo_client.model.AdjustProperties;
 import com.wackadoo.wackadoo_client.model.DeviceInformation;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
 
@@ -139,10 +141,15 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
 		
 		try {
 			if (result) {
-					String accessToken = jsonResponse.getString("access_token");
-					String expiresIn = jsonResponse.getString("expires_in");
-					String identifier = jsonResponse.getString("user_identifer");
-					((GameLoginCallbackInterface) context).loginCallback(result.booleanValue(), accessToken, expiresIn, identifier, restoreAccount, refresh);
+
+				String accessToken = jsonResponse.getString("access_token");
+				String expiresIn = jsonResponse.getString("expires_in");
+				String identifier = jsonResponse.getString("user_identifer");
+								
+				AppsFlyerLib.setAppUserId(identifier);
+	    		AppsFlyerLib.sendTracking(context);
+			
+				((GameLoginCallbackInterface) context).loginCallback(result.booleanValue(), accessToken, expiresIn, identifier, restoreAccount, refresh);
 				
 			} else {
 				if (jsonResponse.has("error")) {
