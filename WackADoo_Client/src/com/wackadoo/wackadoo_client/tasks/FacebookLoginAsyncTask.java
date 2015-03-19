@@ -74,6 +74,7 @@ public class FacebookLoginAsyncTask extends AsyncTask<String, Integer, ResponseR
     						
     		nameValuePairs.add(new BasicNameValuePair("[device_information][vendor_token]", deviceInformation.getUniqueTrackingToken())); 
     		nameValuePairs.add(new BasicNameValuePair("[device_information][advertiser_token]", Secure.getString(context.getContentResolver(), Secure.ANDROID_ID)));
+    		nameValuePairs.add(new BasicNameValuePair("[device_information][device_token]", Secure.getString(context.getContentResolver(), Secure.ANDROID_ID)));
     		
 			HttpResponse response = StaticHelper.executeRequest(HttpPost.METHOD_NAME, url, nameValuePairs, null);
 			
