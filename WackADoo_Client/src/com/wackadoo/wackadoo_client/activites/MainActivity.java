@@ -66,7 +66,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	
 	private ImageButton playBtn, accountmanagerBtn, selectGameBtn, facebookBtn, shopBtn, soundBtn, infoBtn;
 	private Button characterFrame;
-	private boolean lastWorldAccessible, loggedIn, loadGame, tryConnect;
+	private boolean lastWorldAccessible, loggedIn, tryConnect;
 	private UserCredentials userCredentials;
 	private CustomProgressDialog progressDialog;
 	private Handler mTokenHandler;
@@ -478,7 +478,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 						intent = new Intent(MainActivity.this, CredentialScreenActivity.class);
 					}
 					soundManager.setContinueMusic(true);
-					startActivityForResult(intent, CredentialScreenActivity.RESULT_USER_LOGED_IN);
+					startActivity(intent);
 					break;
 				}
 				return false;
@@ -488,8 +488,9 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	
 
 	// handle current credentials, decide how to login and start progress
+	// Gets triggererd every onResume if the device is online
 	private void handleLogin() {
-		String identifier = userCredentials.getIdentifier();		
+		String userName = userCredentials.getUsername();		
 		String email = userCredentials.getEmail();
 		
 		// TODO: Is this destroyed on onPause()
@@ -507,10 +508,16 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 				onSessionStateChange(session, session.getState(), null);
 			}
 		}
-		// portable / local users currently it triggers every 
-		else if (!identifier.equals("") || !email.equals("")) { 
+		// portable / local users
+		else if (!userName.equals("") || !email.equals("")) { 
 			progressDialog.show();
-			new GameLoginAsyncTask(this, userCredentials, false, true).execute();	
+			
+			if (userCredentials.getAccessToken().isValid()) {
+				loggedIn = true;
+				new GetCurrentGamesAsyncTask(this, userCredentials).execute();
+			} else {
+				new GameLoginAsyncTask(this, userCredentials, false, true).execute();	
+			}
 		} 
 		else {
 			loggedIn = false;
@@ -521,17 +528,11 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
     // facebook: handles result for login 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-    	if (requestCode == CredentialScreenActivity.RESULT_USER_LOGED_IN && resultCode == RESULT_OK) {
-    		loggedIn = true;
-    		loadGame = true;
-	    } 
-    	else {
-	    	super.onActivityResult(requestCode, resultCode, data);
-	        uiHelper.onActivityResult(requestCode, resultCode, data);
+	    super.onActivityResult(requestCode, resultCode, data);
+	    uiHelper.onActivityResult(requestCode, resultCode, data);
 	        
-	        // play store dialog stops background music, so prepare to start again
-	     	soundManager.prepare();
-	    }
+	    // play store dialog stops background music, so prepare to start again
+	   	soundManager.prepare();
     }
     
     // facebook: login handling
@@ -682,16 +683,10 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	public void loginCallback(boolean result, String accessToken, String expiration, String identifier, boolean restoreAccount, boolean refresh) 	{
 		userCredentials.generateNewAccessToken(accessToken, expiration);
 		userCredentials.setIdentifier(identifier);
-		
+
 		if (refresh) {
 			StaticHelper.resetLoginErrorCount();
-			if (loadGame) {
-				loadGame = false;
-				new GetCurrentGamesAsyncTask(this, userCredentials).execute();	
-			} else if (!progressDialog.isShowing()) {
-				progressDialog.show();	
-			}
-			
+			updateUi();
 			return;
 		}
 		

@@ -45,9 +45,6 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 	private CustomProgressDialog progressDialog;
 	private UiLifecycleHelper uiHelper;	
 	
-	public static final int RESULT_USER_LOGED_IN = 1;
-	public static final String RESULT_USER_LOGED_IN_KEY = "result_user_loged_in";
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState, R.layout.activity_credentialscreen);
@@ -221,10 +218,6 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 	public void call(Session session, SessionState state, Exception exception) {
 		if (state.isOpened()) {
 			userCredentials.setFbUser(true);
-			
-			Intent output = new Intent();
-			output.putExtra(RESULT_USER_LOGED_IN_KEY, true);
-			setResult(RESULT_OK, output);
 			finish();
 		} else if (state.isClosed()) {	
 			if (session != null) {
@@ -265,11 +258,8 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 			
     		AppsFlyerLib.setAppUserId(identifier);
     		AppsFlyerLib.sendTracking(getApplicationContext());
-			
-    		Intent output = new Intent();
-			output.putExtra(RESULT_USER_LOGED_IN_KEY, true);
-			setResult(RESULT_OK, output);
-			finish();
+    		
+    		new GameLoginAsyncTask(CredentialScreenActivity.this, userCredentials, false, true).execute();
 		} else {
 			Toast.makeText(this, getString(R.string.error_server_communication), Toast.LENGTH_SHORT)
 			 	 .show();
@@ -335,10 +325,6 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 		} else {
 			soundManager.setContinueMusic(true);
 			
-			// Pass the login success back to the parent
-			Intent output = new Intent();
-			output.putExtra(RESULT_USER_LOGED_IN_KEY, true);
-			setResult(RESULT_OK, output);
 			finish();
 		}		
 	}
