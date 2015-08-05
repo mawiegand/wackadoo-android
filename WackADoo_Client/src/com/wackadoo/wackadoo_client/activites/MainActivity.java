@@ -45,6 +45,7 @@ import com.wackadoo.wackadoo_client.helper.CustomProgressDialog;
 import com.wackadoo.wackadoo_client.helper.SoundManager;
 import com.wackadoo.wackadoo_client.helper.StaticHelper;
 import com.wackadoo.wackadoo_client.interfaces.CharacterCallbackInterface;
+import com.wackadoo.wackadoo_client.interfaces.CreateAccountCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.CurrentGamesCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.FacebookTaskCallbackInterface;
 import com.wackadoo.wackadoo_client.interfaces.GameLoginCallbackInterface;
@@ -52,6 +53,7 @@ import com.wackadoo.wackadoo_client.model.AdjustProperties;
 import com.wackadoo.wackadoo_client.model.GameInformation;
 import com.wackadoo.wackadoo_client.model.ResponseResult;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
+import com.wackadoo.wackadoo_client.tasks.CreateAccountAsyncTask;
 import com.wackadoo.wackadoo_client.tasks.FacebookAccountAsyncTask;
 import com.wackadoo.wackadoo_client.tasks.FacebookLoginAsyncTask;
 import com.wackadoo.wackadoo_client.tasks.GameLoginAsyncTask;
@@ -59,7 +61,7 @@ import com.wackadoo.wackadoo_client.tasks.GetCharacterAsyncTask;
 import com.wackadoo.wackadoo_client.tasks.GetCurrentGamesAsyncTask;
 
 public class MainActivity extends Activity implements GameLoginCallbackInterface, FacebookTaskCallbackInterface, 
-		CurrentGamesCallbackInterface, CharacterCallbackInterface, StatusCallback {
+		CurrentGamesCallbackInterface, CharacterCallbackInterface, StatusCallback, CreateAccountCallbackInterface {
 
 	private static final String TAG = MainActivity.class.getSimpleName();
 	private static final int UPDATE_TOKEN_TIMER = 10000;
@@ -152,6 +154,9 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		if (soundManager.isSoundOn() && !soundManager.isPlaying()) {
 			soundManager.start();
 		}
+		
+        // create new player at the very first start if not logged in
+        createAndLoginNewPlayerIfNoPlayerSet();
     }
 	
     @Override
@@ -955,4 +960,48 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		}
 	}
 
+	
+	private void createAndLoginNewPlayerIfNoPlayerSet()
+	{
+		String account_id = userCredentials.getAccountId();
+		if(account_id != null && !account_id.isEmpty())
+			return;
+		else
+			new CreateAccountAsyncTask(this).execute();
+	}
+	
+	
+	 // callback interface for CreateAccountAsyncTask
+	@Override
+	public void onRegistrationCompleted(boolean success, String identifier, String nickname, String accountId, String email) {
+		if (progressDialog.isShowing()) {
+			progressDialog.dismiss();
+		}
+		
+		if (success) {
+			userCredentials.setIdentifier(identifier);
+			userCredentials.setUsername(nickname);
+			userCredentials.setAccountId(accountId);
+			userCredentials.setEmail(email);
+			soundManager.setContinueMusic(true);
+			
+			// PSIORI track register
+			SampleHelper sample = SampleHelper.getInstance(getApplicationContext());
+			sample.setUserId(identifier);
+			sample.track("registration", "account", null);
+			
+			Adjust.trackEvent("e2q363");
+			
+    		AppsFlyerLib.setAppUserId(identifier);
+    		AppsFlyerLib.sendTracking(getApplicationContext());
+
+    		new GameLoginAsyncTask(MainActivity.this, userCredentials, false, false).execute();
+		} else {
+			Toast.makeText(this, getString(R.string.error_server_communication), Toast.LENGTH_SHORT)
+			 	 .show();
+		}
+	}
+	
+	
+	
 }
