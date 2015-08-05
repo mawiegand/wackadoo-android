@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Typeface;
+import android.media.audiofx.AcousticEchoCanceler;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -76,6 +77,11 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	private SoundManager soundManager;
 	
 	private SampleHelper sample;
+	
+	/*
+	 * Tells this activity to create a new account if no user is logged in
+	 */
+	private boolean userLogedOut = false;
 	
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,9 +160,6 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		if (soundManager.isSoundOn() && !soundManager.isPlaying()) {
 			soundManager.start();
 		}
-		
-        // create new player at the very first start if not logged in
-        createAndLoginNewPlayerIfNoPlayerSet();
     }
 	
     @Override
@@ -315,8 +318,26 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 					if (loggedIn) {
 						triggerPlayGame();
 					} else {
-						Toast.makeText(MainActivity.this, getResources().getString(R.string.login_necessary), Toast.LENGTH_SHORT)
-							 .show();
+						
+						AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+						builder.setTitle(getResources().getString(R.string.selectgame_new_account));
+						builder.setMessage(getResources().getString(R.string.selectgame_new_or_rejoin));
+						builder.setPositiveButton(getResources().getString(R.string.selectgame_rejoin), new DialogInterface.OnClickListener() {
+							
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								userCredentials = new UserCredentials(getApplicationContext());
+								new GameLoginAsyncTask(MainActivity.this, userCredentials, true, false).execute();
+							}
+						});
+						builder.setNegativeButton(getResources().getString(R.string.selectgame_new_account), new DialogInterface.OnClickListener() {
+							
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								new CreateAccountAsyncTask(MainActivity.this).execute();
+							}
+						});
+						builder.show();
 					}
 					break;
 				}
@@ -479,11 +500,12 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 					Intent intent = null;
 					if (loggedIn) {
 						intent = new Intent(MainActivity.this, AccountManagerActivity.class);
+						startActivityForResult(intent, AccountManagerActivity.SIGN_OUT_ACCOUNT);
 					} else {
 						intent = new Intent(MainActivity.this, CredentialScreenActivity.class);
+						startActivityForResult(intent, CredentialScreenActivity.SIGN_IN_ACCOUNT);
 					}
 					soundManager.setContinueMusic(true);
-					startActivity(intent);
 					break;
 				}
 				return false;
@@ -498,7 +520,6 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		String userName = userCredentials.getUsername();		
 		String email = userCredentials.getEmail();
 		
-		// TODO: Is this destroyed on onPause()
 		final ImageView view = (ImageView) findViewById(R.id.characterFrameImageView);
 		view.post(new Runnable() {
 			  @Override public void run() {
@@ -512,32 +533,50 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 			if (session != null && (session.isOpened() || session.isClosed())) {
 				onSessionStateChange(session, session.getState(), null);
 			}
+			else {
+				updateUi();
+			}
 		}
 		// portable / local users
-		else if (!userName.equals("") || !email.equals("")) { 
+		else if (!userLogedOut && (!userName.equals("") || !email.equals(""))) { 
 			progressDialog.show();
-			
-			if (userCredentials.getAccessToken().isValid()) {
-				loggedIn = true;
-				new GetCurrentGamesAsyncTask(this, userCredentials).execute();
-			} else {
-				new GameLoginAsyncTask(this, userCredentials, false, true).execute();	
-			}
+			new GameLoginAsyncTask(this, userCredentials, false, false).execute();	
 		} 
-		else {
-			loggedIn = false;
+		else{
 			updateUi();
+			
+			// create new player at the very first start if not logged in
+			if (!userLogedOut) {
+				new CreateAccountAsyncTask(this).execute();
+			}
 		}
 	}
 	
-    // facebook: handles result for login 
+	/**
+	 * Handle the login/logout states
+	 * @param requestCode
+	 * @param resultCode
+	 * @param data
+	 */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-	    super.onActivityResult(requestCode, resultCode, data);
-	    uiHelper.onActivityResult(requestCode, resultCode, data);
-	        
-	    // play store dialog stops background music, so prepare to start again
-	   	soundManager.prepare();
+	    if (requestCode == AccountManagerActivity.SIGN_OUT_ACCOUNT) {
+	    	if (data != null && data.hasExtra(AccountManagerActivity.SIGN_OUT_ACCOUNT_ID) && data.getBooleanExtra(AccountManagerActivity.SIGN_OUT_ACCOUNT_ID, false)) {
+	    		userLogedOut = true;
+	    		loggedIn = false;
+	    	}
+	    } else if (requestCode == CredentialScreenActivity.SIGN_IN_ACCOUNT) {
+	    	if (data != null && data.hasExtra(CredentialScreenActivity.SIGN_IN_ACCOUNT_ID) && data.getBooleanExtra(CredentialScreenActivity.SIGN_IN_ACCOUNT_ID, false)) {
+	    		userLogedOut = false;
+	    		loggedIn = true;
+	    	}
+	    } else {
+	    	super.onActivityResult(requestCode, resultCode, data);
+		    uiHelper.onActivityResult(requestCode, resultCode, data);
+		        
+		    // play store dialog stops background music, so prepare to start again
+		   	soundManager.prepare();
+	    }
     }
     
     // facebook: login handling
@@ -557,6 +596,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	private void onSessionStateChange(Session session, SessionState state, Exception exception) {
 		if (state.isOpened()) {
 			loggedIn = true;
+			userLogedOut = false;
 			userCredentials.setFbUser(true);
 			
 			// get new accesstoken if expired or attempt to connect was made
@@ -645,14 +685,13 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
         request.executeAsync();
     } 
     
-    // handle click on playgame button
+    // handle click on play game button
 	private void triggerPlayGame() {
 		String accessToken = userCredentials.getAccessToken().getToken();
 		String tokenExpiration = userCredentials.getAccessToken().getExpireCode();
 		String userId = userCredentials.getIdentifier();
 		if (accessToken != null && tokenExpiration != null && !userCredentials.getAccessToken().isExpired()) {
 			startGame(accessToken, tokenExpiration, userId);
-		
 		} else {
 			progressDialog.show();
 			new GameLoginAsyncTask(this, userCredentials, false, false).execute();
@@ -688,7 +727,9 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	public void loginCallback(boolean result, String accessToken, String expiration, String identifier, boolean restoreAccount, boolean refresh) 	{
 		userCredentials.generateNewAccessToken(accessToken, expiration);
 		userCredentials.setIdentifier(identifier);
-
+		
+		loggedIn = true;
+		
 		if (refresh) {
 			StaticHelper.resetLoginErrorCount();
 			updateUi();
@@ -698,7 +739,6 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 		if (result) {
 			StaticHelper.resetLoginErrorCount();
 			
-			loggedIn = true;
 			new GetCurrentGamesAsyncTask(this, userCredentials).execute();	
 			
 			if (!progressDialog.isShowing()) {
@@ -722,29 +762,20 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 				}
 			}
 			
-		} else {
-			Toast.makeText(this, getResources().getString(R.string.login_failed_toast), Toast.LENGTH_LONG)
-			     .show();
-			updateUi();
-			
-			handleUserCredentialsOnLoginError();
-		}
+		} 
 	}
 	
-	// callback interface for error in GameLoginAsyncTask
+	/**
+	 * callback interface for error in GameLoginAsyncTask
+	 * try to restore the last account
+	 */
 	@Override
 	public void loginCallbackError(String error, boolean restoreAccount, boolean refresh) {
-		if (error.equals("invalid_grant")) {
-			Toast.makeText(this, getResources().getString(R.string.login_invalid_grant), Toast.LENGTH_LONG)
-				 .show();
-		} else {
-			Toast.makeText(this, getResources().getString(R.string.login_failed_toast), Toast.LENGTH_LONG)
-				 .show();
-		}
 		loggedIn = false;
 		updateUi();
-		
 		handleUserCredentialsOnLoginError();
+	
+		new GameLoginAsyncTask(MainActivity.this, userCredentials, true, false).execute();
 	}
 	
 	public void handleUserCredentialsOnLoginError() {
@@ -959,21 +990,10 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 			}
 		}
 	}
-
-	
-	private void createAndLoginNewPlayerIfNoPlayerSet()
-	{
-		String account_id = userCredentials.getAccountId();
-		if(account_id != null && !account_id.isEmpty())
-			return;
-		else
-			new CreateAccountAsyncTask(this).execute();
-	}
-	
 	
 	 // callback interface for CreateAccountAsyncTask
 	@Override
-	public void onRegistrationCompleted(boolean success, String identifier, String nickname, String accountId, String email) {
+	public void onRegistrationCompleted(boolean success, String identifier, String nickname, String accountId, String email, String password) {
 		if (progressDialog.isShowing()) {
 			progressDialog.dismiss();
 		}
@@ -983,6 +1003,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 			userCredentials.setUsername(nickname);
 			userCredentials.setAccountId(accountId);
 			userCredentials.setEmail(email);
+			userCredentials.setPassword(password);
 			soundManager.setContinueMusic(true);
 			
 			// PSIORI track register

@@ -31,6 +31,7 @@ public class CreateAccountAsyncTask extends AsyncTask<String, Integer, Boolean> 
 	
     private CreateAccountCallbackInterface listener;
     private JSONObject jsonResponse;
+    private String password;
     
     public CreateAccountAsyncTask(CreateAccountCallbackInterface callback) {
     	this.listener = callback;
@@ -43,13 +44,15 @@ public class CreateAccountAsyncTask extends AsyncTask<String, Integer, Boolean> 
 		String completeURL = StaticHelper.generateUrlForTask(parent, true, parent.getString(R.string.createAccountPath), null);
 	    StringBuilder sb = new StringBuilder();
 	    
+	    password = StaticHelper.randomStringOfLength(8);
+	    
 	    List <NameValuePair> nameValuePairs = new ArrayList <NameValuePair>();		
 		nameValuePairs.add(new BasicNameValuePair("client_id", "WACKADOO-ANDROID"));
 		nameValuePairs.add(new BasicNameValuePair("client_password", "5d"));
 		nameValuePairs.add(new BasicNameValuePair("generic_password", "1"));
 		nameValuePairs.add(new BasicNameValuePair("nickname_base", "WackyUser"));
-		nameValuePairs.add(new BasicNameValuePair("password", "egjzdsgt"));
-		nameValuePairs.add(new BasicNameValuePair("password_confirmation", "egjzdsgt"));
+		nameValuePairs.add(new BasicNameValuePair("password", password));
+		nameValuePairs.add(new BasicNameValuePair("password_confirmation", password));
 		
 		// tracking data
 		nameValuePairs.add(new BasicNameValuePair("[device_information][operating_system]", deviceInformation.getOs()));					// e.g. Android 4.4.4	
@@ -119,6 +122,6 @@ public class CreateAccountAsyncTask extends AsyncTask<String, Integer, Boolean> 
 				e.printStackTrace();
 			}
 		} 
-		listener.onRegistrationCompleted(result, identifier, username, accountId, email);
+		listener.onRegistrationCompleted(result, identifier, username, accountId, email, password);
 	}
 }

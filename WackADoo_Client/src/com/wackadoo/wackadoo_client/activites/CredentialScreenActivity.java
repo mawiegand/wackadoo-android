@@ -2,6 +2,7 @@ package com.wackadoo.wackadoo_client.activites;
 
 import java.util.Arrays;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -35,6 +36,9 @@ import com.wackadoo.wackadoo_client.tasks.GameLoginAsyncTask;
 import com.wackadoo.wackadoo_client.tasks.GetAccountAsyncTask;
 
 public class CredentialScreenActivity extends WackadooActivity implements CreateAccountCallbackInterface, GameLoginCallbackInterface, GetAccountCallbackInterface, StatusCallback {
+	
+	public static int SIGN_IN_ACCOUNT = 1002;
+	public static String SIGN_IN_ACCOUNT_ID = "SIGN_IN_ACCOUNT_ID";
 	
 	private static final String TAG = CredentialScreenActivity.class.getSimpleName();
 	
@@ -159,7 +163,11 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 		    	    @Override
 		    	    public void onClick(DialogInterface dialog, int which) { 
 		    	    	soundManager.setContinueMusic(true);
-		    	    	finish(); 
+		    	    	
+		    	    	Intent intent = new Intent();
+		    			intent.putExtra(SIGN_IN_ACCOUNT_ID, true);
+		    			setResult(Activity.RESULT_OK, intent);
+		    			finish();
 		    	    }
 		    	})
 	    	   .setNegativeButton(getResources().getString(R.string.infoscreen_support_btn), new DialogInterface.OnClickListener() {
@@ -175,7 +183,6 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 		    	        intent.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.credentials_lost_access_mail));
 		    	        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // this will make such that when user returns to your app, your app is displayed, instead of the email app.
 		    	        startActivity(intent);
-//		    	        finish();7
 		    	    }
 		    	});
 		
@@ -196,9 +203,11 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 		if (userNameEditText.getText().length() > 0) {
 			if (passwordEditText.getText().length() > 5) {
 				if (StaticHelper.isValidMail(userNameEditText.getText().toString())) {
+					userCredentials.setUsername("");
 					userCredentials.setEmail(this.userNameEditText.getText().toString());
 				
 				} else {
+					userCredentials.setEmail("");
 					userCredentials.setUsername(this.userNameEditText.getText().toString());
 				}
 				userCredentials.setPassword(this.passwordEditText.getText().toString());
@@ -218,6 +227,9 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 	public void call(Session session, SessionState state, Exception exception) {
 		if (state.isOpened()) {
 			userCredentials.setFbUser(true);
+			Intent intent = new Intent();
+			intent.putExtra(SIGN_IN_ACCOUNT_ID, true);
+			setResult(Activity.RESULT_OK, intent);
 			finish();
 		} else if (state.isClosed()) {	
 			if (session != null) {
@@ -237,7 +249,7 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 
     // callback interface for CreateAccountAsyncTask
 	@Override
-	public void onRegistrationCompleted(boolean success, String identifier, String nickname, String accountId, String email) {
+	public void onRegistrationCompleted(boolean success, String identifier, String nickname, String accountId, String email, String password) {
 		if (progressDialog.isShowing()) {
 			progressDialog.dismiss();
 		}
@@ -247,6 +259,7 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 			userCredentials.setUsername(nickname);
 			userCredentials.setAccountId(accountId);
 			userCredentials.setEmail(email);
+			userCredentials.setPassword(password);
 			soundManager.setContinueMusic(true);
 			
 			// PSIORI track register
@@ -259,7 +272,7 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
     		AppsFlyerLib.setAppUserId(identifier);
     		AppsFlyerLib.sendTracking(getApplicationContext());
     		
-    		new GameLoginAsyncTask(CredentialScreenActivity.this, userCredentials, false, true).execute();
+    		new GameLoginAsyncTask(CredentialScreenActivity.this, userCredentials, false, false).execute();
 		} else {
 			Toast.makeText(this, getString(R.string.error_server_communication), Toast.LENGTH_SHORT)
 			 	 .show();
@@ -273,7 +286,7 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 		
 		userCredentials.generateNewAccessToken(accessToken, expiration);
 		userCredentials.setIdentifier(userIdentifier);
-
+		
 		// fetch account data to show in interface
 		new GetAccountAsyncTask(this, userCredentials, restoreAccount).execute();
 	}
@@ -309,22 +322,16 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 		
 		userCredentials.setUsername(nickname);
 		userCredentials.setAccountId(accountId);
-		
-		String fbId = userCredentials.getFbPlayerId();
-		String userId = userCredentials.getIdentifier();
-		
-		// PSIORI track sign in
-		SampleHelper helper = SampleHelper.getInstance(getApplicationContext());
-		helper.setUserId(userId);
-		helper.setFacebookId(fbId);
-		helper.track("sign_in", "account", null);
-		
+
 		// if async task called to restore locale account, show dialog
 		if (restoreAccount) {
 			showRestoreAccountDialog(true);
 		} else {
 			soundManager.setContinueMusic(true);
 			
+			Intent intent = new Intent();
+			intent.putExtra(SIGN_IN_ACCOUNT_ID, true);
+			setResult(Activity.RESULT_OK, intent);
 			finish();
 		}		
 	}

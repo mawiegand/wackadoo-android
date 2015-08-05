@@ -40,6 +40,10 @@
     <string name="selectgame_game_finished">The game is already over</string>
     <string name="selectgame_game_login">Log in in world </string>
     <string name="selectgame_create_account">Create new account in world </string>
+    <string name="selectgame_new_account">New player?</string>
+    <string name="selectgame_new_or_rejoin">Do you want to register or rejoin?</string>
+    <string name="selectgame_new">Register</string>
+    <string name="selectgame_rejoin">Rejoin</string>
     
     <!-- AccountManager -->
     <string name="account_change_password">Change Password</string>

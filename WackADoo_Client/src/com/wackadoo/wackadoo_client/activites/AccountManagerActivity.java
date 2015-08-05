@@ -1,5 +1,6 @@
 package com.wackadoo.wackadoo_client.activites;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,10 +21,14 @@ import com.wackadoo.wackadoo_client.R;
 import com.wackadoo.wackadoo_client.helper.CustomProgressDialog;
 import com.wackadoo.wackadoo_client.helper.StaticHelper;
 import com.wackadoo.wackadoo_client.interfaces.AccountManagerCallbackInterface;
+import com.wackadoo.wackadoo_client.model.AccessToken;
 import com.wackadoo.wackadoo_client.model.UserCredentials;
 import com.wackadoo.wackadoo_client.tasks.AccountManagerAsyncTask;
 
 public class AccountManagerActivity extends WackadooActivity implements AccountManagerCallbackInterface{
+	
+	public static int SIGN_OUT_ACCOUNT = 1001;
+	public static String SIGN_OUT_ACCOUNT_ID = "SIGN_OUT_ACCOUNT_ID";
 	
 	private static final String TAG = AccountManagerActivity.class.getSimpleName();
 
@@ -248,14 +253,13 @@ public class AccountManagerActivity extends WackadooActivity implements AccountM
 		}
 	}
 	
-	// delete user credentials when signing out
+	/**
+	 * Inform the MainActivity that the user wants to sign out
+	 */
 	private void signOut() {
-		userCredentials.clearAllCredentials();
-		userCredentials = new UserCredentials(getApplicationContext());
+		userCredentials.setAccessToken(null);
+		userCredentials.clearFbCredentials();
 		
-		String identifier = userCredentials.getIdentifier();
-		String email = userCredentials.getEmail();
-	
 		// closes facebook session and clears cache
 		Session session = Session.getActiveSession();
 		if (session != null) {
@@ -264,13 +268,11 @@ public class AccountManagerActivity extends WackadooActivity implements AccountM
 			Session.setActiveSession(null);
 		}
 
-		// if credentials been deleted, go back to login screen
-	    if ((identifier.length() <= 0) && (email.length() <= 0)) {
-			Intent intent = new Intent(AccountManagerActivity.this, CredentialScreenActivity.class);
-			startActivity(intent);
-			soundManager.setContinueMusic(true);
-			finish();
-		}
+		Intent intent = new Intent();
+		intent.putExtra(SIGN_OUT_ACCOUNT_ID, true);
+		setResult(Activity.RESULT_OK, intent);
+		soundManager.setContinueMusic(true);
+		finish();
 	}
 
 	// callback interface for AccountManagerAsyncTask

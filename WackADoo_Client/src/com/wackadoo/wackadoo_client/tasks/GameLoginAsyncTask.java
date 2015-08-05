@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -63,10 +64,15 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	    		username = userCredentials.getIdentifier();	    	
 	    	}
 	    }
-	    if (userCredentials.getPassword().length() > 0) {
+	    
+	    if (restoreAccount) {
+	    	password = StaticHelper.randomStringOfLength(8);
+	    	userCredentials.setPassword(password);
+	    } else if (userCredentials.getPassword().length() > 0) {
 	    	password = userCredentials.getPassword();
-	    } else {
-	    	password = "egjzdsgt";
+	    }
+	    else {
+	    	return false;
 	    }
 	    
 	    List <NameValuePair> nameValuePairs = new ArrayList <NameValuePair>();
@@ -134,7 +140,7 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
     	}		
 		return false;
     }
-	
+    
 	@Override
 	protected void onPostExecute(Boolean result) {
 		super.onPostExecute(result);

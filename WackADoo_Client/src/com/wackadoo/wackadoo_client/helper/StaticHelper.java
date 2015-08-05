@@ -13,6 +13,7 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -71,7 +72,7 @@ public class StaticHelper {
 	public static final String FB_LOGIN_TASK = "facebook_login_task";
 	public static final int MAX_LOGIN_ERRORS = 3;
 	
-	public static boolean debugEnabled = false;			// true = all debuging is enabled; if false no debug messages will be shown
+	public static boolean debugEnabled = true;			// true = all debuging is enabled; if false no debug messages will be shown
 	public static boolean localTest = false;			// true = test on local server, if false the live server is used
 
 	public static int loginErrorCount = 0;
@@ -324,5 +325,22 @@ public class StaticHelper {
 	    	((TextView) dialog.findViewById(id)).setTypeface(tf);
 	    }
 	}
+	
+    public static String randomStringOfLength(int length) {
+    	String alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXZY0123456789;,.:-_#+*?=&%!";
+    	int aLength = alphabet.length();
+    	
+    	Random generator = new Random();
+    	
+    	StringBuilder builder= new StringBuilder(length);
+    	for (int i = 0; i < length; i++) {
+    	    int r = generator.nextInt(aLength);
+    	    char c = alphabet.charAt(r);
+    	    builder.append(c);
+    	  }
+    	
+    	return builder.toString();
+    }
+	
 	
 }

@@ -40,6 +40,10 @@
     <string name="selectgame_game_finished">Spiel bereits beendet</string>
     <string name="selectgame_game_login">Einloggen in Welt </string>
     <string name="selectgame_create_account">Erstelle neuen Account in Welt </string>
+    <string name="selectgame_new_account">Neu registrieren?</string>
+    <string name="selectgame_new_or_rejoin">Bist du ein neuer Nutzer und möchtest dich neu registrieren oder warst du schon mal da?</string>
+    <string name="selectgame_new">Neu</string>
+    <string name="selectgame_rejoin">Wieder da</string>
      
     <!-- AccountManager -->
     <string name="account_change_password">Passwort ändern</string>

@@ -106,11 +106,11 @@ public class UserCredentials {
 	private void persistCredentials() {
 		SharedPreferences myPrefs = context.getSharedPreferences(WAD_PREFS_NAME, Context.MODE_PRIVATE);
 		SharedPreferences.Editor e = myPrefs.edit();
-		e.putString("identifier", accessToken.getIdentifier());
-		e.putString("accesstoken", accessToken.getToken());
-		e.putLong("created_at", accessToken.getCreatedAt().getTime());
-		e.putString("expire_code", accessToken.getExpireCode());
-		e.putString("fb_token", accessToken.getFbToken());
+		e.putString("identifier", accessToken == null ? "" : accessToken.getIdentifier());
+		e.putString("accesstoken", accessToken == null ? "" : accessToken.getToken());
+		e.putLong("created_at", accessToken == null ? 0L : accessToken.getCreatedAt().getTime());
+		e.putString("expire_code", accessToken == null ? "" : accessToken.getExpireCode());
+		e.putString("fb_token", accessToken == null ? "" : accessToken.getFbToken());
 		e.putString("fb_player_id", fbPlayerId);
 		e.putBoolean("is_fb_user", isFbUser);
 		e.putString("account_id", accountId);
@@ -217,6 +217,11 @@ public class UserCredentials {
 		setEmail("");
 		setIdentifier("");
 		setUsername("");
+	}
+	
+	public void clearFbCredentials() {
+		setFbPlayerId("");
+		setFbUser(false);
 	}
 	
 	public String getGameHost() {
