@@ -214,6 +214,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 	    // put version number in textview
 		try {
 			String versionName = "Version " + getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+			versionName +=  "." + getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
 			((TextView) findViewById(R.id.title_version_text)).setText(versionName);
 			((TextView) findViewById(R.id.title_version_text)).setTypeface(Typeface.createFromAsset(getAssets(), "fonts/Montserrat-Regular.ttf"));
 		} 
