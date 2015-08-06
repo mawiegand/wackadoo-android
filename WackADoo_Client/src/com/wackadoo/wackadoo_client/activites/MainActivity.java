@@ -651,8 +651,7 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
             	progressDialog.show();
                 if (session == Session.getActiveSession()) {
                     if (user != null) {
-                    	try {
-	                    	userCredentials.setEmail(user.getProperty("email").toString());
+                    	try {	                    
 	                    	userCredentials.setFbPlayerId(user.getId());	
 	                    	userCredentials.getAccessToken().setFbToken(session.getAccessToken());
 	                    	
