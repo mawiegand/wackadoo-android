@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- X86 VersionCode: 16 / armeabi-v7a VersionCode: 15 -->
+<!-- X86 VersionCode: 32 / armeabi-v7a VersionCode: 31 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.wackadoo.wackadoo_client"
-    android:versionCode="25" 
-    android:versionName="2.3">
+    android:versionCode="32" 
+    android:versionName="2.4">
 
     <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="19"/>
     
