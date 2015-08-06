@@ -257,8 +257,7 @@ public class AccountManagerActivity extends WackadooActivity implements AccountM
 	 * Inform the MainActivity that the user wants to sign out
 	 */
 	private void signOut() {
-		userCredentials.setAccessToken(null);
-		userCredentials.clearFbCredentials();
+		userCredentials.clearAllCredentials();
 		
 		// closes facebook session and clears cache
 		Session session = Session.getActiveSession();
