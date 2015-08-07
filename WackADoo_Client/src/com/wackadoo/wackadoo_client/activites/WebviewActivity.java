@@ -56,10 +56,12 @@ public class WebviewActivity extends WackadooActivity {
         setUpReloadBtn();
         setUpWebview();
         setUpJavaScriptInterface(bundle);
-      
+        
         if (savedInstanceState != null) {
-        	xWalkView.restoreState(savedInstanceState);
+        	xWalkView.restoreState(savedInstanceState);        	
         }
+        
+    	xWalkView.clearCache(true);
      
         xWalkView.load("file:///android_asset/index.html", null);
         AndroidBug5497Workaround.assistActivity(this);
