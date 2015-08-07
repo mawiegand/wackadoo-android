@@ -652,7 +652,11 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
                 if (session == Session.getActiveSession()) {
                     if (user != null) {
                     	try {	                    
-	                    	userCredentials.setFbPlayerId(user.getId());	
+	                    	if (user.getProperty("email") != null) {
+	                    		userCredentials.setEmail(user.getProperty("email").toString());
+	                    	}
+                    		
+                    		userCredentials.setFbPlayerId(user.getId());	
 	                    	userCredentials.getAccessToken().setFbToken(session.getAccessToken());
 	                    	
 	                    	sample.setFacebookId(user.getId());

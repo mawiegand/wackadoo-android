@@ -58,6 +58,11 @@ public class FacebookLoginAsyncTask extends AsyncTask<String, Integer, ResponseR
     		nameValuePairs.add(new BasicNameValuePair("grant_type", "fb-player-id"));
     		nameValuePairs.add(new BasicNameValuePair("scope", "5dentity"));
     		
+    		String email = userCredentials.getEmail();
+    		if (email != null && !email.isEmpty()) {
+    			nameValuePairs.add(new BasicNameValuePair("email", userCredentials.getEmail()));
+    		}
+    			
     		// tracking data
     		DeviceInformation deviceInformation = new DeviceInformation(context);
     		nameValuePairs.add(new BasicNameValuePair("[device_information][operating_system]", deviceInformation.getOs()));					// e.g. Android 4.4.4	
