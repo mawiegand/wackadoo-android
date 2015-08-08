@@ -103,7 +103,7 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
 						
 		nameValuePairs.add(new BasicNameValuePair("[device_information][vendor_token]", deviceInformation.getUniqueTrackingToken())); 
 		nameValuePairs.add(new BasicNameValuePair("[device_information][advertiser_token]", Secure.getString(context.getContentResolver(), Secure.ANDROID_ID))); 	// adjust trackerToken
-	   nameValuePairs.add(new BasicNameValuePair("[device_information][device_token]", Secure.getString(context.getContentResolver(), Secure.ANDROID_ID)));
+	    nameValuePairs.add(new BasicNameValuePair("[device_information][device_token]", Secure.getString(context.getContentResolver(), Secure.ANDROID_ID)));
 		
 		if (StaticHelper.debugEnabled) {
 			for (NameValuePair nvp : nameValuePairs) {

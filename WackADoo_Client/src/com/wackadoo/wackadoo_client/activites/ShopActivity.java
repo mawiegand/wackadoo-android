@@ -486,6 +486,12 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 	// callback interface for purchase of play store item
 	@Override
 	public void onIabPurchaseFinished(IabResult result, Purchase purchase) {
+		if (purchase == null) {
+			Toast.makeText(this, getString(R.string.buy_credits_fail), Toast.LENGTH_SHORT)
+			 .show();
+			return;
+		}
+		
 		// code 0 = successful purchase
 		if(result.getResponse() == 0) {
 			InAppProduct inAppProductData = billingHelper.getInAppProduct(purchase.getSku());
@@ -502,13 +508,20 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 	public void handleUnconsumedItems(Inventory inv) {
 		for (Purchase purchase : inv.getAllPurchases()) {
 			InAppProduct inAppProductData = billingHelper.getInAppProduct(purchase.getSku());
-			new BuyPlayStoreAsyncTask(this, userCredentials, purchase, inAppProductData).execute();
+			if (inAppProductData != null) {
+				new BuyPlayStoreAsyncTask(this, userCredentials, purchase, inAppProductData).execute();
+			}
 		}
 	}
 	
 	// callback interface for communication with backend after successful play store purchase
 	@Override
 	public void buyPlayStoreCallback(int responseCode, Purchase purchase, String message) {
+		
+		if (StaticHelper.debugEnabled) {
+			Log.d(TAG, "playstore response code: " + responseCode);
+		}
+		
 		if (responseCode == 200) {
 			billingHelper.consumeAsync(purchase, this);
 			Toast.makeText(this, getString(R.string.buy_credits_success), Toast.LENGTH_SHORT)
@@ -549,7 +562,7 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 		} else if (responseCode == 400 || responseCode == 422){
 			Toast.makeText(this, getString(R.string.buy_credits_fail), Toast.LENGTH_LONG)
 				 .show();
-		}
+		} 
 	}
 	
 	public double convertPriceToCents(String price) {
@@ -584,28 +597,17 @@ public class ShopActivity extends WackadooActivity implements ShopDataCallbackIn
 	
 	// play store: callback interface for billingHelper.getProductsAsyncInternal
 	@Override
-	public void getProductsCallback(Bundle skuDetails){
-		int response = skuDetails.getInt("RESPONSE_CODE");
-		
-		if (response == 0) {
-			if (progressDialog.isShowing()) {
-				progressDialog.dismiss();
-			}
-			
-			if (StaticHelper.debugEnabled) {
-				Log.d(TAG, "products skuDetails: " + skuDetails.toString());
-			}
-			
-			stringProductList = skuDetails.getStringArrayList("DETAILS_LIST");
-			
-			// save skuDetails for tracking issues in billingHelper
-			billingHelper.saveSkuDetails(stringProductList);
-			
-			ArrayList<ShopRowItem> rowItems = produceRowItemList();
-			openCreditsFragment(rowItems);
+	public void getProductsCallback(ArrayList<String> productList){
+		if (progressDialog.isShowing()) {
+			progressDialog.dismiss();
 		}
+		
+		this.stringProductList = productList;
+
+		ArrayList<ShopRowItem> rowItems = produceRowItemList();
+		openCreditsFragment(rowItems);
 	}
-	
+
 	// play store: returns list of platinum credits ShopRowItems for given list of json products (sorted by price)
 	private ArrayList<ShopRowItem> produceRowItemList() {
 		ArrayList<ShopRowItem> rowItemList = new ArrayList<ShopRowItem>();

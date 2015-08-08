@@ -21,7 +21,8 @@ public class CustomIabHelper extends IabHelper implements QueryInventoryFinished
 	
 	private static final String TAG = CustomIabHelper.class.getSimpleName();
 	private Context mContext;
-	private ArrayList<InAppProduct> inAppProducts;
+	private ArrayList<InAppProduct> inAppProducts = new ArrayList<InAppProduct>();
+	private Inventory inventory;
 	
 	public CustomIabHelper(Context ctx, String base64PublicKey) {
 		super(ctx, base64PublicKey);
@@ -49,13 +50,31 @@ public class CustomIabHelper extends IabHelper implements QueryInventoryFinished
         checkSetupDone("getProducts");
         flagStartAsync("getProducts");
         (new Thread(new Runnable() {
-            public void run() {
+
+        	public void run() {
         		Bundle querySkus = new Bundle();
         		querySkus.putStringArrayList("ITEM_ID_LIST", setUpSkuList());
         		try {
 					Bundle skuDetails = mService.getSkuDetails(3, mContext.getPackageName(), "inapp", querySkus);
 					flagEndAsync();
-					callback.getProductsCallback(skuDetails);
+					
+					int response = skuDetails.getInt("RESPONSE_CODE");
+
+					if (response == 0) {
+						
+						if (StaticHelper.debugEnabled) {
+							Log.d(TAG, "products skuDetails: " + skuDetails.toString());
+						}
+						
+						ArrayList<String> stringProductList = skuDetails.getStringArrayList("DETAILS_LIST");
+						saveSkuDetails(stringProductList);
+						
+						if (inventory != null) {
+							((ShopActivity) mContext).handleUnconsumedItems(inventory);
+						}
+						
+						callback.getProductsCallback(stringProductList);
+					}
 					
 				} catch (RemoteException e) {
 					e.printStackTrace();
@@ -66,9 +85,8 @@ public class CustomIabHelper extends IabHelper implements QueryInventoryFinished
     
     // handle response with purchased items
     public void onQueryInventoryFinished(IabResult result, Inventory inv) {
-        ((ShopActivity) mContext).handleUnconsumedItems(inv);
-
-        // get platinum credit packages from play store
+        this.inventory = inv;
+    	// get platinum credit packages from play store
 		getProductsAsyncInternal((CreditsFragmentCallbackInterface) mContext);
 	}
 	
