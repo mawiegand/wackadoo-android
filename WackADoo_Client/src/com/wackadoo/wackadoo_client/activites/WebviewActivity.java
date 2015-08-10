@@ -109,15 +109,8 @@ public class WebviewActivity extends WackadooActivity {
     // set up the webview
 
     private void setUpWebview() {
-    	  xWalkView = (XWalkView) findViewById(R.id.main_webView);
-
-          XWalkSettings xWalkSettings = xWalkView.getSettings();
-          xWalkSettings.setJavaScriptEnabled(true);
-          xWalkSettings.setJavaScriptCanOpenWindowsAutomatically(true);
-          xWalkSettings.setUseWideViewPort(true);
-          xWalkSettings.setDomStorageEnabled(true);	
-          
-          XWalkPreferences.setValue(XWalkPreferences.REMOTE_DEBUGGING, true);
+    	xWalkView = (XWalkView) findViewById(R.id.main_webView);
+        XWalkPreferences.setValue(XWalkPreferences.JAVASCRIPT_CAN_OPEN_WINDOW, true);     
     }
     
     private void setUpJavaScriptInterface(Bundle b) {
