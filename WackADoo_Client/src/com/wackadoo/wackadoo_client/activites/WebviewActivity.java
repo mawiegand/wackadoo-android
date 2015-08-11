@@ -99,7 +99,9 @@ public class WebviewActivity extends WackadooActivity {
     	super.onPause();
     	
         mConnectionHandler.removeCallbacks(checkConnectionThread);
-        playtimeHandler.removeCallbacks(playtimeThread);
+        if (playtimeHandler != null && playtimeThread != null) {
+        	playtimeHandler.removeCallbacks(playtimeThread);
+        }
         
         if (adjustProperties.IsUserFiveMinutesIngame(userId) == false) {
         	adjustProperties.setPlayTimeForUser(userId, currentPlayTime);
