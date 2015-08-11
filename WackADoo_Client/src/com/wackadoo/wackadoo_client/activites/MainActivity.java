@@ -1016,9 +1016,6 @@ public class MainActivity extends Activity implements GameLoginCallbackInterface
 			sample.track("registration", "account", null);
 			
 			Adjust.trackEvent("e2q363");
-			
-    		AppsFlyerLib.setAppUserId(identifier);
-    		AppsFlyerLib.sendTracking(getApplicationContext());
 
     		new GameLoginAsyncTask(MainActivity.this, userCredentials, false, false).execute();
 		} else {

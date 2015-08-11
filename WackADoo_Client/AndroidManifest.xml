@@ -46,21 +46,8 @@
  				<action android:name="com.android.vending.INSTALL_REFERRER" />
  			</intent-filter>
 		</receiver>
-		<receiver 
-		    android:name="com.google.android.apps.analytics.AnalyticsReceiver" android:exported="true">
- 			<intent-filter>
- 				<action android:name="com.android.vending.INSTALL_REFERRER" />
- 			</intent-filter>support@appsflyer.com | US: +1-800-660-2818 | UK: +44-20-3318-8649 | IL: +972-9-768-1949 | www.appsflyer.com
-		</receiver>
-		<receiver 
-		    android:name="com.admob.android.ads.analytics.InstallReceiver" android:exported="true">
-			 <intent-filter>
- 				<action android:name="com.android.vending.INSTALL_REFERRER" />
-			 </intent-filter>
-		</receiver>
  	    <receiver
-		    android:name="com.adjust.sdk.ReferrerReceiver"
-		    android:exported="true" >
+		    android:name="com.adjust.sdk.ReferrerReceiver" android:exported="true" >
 		    <intent-filter>
 		        <action android:name="com.android.vending.INSTALL_REFERRER" />
 		    </intent-filter>

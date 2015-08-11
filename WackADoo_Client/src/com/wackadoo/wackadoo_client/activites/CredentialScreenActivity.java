@@ -268,9 +268,6 @@ public class CredentialScreenActivity extends WackadooActivity implements Create
 			sample.track("registration", "account", null);
 			
 			Adjust.trackEvent("e2q363");
-			
-    		AppsFlyerLib.setAppUserId(identifier);
-    		AppsFlyerLib.sendTracking(getApplicationContext());
     		
     		new GameLoginAsyncTask(CredentialScreenActivity.this, userCredentials, false, false).execute();
 		} else {

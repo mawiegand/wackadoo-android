@@ -152,7 +152,7 @@ public class GameLoginAsyncTask extends AsyncTask<String, Integer, Boolean> {
 				String expiresIn = jsonResponse.getString("expires_in");
 				String identifier = jsonResponse.getString("user_identifer");
 								
-				AppsFlyerLib.setAppUserId(identifier);
+				AppsFlyerLib.setCustomerUserId(identifier);
 	    		AppsFlyerLib.sendTracking(context);
 			
 				((GameLoginCallbackInterface) context).loginCallback(result.booleanValue(), accessToken, expiresIn, identifier, restoreAccount, refresh);
